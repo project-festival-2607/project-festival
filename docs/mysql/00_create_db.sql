@@ -1,1 +1,1 @@
-CREATE DATABASE chookdb;
+CREATE DATABASE chook_database;
