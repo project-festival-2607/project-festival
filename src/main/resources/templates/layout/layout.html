@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Title</title>
+  <!-- Bootstrap 설정 -->
+  <link rel="stylesheet" th:href="@{/libs/bootstrap-5.3.8-dist/css/bootstrap.min.css}">
+  <script th:src="@{/libs/bootstrap-5.3.8-dist/js/bootstrap.bundle.min.js}"></script>
+</head>
+<body>
+<div th:replace="~{fragments/header :: header}"></div>
+<div class="container-wrapper">
+  <div layout:fragment="content" ></div>
+</div>
+<div th:replace="~{fragments/footer :: footer}"></div>
+<script th:src="@{/js/common.js}"></script>
+</body>
+</html>
