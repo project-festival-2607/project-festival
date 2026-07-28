@@ -27,6 +27,9 @@ dependencies {
     // QueryDSL: 쿼리를 타입 안전하게 생성 관리하도록 돕는 프레임워크
     // Source: https://mvnrepository.com/artifact/com.querydsl/querydsl-jpa
     implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
+    // Thymeleaf Layout Dialect
+    // Source: https://mvnrepository.com/artifact/nz.net.ultraq.thymeleaf/thymeleaf-layout-dialect
+    implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect'
     compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     runtimeOnly 'com.mysql:mysql-connector-j'
