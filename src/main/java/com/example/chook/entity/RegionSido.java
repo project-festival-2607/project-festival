@@ -23,4 +23,7 @@ public class RegionSido {
   @Column(name = "sido_name", length = 20, nullable = false)
   private String sidoName;
 
+  @Column(name = "sido_short_name", length = 10, nullable = false)
+  private String shortName;
+
 }
