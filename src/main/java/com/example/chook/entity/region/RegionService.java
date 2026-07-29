@@ -11,15 +11,17 @@ public interface RegionService {
 
   default RegionDTO toDto(RegionSido sido){
     return RegionDTO.builder()
-      .code(sido.getSidoCode())
-      .name(sido.getSidoName())
+      .code(sido.getCode())
+      .name(sido.getName())
+      .shortName(sido.getShortName())
       .build();
   }
 
   default RegionDTO toDto(RegionSigungu sigungu){
     return RegionDTO.builder()
-      .code(sigungu.getSigunguCode())
-      .name(sigungu.getSigunguName())
+      .code(sigungu.getCode())
+      .name(sigungu.getName())
+      .shortName(sigungu.getName())
       .build();
   }
 

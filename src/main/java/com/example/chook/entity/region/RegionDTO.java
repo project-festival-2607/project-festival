@@ -12,5 +12,6 @@ public class RegionDTO {
 
   private String code;
   private String name;
+  private String shortName;
 
 }
