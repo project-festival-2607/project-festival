@@ -8,6 +8,6 @@ import java.util.List;
 
 public interface RegionSigunguRepository extends JpaRepository<RegionSigungu, String> {
 
-  List<RegionSigungu> findBySido_SidoCode(String sidoCode, Sort sort);
+  List<RegionSigungu> findBySido_Code(String sidoCode, Sort sort);
 
 }

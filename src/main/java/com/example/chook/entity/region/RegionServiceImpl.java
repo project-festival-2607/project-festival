@@ -20,16 +20,16 @@ public class RegionServiceImpl implements RegionService {
   @Override
   public List<RegionDTO> getSidoList() {
     List<RegionSido> sidoList = regionSidoRepository.findAll(
-      Sort.by(Sort.Direction.ASC, "sidoCode")
+      Sort.by(Sort.Direction.ASC, "code")
     );
     return sidoList.stream().map(this::toDto).toList();
   }
 
   @Override
   public List<RegionDTO> getSigunguList(String sidoCode) {
-    List<RegionSigungu> sigunguList = regionSigunguRepository.findBySido_SidoCode(
+    List<RegionSigungu> sigunguList = regionSigunguRepository.findBySido_Code(
       sidoCode,
-      Sort.by(Sort.Direction.ASC, "sigunguName")
+      Sort.by(Sort.Direction.ASC, "name")
     );
     return sigunguList.stream().map(this::toDto).toList();
   }

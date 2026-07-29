@@ -15,13 +15,13 @@ public class RegionSigungu {
 
   @Id
   @Column(name = "sigungu_code", columnDefinition = "char(5)", nullable = false)
-  private String sigunguCode;
+  private String code;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "sido_code", nullable = false)
   private RegionSido sido;
 
   @Column(name = "sigungu_name", length = 20, nullable = false)
-  private String sigunguName;
+  private String name;
 
 }
