@@ -57,6 +57,6 @@ def querydslSrcDir = 'src/main/generated'    // Q-Type 생성 위치
 clean { delete file(querydslSrcDir) }               // 테이블에 변동이 있거나 서버를 껐다 켰을 경우 Q-Type 지우고 다시 생성
 
 // 컴파일 시 비교되는 Q-Type 위치설정
-tasks.withType(JavaCompile) {
+tasks.named('compileJava', JavaCompile) {
     options.generatedSourceOutputDirectory = file(querydslSrcDir)
 }
