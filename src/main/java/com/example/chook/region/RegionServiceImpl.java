@@ -1,4 +1,4 @@
-package com.example.chook.entity.region;
+package com.example.chook.region;
 
 import com.example.chook.entity.RegionSido;
 import com.example.chook.entity.RegionSigungu;
