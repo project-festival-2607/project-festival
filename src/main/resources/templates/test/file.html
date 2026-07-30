@@ -5,11 +5,27 @@
       xmlns:th="http://www.thymeleaf.org">
 <div layout:fragment="content">
   <div class="container-md">
-    <form action="/file/upload" enctype="multipart/form-data" class="my-5" method="post">
+    <form action="/file/upload" class="my-5" enctype="multipart/form-data" method="post">
       <div class="input-group">
-        <input class="form-control" type="file" id="file" name="file">
-        <button class="btn btn-outline-secondary" type="submit" id="fileUploadBtn">업로드</button>
+        <input class="form-control" id="file" name="file" type="file">
+        <button class="btn btn-outline-secondary" id="fileUploadBtn" type="submit">업로드</button>
       </div>
     </form>
+    <div class="card" style="width: 18rem;">
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item d-flex" th:each="file: ${fileList}">
+          <div class="ms-2 me-auto">
+            <div class="fw-semibold">[[${file.name}]]</div>
+            <div class="text-body-tertiary" style="font-size: 12px;">
+              [[${file.category}]] / [[${file.size}]] Bytes
+            </div>
+          </div>
+          <form method="post" th:action="@{/file/delete}">
+            <input name="uuid" th:value="${file.uuid}" type="hidden"/>
+            <button class="btn btn-sm btn-danger" type="submit">X</button>
+          </form>
+        </li>
+      </ul>
+    </div>
   </div>
 </div>

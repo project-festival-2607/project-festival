@@ -14,6 +14,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @RequiredArgsConstructor
@@ -29,6 +30,12 @@ public class FileServiceImpl implements FileService {
   @Override
   public FileDTO uploadAndGetDto(MultipartFile file) {
     return toDto(upload(file));
+  }
+
+  @Override
+  public List<FileDTO> getList() {
+    return uploadedFileRepository.findAll().stream()
+      .map(this::toDto).toList();
   }
 
   public UploadedFile upload(MultipartFile file) {
@@ -75,7 +82,13 @@ public class FileServiceImpl implements FileService {
 
   @Transactional
   @Override
-  public void delete(UploadedFile file) {
+  public void delete(FileDTO fileDto) {
+    UploadedFile targetFile = uploadedFileRepository.findByUuid(UUID.fromString(fileDto.getUuid()));
+    delete(targetFile);
+  }
+
+
+  private void delete(UploadedFile file) {
     Path targetPath = Paths.get(file.getSaveDir()).resolve(file.getStoredName());
     deletePhysicalFile(targetPath);
     uploadedFileRepository.delete(file);
