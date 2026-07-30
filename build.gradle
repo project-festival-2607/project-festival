@@ -30,6 +30,9 @@ dependencies {
     // Thymeleaf Layout Dialect
     // Source: https://mvnrepository.com/artifact/nz.net.ultraq.thymeleaf/thymeleaf-layout-dialect
     implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect'
+    // Apache Commons CSV: CSV 파일 처리를 위한 라이브러리
+    // Source: https://mvnrepository.com/artifact/org.apache.commons/commons-csv
+    implementation 'org.apache.commons:commons-csv:1.14.1'
     compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     runtimeOnly 'com.mysql:mysql-connector-j'

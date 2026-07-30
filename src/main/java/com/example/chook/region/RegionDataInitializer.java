@@ -1,0 +1,17 @@
+package com.example.chook.region;
+
+import lombok.RequiredArgsConstructor;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.stereotype.Component;
+
+@Component
+@RequiredArgsConstructor
+public class RegionDataInitializer implements CommandLineRunner {
+
+  private final RegionDataInitService regionDataInitService;
+
+  @Override
+  public void run(String... args) throws Exception {
+    regionDataInitService.importData();
+  }
+}
