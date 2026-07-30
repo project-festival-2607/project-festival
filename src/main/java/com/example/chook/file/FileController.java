@@ -31,12 +31,21 @@ public class FileController {
     }
     FileDTO uploadedFileDto = fileService.uploadAndGetDto(file);
     log.info("uploadedFileDto: {}", uploadedFileDto);
+    redirectAttributes.addFlashAttribute(
+      "uploadSuccessMsg",
+      "파일이 성공적으로 업로드되었습니다."
+    );
     return "redirect:/test/file";
   }
 
   @PostMapping("/delete")
-  public String delete(@RequestParam String uuid) {
+  public String delete(RedirectAttributes redirectAttributes,
+                       @RequestParam String uuid) {
     fileService.delete(uuid);
+    redirectAttributes.addFlashAttribute(
+      "deleteSuccessMsg",
+      "파일이 삭제되었습니다."
+    );
     return "redirect:/test/file";
   }
 
