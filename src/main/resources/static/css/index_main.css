@@ -1,0 +1,137 @@
+.index-box {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+
+    margin-bottom: 50px;
+}
+
+.main-bg {
+    width: 100%;
+    height: 500px;
+    background-color: #F3F3F3;
+
+    padding: 50px 0;
+}
+
+.i-main {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    position: relative;
+}
+
+.main-bg-title {
+    display: flex;
+    flex-direction: column;
+    font-size: 40px;
+}
+
+.main-bg-title > span:nth-child(2) {
+    font-size: 28px;
+}
+.main-bg-title > span:last-child {
+    font-size: 34px;
+}
+
+.main-bg-img {
+    width: 450px;
+    height: 600px;
+    border: 1px solid #2C2C2C;
+    background: #FEFEFE;
+    text-align: center;
+    line-height: 600px;
+    margin-right: 50px;
+}
+
+.index-center {
+    margin-top: 60px;
+}
+
+.index-title {
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+.index-more-btn {
+    font-size:15px;
+    border: 1px solid #dc3545;
+    border-radius: 50px;
+    padding: 4px 10px;
+    width: 80px;
+    margin-bottom: 10px;
+    text-align: center;
+
+    transition: 0.3s ease;
+}
+
+.index-more-btn > a {
+    color: #dc3545;
+    transition: 0.3s ease;
+}
+
+.index-more-btn:hover {
+    background-color: #dc3545;
+}
+
+.index-more-btn:hover > a {
+    color: #FEFEFE;
+}
+
+.index-gallery {
+    width: 100%;
+    height: auto;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+    gap: 10px;
+}
+
+.gallery-items {
+    border: 1px solid #2C2C2C;
+    width: 400px;
+    height: 200px;
+
+    text-align: center;
+    line-height: 200px;
+}
+
+/* 반응형 대응 */
+
+@media (max-width: 767px){
+    .main-bg {
+        height: auto;
+    }
+
+    .i-main {
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .main-bg-img {
+        width: 330px;
+        height: 440px;
+        margin: 10px 0;
+    }
+
+    .main-bg-title {
+        display: flex;
+        flex-direction: column;
+        font-size: 30px;
+    }
+
+    .main-bg-title > span:nth-child(2) {
+        font-size: 18px;
+    }
+    .main-bg-title > span:last-child {
+        font-size: 24px;
+    }
+
+    .index-gallery {
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+}
