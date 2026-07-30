@@ -1,0 +1,29 @@
+package com.example.chook.file;
+
+import com.example.chook.entity.enums.UploadedFileCategory;
+import lombok.*;
+
+import java.time.LocalDateTime;
+
+@Getter
+@Setter
+@ToString
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+public class FileDTO {
+
+  private String uuid;
+  private String name;
+  private String saveDir;
+  private Long size;
+  private LocalDateTime uploadedAt;
+  private UploadedFileCategory category;
+
+  public String getSizeStr() {
+    if (size >= 1024*1024) return String.format("%.2f MB", (double)size/1024/1024);
+    if (size >= 1024) return String.format("%.2f KB", (double)size/1024);
+    return String.format("%d Bytes", size);
+  }
+
+}
