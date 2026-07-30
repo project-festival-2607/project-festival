@@ -5,7 +5,17 @@ import org.springframework.web.multipart.MultipartFile;
 
 public interface FileService {
 
-  UploadedFile upload(MultipartFile file);
+  default FileDTO toDto(UploadedFile uploadedFile) {
+    return FileDTO.builder()
+      .uuid(uploadedFile.getUuid().toString())
+      .originalName(uploadedFile.getOriginalName())
+      .saveDir(uploadedFile.getSaveDir())
+      .fileSize(uploadedFile.getFileSize())
+      .uploadedAt(uploadedFile.getUploadedAt())
+      .build();
+  }
+
+  FileDTO uploadAndGetDto(MultipartFile file);
 
   void delete(UploadedFile file);
 

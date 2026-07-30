@@ -27,6 +27,10 @@ public class FileServiceImpl implements FileService {
 
   @Transactional
   @Override
+  public FileDTO uploadAndGetDto(MultipartFile file) {
+    return toDto(upload(file));
+  }
+
   public UploadedFile upload(MultipartFile file) {
 
     UUID uuid = UUID.randomUUID();
