@@ -82,8 +82,8 @@ public class FileServiceImpl implements FileService {
 
   @Transactional
   @Override
-  public void delete(FileDTO fileDto) {
-    UploadedFile targetFile = uploadedFileRepository.findByUuid(UUID.fromString(fileDto.getUuid()));
+  public void delete(String uuidStr) {
+    UploadedFile targetFile = uploadedFileRepository.findByUuid(UUID.fromString(uuidStr));
     delete(targetFile);
   }
 

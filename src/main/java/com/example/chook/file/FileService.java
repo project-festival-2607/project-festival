@@ -22,6 +22,6 @@ public interface FileService {
 
   List<FileDTO> getList();
 
-  void delete(FileDTO file);
+  void delete(String uuidStr);
 
 }

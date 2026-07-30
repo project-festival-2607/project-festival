@@ -1,0 +1,41 @@
+package com.example.chook.file;
+
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+@ControllerAdvice
+@Slf4j
+public class FileExceptionHandler {
+
+//  @ExceptionHandler(MaxUploadSizeExceededException.class)
+//  public String handleMaxUploadSizeExceededException(
+//    MaxUploadSizeExceededException e,
+//    RedirectAttributes redirectAttributes) {
+//
+//    log.info("!!! MaxUploadSizeExceededException HANDLED !!!");
+//
+//    redirectAttributes.addFlashAttribute(
+//      "uploadFailMsg",
+//      "파일 최대 크기 (10MB)를 초과했습니다."
+//    );
+//    log.error("MaxUploadSizeExceededException", e);
+//
+//    return "redirect:/test/file";
+//  }
+
+  @ExceptionHandler(MaxUploadSizeExceededException.class)
+  public ResponseEntity<String> handleMaxUploadSizeExceededException(
+    MaxUploadSizeExceededException e
+  ) {
+    log.error("upload size exceeded", e);
+
+    return ResponseEntity
+      .status(HttpStatus.PAYLOAD_TOO_LARGE)
+      .body("파일 최대 크기(10MB)를 초과했습니다.");
+  }
+}

@@ -11,6 +11,9 @@
         <button class="btn btn-outline-secondary" id="fileUploadBtn" type="submit">업로드</button>
       </div>
     </form>
+    <div th:if="${uploadFailMsg != null}" class="alert alert-danger" role="alert">
+      [[${uploadFailMsg}]]
+    </div>
     <div class="card" style="width: 18rem;">
       <ul class="list-group list-group-flush">
         <li class="list-group-item d-flex" th:each="file: ${fileList}">

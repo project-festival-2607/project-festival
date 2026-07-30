@@ -3,8 +3,13 @@ package com.example.chook.file;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping("/file")
@@ -15,7 +20,15 @@ public class FileController {
   private final FileService fileService;
 
   @PostMapping("/upload")
-  public String upload(@RequestParam(name="file",  required=true) MultipartFile file) {
+  public String upload(RedirectAttributes redirectAttributes,
+                       @RequestParam(name = "file") MultipartFile file) {
+    long fileSize = file.getSize();
+    log.info("file size: {}", fileSize);
+    log.info("max size limit test: {}", file.getSize() <= 10 * 1024 * 1024);
+    if (fileSize == 0) {
+      redirectAttributes.addFlashAttribute("uploadFailMsg", "올리려는 파일이 비어있습니다.");
+      return "redirect:/test/file";
+    }
     FileDTO uploadedFileDto = fileService.uploadAndGetDto(file);
     log.info("uploadedFileDto: {}", uploadedFileDto);
     return "redirect:/test/file";
@@ -23,10 +36,7 @@ public class FileController {
 
   @PostMapping("/delete")
   public String delete(@RequestParam String uuid) {
-    FileDTO targetFileDtoSkeleton = FileDTO.builder()
-        .uuid(uuid)
-          .build();
-    fileService.delete(targetFileDtoSkeleton);
+    fileService.delete(uuid);
     return "redirect:/test/file";
   }
 
