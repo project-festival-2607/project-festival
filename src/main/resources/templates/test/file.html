@@ -26,7 +26,7 @@
           <div class="ms-2 me-auto">
             <div class="fw-semibold">[[${file.name}]]</div>
             <div class="text-body-tertiary" style="font-size: 12px;">
-              [[${file.category}]] / [[${file.size}]] Bytes
+              [[${file.category}]] / [[${file.sizeStr}]]
             </div>
           </div>
           <form method="post" th:action="@{/file/delete}">
