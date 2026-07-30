@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class TestController {
 
   @GetMapping("/file")
-  public String file() {
-    return "test/file";
+  public void file() {
   }
 }

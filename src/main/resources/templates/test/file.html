@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="ko"
+      layout:decorate="~{layout/layout}"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org">
+<div layout:fragment="content">
+  <div class="container-md">
+    <form action="/file/upload" enctype="multipart/form-data" class="my-5" method="post">
+      <div class="input-group">
+        <input class="form-control" type="file" id="file" name="file">
+        <button class="btn btn-outline-secondary" type="submit" id="fileUploadBtn">업로드</button>
+      </div>
+    </form>
+  </div>
+</div>
