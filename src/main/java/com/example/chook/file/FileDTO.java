@@ -1,5 +1,6 @@
 package com.example.chook.file;
 
+import com.example.chook.entity.enums.UploadedFileCategory;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -13,9 +14,10 @@ import java.time.LocalDateTime;
 public class FileDTO {
 
   private String uuid;
-  private String originalName;
+  private String name;
   private String saveDir;
-  private Long fileSize;
+  private Long size;
   private LocalDateTime uploadedAt;
+  private UploadedFileCategory category;
 
 }
