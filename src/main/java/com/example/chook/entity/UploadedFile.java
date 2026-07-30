@@ -31,12 +31,11 @@ public class UploadedFile {
   @Column(name = "file_original_name", nullable = false, length = 255)
   private String originalName;
 
+  @Column(name = "file_stored_name", nullable = false, length = 255)
+  private String storedName;
+
   @Column(name = "file_save_dir", nullable = false, length = 512)
   private String saveDir;
-
-  @Column(name = "file_category", nullable = false)
-  @Enumerated(EnumType.STRING)
-  private UploadedFileCategory category;
 
   @Column(name = "file_mime_type", nullable = false, length = 255)
   private String mimeType;
@@ -47,5 +46,9 @@ public class UploadedFile {
   @Column(name = "file_uploaded_at", nullable = false)
   private LocalDateTime uploadedAt;
 
+  @Transient
+  public UploadedFileCategory getCategory() {
+    return UploadedFileCategory.fromMimeType(mimeType);
+  }
 
 }
