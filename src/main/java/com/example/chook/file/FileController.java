@@ -3,10 +3,7 @@ package com.example.chook.file;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 @Controller
@@ -21,7 +18,16 @@ public class FileController {
   public String upload(@RequestParam(name="file",  required=true) MultipartFile file) {
     FileDTO uploadedFileDto = fileService.uploadAndGetDto(file);
     log.info("uploadedFileDto: {}", uploadedFileDto);
-    return "test/file";
+    return "redirect:/test/file";
+  }
+
+  @PostMapping("/delete")
+  public String delete(@RequestParam String uuid) {
+    FileDTO targetFileDtoSkeleton = FileDTO.builder()
+        .uuid(uuid)
+          .build();
+    fileService.delete(targetFileDtoSkeleton);
+    return "redirect:/test/file";
   }
 
 }
