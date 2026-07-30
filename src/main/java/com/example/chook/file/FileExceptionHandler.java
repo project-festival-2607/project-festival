@@ -12,30 +12,20 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Slf4j
 public class FileExceptionHandler {
 
-//  @ExceptionHandler(MaxUploadSizeExceededException.class)
-//  public String handleMaxUploadSizeExceededException(
-//    MaxUploadSizeExceededException e,
-//    RedirectAttributes redirectAttributes) {
-//
-//    log.info("!!! MaxUploadSizeExceededException HANDLED !!!");
-//
-//    redirectAttributes.addFlashAttribute(
-//      "uploadFailMsg",
-//      "파일 최대 크기 (10MB)를 초과했습니다."
-//    );
-//    log.error("MaxUploadSizeExceededException", e);
-//
-//    return "redirect:/test/file";
-//  }
-
   @ExceptionHandler(MaxUploadSizeExceededException.class)
-  public ResponseEntity<String> handleMaxUploadSizeExceededException(
-    MaxUploadSizeExceededException e
-  ) {
-    log.error("upload size exceeded", e);
+  public String handleMaxUploadSizeExceededException(
+    MaxUploadSizeExceededException e,
+    RedirectAttributes redirectAttributes) {
 
-    return ResponseEntity
-      .status(HttpStatus.PAYLOAD_TOO_LARGE)
-      .body("파일 최대 크기(10MB)를 초과했습니다.");
+    log.info("!!! MaxUploadSizeExceededException HANDLED !!!");
+
+    redirectAttributes.addFlashAttribute(
+      "uploadFailMsg",
+      "파일 최대 크기 (10MB)를 초과했습니다."
+    );
+    log.error("MaxUploadSizeExceededException", e);
+
+    return "redirect:/test/file";
   }
+
 }
