@@ -9,6 +9,4 @@ public interface UploadedFileRepository extends JpaRepository<UploadedFile, Long
 
   UploadedFile findByUuid(UUID uuid);
 
-  boolean existsByRelativePathAndStoredName(String relativePath, String storedName);
-
 }
