@@ -1,4 +1,4 @@
-package com.example.chook.file;
+package com.example.chook.file.dto;
 
 import com.example.chook.entity.enums.UploadedFileCategory;
 import lombok.*;
