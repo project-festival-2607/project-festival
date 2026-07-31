@@ -51,7 +51,4 @@ public class Member {
     private LocalDateTime deletedAt;
 
     private int point;
-
-    @OneToMany(mappedBy = "users")
-    private List<SocialLogin> socialLogins;
 }
