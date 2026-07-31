@@ -1,5 +1,6 @@
 package com.example.chook.file;
 
+import com.example.chook.file.record.FilePath;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.csv.CSVFormat;
@@ -29,18 +30,18 @@ public class FileDeletionFailureRecorder {
     .setHeader()
     .setSkipHeaderRecord(true).get();
 
-  public synchronized List<FilePathRecord> load() {
+  public synchronized List<FilePath> load() {
 
     Path absoluteSystemDir = Paths.get(properties.getSystemDir());
     Path deleteFailedLogPath = absoluteSystemDir.resolve(properties.getDeleteFailLogFile());
 
-    List<FilePathRecord> filePathRecords = new ArrayList<>();
+    List<FilePath> filePathRecords = new ArrayList<>();
 
     if (Files.notExists(deleteFailedLogPath)) return new ArrayList<>();  // 기록 자체가 없는 경우
 
     try (CSVParser parser = CSVParser.parse(deleteFailedLogPath, StandardCharsets.UTF_8, CSV_FORMAT)) {
       for (CSVRecord record : parser) {
-        filePathRecords.add(new FilePathRecord(
+        filePathRecords.add(new FilePath(
           record.get("relative_path"),
           record.get("stored_name")
         ));
@@ -53,9 +54,9 @@ public class FileDeletionFailureRecorder {
 
   }
 
-  public synchronized void update(List<FilePathRecord> failureRecords) {
+  public synchronized void update(List<FilePath> failureRecords) {
     clear();
-    for (FilePathRecord record : failureRecords) {
+    for (FilePath record : failureRecords) {
       recordDeleteFailure(record);
     }
   }
@@ -73,7 +74,7 @@ public class FileDeletionFailureRecorder {
     }
   }
 
-  public synchronized boolean recordDeleteFailure(FilePathRecord record) {
+  public synchronized boolean recordDeleteFailure(FilePath record) {
 
     Path absoluteSystemDir = Paths.get(properties.getSystemDir());
     Path deleteFailedLogPath = absoluteSystemDir.resolve(properties.getDeleteFailLogFile());

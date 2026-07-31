@@ -1,6 +1,6 @@
 package com.example.chook.file.repository;
 
-import com.example.chook.file.FilePathRecord;
+import com.example.chook.file.record.FilePath;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import lombok.extern.slf4j.Slf4j;
@@ -20,13 +20,13 @@ public class UploadedFileCustomRepositoryImpl implements UploadedFileCustomRepos
   }
 
   @Override
-  public Set<FilePathRecord> findAllFilePaths() {
+  public Set<FilePath> findAllFilePaths() {
     return jpaQueryFactory
       .select(uploadedFile.relativePath, uploadedFile.storedName)
       .from(uploadedFile)
       .fetch()
       .stream()
-      .map(tuple -> new FilePathRecord(
+      .map(tuple -> new FilePath(
         tuple.get(uploadedFile.relativePath),
         tuple.get(uploadedFile.storedName)
       ))

@@ -1,6 +1,6 @@
 package com.example.chook.file.service;
 
-import com.example.chook.file.FilePathRecord;
+import com.example.chook.file.record.FilePath;
 import com.example.chook.file.FileProperties;
 import com.example.chook.file.FileStorage;
 import com.example.chook.file.repository.UploadedFileRepository;
@@ -36,7 +36,7 @@ public class FileSweeper {
 
     log.info("파일 정리 시작");
 
-    Set<FilePathRecord> filePathRecords = uploadedFileRepository.findAllFilePaths();
+    Set<FilePath> filePathRecords = uploadedFileRepository.findAllFilePaths();
 
     Path absoluteUploadDir = Paths.get(properties.getUploadDir());
     Instant now = Instant.now();
@@ -48,7 +48,7 @@ public class FileSweeper {
         String relativePath = absoluteUploadDir.relativize(filePath.getParent())
           .toString().replace('\\', '/');
         String fileName = filePath.getFileName().toString();
-        if (!filePathRecords.contains(new FilePathRecord(fileName, relativePath))) {
+        if (!filePathRecords.contains(new FilePath(fileName, relativePath))) {
           try {
             log.info("\"{}\" 파일이 DB에 존재하지 않습니다.",
               absoluteUploadDir.relativize(filePath)
