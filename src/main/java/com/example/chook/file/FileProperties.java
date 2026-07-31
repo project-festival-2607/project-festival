@@ -9,7 +9,7 @@ import java.time.Duration;
 @ConfigurationProperties(prefix = "file")
 @Getter
 @Setter
-public class FileSystemProperties {
+public class FileProperties {
 
   private String uploadDir;
   private String systemDir;

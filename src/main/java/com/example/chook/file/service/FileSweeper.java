@@ -1,9 +1,9 @@
 package com.example.chook.file.service;
 
 import com.example.chook.file.FilePathRecord;
+import com.example.chook.file.FileProperties;
 import com.example.chook.file.FileStorage;
-import com.example.chook.file.FileSystemProperties;
-import com.example.chook.file.UploadedFileRepository;
+import com.example.chook.file.repository.UploadedFileRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -27,7 +27,7 @@ import java.util.stream.Stream;
 @RequiredArgsConstructor
 public class FileSweeper {
 
-  private final FileSystemProperties properties;
+  private final FileProperties properties;
   private final UploadedFileRepository uploadedFileRepository;
   private final FileStorage fileStorage;
 

@@ -4,8 +4,8 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       xmlns:th="http://www.thymeleaf.org">
 <div layout:fragment="content">
-  <div class="container-md">
-    <form action="/file/upload" class="my-5" enctype="multipart/form-data" method="post">
+  <div class="container">
+    <form action="/test/file/upload" class="my-5" enctype="multipart/form-data" method="post">
       <div class="input-group">
         <input class="form-control" id="file" name="file" type="file">
         <button class="btn btn-outline-secondary" id="fileUploadBtn" type="submit">업로드</button>
@@ -26,7 +26,7 @@
               [[${file.category}]] / [[${file.sizeStr}]]
             </div>
           </div>
-          <form method="post" th:action="@{/file/delete}">
+          <form method="post" th:action="@{/test/file/delete}">
             <input name="uuid" th:value="${file.uuid}" type="hidden"/>
             <button class="btn btn-sm btn-danger" type="submit">X</button>
           </form>

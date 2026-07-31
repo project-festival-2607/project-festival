@@ -23,7 +23,7 @@ import java.util.List;
 @Slf4j
 public class FileDeletionFailureRecorder {
 
-  private final FileSystemProperties properties;
+  private final FileProperties properties;
 
   private static final CSVFormat CSV_FORMAT = CSVFormat.DEFAULT.builder()
     .setHeader()

@@ -15,7 +15,7 @@ import java.nio.file.Paths;
 @Slf4j
 public class FileStorage {
 
-  private final FileSystemProperties properties;
+  private final FileProperties properties;
 
   public boolean store(MultipartFile file, String relativePath, String storedFileName) {
 

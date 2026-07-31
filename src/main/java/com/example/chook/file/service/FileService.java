@@ -1,7 +1,7 @@
 package com.example.chook.file.service;
 
 import com.example.chook.entity.UploadedFile;
-import com.example.chook.file.FileDTO;
+import com.example.chook.file.dto.FileDTO;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
