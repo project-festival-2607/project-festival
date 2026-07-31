@@ -1,6 +1,5 @@
-package com.example.chook.file.service;
+package com.example.chook.file;
 
-import com.example.chook.file.FileSystemProperties;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.csv.CSVFormat;
@@ -21,7 +20,20 @@ public class FileDeletionFailureRecorder {
 
   private final FileSystemProperties properties;
 
-  public synchronized boolean recordDeleteFailure(FileDeleteFailureRecord record) {
+  public synchronized void clear() {
+
+    Path absoluteSystemDir = Paths.get(properties.getSystemDir());
+    Path deleteFailedLogPath = absoluteSystemDir.resolve(properties.getDeleteFailLogFile());
+
+    if (Files.notExists(deleteFailedLogPath)) return;
+    try {
+      Files.delete(deleteFailedLogPath);
+    } catch (IOException e) {
+      throw new IllegalStateException("파일 삭제 로그 초기화 실패", e);
+    }
+  }
+
+  public synchronized boolean recordDeleteFailure(FileDeletionFailureRecord record) {
 
     Path absoluteSystemDir = Paths.get(properties.getSystemDir());
     Path deleteFailedLogPath = absoluteSystemDir.resolve(properties.getDeleteFailLogFile());
