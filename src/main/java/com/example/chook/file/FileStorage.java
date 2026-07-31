@@ -1,6 +1,5 @@
-package com.example.chook.file.service;
+package com.example.chook.file;
 
-import com.example.chook.file.FileSystemProperties;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;

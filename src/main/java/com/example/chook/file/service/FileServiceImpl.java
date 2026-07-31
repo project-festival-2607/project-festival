@@ -1,8 +1,7 @@
 package com.example.chook.file.service;
 
 import com.example.chook.entity.UploadedFile;
-import com.example.chook.file.FileDTO;
-import com.example.chook.file.UploadedFileRepository;
+import com.example.chook.file.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FilenameUtils;
@@ -99,7 +98,7 @@ public class FileServiceImpl implements FileService {
       file.getStoredName()
     )) {
       log.error("파일 \"{}\"에 대한 실패 기록 작성을 시도합니다.", file.getOriginalName());
-      if (!failureRecorder.recordDeleteFailure(new FileDeleteFailureRecord(
+      if (!failureRecorder.recordDeleteFailure(new FileDeletionFailureRecord(
         file.getUuid().toString(),
         file.getRelativePath(),
         file.getStoredName()
