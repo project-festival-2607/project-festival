@@ -98,8 +98,7 @@ public class FileServiceImpl implements FileService {
       file.getStoredName()
     )) {
       log.error("파일 \"{}\"에 대한 실패 기록 작성을 시도합니다.", file.getOriginalName());
-      if (!failureRecorder.recordDeleteFailure(new FileDeletionFailureRecord(
-        file.getUuid().toString(),
+      if (!failureRecorder.recordDeleteFailure(new FilePathRecord(
         file.getRelativePath(),
         file.getStoredName()
       ))) {
