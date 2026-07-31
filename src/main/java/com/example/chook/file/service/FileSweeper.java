@@ -14,6 +14,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.time.Duration;
 import java.time.Instant;
 import java.util.stream.Stream;
 
@@ -47,15 +48,21 @@ public class FileSweeper {
           relativePath,
           fileName)) {
           try {
+            log.info("\"{}\" 파일이 DB에 존재하지 않습니다.",
+              absoluteUploadDir.relativize(filePath)
+            );
             BasicFileAttributes attributes = Files.readAttributes(filePath, BasicFileAttributes.class);
             Instant creationTime = attributes.creationTime().toInstant();
-            Instant expirationTime = creationTime.plus(properties.getSweep().getGracePeriod());
+            Duration gracePeriod = properties.getSweep().getGracePeriod();
+            Instant expirationTime = creationTime.plus(gracePeriod);
 
             // DB에 등록되지 않은 파일 중 30분 이상이 경과된 것만 삭제
             if (now.isAfter(expirationTime)) {
               if (!fileStorage.delete(relativePath, fileName)) {
                 log.error("파일 삭제 실패: {}", filePath);
               }
+            } else {
+              log.info("파일 생성 후 {}가 경과되지 않아 삭제를 유예합니다.", gracePeriod);
             }
           } catch (IOException e) {
             log.error("파일 삭제 실패: {}", filePath, e);
@@ -65,6 +72,8 @@ public class FileSweeper {
     } catch (IOException e) {
       log.error("파일 정리 실패", e);
     }
+
+    log.info("파일 정리 종료");
 
   }
 
