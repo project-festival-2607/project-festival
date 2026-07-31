@@ -2,13 +2,18 @@ package com.example.chook.entity;
 
 import com.example.chook.entity.enums.Gender;
 import jakarta.persistence.*;
-import lombok.Getter;
+import lombok.*;
 
 import java.time.LocalDate;
 
 @Entity
 @Table(name = "job_seeker_profiles")
 @Getter
+@Setter
+@ToString
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class JobSeekerProfile {
 
     @Id
