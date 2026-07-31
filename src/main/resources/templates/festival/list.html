@@ -7,8 +7,15 @@
     <div class="container">
 <!--                모든 inner는 class="container" 로 맞춤        -->
 <!--        이 안에서 작업        -->
-        <div>
+        <div class="testDiv">
             FESTIVAL LIST IN
         </div>
     </div>
+
+
+    <script th:inline="javascript">
+        const apiKey = /*[[${apikey}]]*/ 'default-key';
+    </script>
+    <script th:src="@{/js/festival/uploadFestival.js}"></script>
 </div>
+

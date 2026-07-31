@@ -30,6 +30,7 @@ public class Festival {
     @Column(name = "map_y", precision = 10, scale = 6)
     private BigDecimal mapY;
 
+    @Column(columnDefinition = "TEXT")
     private String overview;
 
     private String tel;
@@ -49,6 +50,7 @@ public class Festival {
     @Column(name = "play_time")
     private String playTime;
 
+    @Column(columnDefinition = "TEXT")
     private String program;
 
     @Column(name = "use_time")

@@ -2,6 +2,8 @@ package com.example.chook.festival;
 
 import com.example.chook.entity.Festival;
 
+import java.util.List;
+
 public interface FestivalService {
 
     default FestivalDTO convertEntityToDTO(Festival festival){
@@ -49,4 +51,8 @@ public interface FestivalService {
                 .secondImage(festivalDTO.getSecondImage())
                 .build();
     }
+
+    String save(FestivalDTO festivalDTO);
+
+    void saveAll(List<FestivalDTO> festivalDTOList);
 }
