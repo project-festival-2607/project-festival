@@ -121,6 +121,8 @@ public class FileServiceImpl implements FileService {
    * @return 파일 삭제 성공 여부
    */
   private boolean deletePhysicalFile(Path path) {
+    // 파일 자체가 존재하지 않는 것은 이미 파일 삭제가 완료된 것으로 취급
+    // 파일 삭제에 실패한 경우는 lock 등으로 인해 삭제 권한이 막힌 경우 등
     try {
       Files.deleteIfExists(path);
       return true;
