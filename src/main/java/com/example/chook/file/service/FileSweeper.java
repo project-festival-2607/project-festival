@@ -1,0 +1,72 @@
+package com.example.chook.file.service;
+
+import com.example.chook.file.FileStorage;
+import com.example.chook.file.FileSystemProperties;
+import com.example.chook.file.UploadedFileRepository;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Service;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.time.Duration;
+import java.time.Instant;
+import java.util.stream.Stream;
+
+
+@EnableScheduling
+@Slf4j
+@Service
+@RequiredArgsConstructor
+public class FileSweeper {
+
+  private final FileSystemProperties properties;
+  private final UploadedFileRepository uploadedFileRepository;
+  private final FileStorage fileStorage;
+
+  @Scheduled(cron = "00 */30 * * * *")
+  public synchronized void fileSweep() {
+
+    log.info("파일 정리 시작");
+
+    Path absoluteUploadDir = Paths.get(properties.getUploadDir());
+    Instant now = Instant.now();
+
+    if (Files.notExists(absoluteUploadDir)) return;
+
+    try (Stream<Path> paths = Files.walk(absoluteUploadDir).filter(Files::isRegularFile)) {
+      paths.forEach(filePath -> {
+        String relativePath = absoluteUploadDir.relativize(filePath.getParent())
+          .toString().replace('\\', '/');
+        String fileName = filePath.getFileName().toString();
+        if (!uploadedFileRepository.existsByRelativePathAndStoredName(
+          relativePath,
+          fileName)) {
+          try {
+            BasicFileAttributes attributes = Files.readAttributes(filePath, BasicFileAttributes.class);
+            Instant creationTime = attributes.creationTime().toInstant();
+            Instant expirationTime = creationTime.plus(Duration.ofMinutes(30));
+
+            // DB에 등록되지 않은 파일 중 30분 이상이 경과된 것만 삭제
+            if (now.isAfter(expirationTime)) {
+              if (!fileStorage.delete(relativePath, fileName)) {
+                log.error("파일 삭제 실패: {}", filePath);
+              }
+            }
+          } catch (IOException e) {
+            log.error("파일 삭제 실패: {}", filePath, e);
+          }
+        }
+      });
+    } catch (IOException e) {
+      log.error("파일 정리 실패", e);
+    }
+
+  }
+
+}
