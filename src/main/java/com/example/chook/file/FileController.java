@@ -19,13 +19,14 @@ public class FileController {
 
   @PostMapping("/upload")
   public String upload(RedirectAttributes redirectAttributes,
-                       @RequestParam(name = "file") MultipartFile file) {
+                       @RequestParam(name = "file") MultipartFile file,
+                       @RequestParam(name = "relativePath", defaultValue = "") String relativePath) {
 
     if (file.isEmpty()) {
       redirectAttributes.addFlashAttribute("uploadFailMsg", "올리려는 파일이 비어있습니다.");
       return "redirect:/test/file";
     }
-    FileDTO uploadedFileDto = fileService.uploadAndGetDto(file);
+    FileDTO uploadedFileDto = fileService.uploadAndGetDto(file, relativePath);
     log.info("uploadedFileDto: {}", uploadedFileDto);
     redirectAttributes.addFlashAttribute(
       "uploadSuccessMsg",

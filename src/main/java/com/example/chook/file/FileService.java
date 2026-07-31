@@ -11,14 +11,14 @@ public interface FileService {
     return FileDTO.builder()
       .uuid(uploadedFile.getUuid().toString())
       .name(uploadedFile.getOriginalName())
-      .saveDir(uploadedFile.getSaveDir())
+      .saveDir(uploadedFile.getRelativePath())
       .size(uploadedFile.getFileSize())
       .uploadedAt(uploadedFile.getUploadedAt())
       .category(uploadedFile.getCategory())
       .build();
   }
 
-  FileDTO uploadAndGetDto(MultipartFile file);
+  FileDTO uploadAndGetDto(MultipartFile file, String relativePath);
 
   List<FileDTO> getList();
 

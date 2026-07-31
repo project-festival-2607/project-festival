@@ -24,12 +24,14 @@ public class FileServiceImpl implements FileService {
 
   private final UploadedFileRepository uploadedFileRepository;
   @Value("${file.upload-dir}")
-  private String baseDir;
+  private String uploadDir;
+  @Value("${file.system-dir}")
+  private String systemDir;
 
   @Transactional
   @Override
-  public FileDTO uploadAndGetDto(MultipartFile file) {
-    return toDto(upload(file));
+  public FileDTO uploadAndGetDto(MultipartFile file, String relativePath) {
+    return toDto(upload(file, relativePath));
   }
 
   @Override
@@ -38,7 +40,7 @@ public class FileServiceImpl implements FileService {
       .map(this::toDto).toList();
   }
 
-  public UploadedFile upload(MultipartFile file) {
+  public UploadedFile upload(MultipartFile file, String relativePath) {
 
     UUID uuid = UUID.randomUUID();
     String originalFileName = file.getOriginalFilename();
@@ -51,17 +53,17 @@ public class FileServiceImpl implements FileService {
       .uuid(uuid)
       .originalName(originalFileName)
       .storedName(storedFileName)
-      .saveDir(baseDir)
+      .relativePath(relativePath)
       .mimeType(file.getContentType())
       .fileSize(file.getSize())
       .uploadedAt(LocalDateTime.now())
       .build();
 
-    Path uploadDir = Paths.get(baseDir);
-    Path targetPath = uploadDir.resolve(storedFileName);
+    Path absoluteUploadDir = Paths.get(this.uploadDir).resolve(relativePath);
+    Path targetPath = absoluteUploadDir.resolve(storedFileName);
 
     try {
-      Files.createDirectories(uploadDir);
+      Files.createDirectories(absoluteUploadDir);
       file.transferTo(targetPath);
     } catch (IOException exception) {
       log.error("파일 \"{}\" 업로드 실패", originalFileName, exception);
@@ -79,28 +81,51 @@ public class FileServiceImpl implements FileService {
       throw exception;
     }
   }
-
+  /**
+   * UUID 문자열을 기준으로 파일을 삭제한다.
+   * @param uuidStr 삭제할 파일의 UUID 문자열
+   */
   @Transactional
   @Override
   public void delete(String uuidStr) {
     UploadedFile targetFile = uploadedFileRepository.findByUuid(UUID.fromString(uuidStr));
-    delete(targetFile);
+    if (targetFile == null) return;
+    deleteFile(targetFile);
   }
 
-
-  private void delete(UploadedFile file) {
-    Path targetPath = Paths.get(file.getSaveDir()).resolve(file.getStoredName());
-    deletePhysicalFile(targetPath);
+  /**
+   * 파일을 물리 저장소와 DB에서 삭제한다.
+   * @param file 삭제할 파일 Entity
+   */
+  private void deleteFile(UploadedFile file) {
+    Path absoluteUploadDir = Paths.get(this.uploadDir);
+    Path targetPath = absoluteUploadDir
+      .resolve(file.getRelativePath())
+      .resolve(file.getStoredName());
+    if (!deletePhysicalFile(targetPath)) {
+      recordDeleteFailure(file);
+    }
     uploadedFileRepository.delete(file);
   }
 
-  private void deletePhysicalFile(Path path) {
+  /**
+   * 물리 저장소에서 파일을 삭제한다.
+   * @param path 삭제할 파일의 경로
+   * @return 파일 삭제 성공 여부
+   */
+  private boolean deletePhysicalFile(Path path) {
     try {
       Files.deleteIfExists(path);
+      return true;
     } catch (IOException exception) {
       log.error("파일 \"{}\" 삭제 실패", path, exception);
+      return false;
       // 물리적 파일 삭제 실패 시에도 DB 삭제는 진행하기 위해 Exception을 전파하지 않음
       // 추후 OrphanFileSweeper 등으로 주기적으로 다시 삭제하도록 구현하고자 함
     }
+  }
+
+  private void recordDeleteFailure(UploadedFile file) {
+
   }
 }
