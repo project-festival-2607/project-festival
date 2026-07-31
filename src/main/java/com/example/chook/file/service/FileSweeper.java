@@ -58,13 +58,13 @@ public class FileSweeper {
             Duration gracePeriod = properties.getSweep().getGracePeriod();
             Instant expirationTime = creationTime.plus(gracePeriod);
 
-            // DB에 등록되지 않은 파일 중 30분 이상이 경과된 것만 삭제
+            // DB에 등록되지 않은 파일 중 유예 기간이 지난 것만 삭제
             if (now.isAfter(expirationTime)) {
               if (!fileStorage.delete(relativePath, fileName)) {
                 log.error("파일 삭제 실패: {}", filePath);
               }
             } else {
-              log.info("파일 생성 후 {}가 경과되지 않아 삭제를 유예합니다.", gracePeriod);
+              log.info("파일 생성 후 유예 기간({})이 지나지 않아 삭제하지 않습니다.", gracePeriod);
             }
           } catch (IOException e) {
             log.error("파일 삭제 실패: {}", filePath, e);
