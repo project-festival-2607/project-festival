@@ -21,7 +21,7 @@ public class FileDeletionRetryService {
   private final FileDeletionFailureRecorder failureRecorder;
   private final FileStorage fileStorage;
 
-  @Scheduled(cron = "00 */10 * * * *")
+  @Scheduled(cron = "${file.retry.cron}")
   public synchronized void retryFileDeletion() {
 
     log.info("파일 재삭제 작업 시작");

@@ -14,7 +14,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.time.Duration;
 import java.time.Instant;
 import java.util.stream.Stream;
 
@@ -29,7 +28,7 @@ public class FileSweeper {
   private final UploadedFileRepository uploadedFileRepository;
   private final FileStorage fileStorage;
 
-  @Scheduled(cron = "00 */30 * * * *")
+  @Scheduled(cron = "${file.sweep.cron}")
   public synchronized void fileSweep() {
 
     log.info("파일 정리 시작");
@@ -50,7 +49,7 @@ public class FileSweeper {
           try {
             BasicFileAttributes attributes = Files.readAttributes(filePath, BasicFileAttributes.class);
             Instant creationTime = attributes.creationTime().toInstant();
-            Instant expirationTime = creationTime.plus(Duration.ofMinutes(30));
+            Instant expirationTime = creationTime.plus(properties.getSweep().getGracePeriod());
 
             // DB에 등록되지 않은 파일 중 30분 이상이 경과된 것만 삭제
             if (now.isAfter(expirationTime)) {
