@@ -3,16 +3,20 @@ package com.example.chook.file;
 import com.example.chook.entity.UploadedFile;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVPrinter;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -27,6 +31,7 @@ public class FileServiceImpl implements FileService {
   private String uploadDir;
   @Value("${file.system-dir}")
   private String systemDir;
+  private static final String DELETE_FAIL_LOG_FILE = "delete-failed-files.csv";
 
   @Transactional
   @Override
@@ -96,14 +101,16 @@ public class FileServiceImpl implements FileService {
   /**
    * 파일을 물리 저장소와 DB에서 삭제한다.
    * @param file 삭제할 파일 Entity
+   * @throws IllegalStateException 파일 삭제 실패 기록에 실패해 DB 삭제가 진행되지 않았을 때 예외 발생
    */
   private void deleteFile(UploadedFile file) {
     Path absoluteUploadDir = Paths.get(this.uploadDir);
     Path targetPath = absoluteUploadDir
       .resolve(file.getRelativePath())
       .resolve(file.getStoredName());
-    if (!deletePhysicalFile(targetPath)) {
-      recordDeleteFailure(file);
+    if (!deletePhysicalFile(targetPath) && !recordDeleteFailure(file)) {
+      // 파일 삭제 기록도 실패 시 DB 삭제를 진행하지 않음
+      throw new IllegalStateException("파일 삭제 실패 기록에 실패했습니다.");
     }
     uploadedFileRepository.delete(file);
   }
@@ -120,12 +127,33 @@ public class FileServiceImpl implements FileService {
     } catch (IOException exception) {
       log.error("파일 \"{}\" 삭제 실패", path, exception);
       return false;
-      // 물리적 파일 삭제 실패 시에도 DB 삭제는 진행하기 위해 Exception을 전파하지 않음
-      // 추후 OrphanFileSweeper 등으로 주기적으로 다시 삭제하도록 구현하고자 함
     }
   }
 
-  private void recordDeleteFailure(UploadedFile file) {
 
+  private synchronized boolean recordDeleteFailure(UploadedFile file) {
+
+    Path absoluteSystemDir = Paths.get(this.systemDir);
+    Path deleteFailedLogPath = absoluteSystemDir.resolve(DELETE_FAIL_LOG_FILE);
+
+    try {
+      Files.createDirectories(Paths.get(systemDir));
+      boolean newFile = Files.notExists(deleteFailedLogPath);
+      try (
+        BufferedWriter writer = Files.newBufferedWriter(
+          deleteFailedLogPath,
+          StandardOpenOption.CREATE,
+          StandardOpenOption.APPEND);
+        CSVPrinter printer = new CSVPrinter(writer, CSVFormat.DEFAULT);
+      ) {
+        if (newFile)
+          printer.printRecord("uuid_str", "relative_path", "stored_name");
+        printer.printRecord(file.getUuid().toString(), file.getRelativePath(), file.getStoredName());
+        return true;
+      }
+    } catch (IOException exception) {
+      log.error("파일 삭제 실패 로그 작성 실패", exception);
+      return false;
+    }
   }
 }

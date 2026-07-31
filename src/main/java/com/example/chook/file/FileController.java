@@ -23,13 +23,13 @@ public class FileController {
                        @RequestParam(name = "relativePath", defaultValue = "") String relativePath) {
 
     if (file.isEmpty()) {
-      redirectAttributes.addFlashAttribute("uploadFailMsg", "올리려는 파일이 비어있습니다.");
+      redirectAttributes.addFlashAttribute("FailureMsg", "올리려는 파일이 비어있습니다.");
       return "redirect:/test/file";
     }
     FileDTO uploadedFileDto = fileService.uploadAndGetDto(file, relativePath);
     log.info("uploadedFileDto: {}", uploadedFileDto);
     redirectAttributes.addFlashAttribute(
-      "uploadSuccessMsg",
+      "SuccessMsg",
       "파일이 성공적으로 업로드되었습니다."
     );
     return "redirect:/test/file";
@@ -38,11 +38,19 @@ public class FileController {
   @PostMapping("/delete")
   public String delete(RedirectAttributes redirectAttributes,
                        @RequestParam String uuid) {
-    fileService.delete(uuid);
-    redirectAttributes.addFlashAttribute(
-      "deleteSuccessMsg",
-      "파일이 삭제되었습니다."
-    );
+    try {
+      fileService.delete(uuid);
+      redirectAttributes.addFlashAttribute(
+        "SuccessMsg",
+        "파일이 삭제되었습니다."
+      );
+    } catch (IllegalStateException e) {
+      redirectAttributes.addFlashAttribute(
+        "FailureMsg",
+        "파일 삭제가 완료되지 않았습니다."
+      );
+    }
+
     return "redirect:/test/file";
   }
 
