@@ -11,14 +11,11 @@
         <button class="btn btn-outline-secondary" id="fileUploadBtn" type="submit">업로드</button>
       </div>
     </form>
-    <div th:if="${uploadFailMsg != null}" class="alert alert-danger" role="alert">
-      [[${uploadFailMsg}]]
+    <div th:if="${FailureMsg != null}" class="alert alert-danger" role="alert">
+      [[${FailureMsg}]]
     </div>
-    <div th:if="${uploadSuccessMsg != null}" class="alert alert-success" role="alert">
-      [[${uploadSuccessMsg}]]
-    </div>
-    <div th:if="${deleteSuccessMsg != null}" class="alert alert-primary" role="alert">
-      [[${deleteSuccessMsg}]]
+    <div th:if="${SuccessMsg != null}" class="alert alert-success" role="alert">
+      [[${SuccessMsg}]]
     </div>
     <div class="card" style="width: 18rem;">
       <ul class="list-group list-group-flush">

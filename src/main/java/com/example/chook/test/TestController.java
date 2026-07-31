@@ -1,7 +1,7 @@
 package com.example.chook.test;
 
 import com.example.chook.file.FileDTO;
-import com.example.chook.file.FileService;
+import com.example.chook.file.service.FileService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;

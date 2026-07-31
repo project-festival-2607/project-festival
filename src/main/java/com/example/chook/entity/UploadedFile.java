@@ -34,8 +34,8 @@ public class UploadedFile {
   @Column(name = "file_stored_name", nullable = false, length = 255)
   private String storedName;
 
-  @Column(name = "file_save_dir", nullable = false, length = 512)
-  private String saveDir;
+  @Column(name = "file_relative_path", nullable = false, length = 512)
+  private String relativePath;
 
   @Column(name = "file_mime_type", nullable = false, length = 255)
   private String mimeType;
