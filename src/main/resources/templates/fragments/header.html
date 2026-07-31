@@ -2,6 +2,7 @@
 <html lang="ko"
       xmlns:th="http://www.thymeleaf.org">
 <div th:fragment="header">
+<!--    style="position: sticky; top: 0; z-index: 1000;"-->
     <nav class="navbar" data-bs-theme="dark">
         <div class="dropdown-bg"></div>
         <div class="container inner">
@@ -14,7 +15,7 @@
                             <a href="/" class="nav-link">전국축제</a>
                             <div class="dropdown-menu-box">
                                 <ul class="submenu">
-                                    <li><a href="/">전체축제보기</a></li>
+                                    <li><a href="/festival/list">전체축제보기</a></li>
                                     <li><a href="/">축제지도</a></li>
                                 </ul>
                             </div>
