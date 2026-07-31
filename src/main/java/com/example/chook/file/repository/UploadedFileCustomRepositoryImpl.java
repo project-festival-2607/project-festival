@@ -1,5 +1,6 @@
-package com.example.chook.file;
+package com.example.chook.file.repository;
 
+import com.example.chook.file.FilePathRecord;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import lombok.extern.slf4j.Slf4j;

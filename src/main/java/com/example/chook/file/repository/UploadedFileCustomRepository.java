@@ -1,4 +1,6 @@
-package com.example.chook.file;
+package com.example.chook.file.repository;
+
+import com.example.chook.file.FilePathRecord;
 
 import java.util.Set;
 
