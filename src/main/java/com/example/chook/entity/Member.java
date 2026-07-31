@@ -73,6 +73,7 @@ public class Member {
     private Long point = 0L;
 
     @OneToMany(mappedBy = "member")
+    @ToString.Exclude // 순환 참조 방지
     // 소셜 연동 리스트 컬렉션 초기화
     private List<SocialLogin> socialLogins =  new ArrayList<>();
 }

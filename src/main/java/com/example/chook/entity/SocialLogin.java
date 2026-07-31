@@ -30,11 +30,8 @@ public class SocialLogin {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(
-      name = "member_id",
-      nullable = false,
-      foreignKey = @ForeignKey(name = "fk_social_logins_member_id")
-    )
+    @JoinColumn(name = "member_id", nullable = false)
+    @ToString.Exclude // 순환 참조 방지
     private Member member;
 
     @Enumerated(EnumType.STRING)
