@@ -5,31 +5,31 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name = "resume_file")
+@Table(name = "profile_file")
 @Getter
 @Setter
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ResumeFile {
+public class ProfileFile {
 
     // 식별자
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "resume_file_id")
-    private Long resumeFileId;
+    @Column(name = "profile_file_id")
+    private Long profileFileId;
 
-    // 포트폴리오 아이디
+    // 이력서 아이디
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(
-            name = "portfolio_id",
+            name = "resume_id",
             nullable = false,
             unique = true,
-            foreignKey = @ForeignKey(name = "fk_resume_file_portfolio_id")
+            foreignKey = @ForeignKey(name = "fk_profile_file_resume_id")
     )
     @ToString.Exclude
-    private ResumePortfolio resumePortfolio;
+    private Resume resume;
 
     // 파일 아이디
     @OneToOne(fetch = FetchType.LAZY)
@@ -37,7 +37,7 @@ public class ResumeFile {
             name = "file_uuid",
             nullable = false,
             unique = true,
-            foreignKey = @ForeignKey(name = "fk_resume_file_file_uuid")
+            foreignKey = @ForeignKey(name = "fk_profile_file_file_uuid")
     )
     @ToString.Exclude
     private UploadedFile uploadedFile;
