@@ -2,13 +2,13 @@ package com.example.chook.resume.entity;
 
 import com.example.chook.member.entity.Member;
 import com.example.chook.recruitment.entity.Recruitment;
+import com.example.chook.resume.entity.enums.ApplicationResult;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "application")
 @Getter
 @Setter
 @ToString
@@ -21,7 +21,7 @@ public class Application {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "apply_id")
-    private Long applyId;
+    private Long Id;
 
     // 회원 식별자
     @ManyToOne(fetch = FetchType.LAZY)
@@ -61,8 +61,9 @@ public class Application {
     @Column(name = "read_date")
     private LocalDateTime readDate;
 
-    // 결과
-    @Column(length = 10 , nullable = false)
-    private String result;
+    // 결과 (enum으로)
+    @Enumerated(EnumType.STRING)
+    @Column(name = "result", nullable = false)
+    private ApplicationResult result;
 }
 
