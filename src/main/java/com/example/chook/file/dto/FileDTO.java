@@ -27,4 +27,8 @@ public class FileDTO {
     return String.format("%d Bytes", size);
   }
 
+  public boolean getIsImage() {
+    return category == UploadedFileCategory.IMAGE;
+  }
+
 }
