@@ -1,4 +1,4 @@
-package com.example.chook.entity.enums;
+package com.example.chook.recruitment.entity.enums;
 
 public enum RecruitmentCategory {
   INDIVIDUAL,

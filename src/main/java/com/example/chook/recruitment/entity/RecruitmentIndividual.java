@@ -1,6 +1,6 @@
-package com.example.chook.entity;
+package com.example.chook.recruitment.entity;
 
-import com.example.chook.entity.enums.RecruitmentWageType;
+import com.example.chook.recruitment.entity.enums.RecruitmentWageType;
 import jakarta.persistence.*;
 import lombok.*;
 
