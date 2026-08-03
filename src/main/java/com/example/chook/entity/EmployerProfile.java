@@ -25,6 +25,7 @@ public class EmployerProfile {
       name = "member_id",
       foreignKey = @ForeignKey(name = "fk_employer_profiles_member_id")
     )
+    @ToString.Exclude
     private Member member;
 
     @Column(name = "company_name", nullable = false, length = 100)
