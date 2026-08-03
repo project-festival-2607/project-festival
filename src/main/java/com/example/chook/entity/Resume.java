@@ -16,6 +16,7 @@ public class Resume {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     // 이력서 아이디
+    @Column(name = "resume_id")
     private Long resumeId;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -27,8 +28,10 @@ public class Resume {
     private Member member;
 
     // 자기소개
+    @Column(length = 150)
     private String introduction;
 
     // 최종수정일
+    @Column(name = "saved_at")
     private LocalDateTime savedAt;
 }
