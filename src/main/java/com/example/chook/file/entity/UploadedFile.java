@@ -1,6 +1,6 @@
-package com.example.chook.entity;
+package com.example.chook.file.entity;
 
-import com.example.chook.entity.enums.UploadedFileCategory;
+import com.example.chook.file.entity.enums.UploadedFileCategory;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.JdbcTypeCode;

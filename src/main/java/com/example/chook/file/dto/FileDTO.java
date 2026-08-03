@@ -1,6 +1,6 @@
 package com.example.chook.file.dto;
 
-import com.example.chook.entity.enums.UploadedFileCategory;
+import com.example.chook.file.entity.enums.UploadedFileCategory;
 import lombok.*;
 
 import java.time.LocalDateTime;

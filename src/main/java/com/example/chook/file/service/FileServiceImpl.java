@@ -1,6 +1,6 @@
 package com.example.chook.file.service;
 
-import com.example.chook.entity.UploadedFile;
+import com.example.chook.file.entity.UploadedFile;
 import com.example.chook.file.FileDeletionFailureRecorder;
 import com.example.chook.file.FileStorage;
 import com.example.chook.file.dto.FileDTO;
