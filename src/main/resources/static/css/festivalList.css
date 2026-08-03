@@ -1,0 +1,126 @@
+.fes-h1 {
+    display: flex;
+    flex-direction: column;
+}
+
+.fes-h1 > span:nth-child(1) {
+    font-size:20px;
+    font-weight: 700;
+    color: #afa992;
+}
+
+.fes-h1 > span:nth-child(2) {
+    font-size: 55px;
+    font-weight: 900;
+    color: #afa992;
+}
+
+.fes-middle {
+    width: 100%;
+    height: 300px;
+    margin: 20px 0px 50px 0px;
+
+    border-top: 1px solid #2C2C2C;
+    border-bottom: 1px solid #2C2C2C;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.fes-middle > span {
+    font-size: 35px;
+    font-weight: 800;
+    color: #000000;
+    letter-spacing: -1px;
+}
+
+.hash-box {
+    display: flex;
+    flex-direction: row;
+    gap: 15px;
+    margin-top: 15px;
+}
+
+.hash {
+    background-color: #afa992;
+    border-radius: 50px;
+    padding: 10px 15px;
+    color: #FEFEFE;
+}
+
+.fesContainer {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    /*gap: 40px 30px;*/
+}
+
+.fes-box {
+    width: 100%;
+    border-bottom: 1px solid #afa992;
+    padding: 60px 80px;
+
+    transition: 0.3s ease;
+
+    perspective: 1000px;
+}
+
+.fes-box:hover {
+    background-color: #fbfbfb;
+    cursor: pointer;
+}
+
+.fes-box:nth-child(3n + 2){
+    border-right: 1px solid #afa992;
+    border-left: 1px solid #afa992;
+}
+
+.fes-img {
+    aspect-ratio: 2 / 3;
+    object-fit: cover;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+
+    border-radius: 15px;
+
+    outline: 1px solid #ccc2a4;
+
+    transform-style: preserve-3d;
+    transition: transform 0.08s linear, box-shadow 0.3s ease;
+    will-change: transform;
+}
+
+.fes-img:hover {
+    box-shadow: 0 5px 30px rgba(0, 0, 0, 0.1);
+}
+
+.fes-title {
+    margin: 30px 0 15px 0;
+    font-size: 25px;
+    font-weight: 800;
+    color: #ccc2a4;
+}
+
+.fes-date {
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.topBtn {
+    position: fixed;
+    bottom: 40px;
+    right: 20px;
+
+    margin: 0;
+
+    padding: 10px 15px;
+    border-radius: 50px;
+    background: #ccc2a4;
+    font-size: 16px;
+    font-weight: 800;
+    color: #FEFEFE;
+
+    cursor: pointer;
+}

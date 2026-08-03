@@ -96,6 +96,7 @@ ul * {
     height: 120px;
     transition: height 0.3s ease;
     overflow: visible;
+    margin-bottom: 40px;
     /*background: #dc3545;*/
 }
 
@@ -236,6 +237,7 @@ ul * {
 .f-footer {
     border-top: 1px solid #2C2C2C;
     padding: 20px 0;
+    margin-top: 40px;
 }
 
 .footer-bar .footer-info {
