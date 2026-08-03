@@ -13,7 +13,7 @@ public class FileProperties {
 
   private String uploadDir;
   private String systemDir;
-  private String deleteFailLogFile;
+  private String deletionFailureLogFile;
 
   private Sweep sweep;
 
