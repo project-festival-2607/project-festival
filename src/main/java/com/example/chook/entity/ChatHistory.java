@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 public class ChatHistory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "chat_id")
     private Long chatId; // 대화번호
 
     private String id; // 회원 식별자
