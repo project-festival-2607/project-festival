@@ -17,7 +17,7 @@ public class RecruitmentFile {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "recruit_file_id")
-  private Long recruitFileId;
+  private Long id;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(
