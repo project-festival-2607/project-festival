@@ -1,4 +1,4 @@
-package com.example.chook.entity;
+package com.example.chook.festival;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
