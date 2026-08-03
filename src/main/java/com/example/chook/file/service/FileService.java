@@ -2,6 +2,7 @@ package com.example.chook.file.service;
 
 import com.example.chook.entity.UploadedFile;
 import com.example.chook.file.dto.FileDTO;
+import com.example.chook.file.record.FileResource;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -15,6 +16,7 @@ public interface FileService {
       .saveDir(uploadedFile.getRelativePath())
       .size(uploadedFile.getFileSize())
       .uploadedAt(uploadedFile.getUploadedAt())
+      .mimeType(uploadedFile.getMimeType())
       .category(uploadedFile.getCategory())
       .build();
   }
@@ -25,4 +27,5 @@ public interface FileService {
 
   void delete(String uuidStr);
 
+  FileResource getFile(String uuidStr);
 }

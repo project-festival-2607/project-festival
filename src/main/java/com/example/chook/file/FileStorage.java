@@ -2,6 +2,8 @@ package com.example.chook.file;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -41,6 +43,21 @@ public class FileStorage {
       }
       return false;
     }
+  }
+
+  public Resource getFile(String relativePath, String storedName) {
+
+    Path absoluteUploadDir = Paths.get(properties.getUploadDir());
+    Path targetPath = absoluteUploadDir
+      .resolve(relativePath)
+      .resolve(storedName);
+
+    Resource resource = new FileSystemResource(targetPath);
+    if (!resource.exists())
+      throw new RuntimeException(String.format("\"%s\" 파일을 저장소에서 찾을 수 없음", targetPath));
+
+    return resource;
+
   }
 
   public boolean delete(String relativePath, String storedFileName) {

@@ -18,6 +18,7 @@ public class FileDTO {
   private String saveDir;
   private Long size;
   private LocalDateTime uploadedAt;
+  private String mimeType;
   private UploadedFileCategory category;
 
   public String getSizeStr() {
