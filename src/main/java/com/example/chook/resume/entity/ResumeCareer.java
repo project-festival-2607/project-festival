@@ -18,8 +18,8 @@ public class ResumeCareer {
     // 경력사항 아이디
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "career_id")
-    private Long careerId;
+    @Column(name = "resume_career_id")
+    private Long id;
 
     // 이력서 아이디
     @ManyToOne(fetch = FetchType.LAZY)

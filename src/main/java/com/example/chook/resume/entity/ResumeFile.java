@@ -18,7 +18,7 @@ public class ResumeFile {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "resume_file_id")
-    private Long resumeFileId;
+    private Long id;
 
     // 포트폴리오 아이디
     @OneToOne(fetch = FetchType.LAZY)
