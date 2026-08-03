@@ -1,5 +1,6 @@
 package com.example.chook.file;
 
+import com.example.chook.file.record.FilePath;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.csv.CSVFormat;
@@ -23,25 +24,24 @@ import java.util.List;
 @Slf4j
 public class FileDeletionFailureRecorder {
 
-  private final FileSystemProperties properties;
+  private final FileProperties properties;
 
   private static final CSVFormat CSV_FORMAT = CSVFormat.DEFAULT.builder()
     .setHeader()
     .setSkipHeaderRecord(true).get();
 
-  public synchronized List<FileDeletionFailureRecord> load() {
+  public synchronized List<FilePath> load() {
 
     Path absoluteSystemDir = Paths.get(properties.getSystemDir());
     Path deleteFailedLogPath = absoluteSystemDir.resolve(properties.getDeleteFailLogFile());
 
-    List<FileDeletionFailureRecord> fileDeletionFailureRecords = new ArrayList<>();
+    List<FilePath> filePathRecords = new ArrayList<>();
 
     if (Files.notExists(deleteFailedLogPath)) return new ArrayList<>();  // 기록 자체가 없는 경우
 
     try (CSVParser parser = CSVParser.parse(deleteFailedLogPath, StandardCharsets.UTF_8, CSV_FORMAT)) {
       for (CSVRecord record : parser) {
-        fileDeletionFailureRecords.add(new FileDeletionFailureRecord(
-          record.get("uuid_str"),
+        filePathRecords.add(new FilePath(
           record.get("relative_path"),
           record.get("stored_name")
         ));
@@ -50,13 +50,13 @@ public class FileDeletionFailureRecorder {
       log.error("파일 삭제 실패 로그 읽기 실패", exception);
     }
 
-    return fileDeletionFailureRecords;
+    return filePathRecords;
 
   }
 
-  public synchronized void update(List<FileDeletionFailureRecord> failureRecords) {
+  public synchronized void update(List<FilePath> failureRecords) {
     clear();
-    for (FileDeletionFailureRecord record : failureRecords) {
+    for (FilePath record : failureRecords) {
       recordDeleteFailure(record);
     }
   }
@@ -74,7 +74,7 @@ public class FileDeletionFailureRecorder {
     }
   }
 
-  public synchronized boolean recordDeleteFailure(FileDeletionFailureRecord record) {
+  public synchronized boolean recordDeleteFailure(FilePath record) {
 
     Path absoluteSystemDir = Paths.get(properties.getSystemDir());
     Path deleteFailedLogPath = absoluteSystemDir.resolve(properties.getDeleteFailLogFile());
@@ -90,8 +90,8 @@ public class FileDeletionFailureRecorder {
         CSVPrinter printer = new CSVPrinter(writer, CSVFormat.DEFAULT);
       ) {
         if (newFile)
-          printer.printRecord("uuid_str", "relative_path", "stored_name");
-        printer.printRecord(record.uuidStr(), record.relativePath(), record.storedName());
+          printer.printRecord("relative_path", "stored_name");
+        printer.printRecord(record.relativePath(), record.storedName());
         return true;
       }
     } catch (IOException exception) {

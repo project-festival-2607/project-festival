@@ -20,12 +20,8 @@ import java.util.UUID;
 public class UploadedFile {
 
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "file_id")
-  private Long id;
-
   @JdbcTypeCode(SqlTypes.BINARY)  // Hibernate 구현체에 Java 타입을 어떤 JDBC 타입으로 매핑할지 명시
-  @Column(name = "file_uuid", columnDefinition = "BINARY(16)", nullable = false, unique = true)
+  @Column(name = "file_uuid", columnDefinition = "BINARY(16)")
   private UUID uuid;
 
   @Column(name = "file_original_name", nullable = false, length = 255)

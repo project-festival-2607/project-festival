@@ -15,8 +15,6 @@ public class FileExceptionHandler {
     MaxUploadSizeExceededException e,
     RedirectAttributes redirectAttributes) {
 
-    log.info("!!! MaxUploadSizeExceededException HANDLED !!!");
-
     redirectAttributes.addFlashAttribute(
       "uploadFailMsg",
       "파일 최대 크기 (10MB)를 초과했습니다."

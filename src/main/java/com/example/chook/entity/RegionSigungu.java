@@ -18,7 +18,11 @@ public class RegionSigungu {
   private String code;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "sido_code", nullable = false)
+  @JoinColumn(
+    name = "sido_code",
+    nullable = false,
+    foreignKey = @ForeignKey(name = "fk_region_sigungu_sido_code")
+  )
   private RegionSido sido;
 
   @Column(name = "sigungu_name", length = 20, nullable = false)

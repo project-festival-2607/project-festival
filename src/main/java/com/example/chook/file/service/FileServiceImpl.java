@@ -1,16 +1,23 @@
 package com.example.chook.file.service;
 
 import com.example.chook.entity.UploadedFile;
-import com.example.chook.file.*;
+import com.example.chook.file.FileDeletionFailureRecorder;
+import com.example.chook.file.FileStorage;
+import com.example.chook.file.dto.FileDTO;
+import com.example.chook.file.record.FilePath;
+import com.example.chook.file.record.FileResource;
+import com.example.chook.file.repository.UploadedFileRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FilenameUtils;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @RequiredArgsConstructor
@@ -33,6 +40,40 @@ public class FileServiceImpl implements FileService {
   public List<FileDTO> getList() {
     return uploadedFileRepository.findAll().stream()
       .map(this::toDto).toList();
+  }
+
+  /**
+   * UUID 문자열을 기준으로 파일을 삭제한다.
+   *
+   * @param uuidStr 삭제할 파일의 UUID 문자열
+   */
+  @Transactional
+  @Override
+  public void delete(String uuidStr) {
+    Optional<UploadedFile> targetFile = uploadedFileRepository.findById(UUID.fromString(uuidStr));
+    if (targetFile.isEmpty()) return;
+    deleteFile(targetFile.get());
+  }
+
+  @Override
+  public FileResource getFile(String uuidStr) {
+    UploadedFile targetFile = uploadedFileRepository.findById(UUID.fromString(uuidStr))
+      .orElseThrow(() -> new RuntimeException(String.format("UUID가 \"%s\"인 파일을 DB에서 찾을 수 없음", uuidStr)));
+
+    Resource resource = fileStorage.getFile(
+      targetFile.getRelativePath(),
+      targetFile.getStoredName()
+    );
+
+    FileResource result = new FileResource(
+      resource,
+      targetFile.getMimeType(),
+      targetFile.getOriginalName()
+    );
+
+    log.info("FileResource: {}", result);
+
+    return result;
   }
 
   private UploadedFile upload(MultipartFile file, String relativePath) {
@@ -74,19 +115,6 @@ public class FileServiceImpl implements FileService {
   }
 
   /**
-   * UUID 문자열을 기준으로 파일을 삭제한다.
-   *
-   * @param uuidStr 삭제할 파일의 UUID 문자열
-   */
-  @Transactional
-  @Override
-  public void delete(String uuidStr) {
-    UploadedFile targetFile = uploadedFileRepository.findByUuid(UUID.fromString(uuidStr));
-    if (targetFile == null) return;
-    deleteFile(targetFile);
-  }
-
-  /**
    * 파일을 물리 저장소와 DB에서 삭제한다.
    *
    * @param file 삭제할 파일 Entity
@@ -98,8 +126,7 @@ public class FileServiceImpl implements FileService {
       file.getStoredName()
     )) {
       log.error("파일 \"{}\"에 대한 실패 기록 작성을 시도합니다.", file.getOriginalName());
-      if (!failureRecorder.recordDeleteFailure(new FileDeletionFailureRecord(
-        file.getUuid().toString(),
+      if (!failureRecorder.recordDeleteFailure(new FilePath(
         file.getRelativePath(),
         file.getStoredName()
       ))) {

@@ -1,7 +1,7 @@
 package com.example.chook.file.service;
 
-import com.example.chook.file.FileDeletionFailureRecord;
 import com.example.chook.file.FileDeletionFailureRecorder;
+import com.example.chook.file.record.FilePath;
 import com.example.chook.file.FileStorage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,13 +21,13 @@ public class FileDeletionRetryService {
   private final FileDeletionFailureRecorder failureRecorder;
   private final FileStorage fileStorage;
 
-  @Scheduled(cron = "00 */10 * * * *")
+  @Scheduled(cron = "${file.retry.cron}")
   public synchronized void retryFileDeletion() {
 
     log.info("파일 재삭제 작업 시작");
 
-    List<FileDeletionFailureRecord> deleteFailedRecords = failureRecorder.load();
-    List<FileDeletionFailureRecord> newDeleteFailedRecords =
+    List<FilePath> deleteFailedRecords = failureRecorder.load();
+    List<FilePath> newDeleteFailedRecords =
       deleteFilesFromFailedRecords(deleteFailedRecords);
     failureRecorder.update(newDeleteFailedRecords);
 
@@ -35,11 +35,11 @@ public class FileDeletionRetryService {
 
   }
 
-  private List<FileDeletionFailureRecord> deleteFilesFromFailedRecords(List<FileDeletionFailureRecord> deleteFailedRecords) {
+  private List<FilePath> deleteFilesFromFailedRecords(List<FilePath> deleteFailedRecords) {
 
-    List<FileDeletionFailureRecord> newDeleteFailedRecords = new ArrayList<>();
+    List<FilePath> newDeleteFailedRecords = new ArrayList<>();
 
-    for (FileDeletionFailureRecord deleteFailedRecord : deleteFailedRecords) {
+    for (FilePath deleteFailedRecord : deleteFailedRecords) {
       if (!fileStorage.delete(
         deleteFailedRecord.relativePath(),
         deleteFailedRecord.storedName()
