@@ -39,16 +39,16 @@ public class TestFileController {
   }
 
   @GetMapping("/{uuid}")
-  public ResponseEntity<Resource> getFile(@PathVariable("uuid") String uuidStr) {
-    FileResource file = fileService.getFile(uuidStr);
+  public ResponseEntity<Resource> getFile(@PathVariable UUID uuid) {
+    FileResource file = fileService.getFile(uuid);
     return ResponseEntity.ok()
       .contentType(MediaType.parseMediaType(file.mimeType()))
       .body(file.resource());
   }
 
   @GetMapping("/{uuid}/download")
-  public ResponseEntity<Resource> downloadFile(@PathVariable("uuid") String uuidStr) {
-    FileResource file = fileService.getFile(uuidStr);
+  public ResponseEntity<Resource> downloadFile(@PathVariable UUID uuid) {
+    FileResource file = fileService.getFile(uuid);
     ContentDisposition contentDisposition =
       ContentDisposition.attachment()
         .filename(file.originalName(), StandardCharsets.UTF_8)

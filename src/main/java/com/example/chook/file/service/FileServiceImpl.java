@@ -56,9 +56,9 @@ public class FileServiceImpl implements FileService {
   }
 
   @Override
-  public FileResource getFile(String uuidStr) {
-    UploadedFile targetFile = uploadedFileRepository.findById(UUID.fromString(uuidStr))
-      .orElseThrow(() -> new RuntimeException(String.format("UUID가 \"%s\"인 파일을 DB에서 찾을 수 없음", uuidStr)));
+  public FileResource getFile(UUID uuid) {
+    UploadedFile targetFile = uploadedFileRepository.findById(uuid)
+      .orElseThrow(() -> new RuntimeException(String.format("UUID가 \"%s\"인 파일을 DB에서 찾을 수 없음", uuid)));
 
     Resource resource = fileStorage.getFile(
       targetFile.getRelativePath(),

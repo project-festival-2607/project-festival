@@ -28,5 +28,5 @@ public interface FileService {
 
   void delete(UUID uuid);
 
-  FileResource getFile(String uuidStr);
+  FileResource getFile(UUID uuid);
 }
