@@ -3,6 +3,7 @@ package com.example.chook.file.service;
 import com.example.chook.file.FileProperties;
 import com.example.chook.file.FileStorage;
 import com.example.chook.file.record.FilePath;
+import com.example.chook.file.record.UnreferencedFile;
 import com.example.chook.file.repository.UploadedFileRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,6 +18,8 @@ import java.nio.file.Paths;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.time.Duration;
 import java.time.Instant;
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Stream;
 
@@ -29,8 +32,36 @@ public class FileSweeper {
 
   private final FileProperties properties;
   private final UploadedFileRepository uploadedFileRepository;
+  private final FileService fileService;
   private final FileStorage fileStorage;
 
+  @Scheduled(cron = "${file.sweep.unreferenced.cron}")
+  public synchronized void sweepUnreferencedFiles() {
+
+    log.info("미참조 파일 정리 시작");
+    LocalDateTime now = LocalDateTime.now();
+    Duration gracePeriod = properties.getSweep().getUnreferenced().getGracePeriod();
+
+    List<UnreferencedFile> unreferencedFiles = uploadedFileRepository.findUnreferencedFiles();
+    for (UnreferencedFile file : unreferencedFiles) {
+      log.debug("\"{}\" 파일이 참조되지 않음", file.uuid());
+      LocalDateTime expirationTime = file.uploadedAt().plus(gracePeriod);
+      if (now.isAfter(expirationTime)) {
+        try {
+          fileService.delete(file.uuid());
+          log.info("\"{}\" 미참조 파일 삭제 완료", file.uuid());
+        } catch (IllegalStateException e) {
+          log.error("\"{}\" 미참조 파일 삭제 실패", file.uuid(), e);
+        }
+      } else {
+        log.debug("\"{}\" 미참조 파일을 삭제하지 않음 (유예 기간 [{}]이 지나지 않음)",
+          file.uuid(),
+          gracePeriod
+        );
+      }
+    }
+    log.info("미참조 파일 정리 종료");
+  }
 
 
   @Scheduled(cron = "${file.sweep.untracked.cron}")

@@ -1,6 +1,7 @@
 package com.example.chook.file.repository;
 
 import com.example.chook.file.record.FilePath;
+import com.example.chook.file.record.UnreferencedFile;
 import com.example.chook.recruitment.entity.QRecruitmentFile;
 import com.example.chook.resume.entity.QProfileFile;
 import com.example.chook.resume.entity.QResumeFile;
@@ -39,13 +40,13 @@ public class UploadedFileCustomRepositoryImpl implements UploadedFileCustomRepos
   }
 
   @Override
-  public List<FilePath> findUnreferencedFilePaths() {
+  public List<UnreferencedFile> findUnreferencedFiles() {
     QProfileFile profileFile = QProfileFile.profileFile;
     QRecruitmentFile recruitmentFile = QRecruitmentFile.recruitmentFile;
     QResumeFile resumeFile = QResumeFile.resumeFile;
 
     return jpaQueryFactory
-      .select(uploadedFile.relativePath, uploadedFile.storedName)
+      .select(uploadedFile.uuid, uploadedFile.uploadedAt)
       .from(uploadedFile)
       .where(
 
@@ -72,9 +73,9 @@ public class UploadedFileCustomRepositoryImpl implements UploadedFileCustomRepos
       )
       .fetch()
       .stream()
-      .map(tuple -> new FilePath(
-        tuple.get(uploadedFile.relativePath),
-        tuple.get(uploadedFile.storedName)
+      .map(tuple -> new UnreferencedFile(
+        tuple.get(uploadedFile.uuid),
+        tuple.get(uploadedFile.uploadedAt)
       ))
       .collect(Collectors.toList());
   }
