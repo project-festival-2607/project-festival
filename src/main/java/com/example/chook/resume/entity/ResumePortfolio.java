@@ -25,7 +25,7 @@ public class ResumePortfolio {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(
             name = "resume_id",
-            foreignKey = @ForeignKey(name = "fk_resume_portfolio _resume_id")
+            foreignKey = @ForeignKey(name = "fk_resume_portfolio_resume_id")
     )
     @ToString.Exclude
     private Resume resume;
