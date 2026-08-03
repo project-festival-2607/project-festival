@@ -1,5 +1,6 @@
 package com.example.chook.entity;
 
+import com.example.chook.entity.enums.ResumePortfolioRole;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -9,6 +10,7 @@ import java.time.LocalDateTime;
 @Table(name = "resume_portfolio")
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class ResumePortfolio {
@@ -23,13 +25,15 @@ public class ResumePortfolio {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(
             name = "resume_id",
-            foreignKey = @ForeignKey(name = "fk_resume_portfollo_resume_id")
+            foreignKey = @ForeignKey(name = "fk_resume_portfolio _resume_id")
     )
+    @ToString.Exclude
     private Resume resume;
 
     // 타입
-    @Column(name = "type")
-    private String type;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "type", nullable = false)
+    private ResumePortfolioRole type;
 
     // 제목
     @Column(name = "title")
