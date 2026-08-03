@@ -1,8 +1,8 @@
 package com.example.chook.file.service;
 
-import com.example.chook.file.record.FilePath;
 import com.example.chook.file.FileProperties;
 import com.example.chook.file.FileStorage;
+import com.example.chook.file.record.FilePath;
 import com.example.chook.file.repository.UploadedFileRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,24 +34,27 @@ public class FileSweeper {
   @Scheduled(cron = "${file.sweep.cron}")
   public synchronized void sweepUntrackedFiles() {
 
-    log.info("파일 정리 시작");
+    log.info("미추적 파일 정리 시작");
 
     Set<FilePath> filePathRecords = uploadedFileRepository.findAllFilePaths();
 
-    Path absoluteUploadDir = Paths.get(properties.getUploadDir());
+    Path uploadDir = Paths.get(properties.getUploadDir());
     Instant now = Instant.now();
 
-    if (Files.notExists(absoluteUploadDir)) return;
+    if (Files.notExists(uploadDir)) {
+      log.info("업로드 경로 ({})가 존재하지 않아 미추적 파일 정리 종료", uploadDir);
+      return;
+    }
 
-    try (Stream<Path> paths = Files.walk(absoluteUploadDir).filter(Files::isRegularFile)) {
+    try (Stream<Path> paths = Files.walk(uploadDir).filter(Files::isRegularFile)) {
       paths.forEach(filePath -> {
-        String relativePath = absoluteUploadDir.relativize(filePath.getParent())
+        String relativePath = uploadDir.relativize(filePath.getParent())
           .toString().replace('\\', '/');
         String fileName = filePath.getFileName().toString();
         if (!filePathRecords.contains(new FilePath(fileName, relativePath))) {
           try {
-            log.info("\"{}\" 파일이 DB에 존재하지 않습니다.",
-              absoluteUploadDir.relativize(filePath)
+            log.debug("\"{}\" 파일이 DB에 존재하지 않음",
+              uploadDir.relativize(filePath)
             );
             BasicFileAttributes attributes = Files.readAttributes(filePath, BasicFileAttributes.class);
             Instant creationTime = attributes.creationTime().toInstant();
@@ -61,21 +64,26 @@ public class FileSweeper {
             // DB에 등록되지 않은 파일 중 유예 기간이 지난 것만 삭제
             if (now.isAfter(expirationTime)) {
               if (!fileStorage.delete(relativePath, fileName)) {
-                log.error("파일 삭제 실패: {}", filePath);
+                log.error("\"{}\" 파일 삭제 실패", filePath);
+              } else {
+                log.info("\"{}\" 파일 삭제 완료", filePath);
               }
             } else {
-              log.info("파일 생성 후 유예 기간({})이 지나지 않아 삭제하지 않습니다.", gracePeriod);
+              log.debug("\"{}\" 파일을 삭제하지 않음 (유예 기간 [{}]이 지나지 않음)",
+                filePath,
+                gracePeriod
+              );
             }
           } catch (IOException e) {
-            log.error("파일 삭제 실패: {}", filePath, e);
+            log.error("\"{}\" 파일 처리 중 오류 발생", filePath, e);
           }
         }
       });
     } catch (IOException e) {
-      log.error("파일 정리 실패", e);
+      log.error("미추적 파일 정리 중 오류 발생", e);
     }
 
-    log.info("파일 정리 종료");
+    log.info("미추적 파일 정리 종료");
 
   }
 
