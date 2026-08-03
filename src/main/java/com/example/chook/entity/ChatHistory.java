@@ -24,5 +24,6 @@ public class ChatHistory {
 
     private String answer; // GTP답변
 
+    @Column(name = "reg_date")
     private LocalDateTime regDate; // 질문시간
 }
