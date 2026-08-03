@@ -16,7 +16,10 @@ public class EmployerProfile {
 
     @OneToOne(fetch = FetchType.LAZY)
     @MapsId
-    @JoinColumn(name = "member_id")
+    @JoinColumn(
+      name = "member_id",
+      foreignKey = @ForeignKey(name = "fk_employer_profiles_member_id")
+    )
     private Member member;
 
     @Column(name = "company_name", nullable = false, length = 100)
