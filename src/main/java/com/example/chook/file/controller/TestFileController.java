@@ -25,8 +25,8 @@ import java.util.List;
 @Slf4j
 public class TestFileController {
 
-  private final FileService fileService;
   private static final String RELATIVE_PATH = "test";
+  private final FileService fileService;
 
   @GetMapping
   public void file(Model model) {
@@ -35,6 +35,14 @@ public class TestFileController {
     log.info("fileDtoList: {}", fileDtoList);
     model.addAttribute("fileList", fileDtoList);
 
+  }
+
+  @GetMapping("/{uuid}")
+  public ResponseEntity<Resource> getFile(@PathVariable("uuid") String uuidStr) {
+    FileResource file = fileService.getFile(uuidStr);
+    return ResponseEntity.ok()
+      .contentType(MediaType.parseMediaType(file.mimeType()))
+      .body(file.resource());
   }
 
   @GetMapping("/{uuid}/download")

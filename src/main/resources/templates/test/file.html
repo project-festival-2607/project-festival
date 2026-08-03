@@ -25,6 +25,10 @@
             <div class="text-body-tertiary" style="font-size: 12px;">
               [[${file.category}]] / [[${file.sizeStr}]]
             </div>
+            <div th:if="${file.isImage}" class="my-2">
+              <img style="max-height: 150px; max-width:150px; object-fit: contain;"
+                   th:src="@{/test/file/{uuid}(uuid=${file.uuid})}" alt="이미지">
+            </div>
           </div>
           <form method="post" th:action="@{/test/file/delete}">
             <input name="uuid" th:value="${file.uuid}" type="hidden"/>
