@@ -1,6 +1,6 @@
 package com.example.chook.recruitment.entity;
 
-import com.example.chook.entity.Festival;
+import com.example.chook.festival.Festival;
 import com.example.chook.recruitment.entity.enums.RecruitmentCategory;
 import com.example.chook.recruitment.entity.enums.RecruitmentStatus;
 import com.example.chook.region.entity.RegionSigungu;

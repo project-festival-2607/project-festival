@@ -1,6 +1,6 @@
-package com.example.chook.entity;
+package com.example.chook.resume.entity;
 
-import com.example.chook.entity.enums.ResumePortfolioType;
+import com.example.chook.resume.entity.enums.ResumePortfolioType;
 import jakarta.persistence.*;
 import lombok.*;
 

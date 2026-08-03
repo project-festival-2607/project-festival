@@ -1,4 +1,4 @@
-package com.example.chook.entity;
+package com.example.chook.chatbot.entity;
 
 import com.example.chook.member.entity.Member;
 import jakarta.persistence.*;
