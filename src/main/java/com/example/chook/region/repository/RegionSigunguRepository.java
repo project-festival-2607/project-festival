@@ -1,4 +1,4 @@
-package com.example.chook.region.repositoty;
+package com.example.chook.region.repository;
 
 import com.example.chook.entity.RegionSigungu;
 import org.springframework.data.domain.Sort;

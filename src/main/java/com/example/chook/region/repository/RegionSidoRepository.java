@@ -1,4 +1,4 @@
-package com.example.chook.region.repositoty;
+package com.example.chook.region.repository;
 
 import com.example.chook.entity.RegionSido;
 import org.springframework.data.jpa.repository.JpaRepository;
