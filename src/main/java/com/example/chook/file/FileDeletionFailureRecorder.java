@@ -30,16 +30,20 @@ public class FileDeletionFailureRecorder {
     .setHeader()
     .setSkipHeaderRecord(true).get();
 
+  private Path getDeletionFailureLogPath() {
+    Path systemDir = Paths.get(properties.getSystemDir());
+    return systemDir.resolve(properties.getDeletionFailureLogFile());
+  }
+
   public synchronized List<FilePath> load() {
 
-    Path absoluteSystemDir = Paths.get(properties.getSystemDir());
-    Path deleteFailedLogPath = absoluteSystemDir.resolve(properties.getDeleteFailLogFile());
+    Path deletionFailureLogPath = getDeletionFailureLogPath();
 
     List<FilePath> filePathRecords = new ArrayList<>();
 
-    if (Files.notExists(deleteFailedLogPath)) return new ArrayList<>();  // 기록 자체가 없는 경우
+    if (Files.notExists(deletionFailureLogPath)) return new ArrayList<>();  // 기록 자체가 없는 경우
 
-    try (CSVParser parser = CSVParser.parse(deleteFailedLogPath, StandardCharsets.UTF_8, CSV_FORMAT)) {
+    try (CSVParser parser = CSVParser.parse(deletionFailureLogPath, StandardCharsets.UTF_8, CSV_FORMAT)) {
       for (CSVRecord record : parser) {
         filePathRecords.add(new FilePath(
           record.get("relative_path"),
@@ -57,34 +61,32 @@ public class FileDeletionFailureRecorder {
   public synchronized void update(List<FilePath> failureRecords) {
     clear();
     for (FilePath record : failureRecords) {
-      recordDeleteFailure(record);
+      recordDeletionFailure(record);
     }
   }
 
   private synchronized void clear() {
 
-    Path absoluteSystemDir = Paths.get(properties.getSystemDir());
-    Path deleteFailedLogPath = absoluteSystemDir.resolve(properties.getDeleteFailLogFile());
+    Path deletionFailureLogPath = getDeletionFailureLogPath();
 
-    if (Files.notExists(deleteFailedLogPath)) return;
+    if (Files.notExists(deletionFailureLogPath)) return;
     try {
-      Files.delete(deleteFailedLogPath);
+      Files.delete(deletionFailureLogPath);
     } catch (IOException e) {
       throw new IllegalStateException("파일 삭제 로그 초기화 실패", e);
     }
   }
 
-  public synchronized boolean recordDeleteFailure(FilePath record) {
+  public synchronized boolean recordDeletionFailure(FilePath record) {
 
-    Path absoluteSystemDir = Paths.get(properties.getSystemDir());
-    Path deleteFailedLogPath = absoluteSystemDir.resolve(properties.getDeleteFailLogFile());
+    Path deletionFailureLogPath = getDeletionFailureLogPath();
 
     try {
-      Files.createDirectories(absoluteSystemDir);
-      boolean newFile = Files.notExists(deleteFailedLogPath);
+      Files.createDirectories(deletionFailureLogPath.getParent());
+      boolean newFile = Files.notExists(deletionFailureLogPath);
       try (
         BufferedWriter writer = Files.newBufferedWriter(
-          deleteFailedLogPath,
+          deletionFailureLogPath,
           StandardOpenOption.CREATE,
           StandardOpenOption.APPEND);
         CSVPrinter printer = new CSVPrinter(writer, CSVFormat.DEFAULT);
