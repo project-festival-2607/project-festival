@@ -1,6 +1,6 @@
-package com.example.chook.entity;
+package com.example.chook.resume.entity;
 
-import com.example.chook.entity.enums.ResumePortfolioType;
+import com.example.chook.resume.entity.enums.ResumePortfolioType;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -25,7 +25,7 @@ public class ResumePortfolio {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(
             name = "resume_id",
-            foreignKey = @ForeignKey(name = "fk_resume_portfolio _resume_id")
+            foreignKey = @ForeignKey(name = "fk_resume_portfolio_resume_id")
     )
     @ToString.Exclude
     private Resume resume;
