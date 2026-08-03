@@ -34,10 +34,10 @@ public class ResumeFile {
     // 파일 아이디
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(
-            name = "file_id",
+            name = "file_uuid",
             nullable = false,
             unique = true,
-            foreignKey = @ForeignKey(name = "fk_resume_file_file_id")
+            foreignKey = @ForeignKey(name = "fk_resume_file_file_uuid")
     )
     @ToString.Exclude
     private UploadedFile uploadedFile;
