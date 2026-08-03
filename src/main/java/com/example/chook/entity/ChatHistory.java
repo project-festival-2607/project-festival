@@ -13,15 +13,15 @@ import java.time.LocalDateTime;
 public class ChatHistory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long chatId;
+    private Long chatId; // 대화번호
 
-    private String email;
+    private String id; // 회원 식별자
 
-    private String sessionId;
+    private String sessionId; // 비회원 식별자
 
-    private String question;
+    private String question; // 시용자 질문
 
-    private String answer;
+    private String answer; // GTP답변
 
-    private LocalDateTime regDate;
+    private LocalDateTime regDate; // 질문시간
 }
