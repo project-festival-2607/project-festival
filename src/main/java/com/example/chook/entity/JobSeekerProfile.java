@@ -17,7 +17,10 @@ public class JobSeekerProfile {
 
     @OneToOne(fetch = FetchType.LAZY)
     @MapsId
-    @JoinColumn(name = "member_id")
+    @JoinColumn(
+      name = "member_id",
+      foreignKey = @ForeignKey(name = "fk_job_seeker_profiles_member_id")
+    )
     private Member member;
 
     @Enumerated(EnumType.STRING)
