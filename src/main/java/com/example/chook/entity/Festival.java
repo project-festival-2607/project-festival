@@ -6,6 +6,7 @@ import jakarta.persistence.Id;
 import lombok.*;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -56,11 +57,11 @@ public class Festival {
     @Column(name = "use_time")
     private String useTime;
 
-    @Column(name = "start_date")
-    private String startDate;
+    @Column(name = "start_date", columnDefinition = "")
+    private LocalDate startDate;
 
     @Column(name = "end_date")
-    private String endDate;
+    private LocalDate endDate;
 
     @Column(name = "first_image")
     private String firstImage;

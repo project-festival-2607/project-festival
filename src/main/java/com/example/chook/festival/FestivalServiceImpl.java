@@ -7,6 +7,10 @@ import org.jspecify.annotations.NonNull;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
@@ -44,6 +48,14 @@ public class FestivalServiceImpl implements FestivalService, ApplicationRunner {
         festivalRepository.saveAll(festivalList);
     }
 
+    // 페이징 리스트
+    @Override
+    public Page<FestivalDTO> getList(int pageNo) {
+        Pageable pageable = PageRequest.of(pageNo - 1, 20, Sort.by("startDate").descending());
+        Page<Festival> pageList = festivalRepository.findAll(pageable);
+        return pageList.map(this::convertEntityToDTO);
+    }
+
 //    DB에서 API 요청 후 백그라운드에서 동기화
 
     @Override
@@ -52,6 +64,7 @@ public class FestivalServiceImpl implements FestivalService, ApplicationRunner {
         if(festivalRepository.count() > 0){
             log.info("DB 데이터 동기 완료");
             return;
+            // 나중에 새로 갱신될 때를 대비하여 ID로 비교하는 로직으로 바꿀 것! ===> 지금은 TEST
         }
 
         log.info("Festival DB 데이터 동기화 시작...");

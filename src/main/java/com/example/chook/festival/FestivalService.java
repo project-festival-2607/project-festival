@@ -1,7 +1,10 @@
 package com.example.chook.festival;
 
 import com.example.chook.entity.Festival;
+import org.springframework.data.domain.Page;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 public interface FestivalService {
@@ -22,14 +25,17 @@ public interface FestivalService {
                 .playTime(festival.getPlayTime())
                 .program(festival.getProgram())
                 .useTime(festival.getUseTime())
-                .startDate(festival.getStartDate())
-                .endDate(festival.getEndDate())
+                .startDate(festival.getStartDate().toString())
+                .endDate(festival.getEndDate().toString())
                 .firstImage(festival.getFirstImage())
                 .secondImage(festival.getSecondImage())
                 .build();
     }
 
     default Festival convertDTOToEntity(FestivalDTO festivalDTO){
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+
         return Festival.builder()
                 .contentId(festivalDTO.getContentId())
                 .title(festivalDTO.getTitle())
@@ -45,8 +51,8 @@ public interface FestivalService {
                 .playTime(festivalDTO.getPlayTime())
                 .program(festivalDTO.getProgram())
                 .useTime(festivalDTO.getUseTime())
-                .startDate(festivalDTO.getStartDate())
-                .endDate(festivalDTO.getEndDate())
+                .startDate(LocalDate.parse(festivalDTO.getStartDate(), formatter))
+                .endDate(LocalDate.parse(festivalDTO.getEndDate(), formatter))
                 .firstImage(festivalDTO.getFirstImage())
                 .secondImage(festivalDTO.getSecondImage())
                 .build();
@@ -55,4 +61,6 @@ public interface FestivalService {
     String save(FestivalDTO festivalDTO);
 
     void saveAll(List<FestivalDTO> festivalDTOList);
+
+    Page<FestivalDTO> getList(int pageNo);
 }
