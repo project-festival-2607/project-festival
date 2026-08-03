@@ -16,7 +16,10 @@ public class BusinessRegistration {
 
     @OneToOne(fetch = FetchType.LAZY)
     @MapsId
-    @JoinColumn(name = "member_id")
+    @JoinColumn(
+      name = "member_id",
+      foreignKey = @ForeignKey(name = "fk_business_registrations_member_id")
+    )
     private Member member;
 
     @Column(name = "business_number", nullable = false, length = 10)
