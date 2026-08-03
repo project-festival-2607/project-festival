@@ -3,7 +3,7 @@ package com.example.chook.file.service;
 import com.example.chook.entity.UploadedFile;
 import com.example.chook.file.dto.FileDTO;
 import com.example.chook.file.FileDeletionFailureRecorder;
-import com.example.chook.file.FilePathRecord;
+import com.example.chook.file.record.FilePath;
 import com.example.chook.file.FileStorage;
 import com.example.chook.file.repository.UploadedFileRepository;
 import lombok.RequiredArgsConstructor;
@@ -103,7 +103,7 @@ public class FileServiceImpl implements FileService {
       file.getStoredName()
     )) {
       log.error("파일 \"{}\"에 대한 실패 기록 작성을 시도합니다.", file.getOriginalName());
-      if (!failureRecorder.recordDeleteFailure(new FilePathRecord(
+      if (!failureRecorder.recordDeleteFailure(new FilePath(
         file.getRelativePath(),
         file.getStoredName()
       ))) {
