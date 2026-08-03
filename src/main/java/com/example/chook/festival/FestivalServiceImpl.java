@@ -70,7 +70,7 @@ public class FestivalServiceImpl implements FestivalService, ApplicationRunner {
         log.info("Festival DB 데이터 동기화 시작...");
 
         try {
-            String url = "https://apis.data.go.kr/B551011/KorService2/searchFestival2?numOfRows=50&MobileOS=WEB&MobileApp=CHUCK&_type=json&arrange=R&eventStartDate=20260101&serviceKey=" + apiKey;
+            String url = "https://apis.data.go.kr/B551011/KorService2/searchFestival2?numOfRows=10&MobileOS=WEB&MobileApp=CHUCK&_type=json&arrange=R&eventStartDate=20260101&serviceKey=" + apiKey;
 
             RestTemplate restTemplate = new RestTemplate(); // 백엔드에서 RestAPI 실행시켜주는 객체
             String listResponse = restTemplate.getForObject(url, String.class);
@@ -91,25 +91,19 @@ public class FestivalServiceImpl implements FestivalService, ApplicationRunner {
 
                 String commonUrl = "https://apis.data.go.kr/B551011/KorService2/detailCommon2?MobileOS=WEB&MobileApp=CHUCK&_type=json&contentId=" + contentId + "&serviceKey=" + apiKey;
                 String introUrl = "https://apis.data.go.kr/B551011/KorService2/detailIntro2?MobileOS=WEB&MobileApp=CHUCK&_type=json&contentId=" + contentId + "&contentTypeId=15&serviceKey=" + apiKey;
-                String infoUrl = "https://apis.data.go.kr/B551011/KorService2/detailInfo2?MobileOS=WEB&MobileApp=CHUCK&_type=json&contentId=" + contentId + "&contentTypeId=15&serviceKey=" + apiKey;
 
                 try {
                     String commonRes = restTemplate.getForObject(commonUrl, String.class);
                     String introRes = restTemplate.getForObject(introUrl, String.class);
-                    String infoRes = restTemplate.getForObject(infoUrl, String.class);
 
                     JsonNode commonItem = mapper.readTree(commonRes).path("response").path("body").path("items").path("item");
                     JsonNode introItem = mapper.readTree(introRes).path("response").path("body").path("items").path("item");
-                    JsonNode infoItem = mapper.readTree(infoRes).path("response").path("body").path("items").path("item");
 
                     if(commonItem.isArray() && !commonItem.isEmpty()) {
                         commonItem = commonItem.get(0);
                     }
                     if(introItem.isArray() && !introItem.isEmpty()) {
                         introItem = introItem.get(0);
-                    }
-                    if(infoItem.isArray() && !infoItem.isEmpty()) {
-                        infoItem = infoItem.get(0);
                     }
 
                     FestivalDTO festivalDTO = FestivalDTO.builder()
@@ -127,7 +121,7 @@ public class FestivalServiceImpl implements FestivalService, ApplicationRunner {
                             .playTime(introItem.path("playtime").isNull() ? null : introItem.path("playtime").asText())
                             .program(introItem.path("program").isNull() ? null : introItem.path("program").asText())
                             .useTime(introItem.path("usetimefestival").isNull() ? null : introItem.path("usetimefestival").asText())
-                            .startDate(introItem.path("eventstartdate").isNull() ? introItem.path("eventestartdate").asText(null) : introItem.path("eventstartdate").asText())
+                            .startDate(introItem.path("eventstartdate").isNull() ? introItem.path("eventstartdate").asText(null) : introItem.path("eventstartdate").asText())
                             .endDate(introItem.path("eventenddate").isNull() ? null : introItem.path("eventenddate").asText())
                             .firstImage(commonItem.path("firstimage").isNull() ? null : commonItem.path("firstimage").asText())
                             .secondImage(commonItem.path("secondimage").isNull() ? null : commonItem.path("secondimage").asText())
