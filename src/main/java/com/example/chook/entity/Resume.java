@@ -1,5 +1,6 @@
 package com.example.chook.entity;
 
+import com.example.chook.member.entity.Member;
 import jakarta.persistence.*;
 import lombok.*;
 

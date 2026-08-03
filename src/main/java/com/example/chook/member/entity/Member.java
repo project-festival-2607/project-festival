@@ -1,7 +1,7 @@
-package com.example.chook.entity;
+package com.example.chook.member.entity;
 
-import com.example.chook.entity.enums.MemberRole;
-import com.example.chook.entity.enums.MemberStatus;
+import com.example.chook.member.entity.enums.MemberRole;
+import com.example.chook.member.entity.enums.MemberStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
