@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ko"
+      layout:decorate="~{layout/layout}"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" th:href="@{/libs/toastui-editor-3.2.2/css/toastui-editor.min.css}" />
+</head>
+
+<body>
+<div layout:fragment="content">
+    <div class="container">
+        <!--                모든 inner는 class="container" 로 맞춤        -->
+        <!--        이 안에서 작업        -->
+    <h1>Register Page</h1>
+
+        <form th:action="@{/adminBoard/register}" method="post">
+            <input placeholder="제목">
+            <input value="작성자" readonly>
+
+            <!-- 토스트 에디터 구현-->
+            <div id="editor">
+
+            </div>
+
+            <div class="d-flex justify-content-end gap-2 mt-3">
+                <a th:href="@{/adminBoard/list}" class="btn btn-outline-secondary">취소</a>
+                <button type="submit" id="btn" class="btn btn-primary">전송</button>
+            </div>
+
+        </form>
+
+        <script th:src="@{/libs/toastui-editor-3.2.2/js/toastui-editor-all.min.js}"></script>
+
+        <script>
+            const editor = new Editor({
+                el: document.querySelector('#editor'),
+                previewStyle: 'vertical',
+                height: '500px',
+                initialEditType: 'wysiwyg',
+                hideModeSwitch: true
+            });
+
+            const btn = document.getElementById("btn");
+            const title = document.querySelector("form input");
+
+            async function editorHandler(e){
+                const editorBody=editor.getMarkdown();
+                const headTitle = title.value;
+
+                const config=await fetch()
+            }
+
+
+        </script>
+    </div>
+</div>
+</body>
+</html>

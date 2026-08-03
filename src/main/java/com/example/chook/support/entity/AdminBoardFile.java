@@ -1,5 +1,7 @@
-package com.example.chook.entity;
+package com.example.chook.support.entity;
 
+
+import com.example.chook.file.entity.UploadedFile;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -17,27 +19,26 @@ import lombok.*;
 @NoArgsConstructor
 @Builder
 @Entity
-@Table(name="inquiry_file")
-public class InquiryFile {
-
+@Table(name="admin_board_file")
+public class AdminBoardFile {
     @Id
-    @Column(name = "inquiry_file_pair_id")
-    private Long id;
+    @Column(name="admin_board_file_pair_id")
+    private Long id; //식별 아이디
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(
-      name = "ino",
+      name = "bno",
       nullable = false,
-      foreignKey = @ForeignKey(name = "fk_inquiry_file_ino")
+      foreignKey = @ForeignKey(name = "fk_admin_board_file_bno")
     )
-    private Inquiry inquiry; //inquiry 테이블에서 ino => 외래키
+    private AdminBoard adminBoard; //admin_board 테이블에서 bno 외래키
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(
       name = "file_uuid",
       nullable = false,
       columnDefinition = "BINARY(16)",
-      foreignKey = @ForeignKey(name = "fk_inquiry_file_file_id")
+      foreignKey = @ForeignKey(name = "fk_admin_board_file_file_id")
     )
-    private UploadedFile uploadedFile; //uploaded_file 테이블에서 uuid=> 외래키
+    private UploadedFile uploadedFile; // uploaded_file 테이블에서 file_id => 외래키
 }
