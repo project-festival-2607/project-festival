@@ -18,6 +18,7 @@ public class ChatHistory {
 
     private String id; // 회원 식별자
 
+    @Column(name = "session_id")
     private String sessionId; // 비회원 식별자
 
     private String question; // 시용자 질문
