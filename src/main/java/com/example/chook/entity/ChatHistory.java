@@ -16,7 +16,12 @@ public class ChatHistory {
     @Column(name = "chat_id")
     private Long chatId; // 대화번호
 
-    private String id; // 회원 식별자
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(
+      name = "member_id",
+      foreignKey = @ForeignKey(name = "fk_chat_history_member_id")
+    )
+    private Member member;
 
     @Column(name = "session_id")
     private String sessionId; // 비회원 식별자
