@@ -1,4 +1,4 @@
-package com.example.chook.entity.enums;
+package com.example.chook.file.entity.enums;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

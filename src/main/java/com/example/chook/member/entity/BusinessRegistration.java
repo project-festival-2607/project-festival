@@ -1,13 +1,18 @@
-package com.example.chook.entity;
+package com.example.chook.member.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "business_registrations")
 @Getter
+@Setter
+@ToString
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class BusinessRegistration {
 
     @Id
@@ -20,6 +25,7 @@ public class BusinessRegistration {
       name = "member_id",
       foreignKey = @ForeignKey(name = "fk_business_registrations_member_id")
     )
+    @ToString.Exclude
     private Member member;
 
     @Column(name = "business_number", nullable = false, length = 10)

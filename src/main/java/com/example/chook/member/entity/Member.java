@@ -1,7 +1,7 @@
-package com.example.chook.entity;
+package com.example.chook.member.entity;
 
-import com.example.chook.entity.enums.MemberRole;
-import com.example.chook.entity.enums.MemberStatus;
+import com.example.chook.member.entity.enums.MemberRole;
+import com.example.chook.member.entity.enums.MemberStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -73,6 +73,7 @@ public class Member {
     private Long point = 0L;
 
     @OneToMany(mappedBy = "member")
+    @ToString.Exclude // 순환 참조 방지
     // 소셜 연동 리스트 컬렉션 초기화
     private List<SocialLogin> socialLogins =  new ArrayList<>();
 }

@@ -8,7 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static com.example.chook.entity.QUploadedFile.uploadedFile;
+import static com.example.chook.file.entity.QUploadedFile.uploadedFile;
 
 @Slf4j
 public class UploadedFileCustomRepositoryImpl implements UploadedFileCustomRepository {

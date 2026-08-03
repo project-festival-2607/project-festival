@@ -1,6 +1,6 @@
-package com.example.chook.region;
+package com.example.chook.region.repository;
 
-import com.example.chook.entity.RegionSigungu;
+import com.example.chook.region.entity.RegionSigungu;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 

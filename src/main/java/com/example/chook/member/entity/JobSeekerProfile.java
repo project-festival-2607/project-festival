@@ -1,14 +1,19 @@
-package com.example.chook.entity;
+package com.example.chook.member.entity;
 
-import com.example.chook.entity.enums.Gender;
+import com.example.chook.member.entity.enums.Gender;
 import jakarta.persistence.*;
-import lombok.Getter;
+import lombok.*;
 
 import java.time.LocalDate;
 
 @Entity
 @Table(name = "job_seeker_profiles")
 @Getter
+@Setter
+@ToString
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class JobSeekerProfile {
 
     @Id
@@ -21,6 +26,7 @@ public class JobSeekerProfile {
       name = "member_id",
       foreignKey = @ForeignKey(name = "fk_job_seeker_profiles_member_id")
     )
+    @ToString.Exclude
     private Member member;
 
     @Enumerated(EnumType.STRING)

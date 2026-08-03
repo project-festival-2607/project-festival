@@ -1,6 +1,6 @@
-package com.example.chook.entity;
+package com.example.chook.member.entity;
 
-import com.example.chook.entity.enums.Provider;
+import com.example.chook.member.entity.enums.Provider;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -30,7 +30,12 @@ public class SocialLogin {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id", nullable = false)
+    @JoinColumn(
+      name = "member_id", 
+      nullable = false,
+      foreignKey = @ForeignKey(name = "fk_social_logins_member_id")
+    )
+    @ToString.Exclude // 순환 참조 방지
     private Member member;
 
     @Enumerated(EnumType.STRING)

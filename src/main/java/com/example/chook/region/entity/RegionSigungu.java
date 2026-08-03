@@ -1,4 +1,4 @@
-package com.example.chook.entity;
+package com.example.chook.region.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -23,6 +23,7 @@ public class RegionSigungu {
     nullable = false,
     foreignKey = @ForeignKey(name = "fk_region_sigungu_sido_code")
   )
+  @ToString.Exclude
   private RegionSido sido;
 
   @Column(name = "sigungu_name", length = 20, nullable = false)
