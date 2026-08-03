@@ -21,7 +21,7 @@
       <ul class="list-group list-group-flush">
         <li class="list-group-item d-flex" th:each="file: ${fileList}">
           <div class="ms-2 me-auto">
-            <div class="fw-semibold">[[${file.name}]]</div>
+            <a class="fw-semibold" th:href="@{/test/file/{uuid}(uuid=${file.uuid})}">[[${file.name}]]</a>
             <div class="text-body-tertiary" style="font-size: 12px;">
               [[${file.category}]] / [[${file.sizeStr}]]
             </div>

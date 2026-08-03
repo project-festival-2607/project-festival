@@ -1,18 +1,22 @@
 package com.example.chook.file.controller;
 
 import com.example.chook.file.dto.FileDTO;
+import com.example.chook.file.record.FileResource;
 import com.example.chook.file.service.FileService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.Resource;
+import org.springframework.http.ContentDisposition;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 @Controller
@@ -31,6 +35,22 @@ public class TestFileController {
     log.info("fileDtoList: {}", fileDtoList);
     model.addAttribute("fileList", fileDtoList);
 
+  }
+
+  @GetMapping("/{uuid}")
+  public ResponseEntity<Resource> downloadFile(@PathVariable("uuid") String uuidStr) {
+    FileResource file = fileService.getFile(uuidStr);
+    ContentDisposition contentDisposition =
+      ContentDisposition.attachment()
+        .filename(file.originalName(), StandardCharsets.UTF_8)
+        .build();
+    return ResponseEntity.ok()
+      .contentType(MediaType.parseMediaType(file.mimeType()))
+      .header(
+        HttpHeaders.CONTENT_DISPOSITION,
+        contentDisposition.toString()
+      )
+      .body(file.resource());
   }
 
   @PostMapping("/upload")

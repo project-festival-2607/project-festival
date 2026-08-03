@@ -1,14 +1,16 @@
 package com.example.chook.file.service;
 
 import com.example.chook.entity.UploadedFile;
-import com.example.chook.file.dto.FileDTO;
 import com.example.chook.file.FileDeletionFailureRecorder;
-import com.example.chook.file.record.FilePath;
 import com.example.chook.file.FileStorage;
+import com.example.chook.file.dto.FileDTO;
+import com.example.chook.file.record.FilePath;
+import com.example.chook.file.record.FileResource;
 import com.example.chook.file.repository.UploadedFileRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FilenameUtils;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -89,6 +91,27 @@ public class FileServiceImpl implements FileService {
     Optional<UploadedFile> targetFile = uploadedFileRepository.findById(UUID.fromString(uuidStr));
     if (targetFile.isEmpty()) return;
     deleteFile(targetFile.get());
+  }
+
+  @Override
+  public FileResource getFile(String uuidStr) {
+    UploadedFile targetFile = uploadedFileRepository.findById(UUID.fromString(uuidStr))
+      .orElseThrow(() -> new RuntimeException(String.format("UUID가 \"%s\"인 파일을 DB에서 찾을 수 없음", uuidStr)));
+
+    Resource resource = fileStorage.getFile(
+      targetFile.getRelativePath(),
+      targetFile.getStoredName()
+    );
+
+    FileResource result = new FileResource(
+      resource,
+      targetFile.getMimeType(),
+      targetFile.getOriginalName()
+    );
+
+    log.info("FileResource: {}", result);
+
+    return result;
   }
 
   /**
