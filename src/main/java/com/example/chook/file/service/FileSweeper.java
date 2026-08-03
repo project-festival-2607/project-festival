@@ -31,7 +31,9 @@ public class FileSweeper {
   private final UploadedFileRepository uploadedFileRepository;
   private final FileStorage fileStorage;
 
-  @Scheduled(cron = "${file.sweep.cron}")
+
+
+  @Scheduled(cron = "${file.sweep.untracked.cron}")
   public synchronized void sweepUntrackedFiles() {
 
     log.info("미추적 파일 정리 시작");
@@ -58,7 +60,7 @@ public class FileSweeper {
             );
             BasicFileAttributes attributes = Files.readAttributes(filePath, BasicFileAttributes.class);
             Instant creationTime = attributes.creationTime().toInstant();
-            Duration gracePeriod = properties.getSweep().getGracePeriod();
+            Duration gracePeriod = properties.getSweep().getUntracked().getGracePeriod();
             Instant expirationTime = creationTime.plus(gracePeriod);
 
             // DB에 등록되지 않은 파일 중 유예 기간이 지난 것만 삭제
