@@ -6,6 +6,7 @@ import com.example.chook.file.record.FileResource;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.UUID;
 
 public interface FileService {
 
@@ -25,7 +26,7 @@ public interface FileService {
 
   List<FileDTO> getList();
 
-  void delete(String uuidStr);
+  void delete(UUID uuid);
 
   FileResource getFile(String uuidStr);
 }

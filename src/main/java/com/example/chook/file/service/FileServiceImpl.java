@@ -43,14 +43,14 @@ public class FileServiceImpl implements FileService {
   }
 
   /**
-   * UUID 문자열을 기준으로 파일을 삭제한다.
+   * UUID를 기준으로 파일을 삭제한다.
    *
-   * @param uuidStr 삭제할 파일의 UUID 문자열
+   * @param uuid 삭제할 파일의 UUID
    */
   @Transactional
   @Override
-  public void delete(String uuidStr) {
-    Optional<UploadedFile> targetFile = uploadedFileRepository.findById(UUID.fromString(uuidStr));
+  public void delete(UUID uuid) {
+    Optional<UploadedFile> targetFile = uploadedFileRepository.findById(uuid);
     if (targetFile.isEmpty()) return;
     deleteFile(targetFile.get());
   }

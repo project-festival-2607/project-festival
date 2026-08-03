@@ -18,6 +18,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.UUID;
 
 @Controller
 @RequestMapping("/test/file")
@@ -80,7 +81,7 @@ public class TestFileController {
 
   @PostMapping("/delete")
   public String delete(RedirectAttributes redirectAttributes,
-                       @RequestParam String uuid) {
+                       @RequestParam UUID uuid) {
     try {
       fileService.delete(uuid);
       redirectAttributes.addFlashAttribute(
