@@ -32,7 +32,7 @@ public class FileSweeper {
   private final FileStorage fileStorage;
 
   @Scheduled(cron = "${file.sweep.cron}")
-  public synchronized void fileSweep() {
+  public synchronized void sweepUntrackedFiles() {
 
     log.info("파일 정리 시작");
 
