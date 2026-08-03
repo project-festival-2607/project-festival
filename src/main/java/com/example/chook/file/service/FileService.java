@@ -15,6 +15,7 @@ public interface FileService {
       .saveDir(uploadedFile.getRelativePath())
       .size(uploadedFile.getFileSize())
       .uploadedAt(uploadedFile.getUploadedAt())
+      .mimeType(uploadedFile.getMimeType())
       .category(uploadedFile.getCategory())
       .build();
   }
