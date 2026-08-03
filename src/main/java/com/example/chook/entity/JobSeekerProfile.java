@@ -26,6 +26,7 @@ public class JobSeekerProfile {
       name = "member_id",
       foreignKey = @ForeignKey(name = "fk_job_seeker_profiles_member_id")
     )
+    @ToString.Exclude
     private Member member;
 
     @Enumerated(EnumType.STRING)

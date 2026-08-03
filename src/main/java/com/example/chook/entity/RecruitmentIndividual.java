@@ -24,6 +24,7 @@ public class RecruitmentIndividual {
     name = "recruit_id",
     foreignKey = @ForeignKey(name = "fk_recruitment_individual_recruit_id")
   )
+  @ToString.Exclude
   private Recruitment recruit;
 
   @Enumerated(EnumType.STRING)

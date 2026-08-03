@@ -24,6 +24,7 @@ public class Resume {
             name = "member_id",
             foreignKey = @ForeignKey(name = "fk_resume_member_id")
     )
+    @ToString.Exclude
     // 회원 식별자
     private Member member;
 

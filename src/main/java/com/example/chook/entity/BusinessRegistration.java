@@ -25,6 +25,7 @@ public class BusinessRegistration {
       name = "member_id",
       foreignKey = @ForeignKey(name = "fk_business_registrations_member_id")
     )
+    @ToString.Exclude
     private Member member;
 
     @Column(name = "business_number", nullable = false, length = 10)

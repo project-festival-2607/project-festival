@@ -23,6 +23,7 @@ public class RegionSigungu {
     nullable = false,
     foreignKey = @ForeignKey(name = "fk_region_sigungu_sido_code")
   )
+  @ToString.Exclude
   private RegionSido sido;
 
   @Column(name = "sigungu_name", length = 20, nullable = false)

@@ -37,6 +37,7 @@ public class Recruitment {
     nullable = false,
     foreignKey = @ForeignKey(name = "fk_recruitment_festival_id")
   )
+  @ToString.Exclude
   private Festival festival;
 
   @Enumerated(EnumType.STRING)

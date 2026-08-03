@@ -24,6 +24,7 @@ public class RecruitmentFoodTruck {
     name = "recruit_id",
     foreignKey = @ForeignKey(name = "fk_recruitment_food_truck_recruit_id")
   )
+  @ToString.Exclude
   private Recruitment recruit;
 
   @Column(nullable = false)
