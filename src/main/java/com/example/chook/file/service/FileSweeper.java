@@ -50,7 +50,7 @@ public class FileSweeper {
         try {
           fileService.delete(file.uuid());
           log.info("\"{}\" 미참조 파일 삭제 완료", file.uuid());
-        } catch (IllegalStateException e) {
+        } catch (IllegalStateException e) {     // 물리 파일 삭제에도, DB 삭제에도 실패한 경우
           log.error("\"{}\" 미참조 파일 삭제 실패", file.uuid(), e);
         }
       } else {
