@@ -1,4 +1,4 @@
-package com.example.chook.region;
+package com.example.chook.region.dto;
 
 import lombok.*;
 
