@@ -2,6 +2,7 @@ package com.example.chook.entity;
 
 import com.example.chook.entity.enums.RecruitmentCategory;
 import com.example.chook.entity.enums.RecruitmentStatus;
+import com.example.chook.region.entity.RegionSigungu;
 import jakarta.persistence.*;
 import lombok.*;
 

@@ -1,4 +1,4 @@
-package com.example.chook.entity;
+package com.example.chook.region.entity;
 
 import jakarta.persistence.*;
 import lombok.*;

@@ -1,7 +1,7 @@
 package com.example.chook.region.service;
 
-import com.example.chook.entity.RegionSido;
-import com.example.chook.entity.RegionSigungu;
+import com.example.chook.region.entity.RegionSido;
+import com.example.chook.region.entity.RegionSigungu;
 import com.example.chook.region.repository.RegionSidoRepository;
 import com.example.chook.region.repository.RegionSigunguRepository;
 import lombok.RequiredArgsConstructor;
