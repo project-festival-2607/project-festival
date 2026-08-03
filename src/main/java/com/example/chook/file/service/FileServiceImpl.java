@@ -42,6 +42,40 @@ public class FileServiceImpl implements FileService {
       .map(this::toDto).toList();
   }
 
+  /**
+   * UUID 문자열을 기준으로 파일을 삭제한다.
+   *
+   * @param uuidStr 삭제할 파일의 UUID 문자열
+   */
+  @Transactional
+  @Override
+  public void delete(String uuidStr) {
+    Optional<UploadedFile> targetFile = uploadedFileRepository.findById(UUID.fromString(uuidStr));
+    if (targetFile.isEmpty()) return;
+    deleteFile(targetFile.get());
+  }
+
+  @Override
+  public FileResource getFile(String uuidStr) {
+    UploadedFile targetFile = uploadedFileRepository.findById(UUID.fromString(uuidStr))
+      .orElseThrow(() -> new RuntimeException(String.format("UUID가 \"%s\"인 파일을 DB에서 찾을 수 없음", uuidStr)));
+
+    Resource resource = fileStorage.getFile(
+      targetFile.getRelativePath(),
+      targetFile.getStoredName()
+    );
+
+    FileResource result = new FileResource(
+      resource,
+      targetFile.getMimeType(),
+      targetFile.getOriginalName()
+    );
+
+    log.info("FileResource: {}", result);
+
+    return result;
+  }
+
   private UploadedFile upload(MultipartFile file, String relativePath) {
 
     UUID uuid = UUID.randomUUID();
@@ -78,40 +112,6 @@ public class FileServiceImpl implements FileService {
       }
       throw exception;
     }
-  }
-
-  /**
-   * UUID 문자열을 기준으로 파일을 삭제한다.
-   *
-   * @param uuidStr 삭제할 파일의 UUID 문자열
-   */
-  @Transactional
-  @Override
-  public void delete(String uuidStr) {
-    Optional<UploadedFile> targetFile = uploadedFileRepository.findById(UUID.fromString(uuidStr));
-    if (targetFile.isEmpty()) return;
-    deleteFile(targetFile.get());
-  }
-
-  @Override
-  public FileResource getFile(String uuidStr) {
-    UploadedFile targetFile = uploadedFileRepository.findById(UUID.fromString(uuidStr))
-      .orElseThrow(() -> new RuntimeException(String.format("UUID가 \"%s\"인 파일을 DB에서 찾을 수 없음", uuidStr)));
-
-    Resource resource = fileStorage.getFile(
-      targetFile.getRelativePath(),
-      targetFile.getStoredName()
-    );
-
-    FileResource result = new FileResource(
-      resource,
-      targetFile.getMimeType(),
-      targetFile.getOriginalName()
-    );
-
-    log.info("FileResource: {}", result);
-
-    return result;
   }
 
   /**

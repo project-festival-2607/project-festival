@@ -37,7 +37,7 @@ public class TestFileController {
 
   }
 
-  @GetMapping("/{uuid}")
+  @GetMapping("/{uuid}/download")
   public ResponseEntity<Resource> downloadFile(@PathVariable("uuid") String uuidStr) {
     FileResource file = fileService.getFile(uuidStr);
     ContentDisposition contentDisposition =
