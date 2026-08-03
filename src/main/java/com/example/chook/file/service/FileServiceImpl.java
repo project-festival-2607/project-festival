@@ -15,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @RequiredArgsConstructor
@@ -85,9 +86,9 @@ public class FileServiceImpl implements FileService {
   @Transactional
   @Override
   public void delete(String uuidStr) {
-    UploadedFile targetFile = uploadedFileRepository.findByUuid(UUID.fromString(uuidStr));
-    if (targetFile == null) return;
-    deleteFile(targetFile);
+    Optional<UploadedFile> targetFile = uploadedFileRepository.findById(UUID.fromString(uuidStr));
+    if (targetFile.isEmpty()) return;
+    deleteFile(targetFile.get());
   }
 
   /**
