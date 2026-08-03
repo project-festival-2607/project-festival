@@ -1,6 +1,6 @@
 package com.example.chook.entity.enums;
 
-public enum ResumePortfolioRoleType {
+public enum ResumePortfolioType {
     URL,
     FILE
 }

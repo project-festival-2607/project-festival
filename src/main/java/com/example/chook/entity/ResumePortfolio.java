@@ -1,6 +1,6 @@
 package com.example.chook.entity;
 
-import com.example.chook.entity.enums.ResumePortfolioRoleType;
+import com.example.chook.entity.enums.ResumePortfolioType;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -33,7 +33,7 @@ public class ResumePortfolio {
     // 타입
     @Enumerated(EnumType.STRING)
     @Column(name = "type", nullable = false)
-    private ResumePortfolioRoleType type;
+    private ResumePortfolioType type;
 
     // 제목
     private String title;
