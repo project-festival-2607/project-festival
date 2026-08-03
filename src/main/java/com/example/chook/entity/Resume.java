@@ -24,7 +24,7 @@ public class Resume {
             foreignKey = @ForeignKey(name = "fk_resume_member_id")
     )
     // 회원 식별자
-    private Resume resume;
+    private Member member;
 
     // 자기소개
     private String introduction;
