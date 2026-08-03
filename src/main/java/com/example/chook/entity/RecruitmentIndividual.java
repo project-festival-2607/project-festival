@@ -30,7 +30,7 @@ public class RecruitmentIndividual {
   @Column(name = "wage_type", nullable = false, length = 10)
   private RecruitmentWageType wageType;
 
-  @Column(name = "wage_value")
+  @Column(name = "wage_value", nullable = false)
   private int wageValue;
 
 }

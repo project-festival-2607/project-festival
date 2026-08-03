@@ -26,12 +26,13 @@ public class RecruitmentFoodTruck {
   )
   private Recruitment recruit;
 
+  @Column(nullable = false)
   private boolean prepaid;
 
-  @Column(name = "booth_fee_required")
+  @Column(name = "booth_fee_required", nullable = false)
   private boolean boothFeeRequired;
 
-  @Column(name = "electricity_provided")
+  @Column(name = "electricity_provided", nullable = false)
   private boolean electricityProvided;
 
 }
