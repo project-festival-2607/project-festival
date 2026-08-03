@@ -30,7 +30,11 @@ public class SocialLogin {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id", nullable = false)
+    @JoinColumn(
+      name = "member_id",
+      nullable = false,
+      foreignKey = @ForeignKey(name = "fk_social_logins_member_id")
+    )
     private Member member;
 
     @Enumerated(EnumType.STRING)
