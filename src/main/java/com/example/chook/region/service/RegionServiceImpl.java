@@ -1,7 +1,10 @@
-package com.example.chook.region;
+package com.example.chook.region.service;
 
 import com.example.chook.entity.RegionSido;
 import com.example.chook.entity.RegionSigungu;
+import com.example.chook.region.dto.RegionDTO;
+import com.example.chook.region.repository.RegionSidoRepository;
+import com.example.chook.region.repository.RegionSigunguRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Sort;
