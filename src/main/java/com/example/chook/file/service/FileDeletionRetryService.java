@@ -26,27 +26,27 @@ public class FileDeletionRetryService {
 
     log.info("파일 재삭제 작업 시작");
 
-    List<FilePath> deleteFailedRecords = failureRecorder.load();
-    List<FilePath> newDeleteFailedRecords =
-      deleteFilesFromFailedRecords(deleteFailedRecords);
-    failureRecorder.update(newDeleteFailedRecords);
+    List<FilePath> records = failureRecorder.load();
+    List<FilePath> remainingRecords =
+      deleteFiles(records);
+    failureRecorder.update(remainingRecords);
 
     log.info("파일 재삭제 작업 종료");
 
   }
 
-  private List<FilePath> deleteFilesFromFailedRecords(List<FilePath> deleteFailedRecords) {
+  private List<FilePath> deleteFiles(List<FilePath> records) {
 
-    List<FilePath> newDeleteFailedRecords = new ArrayList<>();
+    List<FilePath> remainingRecords = new ArrayList<>();
 
-    for (FilePath deleteFailedRecord : deleteFailedRecords) {
+    for (FilePath record : records) {
       if (!fileStorage.delete(
-        deleteFailedRecord.relativePath(),
-        deleteFailedRecord.storedName()
-      )) newDeleteFailedRecords.add(deleteFailedRecord);
+        record.relativePath(),
+        record.storedName()
+      )) remainingRecords.add(record);
     }
 
-    return newDeleteFailedRecords;
+    return remainingRecords;
 
   }
 

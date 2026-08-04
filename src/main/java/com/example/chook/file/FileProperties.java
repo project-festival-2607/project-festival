@@ -13,14 +13,31 @@ public class FileProperties {
 
   private String uploadDir;
   private String systemDir;
-  private String deleteFailLogFile;
+  private String deletionFailureLogFile;
 
   private Sweep sweep;
 
   @Getter
   @Setter
   public static class Sweep {
-    private Duration gracePeriod;
+
+    private Unreferenced unreferenced;
+    private Untracked untracked;
+
+    @Getter
+    @Setter
+    public static class Unreferenced {
+      private String cron;
+      private Duration gracePeriod;
+    }
+
+    @Getter
+    @Setter
+    public static class Untracked {
+      private String cron;
+      private Duration gracePeriod;
+    }
+
   }
 
 }

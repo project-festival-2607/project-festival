@@ -18,8 +18,8 @@ public class ResumePortfolio {
     // 포트폴리오 아이디
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "portfolio_id")
-    private Long portfolioId;
+    @Column(name = "resume_portfolio_id")
+    private Long id;
 
     // 이력서 아이디
     @ManyToOne(fetch = FetchType.LAZY)

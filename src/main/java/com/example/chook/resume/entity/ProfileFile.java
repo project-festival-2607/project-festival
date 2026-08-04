@@ -18,7 +18,7 @@ public class ProfileFile {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "profile_file_id")
-    private Long profileFileId;
+    private Long id;
 
     // 이력서 아이디
     @OneToOne(fetch = FetchType.LAZY)
