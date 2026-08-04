@@ -29,9 +29,11 @@ public class AdminBoard {
     @Column(columnDefinition = "TEXT", nullable = false)
     private String content;
 
-    @Column(name = "created_at", nullable = false)
+    @Column(name = "created_at", nullable = false, insertable = false, updatable = false,
+        columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime createdAt;
 
-    @Column(nullable = false)
+    @Column(nullable = false, insertable = false,
+        columnDefinition = "BOOLEAN DEFAULT FALSE")
     private Boolean highlight;
 }

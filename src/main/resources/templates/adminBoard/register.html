@@ -16,9 +16,11 @@
         <!--        이 안에서 작업        -->
     <h1>Register Page</h1>
 
-        <form th:action="@{/adminBoard/register}" method="post">
-            <input placeholder="제목">
+        <form th:action="@{/adminBoard/register}" method="post" id="registerForm">
+            <input type="text" name="title" id="title" placeholder="제목">
             <input value="작성자" readonly>
+            <!-- 에디터는 폼 필드가 아니므로, 전송 시점에 마크다운을 채워 넣어서 함께 전송 -->
+            <input type="hidden" name="content" id="content">
 
             <!-- 토스트 에디터 구현-->
             <div id="editor">
@@ -35,35 +37,65 @@
         <script th:src="@{/libs/toastui-editor-3.2.2/js/toastui-editor-all.min.js}"></script>
 
         <script>
+            const titleInput = document.getElementById("title");
+            const registerForm = document.getElementById("registerForm");
+
+            // 로컬 미리보기 URL(blob:...) -> 실제 업로드할 이미지 파일 매핑
+            // 이미지를 넣는 시점에는 서버에 저장하지 않고, 전송 버튼을 눌렀을 때 한 번에 업로드함
+            const pendingImages = new Map();
+
             const editor = new toastui.Editor({
                 el: document.querySelector('#editor'),
                 previewStyle: 'vertical',
                 height: '500px',
                 initialEditType: 'wysiwyg',
-                hideModeSwitch: true
+                hideModeSwitch: true,
+                hooks: {
+                    addImageBlobHook(blob, callback) {
+                        const previewUrl = URL.createObjectURL(blob);
+                        pendingImages.set(previewUrl, blob);
+                        callback(previewUrl, blob.name || "image");
+                    }
+                }
             });
 
-            const btn = document.getElementById("btn");
-            const title = document.querySelector("form input");
+            // 대기 중인 이미지들을 비동기로 서버에 업로드하고,
+            // 마크다운 안의 로컬 미리보기 URL을 실제 저장된 이미지 URL로 교체함
+            async function uploadPendingImages(markdown) {
+                let result = markdown;
+                for (const [previewUrl, blob] of pendingImages) {
+                    const formData = new FormData();
+                    formData.append("image", blob);
+                    formData.append("title", titleInput.value);
 
-            async function editorHandler(e){
-                e.preventDefault();
+                    const res = await fetch("/adminBoard/uploadImage", {
+                        method: "POST",
+                        body: formData
+                    });
+                    if (!res.ok) throw new Error("이미지 업로드 실패: " + res.status);
 
-                const content = editor.getMarkdown();
-                const titleValue = title.value;
-
-                const res = await fetch("/adminBoard/register", {
-                    method: "POST",
-                    headers: {"Content-Type": "application/json"},
-                    body: JSON.stringify({title: titleValue, content})
-                });
-
-                // 확인용: 컨트롤러가 받아서 그대로 echo한 값이 응답으로 오는지 체크
-                console.log("status:", res.status);
-                console.log("echo from controller:", await res.json());
+                    const fileDto = await res.json();
+                    console.log("image uploaded:", fileDto);
+                    result = result.split(previewUrl).join("/adminBoard/image/" + fileDto.uuid);
+                }
+                return result;
             }
 
-            btn.addEventListener("click", editorHandler);
+            // 전송 버튼을 누르면: 대기 중인 이미지 업로드(비동기)를 먼저 끝내고,
+            // hidden input을 채운 뒤 실제 폼 전송은 동기(페이지 이동) 방식으로 진행함
+            registerForm.addEventListener("submit", (e) => {
+                e.preventDefault();
+
+                uploadPendingImages(editor.getMarkdown())
+                    .then(finalMarkdown => {
+                        document.getElementById("content").value = finalMarkdown;
+                        registerForm.submit(); // fetch가 아닌 실제 동기 폼 전송 (submit 이벤트 재발생 없음)
+                    })
+                    .catch(err => {
+                        console.error(err);
+                        alert("이미지 업로드에 실패했습니다.");
+                    });
+            });
 
         </script>
     </div>
