@@ -54,7 +54,7 @@ public class Recruitment {
   private String content;
 
   @Column(nullable = false)
-  private LocalDateTime deadline;
+  private LocalDate applicationDeadline;
 
   @Column(name = "recruitment_count", nullable = false)
   private int recruitmentCount;
