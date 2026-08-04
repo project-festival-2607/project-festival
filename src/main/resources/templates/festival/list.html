@@ -40,6 +40,12 @@
 <!--        이 안에서 작업        -->
         <div class="fesContainer">
             <div class="fes-box" th:each="fes : ${fes.list}">
+                <div th:switch="${fes.status}">
+                    <div th:case="'진행예정'" class="fes-pro upComing">진행예정</div>
+                    <div th:case="'진행중'" class="fes-pro onGoing">진행중</div>
+                    <div th:case="'종료된행사'" class="fes-pro past">종료</div>
+                </div>
+
                 <div class="fes-img"
                      th:style="'background-image: url(' + ${fes.firstImage} + ')'">
                 </div>

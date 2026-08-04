@@ -68,6 +68,7 @@
 .detail-sub > span {
     color: #6c757d;
     width: 80%;
+    white-space: pre-line;
 }
 
 .detail-home {
@@ -114,6 +115,7 @@
     color: #6c757d;
     padding: 20px 30px;
     font-weight: 500;
+    white-space: pre-line;
 }
 
 .goToList {
@@ -127,13 +129,13 @@
 
 .goToList > a {
     padding: 10px 45px;
-    color: #597cff;
-    border: 1px solid #597cff;
+    color: #dc3545;
+    border: 1px solid #dc3545;
 
     transition: 0.3s ease;
 }
 
 .goToList > a:hover {
-    background-color: #597cff;
+    background-color: #dc3545;
     color: #FEFEFE;
 }
