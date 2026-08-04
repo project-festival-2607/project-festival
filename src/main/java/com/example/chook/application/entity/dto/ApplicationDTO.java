@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 public class ApplicationDTO {
 
     // 지원 아이디
-    private Long Id;
+    private Long id;
 
     // 회원 식별자
     private Long memberId;
