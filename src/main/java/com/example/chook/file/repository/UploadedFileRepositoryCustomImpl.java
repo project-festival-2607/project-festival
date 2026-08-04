@@ -17,11 +17,11 @@ import java.util.stream.Collectors;
 import static com.example.chook.file.entity.QUploadedFile.uploadedFile;
 
 @Slf4j
-public class UploadedFileCustomRepositoryImpl implements UploadedFileCustomRepository {
+public class UploadedFileRepositoryCustomImpl implements UploadedFileRepositoryCustom {
 
   private final JPAQueryFactory jpaQueryFactory;
 
-  public UploadedFileCustomRepositoryImpl(EntityManager em) {
+  public UploadedFileRepositoryCustomImpl(EntityManager em) {
     this.jpaQueryFactory = new JPAQueryFactory(em);
   }
 
