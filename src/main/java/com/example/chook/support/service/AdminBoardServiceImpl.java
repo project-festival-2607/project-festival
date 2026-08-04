@@ -9,6 +9,10 @@ import com.example.chook.support.repository.AdminBoardFileRepository;
 import com.example.chook.support.repository.AdminBoardRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,6 +24,8 @@ import java.util.regex.Pattern;
 @Service
 @Slf4j
 public class AdminBoardServiceImpl implements AdminBoardService {
+
+  private static final int PAGE_SIZE = 10;
 
   // 본문 마크다운 안에 박혀있는 "/adminBoard/image/{uuid}" 링크로 첨부 이미지를 역추적
   private static final Pattern IMAGE_UUID_PATTERN =
@@ -37,6 +43,7 @@ public class AdminBoardServiceImpl implements AdminBoardService {
       AdminBoard.builder()
         .title(dto.getTitle())
         .content(dto.getContent())
+        .highlight(Boolean.TRUE.equals(dto.getHighlight()))
         .build()
     );
 
@@ -54,6 +61,34 @@ public class AdminBoardServiceImpl implements AdminBoardService {
     }
 
     return savedBoard;
+  }
+
+  @Override
+  public Page<AdminBoardDTO> getList(int page) {
+    // 하이라이트 글을 항상 위로, 그 안에서는 최신순
+    Pageable pageable = PageRequest.of(
+      Math.max(page - 1, 0),
+      PAGE_SIZE,
+      Sort.by(Sort.Order.desc("highlight"), Sort.Order.desc("bno"))
+    );
+    Page<AdminBoardDTO> boardPage = adminBoardRepository.findAll(pageable).map(this::toDto);
+
+    int seq = 1;
+    for (AdminBoardDTO board : boardPage.getContent()) {
+      board.setDisplayNo(Boolean.TRUE.equals(board.getHighlight()) ? "중요" : String.valueOf(seq++));
+    }
+
+    return boardPage;
+  }
+
+  private AdminBoardDTO toDto(AdminBoard board) {
+    return AdminBoardDTO.builder()
+      .bno(board.getBno())
+      .title(board.getTitle())
+      .content(board.getContent())
+      .createdAt(board.getCreatedAt())
+      .highlight(board.getHighlight())
+      .build();
   }
 
   private List<UUID> extractImageUuids(String content) {

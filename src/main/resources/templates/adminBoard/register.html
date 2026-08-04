@@ -22,6 +22,13 @@
             <!-- 에디터는 폼 필드가 아니므로, 전송 시점에 마크다운을 채워 넣어서 함께 전송 -->
             <input type="hidden" name="content" id="content">
 
+            <div class="form-check">
+                <input type="checkbox" class="form-check-input" name="highlight" id="highlight" value="true">
+                <!-- 체크 해제 시에도 highlight=false로 바인딩되도록 하는 스프링의 필드 마커 -->
+                <input type="hidden" name="_highlight" value="on">
+                <label class="form-check-label" for="highlight">하이라이트</label>
+            </div>
+
             <!-- 토스트 에디터 구현-->
             <div id="editor">
 

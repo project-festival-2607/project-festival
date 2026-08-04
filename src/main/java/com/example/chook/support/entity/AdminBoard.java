@@ -33,7 +33,6 @@ public class AdminBoard {
         columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime createdAt;
 
-    @Column(nullable = false, insertable = false,
-        columnDefinition = "BOOLEAN DEFAULT FALSE")
+    @Column(nullable = false, columnDefinition = "BOOLEAN DEFAULT FALSE")
     private Boolean highlight;
 }
