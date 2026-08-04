@@ -84,7 +84,7 @@ public class FileSweeper {
         String relativePath = uploadDir.relativize(filePath.getParent())
           .toString().replace('\\', '/');
         String fileName = filePath.getFileName().toString();
-        if (!filePathRecords.contains(new FilePath(fileName, relativePath))) {
+        if (!filePathRecords.contains(new FilePath(relativePath, fileName))) {
           try {
             log.debug("\"{}\" 파일이 DB에 존재하지 않음",
               uploadDir.relativize(filePath)
