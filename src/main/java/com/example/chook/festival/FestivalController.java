@@ -36,4 +36,10 @@ public class FestivalController {
 
         return "/festival/list";
     }
+
+    @GetMapping("/detail")
+    public void detail(@RequestParam("id") String contentId, Model model){
+        FestivalDTO festivalDTO = festivalService.getDetail(contentId);
+        model.addAttribute("fes", festivalDTO);
+    }
 }

@@ -98,14 +98,24 @@
 
 .fes-title {
     margin: 30px 0 15px 0;
+
+    transition: 0.3s ease;
+}
+
+.fes-title > a {
     font-size: 25px;
     font-weight: 800;
     color: #ccc2a4;
 }
 
+.fes-title:hover > a {
+    border-bottom: 1px solid #ccc2a4;
+}
+
 .fes-date {
     font-size: 15px;
     font-weight: 600;
+    color: #6c757d;
 }
 
 .topBtn {
@@ -123,4 +133,50 @@
     color: #FEFEFE;
 
     cursor: pointer;
+}
+
+.addBtn {
+    position: fixed;
+    bottom: 100px;
+    right: 20px;
+
+    margin: 0;
+
+    padding: 10px 15px;
+    border-radius: 50px;
+    background: #ccc2a4;
+
+    cursor: pointer;
+
+    transition: 0.3s ease;
+}
+
+.addBtn:hover {
+    background: #b8af93;
+}
+
+.addBtn > a {
+    font-size: 16px;
+    font-weight: 800;
+    color: #FEFEFE;
+}
+
+
+/*반응형 대응*/
+
+@media (max-width: 767px){
+    .fesContainer {
+        display: grid;
+        grid-template-columns: repeat(1, 1fr);
+        /*gap: 40px 30px;*/
+    }
+
+    .fes-box {
+        border-bottom: 1px solid #ccc2a4;
+    }
+
+    .fes-box:nth-child(3n + 2){
+        border-right: none;
+        border-left: none;
+    }
 }

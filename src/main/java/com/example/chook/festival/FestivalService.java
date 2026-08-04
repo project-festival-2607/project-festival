@@ -63,4 +63,6 @@ public interface FestivalService {
     void saveAll(List<FestivalDTO> festivalDTOList);
 
     Page<FestivalDTO> getList(int pageNo);
+
+    FestivalDTO getDetail(String contentId);
 }

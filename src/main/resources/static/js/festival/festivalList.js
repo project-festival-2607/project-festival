@@ -28,3 +28,10 @@ document.querySelectorAll(".fes-img").forEach(img => {
     });
 
 });
+
+document.querySelector(".topBtn").addEventListener("click", (e) => {
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
+});

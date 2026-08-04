@@ -44,7 +44,9 @@
                      th:style="'background-image: url(' + ${fes.firstImage} + ')'">
                 </div>
                 <div class="fes-title">
-                    [[${fes.title}]]
+                    <a th:href="@{/festival/detail(id=${fes.contentId})}">
+                        [[${fes.title}]]
+                    </a>
                 </div>
                 <div class="fes-date">
                     <span th:text="${fes.startDate + ' ~ ' + fes.endDate}"></span>
@@ -57,11 +59,18 @@
         ↑
     </div>
 
+<!--    구인자 로그인 시      -->
+    <div class="addBtn">
+        <a href="/festival/register">
+            축제등록하기
+        </a>
+    </div>
 
-    <script th:inline="javascript">
-        const apiKey = /*[[${apikey}]]*/ 'default-key';
-    </script>
-    <script th:src="@{/js/festival/uploadFestival.js}"></script>
+
+<!--    <script th:inline="javascript">-->
+<!--        const apiKey = /*[[${apikey}]]*/ 'default-key';-->
+<!--    </script>-->
+<!--    <script th:src="@{/js/festival/uploadFestival.js}"></script>-->
     <script th:src="@{/js/festival/festivalList.js}"></script>
 </div>
 
