@@ -68,4 +68,12 @@ public class Festival {
 
     @Column(name = "second_image")
     private String secondImage;
+
+    public String getOfficialHomepage() {
+        if (this.homepage == null || this.homepage.isBlank()) {
+            return "";
+        }
+        var matcher = java.util.regex.Pattern.compile("https?://[^\\s]+").matcher(this.homepage);
+        return matcher.find() ? matcher.group() : this.homepage;
+    }
 }

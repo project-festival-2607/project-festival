@@ -1,0 +1,139 @@
+.detailContainer {
+    border: 1px solid #afa992;
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    gap: 100px;
+
+    padding: 30px 80px;
+
+    margin-bottom: 40px;
+
+    background: #fbfbfb;
+}
+
+.detail-img {
+    /*aspect-ratio: 2 / 3;*/
+    /*object-fit: cover;*/
+    width: 280px;
+    height: 420px;
+
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+
+    border: 1px solid #ccc2a4;
+    /*border-radius: 15px;*/
+
+    transition: 0.3s ease;
+}
+
+.detail-img:hover {
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+}
+
+.detail-text {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    width: 700px;
+
+    gap: 20px;
+}
+
+.detail-h1 {
+    font-size: 40px;
+    font-weight: 800;
+    margin-bottom: 30px;
+
+    color: #ccc2a4;
+
+    border-bottom: 1px solid #ccc2a4;
+}
+
+.detail-sub {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+
+.detail-sub > div {
+    color: #ccc2a4;
+    width: 10%;
+}
+
+.detail-sub > span {
+    color: #6c757d;
+    width: 80%;
+}
+
+.detail-home {
+    margin-top: 15px;
+}
+
+.detail-sub > .homepage {
+    padding: 10px 45px;
+    color: #ccc2a4;
+    border: 1px solid #ccc2a4;
+    background: #FEFEFE;
+    transition: 0.3s ease;
+}
+
+.detail-sub > .homepage:hover {
+    background-color: #ccc2a4;
+    color: #FEFEFE;
+}
+
+.detail-sub-container {
+    padding: 30px 80px;
+    display: flex;
+    flex-direction: column;
+
+    width: 80%;
+
+    gap: 30px;
+}
+
+.detail-h2 {
+    font-size: 28px;
+    font-weight: 800;
+    margin-bottom: 10px;
+
+    color: #ccc2a4;
+
+    border-bottom: 1px solid #ccc2a4;
+
+    width: 100px;
+}
+
+.detail-h3 {
+    font-size: 15px;
+    color: #6c757d;
+    padding: 20px 30px;
+    font-weight: 500;
+}
+
+.goToList {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    margin-top: 20px;
+}
+
+.goToList > a {
+    padding: 10px 45px;
+    color: #597cff;
+    border: 1px solid #597cff;
+
+    transition: 0.3s ease;
+}
+
+.goToList > a:hover {
+    background-color: #597cff;
+    color: #FEFEFE;
+}
