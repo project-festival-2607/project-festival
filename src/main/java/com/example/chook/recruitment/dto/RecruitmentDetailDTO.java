@@ -28,8 +28,14 @@ public class RecruitmentDetailDTO {
   private String content;
 
   private RecruitmentCategory category;
+  // RecruitmentIndividual
   private RecruitmentWageType wageType;
   private Integer wageValue;
+  // RecruitmentFoodTruck
+  private boolean prepaid;
+  private boolean boothFeeRequired;
+  private boolean electricityProvided;
+
   private LocalDate applicationDeadline;
   private Integer recruitmentCount;
   private RecruitmentStatus status;
