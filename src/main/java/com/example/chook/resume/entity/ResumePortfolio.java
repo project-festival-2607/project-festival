@@ -1,0 +1,44 @@
+package com.example.chook.resume.entity;
+
+import com.example.chook.resume.entity.enums.ResumePortfolioType;
+import jakarta.persistence.*;
+import lombok.*;
+
+import java.time.LocalDateTime;
+
+@Entity
+@Table(name = "resume_portfolio")
+@Getter
+@Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class ResumePortfolio {
+
+    // 포트폴리오 아이디
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "resume_portfolio_id")
+    private Long id;
+
+    // 이력서 아이디
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(
+            name = "resume_id",
+            foreignKey = @ForeignKey(name = "fk_resume_portfolio_resume_id")
+    )
+    @ToString.Exclude
+    private Resume resume;
+
+    // 타입
+    @Enumerated(EnumType.STRING)
+    @Column(name = "type", nullable = false)
+    private ResumePortfolioType type;
+
+    // 제목
+    private String title;
+
+    // 등록일
+    @Column(name = "registered_at")
+    private LocalDateTime registeredAt;
+}

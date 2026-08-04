@@ -18,6 +18,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.UUID;
 
 @Controller
 @RequestMapping("/test/file")
@@ -38,16 +39,16 @@ public class TestFileController {
   }
 
   @GetMapping("/{uuid}")
-  public ResponseEntity<Resource> getFile(@PathVariable("uuid") String uuidStr) {
-    FileResource file = fileService.getFile(uuidStr);
+  public ResponseEntity<Resource> getFile(@PathVariable UUID uuid) {
+    FileResource file = fileService.getFile(uuid);
     return ResponseEntity.ok()
       .contentType(MediaType.parseMediaType(file.mimeType()))
       .body(file.resource());
   }
 
   @GetMapping("/{uuid}/download")
-  public ResponseEntity<Resource> downloadFile(@PathVariable("uuid") String uuidStr) {
-    FileResource file = fileService.getFile(uuidStr);
+  public ResponseEntity<Resource> downloadFile(@PathVariable UUID uuid) {
+    FileResource file = fileService.getFile(uuid);
     ContentDisposition contentDisposition =
       ContentDisposition.attachment()
         .filename(file.originalName(), StandardCharsets.UTF_8)
@@ -80,7 +81,7 @@ public class TestFileController {
 
   @PostMapping("/delete")
   public String delete(RedirectAttributes redirectAttributes,
-                       @RequestParam String uuid) {
+                       @RequestParam UUID uuid) {
     try {
       fileService.delete(uuid);
       redirectAttributes.addFlashAttribute(

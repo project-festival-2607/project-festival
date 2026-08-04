@@ -1,6 +1,6 @@
 package com.example.chook.file.service;
 
-import com.example.chook.entity.UploadedFile;
+import com.example.chook.file.entity.UploadedFile;
 import com.example.chook.file.FileDeletionFailureRecorder;
 import com.example.chook.file.FileStorage;
 import com.example.chook.file.dto.FileDTO;
@@ -43,22 +43,22 @@ public class FileServiceImpl implements FileService {
   }
 
   /**
-   * UUID 문자열을 기준으로 파일을 삭제한다.
+   * UUID를 기준으로 파일을 삭제한다.
    *
-   * @param uuidStr 삭제할 파일의 UUID 문자열
+   * @param uuid 삭제할 파일의 UUID
    */
   @Transactional
   @Override
-  public void delete(String uuidStr) {
-    Optional<UploadedFile> targetFile = uploadedFileRepository.findById(UUID.fromString(uuidStr));
+  public void delete(UUID uuid) {
+    Optional<UploadedFile> targetFile = uploadedFileRepository.findById(uuid);
     if (targetFile.isEmpty()) return;
     deleteFile(targetFile.get());
   }
 
   @Override
-  public FileResource getFile(String uuidStr) {
-    UploadedFile targetFile = uploadedFileRepository.findById(UUID.fromString(uuidStr))
-      .orElseThrow(() -> new RuntimeException(String.format("UUID가 \"%s\"인 파일을 DB에서 찾을 수 없음", uuidStr)));
+  public FileResource getFile(UUID uuid) {
+    UploadedFile targetFile = uploadedFileRepository.findById(uuid)
+      .orElseThrow(() -> new RuntimeException(String.format("UUID가 \"%s\"인 파일을 DB에서 찾을 수 없음", uuid)));
 
     Resource resource = fileStorage.getFile(
       targetFile.getRelativePath(),
@@ -126,7 +126,7 @@ public class FileServiceImpl implements FileService {
       file.getStoredName()
     )) {
       log.error("파일 \"{}\"에 대한 실패 기록 작성을 시도합니다.", file.getOriginalName());
-      if (!failureRecorder.recordDeleteFailure(new FilePath(
+      if (!failureRecorder.recordDeletionFailure(new FilePath(
         file.getRelativePath(),
         file.getStoredName()
       ))) {
