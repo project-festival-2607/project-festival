@@ -55,6 +55,31 @@
         </div>
     </div>
 
+<!--    페이징        -->
+    <div class="pageBtn">
+            <div class="fes-pagination">
+                <div class="fes-page-item" th:classappend="${fes.prev eq false ? 'disabled' : '' }">
+                    <a class="fes-page-link" th:href="@{/festival/list(pageNo=${fes.pageNo} - 1)}">
+                        ←
+                    </a>
+                </div>
+
+                <th:block th:each="i:${#numbers.sequence(fes.startPage, fes.endPage)}">
+                    <div class="fes-page-item" th:classappend="${fes.pageNo == i ? 'active' : ''}">
+                        <a class="fes-page-link" th:href="@{/festival/list(pageNo=${i})}">
+                            [[${i}]]
+                        </a>
+                    </div>
+                </th:block>
+
+                <div class="fes-page-item" th:classappend="${fes.next eq false ? 'disabled' : '' }">
+                    <a class="fes-page-link" th:href="@{/festival/list(pageNo=${fes.pageNo} + 1)}">
+                        →
+                    </a>
+                </div>
+            </div>
+    </div>
+
     <div class="topBtn">
         ↑
     </div>
