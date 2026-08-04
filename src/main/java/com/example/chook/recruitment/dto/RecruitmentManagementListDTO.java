@@ -1,10 +1,12 @@
 package com.example.chook.recruitment.dto;
 
 import com.example.chook.recruitment.entity.enums.RecruitmentCategory;
+import com.example.chook.recruitment.entity.enums.RecruitmentStatus;
 import com.example.chook.recruitment.entity.enums.RecruitmentWageType;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 @Getter
@@ -13,7 +15,7 @@ import java.time.LocalTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class RecruitmentListDTO {
+public class RecruitmentManagementListDTO {
 
   private String regionSidoName;
   private String regionSigunguName;
@@ -27,14 +29,17 @@ public class RecruitmentListDTO {
   // RecruitmentIndividual
   private RecruitmentWageType wageType;
   private Integer wageValue;
-  // RecruitmentFoodTruck
-  private boolean prepaid;
-  private boolean boothFeeRequired;
-  private boolean electricityProvided;
+  // RecruitmentFoodTruck - 공고별 페이지에서 확인
 
+  private LocalDate applicationDeadline;
+  private RecruitmentStatus status;
+
+  private String workingLocation;
   private LocalDate workingStartDate;
   private LocalDate workingEndDate;
   private LocalTime workingStartTime;
   private LocalTime workingEndTime;
+
+  private LocalDateTime publishedAt;
 
 }
