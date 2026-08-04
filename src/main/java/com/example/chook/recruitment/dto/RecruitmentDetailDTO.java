@@ -46,6 +46,7 @@ public class RecruitmentDetailDTO {
   private LocalTime workingStartTime;
   private LocalTime workingEndTime;
 
+  private boolean published;
   private LocalDateTime publishedAt;
 
 }
