@@ -1,6 +1,5 @@
 package com.example.chook.festival;
 
-import com.example.chook.entity.Festival;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

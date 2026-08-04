@@ -1,6 +1,5 @@
 package com.example.chook.festival;
 
-import com.example.chook.entity.Festival;
 import org.springframework.data.domain.Page;
 
 import java.time.LocalDate;
