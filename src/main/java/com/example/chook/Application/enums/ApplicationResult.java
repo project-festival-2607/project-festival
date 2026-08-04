@@ -1,4 +1,4 @@
-package com.example.chook.resume.entity.enums;
+package com.example.chook.Application.enums;
 
 public enum ApplicationResult {
     APPLIED,

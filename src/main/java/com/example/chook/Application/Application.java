@@ -1,8 +1,9 @@
-package com.example.chook.resume.entity;
+package com.example.chook.Application;
 
 import com.example.chook.member.entity.Member;
 import com.example.chook.recruitment.entity.Recruitment;
-import com.example.chook.resume.entity.enums.ApplicationResult;
+import com.example.chook.resume.entity.Resume;
+import com.example.chook.Application.enums.ApplicationResult;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -15,13 +16,21 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Table(
+        uniqueConstraints = {
+                @UniqueConstraint(
+                        name = "uk_application_member_recruit",
+                        columnNames = {"member_id", "recruit_id"}
+                )
+        }
+)
 public class Application {
 
     // 지원 아이디
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "apply_id")
-    private Long Id;
+    private Long id;
 
     // 회원 식별자
     @ManyToOne(fetch = FetchType.LAZY)
