@@ -1,4 +1,4 @@
-package com.example.chook.application.entity.dto;
+package com.example.chook.application.dto;
 
 import com.example.chook.application.entity.enums.ApplicationResult;
 import lombok.*;
