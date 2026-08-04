@@ -1,4 +1,4 @@
-package com.example.chook.inquiry.entity;
+package com.example.chook.support.entity;
 
 import com.example.chook.file.entity.UploadedFile;
 import jakarta.persistence.Column;

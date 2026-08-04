@@ -1,4 +1,4 @@
-package com.example.chook.inquiry.entity;
+package com.example.chook.support.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
