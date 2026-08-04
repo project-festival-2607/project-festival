@@ -81,6 +81,13 @@ public class AdminBoardServiceImpl implements AdminBoardService {
     return boardPage;
   }
 
+  @Override
+  public AdminBoardDTO getDetail(Long bno) {
+    AdminBoard board = adminBoardRepository.findById(bno)
+      .orElseThrow(() -> new IllegalArgumentException("게시글을 찾을 수 없음: " + bno));
+    return toDto(board);
+  }
+
   private AdminBoardDTO toDto(AdminBoard board) {
     return AdminBoardDTO.builder()
       .bno(board.getBno())

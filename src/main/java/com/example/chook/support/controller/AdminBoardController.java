@@ -49,6 +49,18 @@ public class AdminBoardController {
         return "adminBoard/register";
     }
 
+    @GetMapping("/detail/{bno}")
+    public String detail(
+        @PathVariable Long bno,
+        // ponytail: 로그인 구현 전 임시 - 쿼리스트링(?admin=true)으로만 관리자 여부 확인, 나중에 세션의 회원 role 체크로 교체
+        @RequestParam(defaultValue = "false") boolean admin,
+        Model model
+    ) {
+        model.addAttribute("board", adminBoardService.getDetail(bno));
+        model.addAttribute("isAdmin", admin);
+        return "adminBoard/detail";
+    }
+
     @PostMapping("/register")
     public String register(AdminBoardDTO dto) {
         AdminBoard saved = adminBoardService.register(dto);

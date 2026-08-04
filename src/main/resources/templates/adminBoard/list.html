@@ -25,7 +25,7 @@
                 <td th:text="${board.displayNo}"></td>
                 <td>
 <!--               <span th:if="${board.highlight}" class="badge bg-danger me-1">고정</span>-->
-                    <span th:text="${board.title}"></span>
+                    <a th:href="@{/adminBoard/detail/{bno}(bno=${board.bno})}" th:text="${board.title}"></a>
                 </td>
                 <td th:text="${board.createdAtStr}"></td>
             </tr>

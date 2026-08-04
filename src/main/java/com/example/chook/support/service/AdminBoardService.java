@@ -10,4 +10,6 @@ public interface AdminBoardService {
 
   Page<AdminBoardDTO> getList(int page);
 
+  AdminBoardDTO getDetail(Long bno);
+
 }
