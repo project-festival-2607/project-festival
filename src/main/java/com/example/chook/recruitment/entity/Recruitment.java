@@ -33,6 +33,9 @@ public class Recruitment {
   )
   private RegionSigungu sigungu;
 
+  @Column(name = "working_location")
+  private String workingLocation;
+
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(
     name = "festival_id",
@@ -54,7 +57,7 @@ public class Recruitment {
   private String content;
 
   @Column(nullable = false)
-  private LocalDateTime deadline;
+  private LocalDate applicationDeadline;
 
   @Column(name = "recruitment_count", nullable = false)
   private int recruitmentCount;
