@@ -5,6 +5,7 @@ import com.example.chook.file.record.UnreferencedFile;
 import com.example.chook.recruitment.entity.QRecruitmentFile;
 import com.example.chook.resume.entity.QProfileFile;
 import com.example.chook.resume.entity.QResumeFile;
+import com.example.chook.support.entity.QAdminBoardFile;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
@@ -41,6 +42,7 @@ public class UploadedFileRepositoryCustomImpl implements UploadedFileRepositoryC
 
   @Override
   public List<UnreferencedFile> findUnreferencedFiles() {
+    QAdminBoardFile  adminBoardFile = QAdminBoardFile.adminBoardFile;
     QProfileFile profileFile = QProfileFile.profileFile;
     QRecruitmentFile recruitmentFile = QRecruitmentFile.recruitmentFile;
     QResumeFile resumeFile = QResumeFile.resumeFile;
@@ -69,7 +71,15 @@ public class UploadedFileRepositoryCustomImpl implements UploadedFileRepositoryC
           .selectOne()
           .from(resumeFile)
           .where(resumeFile.uploadedFile.eq(uploadedFile))
+          .notExists(),
+
+        // AdminBoardFile
+        JPAExpressions
+          .selectOne()
+          .from(adminBoardFile)
+          .where(adminBoardFile.uploadedFile.eq(uploadedFile))
           .notExists()
+
       )
       .fetch()
       .stream()

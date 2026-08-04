@@ -3,6 +3,7 @@ package com.example.chook.resume.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -36,11 +37,11 @@ public class ResumeCareer {
 
     // 입사연월
     @Column(name = "start_date")
-    private LocalDateTime startDate;
+    private LocalDate startDate;
 
     // 퇴사연월
     @Column(name = "end_date")
-    private LocalDateTime endDate;
+    private LocalDate endDate;
 
     // 담당업무
     @Column(length = 5000)
