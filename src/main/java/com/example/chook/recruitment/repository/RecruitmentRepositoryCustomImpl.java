@@ -33,6 +33,8 @@ public class RecruitmentRepositoryCustomImpl implements RecruitmentRepositoryCus
     BooleanBuilder booleanBuilder = new BooleanBuilder();
 
     booleanBuilder
+      .and(recruitment.deletedAt.isNull())
+      .and(recruitment.published)
       .and(containsAnyKeyword(condition.keywords()))
       .and(regionSidoEq(condition.regionSidoCode()))
       .and(regionSigunguEq(condition.regionSigunguCode()))

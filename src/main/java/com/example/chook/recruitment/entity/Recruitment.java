@@ -76,4 +76,13 @@ public class Recruitment {
   @Column(name = "working_end_date", nullable = false)
   private LocalDate workingEndDate;
 
+  @Builder.Default
+  private boolean published = false;
+
+  @Column(name = "published_at")
+  private LocalDateTime publishedAt;
+
+  @Column(name = "deleted_at")
+  private LocalDateTime deletedAt;
+
 }
