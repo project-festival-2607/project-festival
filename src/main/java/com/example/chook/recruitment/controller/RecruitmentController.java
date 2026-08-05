@@ -7,14 +7,15 @@ import com.example.chook.recruitment.dto.RecruitmentSpecificDTO;
 import com.example.chook.recruitment.entity.enums.RecruitmentCategory;
 import com.example.chook.recruitment.form.RecruitmentCreateForm;
 import com.example.chook.recruitment.service.RecruitmentService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping("/recruit/*")
@@ -32,14 +33,35 @@ public class RecruitmentController {
   public void manageList(Model model) {
   }
 
+  @GetMapping("/{id}")
+  public String view(@PathVariable String id, Model model) {
+    return "/recruit/detail";
+  }
+
   @GetMapping("/register")
   public void register(Model model) {
-
   }
 
   @PostMapping("/register")
-  public String register(@ModelAttribute RecruitmentCreateForm recruitmentCreateForm) {
-    return "redirect:/recruit/list";
+  public String register(@Valid @ModelAttribute RecruitmentCreateForm recruitmentCreateForm,
+                         BindingResult bindingResult,
+                         RedirectAttributes redirectAttributes) {
+
+    if (bindingResult.hasErrors()) return "recruit/register";
+    if (recruitmentCreateForm.getWorkingStartDate().isAfter(
+      recruitmentCreateForm.getWorkingEndDate()))
+      bindingResult.rejectValue("workingEndDate",
+        "workingEndDate.outOfRange",
+        "업무시작날짜는 업무종료날짜보다 늦을 수 없습니다."
+      );
+    if (bindingResult.hasErrors()) return "recruit/register";
+    RecruitmentCreateDTO recruitmentCreateDTO = toCreateDto(recruitmentCreateForm);
+    Long recruitmentId = recruitmentService.createRecruitment(recruitmentCreateDTO);
+
+    redirectAttributes.addAttribute("id", recruitmentId);
+    redirectAttributes.addFlashAttribute("successMsg", "공고 초안이 등록되었습니다.");
+
+    return "redirect:/recruit/{id}";
   }
 
   private RecruitmentCreateDTO toCreateDto(RecruitmentCreateForm form) {
