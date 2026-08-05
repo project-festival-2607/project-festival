@@ -43,10 +43,10 @@ public class RecruitmentServiceImpl implements RecruitmentService {
   @Transactional
   @Override
   public Long createRecruitment(RecruitmentCreateDTO dto) {
-
     String sigunguCode = dto.getRegionSigunguCode();
     String festivalContentId = dto.getFestivalContentId();
     RecruitmentSpecificDTO specificDto = dto.getSpecific();
+
 
     RegionSigungu sigungu = regionSigunguRepository
       .findById(sigunguCode)
@@ -61,20 +61,7 @@ public class RecruitmentServiceImpl implements RecruitmentService {
 
     recruitmentRepository.save(recruitment);
 
-    switch (dto.getCategory()) {
-      case INDIVIDUAL -> {
-        if (!(specificDto instanceof RecruitmentIndividualDTO individualDto))
-          throw new IllegalArgumentException("specific이 Individual이 아님");
-        recruitmentIndividualRepository.save(
-          mapper.toIndividualEntity(recruitment, individualDto));
-      }
-      case FOOD_TRUCK -> {
-        if (!(specificDto instanceof RecruitmentFoodTruckDTO foodTruckDto))
-          throw new IllegalArgumentException("specific이 FoodTruck이 아님");
-        recruitmentFoodTruckRepository.save(
-          mapper.toFoodTruckEntity(recruitment, foodTruckDto));
-      }
-    }
+    validateSpecificDtoAndSave(recruitment, specificDto);
 
     return recruitment.getId();
 
@@ -103,8 +90,37 @@ public class RecruitmentServiceImpl implements RecruitmentService {
 
   }
 
+  @Transactional
   @Override
   public void updateRecruitment(Long id, RecruitmentUpdateDTO dto) {
+
+    String sigunguCode = dto.getRegionSigunguCode();
+    RecruitmentSpecificDTO specificDto = dto.getSpecific();
+
+    RegionSigungu sigungu = regionSigunguRepository
+      .findById(sigunguCode)
+      .orElseThrow(() -> new EntityNotFoundException(String.format("코드가 \"%s\"인 시군구가 없음", sigunguCode)));
+
+    Recruitment recruitment = recruitmentRepository.findById(id)
+      .orElseThrow(() -> new EntityNotFoundException(String.format("id가 \"%d\"인 행사가 없음", id)));
+
+    recruitmentFoodTruckRepository.deleteById(id);
+    recruitmentIndividualRepository.deleteById(id);
+
+    validateSpecificDtoAndSave(recruitment, specificDto);
+
+    recruitment.setSigungu(sigungu);
+    recruitment.setTitle(dto.getRecruitmentTitle());
+    recruitment.setContent(dto.getContent());
+    recruitment.setApplicationDeadline(dto.getApplicationDeadline());
+    recruitment.setRecruitmentCount(dto.getRecruitmentCount());
+    recruitment.setWorkingLocation(dto.getWorkingLocation());
+    recruitment.setWorkingStartDate(dto.getWorkingStartDate());
+    recruitment.setWorkingEndDate(dto.getWorkingEndDate());
+    recruitment.setWorkingStartTime(dto.getWorkingStartTime());
+    recruitment.setWorkingEndTime(dto.getWorkingEndTime());
+
+    recruitmentRepository.save(recruitment);
 
   }
 
@@ -161,6 +177,24 @@ public class RecruitmentServiceImpl implements RecruitmentService {
     return recruitmentRepository
       .searchRecruitments(condition, pageable)
       .map(this::buildManagementListDtoFromEntity);
+  }
+
+  private void validateSpecificDtoAndSave(Recruitment recruitment,
+                                          RecruitmentSpecificDTO specificDto) {
+    switch (recruitment.getCategory()) {
+      case INDIVIDUAL -> {
+        if (!(specificDto instanceof RecruitmentIndividualDTO individualDto))
+          throw new IllegalArgumentException("specific이 Individual이 아님");
+        recruitmentIndividualRepository.save(
+          mapper.toIndividualEntity(recruitment, individualDto));
+      }
+      case FOOD_TRUCK -> {
+        if (!(specificDto instanceof RecruitmentFoodTruckDTO foodTruckDto))
+          throw new IllegalArgumentException("specific이 FoodTruck이 아님");
+        recruitmentFoodTruckRepository.save(
+          mapper.toFoodTruckEntity(recruitment, foodTruckDto));
+      }
+    }
   }
 
   private RecruitmentIndividual getIndividual(Long id) {
