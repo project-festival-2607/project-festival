@@ -1,8 +1,8 @@
 package com.example.chook.file.service;
 
 import com.example.chook.file.FileDeletionFailureRecorder;
-import com.example.chook.file.record.FilePath;
 import com.example.chook.file.FileStorage;
+import com.example.chook.file.record.FilePath;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.EnableScheduling;

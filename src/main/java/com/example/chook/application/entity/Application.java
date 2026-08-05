@@ -1,9 +1,9 @@
 package com.example.chook.application.entity;
 
+import com.example.chook.application.entity.enums.ApplicationResult;
 import com.example.chook.member.entity.Member;
 import com.example.chook.recruitment.entity.Recruitment;
 import com.example.chook.resume.entity.Resume;
-import com.example.chook.application.entity.enums.ApplicationResult;
 import jakarta.persistence.*;
 import lombok.*;
 

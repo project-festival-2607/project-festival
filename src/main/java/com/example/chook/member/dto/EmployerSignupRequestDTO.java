@@ -1,6 +1,5 @@
 package com.example.chook.member.dto;
 
-import com.example.chook.member.entity.enums.Gender;
 import lombok.*;
 
 import java.time.LocalDate;
