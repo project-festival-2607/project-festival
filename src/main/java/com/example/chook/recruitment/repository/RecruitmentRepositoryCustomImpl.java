@@ -1,6 +1,8 @@
 package com.example.chook.recruitment.repository;
 
 import com.example.chook.recruitment.entity.Recruitment;
+import com.example.chook.recruitment.entity.RecruitmentFoodTruck;
+import com.example.chook.recruitment.entity.RecruitmentIndividual;
 import com.example.chook.recruitment.entity.enums.RecruitmentCategory;
 import com.example.chook.recruitment.entity.enums.RecruitmentStatus;
 import com.example.chook.recruitment.record.RecruitmentSearchCondition;
@@ -14,8 +16,10 @@ import lombok.extern.slf4j.Slf4j;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Optional;
 
 import static com.example.chook.recruitment.entity.QRecruitment.recruitment;
+import static com.example.chook.recruitment.entity.QRecruitmentFoodTruck.recruitmentFoodTruck;
 import static com.example.chook.recruitment.entity.QRecruitmentIndividual.recruitmentIndividual;
 
 @Slf4j
@@ -66,6 +70,28 @@ public class RecruitmentRepositoryCustomImpl implements RecruitmentRepositoryCus
       jpaQuery.orderBy(recruitmentIndividual.wageValue.desc());
 
     return jpaQuery.fetch();
+  }
+
+  @Override
+  public Optional<RecruitmentIndividual> getIndividualById(Long id) {
+
+    RecruitmentIndividual individual = jpaQueryFactory
+      .selectFrom(recruitmentIndividual)
+      .where(recruitmentIndividual.id.eq(id))
+      .fetchOne();
+
+    return Optional.ofNullable(individual);
+  }
+
+  @Override
+  public Optional<RecruitmentFoodTruck> getFoodTruckById(Long id) {
+
+    RecruitmentFoodTruck foodTruck = jpaQueryFactory
+      .selectFrom(recruitmentFoodTruck)
+      .where(recruitmentFoodTruck.id.eq(id))
+      .fetchOne();
+
+    return Optional.ofNullable(foodTruck);
   }
 
   private BooleanBuilder containsAnyKeyword(List<String> keywords) {
