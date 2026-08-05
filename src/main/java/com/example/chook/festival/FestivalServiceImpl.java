@@ -66,7 +66,7 @@ public class FestivalServiceImpl implements FestivalService, ApplicationRunner {
 
     @Override
     public Page<FestivalDTO> getList(int pageNo, String type, String keyword) {
-        Pageable pageable = PageRequest.of(pageNo -1, 18, Sort.by("startDate").ascending());
+        Pageable pageable = PageRequest.of(pageNo - 1, 18, Sort.by("startDate").ascending());
         Page<Festival> pageList = festivalRepository.searchFestival(type, keyword, pageable);
         return pageList.map(this::convertEntityToDTO);
     }
@@ -133,6 +133,7 @@ public class FestivalServiceImpl implements FestivalService, ApplicationRunner {
                             .ageLimit(introItem.path("agelimit").isNull() ? null : introItem.path("agelimit").asText())
                             .eventPlace(introItem.path("eventplace").isNull() ? null : introItem.path("eventplace").asText())
                             .zipCode(commonItem.path("zipcode").isNull() ? null : commonItem.path("zipcode").asText())
+                            .address(commonItem.path("addr1").isNull() ? null : commonItem.path("addr1").asText())
                             .playTime(introItem.path("playtime").isNull() ? null : introItem.path("playtime").asText())
                             .program(introItem.path("program").isNull() ? null : introItem.path("program").asText())
                             .useTime(introItem.path("usetimefestival").isNull() ? null : introItem.path("usetimefestival").asText())

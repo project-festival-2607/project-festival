@@ -16,24 +16,30 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/api/festival/*")
 public class FestivalAPIController {
+
     private final FestivalService festivalService;
 
-    @PostMapping("/save")
-    public ResponseEntity<String> save(@RequestBody FestivalDTO festivalDTO){
-        String contentId = festivalService.save(festivalDTO);
+    // API 요청 백엔드로 넘기기 전 프론트엔드에서 처리한 코드
 
-        return contentId != null ? new ResponseEntity<String>("OK", HttpStatus.OK) : new ResponseEntity<String>("NO", HttpStatus.INTERNAL_SERVER_ERROR);
-    }
+//    @PostMapping("/save")
+//    public ResponseEntity<String> save(@RequestBody FestivalDTO festivalDTO){
+//        String contentId = festivalService.save(festivalDTO);
+//
+//        return contentId != null ? new ResponseEntity<String>("OK", HttpStatus.OK) : new ResponseEntity<String>("NO", HttpStatus.INTERNAL_SERVER_ERROR);
+//    }
+//
+//    @PostMapping("/saveAll")
+//    public ResponseEntity<String> saveAll(@RequestBody List<FestivalDTO> festivalDTOList){
+//        try{
+//            festivalService.saveAll(festivalDTOList);
+//            return new ResponseEntity<>("OK", HttpStatus.OK);
+//        }catch (Exception e){
+//            log.info(">>> ERROR >> {}", e);
+//            return new ResponseEntity<>("NO", HttpStatus.INTERNAL_SERVER_ERROR);
+//        }
+//    }
 
-    @PostMapping("/saveAll")
-    public ResponseEntity<String> saveAll(@RequestBody List<FestivalDTO> festivalDTOList){
-        try{
-            festivalService.saveAll(festivalDTOList);
-            return new ResponseEntity<>("OK", HttpStatus.OK);
-        }catch (Exception e){
-            log.info(">>> ERROR >> {}", e);
-            return new ResponseEntity<>("NO", HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
+    // 1월 2월 ... 비동기 카테고리
+
 
 }

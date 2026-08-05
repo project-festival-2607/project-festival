@@ -23,6 +23,7 @@ public class FestivalDTO {
     private String ageLimit;
     private String eventPlace;
     private String zipCode;
+    private String address;
     private String playTime;
     private String program;
     private String useTime;

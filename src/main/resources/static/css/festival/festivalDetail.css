@@ -139,3 +139,20 @@
     background-color: #dc3545;
     color: #FEFEFE;
 }
+
+.goToMap {
+    padding: 10px 30px;
+}
+
+.goToMap > a {
+    padding: 10px 45px;
+    color: #597cff;
+    border: 1px solid #597cff;
+
+    transition: 0.3s ease;
+}
+
+.goToMap > a:hover {
+    background-color: #597cff;
+    color: #FEFEFE;
+}

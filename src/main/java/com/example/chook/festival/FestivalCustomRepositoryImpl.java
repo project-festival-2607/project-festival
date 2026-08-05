@@ -53,31 +53,34 @@ public class FestivalCustomRepositoryImpl implements FestivalCustomRepository{
         switch (type){
             case "t" : return festival.title.containsIgnoreCase(keyword);
             case "c" : return festival.overview.containsIgnoreCase(keyword);
-            case "r" : return eqRegion(keyword);
+            case "r" : return festival.address.containsIgnoreCase(keyword);
             default: return null;
         }
     }
 
-    private BooleanExpression eqRegion(String keyword){
-        BooleanExpression sido = JPAExpressions
-                .selectOne()
-                .from(regionSido)
-                .where(
-                        festival.zipCode.substring(0, 2).eq(regionSido.code)
-                                .and(
-                                        regionSido.name.containsIgnoreCase(keyword)
-                                                .or(regionSido.shortName.containsIgnoreCase(keyword))
-                                )
-                ).exists();
 
-        BooleanExpression sigungu = JPAExpressions
-                .selectOne()
-                .from(regionSigungu)
-                .where(
-                        regionSigungu.name.containsIgnoreCase(keyword)
-                ).exists();
+    // address 받아오기 전 region 데이터랑 join 했던 것
 
-        return sido.or(sigungu);
-
-    }
+//    private BooleanExpression eqRegion(String keyword){
+//        BooleanExpression sido = JPAExpressions
+//                .selectOne()
+//                .from(regionSido)
+//                .where(
+//                        festival.zipCode.substring(0, 2).eq(regionSido.code)
+//                                .and(
+//                                        regionSido.name.containsIgnoreCase(keyword)
+//                                                .or(regionSido.shortName.containsIgnoreCase(keyword))
+//                                )
+//                ).exists();
+//
+//        BooleanExpression sigungu = JPAExpressions
+//                .selectOne()
+//                .from(regionSigungu)
+//                .where(
+//                        regionSigungu.name.containsIgnoreCase(keyword)
+//                ).exists();
+//
+//        return sido.or(sigungu);
+//
+//    }
 }
