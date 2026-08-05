@@ -76,7 +76,7 @@ public class FestivalServiceImpl implements FestivalService, ApplicationRunner {
     @Override
     @Transactional
     public void run(@NonNull ApplicationArguments args) throws Exception{
-        if(festivalRepository.count() > 0){
+        if(festivalRepository.count() >= 0){
             log.info("DB 데이터 동기 완료");
             return;
             // 나중에 새로 갱신될 때를 대비하여 ID로 비교하는 로직으로 바꿀 것! ===> 지금은 TEST
