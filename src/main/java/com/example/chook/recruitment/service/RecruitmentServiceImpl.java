@@ -148,10 +148,12 @@ public class RecruitmentServiceImpl implements RecruitmentService {
   @Override
   public Page<RecruitmentListDTO> getPages(int page, RecruitmentSearchCondition condition) {
     return null;
+  public Page<RecruitmentListDTO> getPage(int pageIdx, RecruitmentSearchCondition condition) {
   }
 
   @Override
   public Page<RecruitmentManagementListDTO> getManagementPages(int page, RecruitmentSearchCondition condition) {
     return null;
   }
+  public Page<RecruitmentManagementListDTO> getManagementPage(int pageIdx, RecruitmentSearchCondition condition) {
 }
