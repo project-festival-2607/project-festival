@@ -22,6 +22,6 @@ public class AdminBoardDTO {
     private String displayNo;
 
     public String getCreatedAtStr() {
-        return createdAt == null ? "" : createdAt.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+        return createdAt == null ? "" : createdAt.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
     }
 }

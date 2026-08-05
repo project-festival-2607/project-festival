@@ -12,7 +12,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -64,14 +63,10 @@ public class AdminBoardServiceImpl implements AdminBoardService {
   }
 
   @Override
-  public Page<AdminBoardDTO> getList(int page) {
-    // 하이라이트 글을 항상 위로, 그 안에서는 최신순
-    Pageable pageable = PageRequest.of(
-      Math.max(page - 1, 0),
-      PAGE_SIZE,
-      Sort.by(Sort.Order.desc("highlight"), Sort.Order.desc("bno"))
-    );
-    Page<AdminBoardDTO> boardPage = adminBoardRepository.findAll(pageable).map(this::toDto);
+  public Page<AdminBoardDTO> getList(int page, String searchType, String keyword) {
+    // 정렬(하이라이트 우선, 최신순)은 검색 쿼리 안에서 처리
+    Pageable pageable = PageRequest.of(Math.max(page - 1, 0), PAGE_SIZE);
+    Page<AdminBoardDTO> boardPage = adminBoardRepository.search(searchType, keyword, pageable).map(this::toDto);
 
     int seq = 1;
     for (AdminBoardDTO board : boardPage.getContent()) {
@@ -86,6 +81,44 @@ public class AdminBoardServiceImpl implements AdminBoardService {
     AdminBoard board = adminBoardRepository.findById(bno)
       .orElseThrow(() -> new IllegalArgumentException("게시글을 찾을 수 없음: " + bno));
     return toDto(board);
+  }
+
+  @Transactional
+  @Override
+  public AdminBoard modify(Long bno, AdminBoardDTO dto) {
+    AdminBoard board = adminBoardRepository.findById(bno)
+      .orElseThrow(() -> new IllegalArgumentException("게시글을 찾을 수 없음: " + bno));
+
+    board.setTitle(dto.getTitle());
+    board.setContent(dto.getContent());
+    board.setHighlight(Boolean.TRUE.equals(dto.getHighlight()));
+
+    // 이미 연결된 이미지는 건너뛰고, 수정하면서 새로 추가된 이미지만 연결
+    for (UUID uuid : extractImageUuids(dto.getContent())) {
+      if (adminBoardFileRepository.existsByUploadedFile_Uuid(uuid)) continue;
+      UploadedFile uploadedFile = uploadedFileRepository.findById(uuid)
+        .orElseThrow(() -> new IllegalStateException(
+          String.format("본문에 참조된 이미지(%s)를 업로드 기록에서 찾을 수 없음", uuid)
+        ));
+      adminBoardFileRepository.save(
+        AdminBoardFile.builder()
+          .adminBoard(board)
+          .uploadedFile(uploadedFile)
+          .build()
+      );
+    }
+
+    return board;
+  }
+
+  @Transactional
+  @Override
+  public void delete(Long bno) {
+    AdminBoard board = adminBoardRepository.findById(bno)
+      .orElseThrow(() -> new IllegalArgumentException("게시글을 찾을 수 없음: " + bno));
+    // FK 제약 때문에 게시글보다 먼저 연결 레코드 삭제 (물리 파일은 FileSweeper가 추후 정리)
+    adminBoardFileRepository.deleteAll(adminBoardFileRepository.findByAdminBoard(board));
+    adminBoardRepository.delete(board);
   }
 
   private AdminBoardDTO toDto(AdminBoard board) {

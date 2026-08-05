@@ -16,27 +16,39 @@
         <!--        이 안에서 작업        -->
         <h1>공지사항</h1>
 
-        <div class="mb-3">
-            <input type="text" class="form-control" id="title" th:value="${board.title}" th:readonly="${!isAdmin}">
-        </div>
-        <div class="mb-3">
-            <input type="text" class="form-control" value="작성자" readonly>
-        </div>
+        <form th:action="@{/adminBoard/modify/{bno}(bno=${board.bno}, admin=${isAdmin})}" method="post" id="modifyForm">
+            <div class="mb-3">
+                <input type="text" class="form-control" name="title" id="title" th:value="${board.title}" th:readonly="${!isAdmin}">
+            </div>
+            <div class="mb-3">
+                <input type="text" class="form-control" value="작성자" readonly>
+            </div>
 
-        <div class="form-check mb-3">
-            <input type="checkbox" class="form-check-input" id="highlight" th:checked="${board.highlight}" th:disabled="${!isAdmin}">
-            <label class="form-check-label" for="highlight">하이라이트</label>
-        </div>
+<!--
+ 관리자만 보임-->
+            <div class="form-check mb-3" th:hidden="${!isAdmin}">
+                <input type="checkbox" class="form-check-input" name="highlight" id="highlight" value="true" th:checked="${board.highlight}">
+                <!-- 체크 해제 시에도 highlight=false로 바인딩되도록 하는 스프링의 필드 마커 -->
+                <input type="hidden" name="_highlight" value="on">
+                <label class="form-check-label" for="highlight">하이라이트</label>
+            </div>
 
-        <!-- 서버가 내려준 마크다운 원본 (에디터/뷰어 초기화용, 화면에는 안 보임) -->
-        <textarea id="content" style="display:none" th:text="${board.content}"></textarea>
+            <!-- 서버가 내려준 마크다운 원본 (에디터 초기화용, 화면에는 안 보임) -->
+            <textarea id="contentInit" style="display:none" th:text="${board.content}"></textarea>
+            <!-- 전송 시점에 에디터의 마크다운을 채워 넣어서 함께 전송 -->
+            <input type="hidden" name="content" id="content">
 
-        <!-- admin이면 바로 수정 가능한 에디터(저장 버튼은 아직 미구현), 아니면 읽기 전용 뷰어 -->
-        <div id="editor" th:attr="data-admin=${isAdmin}"></div>
+            <!-- admin이면 바로 수정 가능한 에디터, 아니면 읽기 전용 뷰어 -->
+            <div id="editor" th:attr="data-admin=${isAdmin}"></div>
 
-        <div class="d-flex justify-content-end gap-2 mt-3">
-            <a th:href="@{/adminBoard/list}" class="btn btn-outline-secondary">목록</a>
-        </div>
+            <div class="d-flex justify-content-end gap-2 mt-3">
+                <a th:href="@{/adminBoard/list}" class="btn btn-outline-secondary">목록</a>
+                <button type="button" id="deleteBtn" th:if="${isAdmin}" class="btn btn-danger">삭제</button>
+                <button type="submit" id="modifyBtn" th:if="${isAdmin}" class="btn btn-primary">수정완료</button>
+            </div>
+        </form>
+
+        <form th:action="@{/adminBoard/delete/{bno}(bno=${board.bno}, admin=${isAdmin})}" method="post" id="deleteForm" style="display:none"></form>
 
         <script th:src="@{/libs/toastui-editor-3.2.2/js/toastui-editor-all.min.js}"></script>
 

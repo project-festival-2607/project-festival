@@ -12,14 +12,23 @@
             <a th:href="@{/adminBoard/register}" class="btn btn-primary">글등록</a>
         </div>
 
+        <form th:action="@{/adminBoard/list}" method="get" class="d-flex gap-2 mb-3">
+            <select name="searchType" class="form-select" style="max-width: 120px;">
+                <option value="title" th:selected="${searchType == null or searchType == 'title'}">제목</option>
+                <option value="content" th:selected="${searchType == 'content'}">내용</option>
+            </select>
+            <input type="text" name="keyword" class="form-control" placeholder="검색어" th:value="${keyword}">
+            <button type="submit" class="btn btn-outline-primary">검색</button>
+        </form>
+
         <table class="table table-hover align-middle">
-            <thead>
-            <tr>
-                <th style="width: 80px;"></th>
-                <th>제목</th>
-                <th style="width: 160px;">작성일</th>
-            </tr>
-            </thead>
+<!--            <thead>-->
+<!--            <tr>-->
+<!--                <th style="width: 80px;"></th>-->
+<!--                <th>제목</th>-->
+<!--                <th style="width: 160px;">작성일</th>-->
+<!--            </tr>-->
+<!--            </thead>-->
             <tbody>
             <tr th:each="board : ${boardPage.content}" th:class="${board.highlight} ? 'table-warning'">
                 <td th:text="${board.displayNo}"></td>
@@ -39,7 +48,7 @@
             <ul class="pagination justify-content-center">
                 <li class="page-item" th:each="i : ${#numbers.sequence(1, boardPage.totalPages)}"
                     th:classappend="${i == boardPage.number + 1} ? 'active'">
-                    <a class="page-link" th:href="@{/adminBoard/list(page=${i})}" th:text="${i}"></a>
+                    <a class="page-link" th:href="@{/adminBoard/list(page=${i}, searchType=${searchType}, keyword=${keyword})}" th:text="${i}"></a>
                 </li>
             </ul>
         </nav>
