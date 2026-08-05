@@ -14,12 +14,13 @@ import com.example.chook.recruitment.repository.RecruitmentFoodTruckRepository;
 import com.example.chook.recruitment.repository.RecruitmentIndividualRepository;
 import com.example.chook.recruitment.repository.RecruitmentRepository;
 import com.example.chook.region.entity.RegionSigungu;
-import com.example.chook.region.repository.RegionSidoRepository;
 import com.example.chook.region.repository.RegionSigunguRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,17 +31,13 @@ import java.util.List;
 @Slf4j
 public class RecruitmentServiceImpl implements RecruitmentService {
 
+  private static final int PAGE_SIZE = 10;
   private final RecruitmentRepository recruitmentRepository;
   private final RecruitmentIndividualRepository recruitmentIndividualRepository;
   private final RecruitmentFoodTruckRepository recruitmentFoodTruckRepository;
   private final RecruitmentFileRepository recruitmentFileRepository;
-
-  private final RegionSidoRepository regionSidoRepository;
   private final RegionSigunguRepository regionSigunguRepository;
   private final FestivalRepository festivalRepository;
-
-  private static final int PAGE_SIZE = 10;
-
   private final RecruitmentMapper mapper;
 
   @Transactional
@@ -59,19 +56,28 @@ public class RecruitmentServiceImpl implements RecruitmentService {
       .findById(festivalContentId)
       .orElseThrow(() -> new EntityNotFoundException(String.format("content_id가 \"%s\"인 행사가 없음", festivalContentId)));
 
+
     Recruitment recruitment = mapper.toEntity(dto, sigungu, festival);
+
     recruitmentRepository.save(recruitment);
 
     switch (dto.getCategory()) {
-      case INDIVIDUAL -> recruitmentIndividualRepository.save(
-        mapper.toIndividualEntity(recruitment, (RecruitmentIndividualDTO) specificDto
-        ));
-      case FOOD_TRUCK -> recruitmentFoodTruckRepository.save(
-        mapper.toFoodTruckEntity(recruitment, (RecruitmentFoodTruckDTO) specificDto
-        ));
+      case INDIVIDUAL -> {
+        if (!(specificDto instanceof RecruitmentIndividualDTO individualDto))
+          throw new IllegalArgumentException("specific이 Individual이 아님");
+        recruitmentIndividualRepository.save(
+          mapper.toIndividualEntity(recruitment, individualDto));
+      }
+      case FOOD_TRUCK -> {
+        if (!(specificDto instanceof RecruitmentFoodTruckDTO foodTruckDto))
+          throw new IllegalArgumentException("specific이 FoodTruck이 아님");
+        recruitmentFoodTruckRepository.save(
+          mapper.toFoodTruckEntity(recruitment, foodTruckDto));
+      }
     }
 
     return recruitment.getId();
+
   }
 
   @Override
@@ -83,14 +89,12 @@ public class RecruitmentServiceImpl implements RecruitmentService {
     switch (recruitment.getCategory()) {
 
       case INDIVIDUAL -> {
-        RecruitmentIndividual individual = recruitmentIndividualRepository.findById(id)
-          .orElseThrow(() -> new EntityNotFoundException(String.format("id가 \"%d\"인 공고에 Individual 정보가 없음", id)));
+        RecruitmentIndividual individual = getIndividual(id);
         return mapper.toUpdateDto(recruitment, individual);
       }
 
       case FOOD_TRUCK -> {
-        RecruitmentFoodTruck foodTruck = recruitmentFoodTruckRepository.findById(id)
-          .orElseThrow(() -> new EntityNotFoundException(String.format("id가 \"%d\"인 공고에 FoodTruck 정보가 없음", id)));
+        RecruitmentFoodTruck foodTruck = getFoodTruck(id);
         return mapper.toUpdateDto(recruitment, foodTruck);
       }
 
@@ -130,14 +134,12 @@ public class RecruitmentServiceImpl implements RecruitmentService {
     switch (recruitment.getCategory()) {
 
       case INDIVIDUAL -> {
-        RecruitmentIndividual individual = recruitmentIndividualRepository.findById(id)
-          .orElseThrow(() -> new EntityNotFoundException(String.format("id가 \"%d\"인 공고에 Individual 정보가 없음", id)));
+        RecruitmentIndividual individual = getIndividual(id);
         return mapper.toResponseDto(recruitment, individual);
       }
 
       case FOOD_TRUCK -> {
-        RecruitmentFoodTruck foodTruck = recruitmentFoodTruckRepository.findById(id)
-          .orElseThrow(() -> new EntityNotFoundException(String.format("id가 \"%d\"인 공고에 FoodTruck 정보가 없음", id)));
+        RecruitmentFoodTruck foodTruck = getFoodTruck(id);
         return mapper.toResponseDto(recruitment, foodTruck);
       }
 
@@ -146,14 +148,58 @@ public class RecruitmentServiceImpl implements RecruitmentService {
   }
 
   @Override
-  public Page<RecruitmentListDTO> getPages(int page, RecruitmentSearchCondition condition) {
-    return null;
   public Page<RecruitmentListDTO> getPage(int pageIdx, RecruitmentSearchCondition condition) {
+    Pageable pageable = PageRequest.of(pageIdx - 1, PAGE_SIZE);
+    return recruitmentRepository
+      .searchRecruitments(condition, pageable)
+      .map(this::buildListDtoFromEntity);
   }
 
   @Override
-  public Page<RecruitmentManagementListDTO> getManagementPages(int page, RecruitmentSearchCondition condition) {
-    return null;
-  }
   public Page<RecruitmentManagementListDTO> getManagementPage(int pageIdx, RecruitmentSearchCondition condition) {
+    Pageable pageable = PageRequest.of(pageIdx - 1, PAGE_SIZE);
+    return recruitmentRepository
+      .searchRecruitments(condition, pageable)
+      .map(this::buildManagementListDtoFromEntity);
+  }
+
+  private RecruitmentIndividual getIndividual(Long id) {
+    return recruitmentIndividualRepository.findById(id)
+      .orElseThrow(() -> new EntityNotFoundException(String.format("id가 \"%d\"인 공고에 Individual 정보가 없음", id)));
+  }
+
+  private RecruitmentFoodTruck getFoodTruck(Long id) {
+    return recruitmentFoodTruckRepository.findById(id)
+      .orElseThrow(() -> new EntityNotFoundException(String.format("id가 \"%d\"인 공고에 FoodTruck 정보가 없음", id)));
+  }
+
+  private RecruitmentListDTO buildListDtoFromEntity(Recruitment entity) {
+    switch (entity.getCategory()) {
+      case INDIVIDUAL -> {
+        return mapper.toListDto(entity, getIndividual(entity.getId()));
+      }
+      case FOOD_TRUCK -> {
+        return mapper.toListDto(entity, getFoodTruck(entity.getId()));
+      }
+      default -> {
+        return mapper.toListDto(entity);
+      }
+    }
+  }
+
+  private RecruitmentManagementListDTO buildManagementListDtoFromEntity(Recruitment entity) {
+    switch (entity.getCategory()) {
+      case INDIVIDUAL -> {
+        return mapper.toManagementListDto(entity, getIndividual(entity.getId()));
+      }
+      case FOOD_TRUCK -> {
+        return mapper.toManagementListDto(entity, getFoodTruck(entity.getId()));
+      }
+      default -> {
+        return mapper.toManagementListDto(entity);
+      }
+    }
+  }
+
+
 }
