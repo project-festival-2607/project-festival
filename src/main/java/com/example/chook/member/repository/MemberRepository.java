@@ -11,7 +11,7 @@ import java.util.Optional;
 public interface MemberRepository extends JpaRepository<Member, Long> {
 
     // 로그인
-    Optional<Member> findByUsername(String username);
+    Optional<Member> findByUsernameAndDeletedAtIsNull(String username);
 
     // 회원가입 아이디 중복 체크
     boolean existsByUsername(String username);
