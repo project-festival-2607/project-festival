@@ -1,9 +1,9 @@
 package com.example.chook.file.service;
 
-import com.example.chook.file.entity.UploadedFile;
 import com.example.chook.file.FileDeletionFailureRecorder;
 import com.example.chook.file.FileStorage;
 import com.example.chook.file.dto.FileDTO;
+import com.example.chook.file.entity.UploadedFile;
 import com.example.chook.file.record.FilePath;
 import com.example.chook.file.record.FileResource;
 import com.example.chook.file.repository.UploadedFileRepository;
