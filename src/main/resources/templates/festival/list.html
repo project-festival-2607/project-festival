@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="ko"
+      layout:decorate="~{layout/layout}"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block layout:fragment="css">
+        <link rel="stylesheet" th:href="@{/css/festival/festivalList.css}">
+    </th:block>
+</head>
+<div layout:fragment="content">
+    <div class="container">
+        <div class="fes-h1">
+            <span>Festival</span>
+            <span>
+                축제 · 행사
+            </span>
+        </div>
+    </div>
+
+    <div class="fes-middle">
+        <span>
+            다양한 지역 축제 · 행사를 즐겨보세요!
+        </span>
+        <div class="hash-box">
+            <div class="hash">
+                #즐거운
+            </div>
+            <div class="hash">
+                #함께하는
+            </div>
+            <div class="hash">
+                #추억의
+            </div>
+        </div>
+    </div>
+
+<!--    1~12월 카테고리      -->
+    <div class="container">
+        <div class="monthBtn">
+
+        </div>
+    </div>
+
+    <div class="container">
+<!--                모든 inner는 class="container" 로 맞춤        -->
+<!--        이 안에서 작업        -->
+        <div class="fesContainer">
+            <div class="fes-box" th:each="fes : ${fes.list}">
+                <div th:switch="${fes.status}">
+                    <div th:case="'진행예정'" class="fes-pro upComing">진행예정</div>
+                    <div th:case="'진행중'" class="fes-pro onGoing">진행중</div>
+                    <div th:case="'종료된행사'" class="fes-pro past">종료</div>
+                </div>
+
+                <div class="fes-img"
+                     th:style="'background-image: url(' + ${fes.firstImage} + ')'">
+                </div>
+                <div class="fes-title">
+                    <a th:href="@{/festival/detail(id=${fes.contentId})}">
+                        [[${fes.title}]]
+                    </a>
+                </div>
+                <div class="fes-date">
+                    <span th:text="${fes.startDate + ' ~ ' + fes.endDate}"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<!--    페이징        -->
+    <div class="pageBtn">
+            <div class="fes-pagination">
+                <div class="fes-page-item" th:classappend="${fes.prev eq false ? 'disabled' : '' }">
+                    <a class="fes-page-link" th:href="@{/festival/list(pageNo=${fes.pageNo} - 1)}">
+                        ←
+                    </a>
+                </div>
+
+                <th:block th:each="i:${#numbers.sequence(fes.startPage, fes.endPage)}">
+                    <div class="fes-page-item" th:classappend="${fes.pageNo == i ? 'active' : ''}">
+                        <a class="fes-page-link" th:href="@{/festival/list(pageNo=${i})}">
+                            [[${i}]]
+                        </a>
+                    </div>
+                </th:block>
+
+                <div class="fes-page-item" th:classappend="${fes.next eq false ? 'disabled' : '' }">
+                    <a class="fes-page-link" th:href="@{/festival/list(pageNo=${fes.pageNo} + 1)}">
+                        →
+                    </a>
+                </div>
+            </div>
+    </div>
+
+<!--    검색라인        -->
+
+    <div class="fes-form container">
+        <form action="/festival/list">
+            <select name="type" class="form-select">
+                <option>카테고리</option>
+                <option value="t">축제이름</option>
+                <option value="c">축제내용</option>
+                <option value="r">지역</option>
+            </select>
+            <input name="keyword" type="text" placeholder="검색어를 입력하세요">
+            <input type="hidden" name="pageNo" value="1">
+            <button class="searchBtn" type="submit">검색</button>
+        </form>
+    </div>
+
+    <div class="topBtn">
+        ↑
+    </div>
+
+<!--    구인자 로그인 시      -->
+    <div class="addBtn">
+        <a href="/festival/register">
+            축제등록하기
+        </a>
+    </div>
+
+
+<!--    <script th:inline="javascript">-->
+<!--        const apiKey = /*[[${apikey}]]*/ 'default-key';-->
+<!--    </script>-->
+<!--    <script th:src="@{/js/festival/uploadFestival.js}"></script>-->
+    <script th:src="@{/js/festival/festivalList.js}"></script>
+</div>
+

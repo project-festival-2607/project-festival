@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ko"
+      layout:decorate="~{layout/layout}"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block layout:fragment="css">
+        <link rel="stylesheet" th:href="@{/css/festival/festivalDetail.css}">
+    </th:block>
+</head>
+<div layout:fragment="content">
+    <div class="container">
+<!--                모든 inner는 class="container" 로 맞춤        -->
+<!--        이 안에서 작업        -->
+        <div class="detailContainer">
+            <div class="detail-img"
+                 th:style="'background-image: url(' + ${fes.firstImage} + ')'"
+            >
+            </div>
+            <div class="detail-text">
+                <div class="detail-h1">[[${fes.title}]]</div>
+                <div class="detail-sub detail-agenda">
+                    <div>일정</div>
+                    <span>[[${fes.startDate}]] ~ [[${fes.endDate}]]</span>
+                </div>
+                <div class="detail-sub">
+                    <div>시간</div>
+                    <span>[[${fes.playTime}]]</span>
+                </div>
+                <div class="detail-sub">
+                    <div>장소</div>
+                    <span>[[${fes.eventPlace}]]</span>
+                </div>
+                <div class="detail-sub">
+                    <div>가격</div>
+                    <span>[[${fes.useTime}]]</span>
+                </div>
+                <div class="detail-sub">
+                    <div>주최</div>
+                    <span>[[${fes.telName}]]</span>
+                </div>
+                <div class="detail-sub">
+                    <div>문의처</div>
+                    <span>[[${fes.tel}]]</span>
+                </div>
+                <div class="detail-sub detail-home" th:if="${fes.officialHomepage != null and !#strings.isEmpty(fes.officialHomepage)}">
+                    <a th:href="${fes.officialHomepage}"
+                       target="_blank"
+                       class="homepage"
+                       rel="noopener noreferrer"> 공식 홈페이지 ↗ </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="detail-sub-container">
+            <div class="sub-item">
+                <div class="detail-h2">
+                    행사개요
+                </div>
+                <div class="detail-h3">
+                    [[${fes.overview}]]
+                </div>
+            </div>
+            <div class="sub-item">
+                <div class="detail-h2">
+                    참여대상
+                </div>
+                <div class="detail-h3" th:text="${fes.ageLimit ?: '전연령'}"></div>
+            </div>
+            <div class="sub-item">
+                <div class="detail-h2">
+                    프로그램
+                </div>
+                <div class="detail-h3">[[${fes.program}]]</div>
+            </div>
+            <div class="sub-item">
+                <div class="detail-h2">
+                    상세지도
+                </div>
+                <div class="detail-h3">[[${fes.address}]]</div>
+                <div class="goToMap">
+                    <a href="/">
+                        위치보러가기 ↗
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="goToList">
+            <a href="/festival/list">
+                목록으로
+            </a>
+        </div>
+    </div>
+</div>

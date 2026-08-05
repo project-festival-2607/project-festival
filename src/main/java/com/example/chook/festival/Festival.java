@@ -49,6 +49,8 @@ public class Festival {
     @Column(name = "zip_code")
     private String zipCode;
 
+    private String address;
+
     @Column(name = "play_time")
     private String playTime;
 
