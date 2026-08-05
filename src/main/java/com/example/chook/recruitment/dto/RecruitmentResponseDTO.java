@@ -2,7 +2,6 @@ package com.example.chook.recruitment.dto;
 
 import com.example.chook.recruitment.entity.enums.RecruitmentCategory;
 import com.example.chook.recruitment.entity.enums.RecruitmentStatus;
-import com.example.chook.recruitment.entity.enums.RecruitmentWageType;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -15,7 +14,7 @@ import java.time.LocalTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class RecruitmentDetailDTO {
+public class RecruitmentResponseDTO {
 
   private String regionSidoName;
   private String regionSigunguName;
@@ -28,13 +27,7 @@ public class RecruitmentDetailDTO {
   private String content;
 
   private RecruitmentCategory category;
-  // RecruitmentIndividual
-  private RecruitmentWageType wageType;
-  private Integer wageValue;
-  // RecruitmentFoodTruck
-  private boolean prepaid;
-  private boolean boothFeeRequired;
-  private boolean electricityProvided;
+  private RecruitmentSpecificDTO specific;
 
   private LocalDate applicationDeadline;
   private Integer recruitmentCount;
