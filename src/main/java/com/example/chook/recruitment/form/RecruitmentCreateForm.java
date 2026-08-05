@@ -2,6 +2,7 @@ package com.example.chook.recruitment.form;
 
 import com.example.chook.recruitment.entity.enums.RecruitmentCategory;
 import com.example.chook.recruitment.entity.enums.RecruitmentWageType;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -23,6 +24,7 @@ public class RecruitmentCreateForm {
 
   private String content;
 
+  @NotNull
   private RecruitmentCategory category;
 
   // RecruitmentIndividual
@@ -30,9 +32,9 @@ public class RecruitmentCreateForm {
   private Integer wageValue;
 
   // RecruitmentFoodTruck
-  private Boolean prepaid;
-  private Boolean boothFeeRequired;
-  private Boolean electricityProvided;
+  private boolean prepaid;
+  private boolean boothFeeRequired;
+  private boolean electricityProvided;
 
   private LocalDate applicationDeadline;
   private Integer recruitmentCount;

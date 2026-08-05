@@ -1,5 +1,10 @@
 package com.example.chook.recruitment.controller;
 
+import com.example.chook.recruitment.dto.RecruitmentCreateDTO;
+import com.example.chook.recruitment.dto.RecruitmentFoodTruckDTO;
+import com.example.chook.recruitment.dto.RecruitmentIndividualDTO;
+import com.example.chook.recruitment.dto.RecruitmentSpecificDTO;
+import com.example.chook.recruitment.entity.enums.RecruitmentCategory;
 import com.example.chook.recruitment.form.RecruitmentCreateForm;
 import com.example.chook.recruitment.service.RecruitmentService;
 import lombok.RequiredArgsConstructor;
@@ -35,6 +40,46 @@ public class RecruitmentController {
   @PostMapping("/register")
   public String register(@ModelAttribute RecruitmentCreateForm recruitmentCreateForm) {
     return "redirect:/recruit/list";
+  }
+
+  private RecruitmentCreateDTO toCreateDto(RecruitmentCreateForm form) {
+    return RecruitmentCreateDTO.builder()
+      .regionSidoCode(form.getRegionSidoCode())
+      .regionSigunguCode(form.getRegionSigunguCode())
+      .recruitmentTitle(form.getRecruitmentTitle())
+      .festivalContentId(form.getFestivalContentId())
+      .content(form.getContent())
+      .category(form.getCategory())
+      .specific(toSpecificDto(form))
+      .applicationDeadline(form.getApplicationDeadline())
+      .recruitmentCount(form.getRecruitmentCount())
+      .workingLocation(form.getWorkingLocation())
+      .workingStartDate(form.getWorkingStartDate())
+      .workingEndDate(form.getWorkingEndDate())
+      .workingStartTime(form.getWorkingStartTime())
+      .workingEndTime(form.getWorkingEndTime())
+      .build();
+  }
+
+  private RecruitmentSpecificDTO toSpecificDto(RecruitmentCreateForm form) {
+    RecruitmentCategory category = form.getCategory();
+    if (category == null) return null;
+    switch (category) {
+      case INDIVIDUAL -> {
+        return RecruitmentIndividualDTO.builder()
+          .wageType(form.getWageType())
+          .wageValue(form.getWageValue())
+          .build();
+      }
+      case FOOD_TRUCK -> {
+        return RecruitmentFoodTruckDTO.builder()
+          .prepaid(form.isPrepaid())
+          .boothFeeRequired(form.isBoothFeeRequired())
+          .electricityProvided(form.isElectricityProvided())
+          .build();
+      }
+    }
+    return null;
   }
 
 }
