@@ -26,10 +26,7 @@ public class RecruitmentManagementListDTO {
   private String festivalTitle;
 
   private RecruitmentCategory category;
-  // RecruitmentIndividual
-  private RecruitmentWageType wageType;
-  private Integer wageValue;
-  // RecruitmentFoodTruck - 공고별 페이지에서 확인
+  private RecruitmentSpecificDTO specific;
 
   private LocalDate applicationDeadline;
   private RecruitmentStatus status;
