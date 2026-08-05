@@ -8,6 +8,12 @@ public interface AdminBoardService {
 
   AdminBoard register(AdminBoardDTO dto);
 
-  Page<AdminBoardDTO> getList(int page);
+  Page<AdminBoardDTO> getList(int page, String searchType, String keyword);
+
+  AdminBoardDTO getDetail(Long bno);
+
+  AdminBoard modify(Long bno, AdminBoardDTO dto);
+
+  void delete(Long bno);
 
 }

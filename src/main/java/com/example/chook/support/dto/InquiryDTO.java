@@ -1,8 +1,10 @@
 package com.example.chook.support.dto;
 
+import com.example.chook.file.dto.FileDTO;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -20,4 +22,5 @@ public class InquiryDTO {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private LocalDateTime commentTime;
+    private List<FileDTO> files; // 첨부파일 목록 (상세 조회 시에만 채워짐)
 }

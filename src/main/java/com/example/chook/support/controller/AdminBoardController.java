@@ -12,6 +12,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -33,9 +34,16 @@ public class AdminBoardController {
     private final AdminBoardService adminBoardService;
 
     @GetMapping("/list")
-    public String list(@RequestParam(defaultValue = "1") int page, Model model) {
-        Page<AdminBoardDTO> boardPage = adminBoardService.getList(page);
+    public String list(
+        @RequestParam(defaultValue = "1") int page,
+        @RequestParam(required = false) String searchType,
+        @RequestParam(required = false) String keyword,
+        Model model
+    ) {
+        Page<AdminBoardDTO> boardPage = adminBoardService.getList(page, searchType, keyword);
         model.addAttribute("boardPage", boardPage);
+        model.addAttribute("searchType", searchType);
+        model.addAttribute("keyword", keyword);
         return "adminBoard/list";
     }
 
@@ -44,10 +52,50 @@ public class AdminBoardController {
         return "adminBoard/register";
     }
 
+    @GetMapping("/detail/{bno}")
+    public String detail(
+        @PathVariable Long bno,
+        // ponytail: 로그인 구현 전 임시 - 쿼리스트링(?admin=true)으로만 관리자 여부 확인, 나중에 세션의 회원 role 체크로 교체
+        @RequestParam(defaultValue = "false") boolean admin,
+        Model model
+    ) {
+        model.addAttribute("board", adminBoardService.getDetail(bno));
+        model.addAttribute("isAdmin", admin);
+        return "adminBoard/detail";
+    }
+
     @PostMapping("/register")
     public String register(AdminBoardDTO dto) {
         AdminBoard saved = adminBoardService.register(dto);
         log.info("admin board saved: {}", saved);
+        return "redirect:/adminBoard/list";
+    }
+
+    @PostMapping("/modify/{bno}")
+    public String modify(
+        @PathVariable Long bno,
+        // ponytail: 로그인 구현 전 임시 - detail과 동일하게 쿼리스트링으로만 관리자 여부 확인
+        @RequestParam(defaultValue = "false") boolean admin,
+        AdminBoardDTO dto
+    ) {
+        if (!admin) {
+            throw new AccessDeniedException("관리자만 수정할 수 있음");
+        }
+        AdminBoard modified = adminBoardService.modify(bno, dto);
+        log.info("admin board modified: {}", modified);
+        return "redirect:/adminBoard/detail/" + bno + "?admin=true";
+    }
+
+    @PostMapping("/delete/{bno}")
+    public String delete(
+        @PathVariable Long bno,
+        @RequestParam(defaultValue = "false") boolean admin
+    ) {
+        if (!admin) {
+            throw new AccessDeniedException("관리자만 삭제할 수 있음");
+        }
+        adminBoardService.delete(bno);
+        log.info("admin board deleted: {}", bno);
         return "redirect:/adminBoard/list";
     }
 
@@ -58,7 +106,7 @@ public class AdminBoardController {
         @RequestParam("image") MultipartFile image,
         @RequestParam("title") String title
     ) {
-        String relativePath = toFolderName(title); // 파일 저장 경로
+        String relativePath = "adminBoard/" + toFolderName(title); // 파일 저장 경로
         FileDTO fileDto = fileService.uploadAndGetDto(image, relativePath);
         log.info("adminBoard image uploaded: {}", fileDto);
         return ResponseEntity.ok(fileDto);
