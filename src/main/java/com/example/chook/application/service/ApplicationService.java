@@ -2,9 +2,9 @@ package com.example.chook.application.service;
 
 import com.example.chook.application.dto.ApplicationDTO;
 import com.example.chook.application.entity.Application;
+import com.example.chook.application.entity.enums.ApplicationResult;
 import com.example.chook.member.entity.Member;
 import com.example.chook.recruitment.entity.Recruitment;
-import com.example.chook.region.dto.RegionDTO;
 import com.example.chook.resume.entity.Resume;
 
 import java.util.List;
@@ -41,5 +41,21 @@ public interface ApplicationService {
                 .build();
     }
 
+    // 지원하기 기능
     Long apply(ApplicationDTO applicationDTO);
+
+    // 내가 지원한 목록 조회
+    List<ApplicationDTO> getList(Long memberId);
+
+    // 지원 상세 조회
+    ApplicationDTO getDetail(Long id);
+
+    // 지원 취소
+    void cancel(Long id);
+
+    // 합격/불합격 처리
+    void updateResult(Long id, ApplicationResult result);
+
+    // 지원서 열람 처리
+    void read(Long id);
 }

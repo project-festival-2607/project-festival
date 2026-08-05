@@ -15,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @RequiredArgsConstructor
 @Service
@@ -29,6 +30,7 @@ public class ApplicationServiceImpl implements ApplicationService {
     // 최종 저장용
     private final ApplicationRepository applicationRepository; // 완성된 Application 저장하기
 
+    // 지원하기 기능
     @Override
     public Long apply(ApplicationDTO applicationDTO) {
 
@@ -54,4 +56,53 @@ public class ApplicationServiceImpl implements ApplicationService {
         return application.getId();
     }
 
+    // 내가 지원한 목록 조회
+    @Override
+    public List<ApplicationDTO> getList(Long memberId) {
+
+        List<Application> applicationList = applicationRepository.findByMemberId(memberId);
+
+        return applicationList.stream()
+                .map(this::convertEntityToDto)
+                .toList();
+    }
+
+    // 지원 상세 조회
+    @Override
+    public ApplicationDTO getDetail(Long id) {
+        Application application = applicationRepository.findById(id)
+                .orElseThrow();
+
+        return convertEntityToDto(application);
+    }
+
+    // 지원 취소
+    @Override
+    public void cancel(Long id) {
+        applicationRepository.deleteById(id);
+    }
+
+    // 합격/불합격 처리
+    @Override
+    public void updateResult(Long id, ApplicationResult result) {
+
+        Application application = applicationRepository.findById(id)
+                .orElseThrow();
+
+        application.setResult(result);
+
+        applicationRepository.save(application);
+    }
+
+    // 지원서 열람 처리
+    @Override
+    public void read(Long id) {
+
+        Application application = applicationRepository.findById(id)
+                .orElseThrow();
+
+        application.setReadDate(LocalDateTime.now());
+
+        applicationRepository.save(application);
+    }
 }
