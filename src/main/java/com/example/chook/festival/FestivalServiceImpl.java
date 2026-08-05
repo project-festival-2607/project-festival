@@ -64,6 +64,13 @@ public class FestivalServiceImpl implements FestivalService, ApplicationRunner {
         return festivalDTO;
     }
 
+    @Override
+    public Page<FestivalDTO> getList(int pageNo, String type, String keyword) {
+        Pageable pageable = PageRequest.of(pageNo -1, 18, Sort.by("startDate").ascending());
+        Page<Festival> pageList = festivalRepository.searchFestival(type, keyword, pageable);
+        return pageList.map(this::convertEntityToDTO);
+    }
+
 //    DB에서 API 요청 후 백그라운드에서 동기화
 
     @Override

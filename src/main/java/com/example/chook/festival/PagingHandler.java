@@ -16,6 +16,8 @@ public class PagingHandler {
     private int pageNo;
     private boolean prev, next;
     private List<FestivalDTO> list;
+    private String type;
+    private String keyword;
 
     public PagingHandler(Page<FestivalDTO> list, int pageNo){
         this.list = list.getContent();
@@ -30,5 +32,11 @@ public class PagingHandler {
         this.prev = list.hasPrevious();
         this.next = list.hasNext();
 
+    }
+
+    public PagingHandler(Page<FestivalDTO> list, int pageNo, String type, String keyword){
+        this(list, pageNo);
+        this.type = type;
+        this.keyword = keyword;
     }
 }

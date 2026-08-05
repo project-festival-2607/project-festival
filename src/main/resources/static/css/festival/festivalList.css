@@ -20,8 +20,10 @@
     height: 300px;
     margin: 20px 0px 50px 0px;
 
-    border-top: 1px solid #2C2C2C;
-    border-bottom: 1px solid #2C2C2C;
+    /*border-top: 1px solid #2C2C2C;*/
+    /*border-bottom: 1px solid #2C2C2C;*/
+
+    background: #ccc2a4;
 
     display: flex;
     flex-direction: column;
@@ -32,7 +34,7 @@
 .fes-middle > span {
     font-size: 35px;
     font-weight: 800;
-    color: #000000;
+    color: #FEFEFE;
     letter-spacing: -1px;
 }
 
@@ -44,10 +46,10 @@
 }
 
 .hash {
-    background-color: #afa992;
+    background-color: #FEFEFE;
     border-radius: 50px;
     padding: 10px 15px;
-    color: #FEFEFE;
+    color: #ccc2a4;
 }
 
 .fesContainer {
@@ -242,6 +244,59 @@
     color: #706a57;
 }
 
+/*검색창*/
+
+.fes-form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    margin-top: 30px;
+}
+
+.fes-form > form {
+    width: 70%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+.fes-form > form > select {
+    width: 140px;
+    height: 50px;
+}
+
+.fes-form > form > input {
+    width: 600px;
+    height: 50px;
+    outline: none;
+    border: 1px solid #ccc2a4;
+    border-radius: 5px;
+    padding: 0 15px;
+}
+
+.fes-form > form > input:focus {
+    border: 1px solid #597cff;
+}
+
+.fes-form > form > button {
+    width: 90px;
+    height: 50px;
+    background: #FEFEFE;
+    border: 1px solid #ccc2a4;
+    color: #ccc2a4;
+    border-radius: 5px;
+
+    transition: 0.3s ease;
+}
+
+.fes-form > form > button:hover {
+    background: #ccc2a4;
+    color: #FEFEFE;
+}
 
 /*반응형 대응*/
 

@@ -64,4 +64,6 @@ public interface FestivalService {
     Page<FestivalDTO> getList(int pageNo);
 
     FestivalDTO getDetail(String contentId);
+
+    Page<FestivalDTO> getList(int pageNo, String type, String keyword);
 }

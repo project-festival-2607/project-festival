@@ -24,13 +24,15 @@ public class FestivalController {
 
     @GetMapping("/list")
     public String list(Model model,
-                       @RequestParam(name = "pageNo", required = false, defaultValue = "1") int pageNo
+                       @RequestParam(name = "pageNo", required = false, defaultValue = "1") int pageNo,
+                       @RequestParam(name = "type", required = false) String type,
+                       @RequestParam(name = "keyword", required = false) String keyword
                        ){
         // 프론트에서 API 요청하기 위해 심는 키 (백에서 요청하면 필요 X) 우선은 TEST로 놔둠
         model.addAttribute("apikey", APIKEY);
 
-        Page<FestivalDTO> list = festivalService.getList(pageNo);
-        PagingHandler fes = new PagingHandler(list, pageNo);
+        Page<FestivalDTO> list = festivalService.getList(pageNo, type, keyword);
+        PagingHandler fes = new PagingHandler(list, pageNo, type, keyword);
 
         model.addAttribute("fes", fes);
 
