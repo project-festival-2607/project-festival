@@ -101,8 +101,11 @@ public class ApplicationServiceImpl implements ApplicationService {
         Application application = applicationRepository.findById(id)
                 .orElseThrow();
 
-        application.setReadDate(LocalDateTime.now());
+        if (application.getReadDate() == null){
 
-        applicationRepository.save(application);
+            application.setReadDate(LocalDateTime.now());
+
+            applicationRepository.save(application);
+        }
     }
 }
