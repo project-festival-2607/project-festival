@@ -1,0 +1,113 @@
+.mz-search {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px;
+    margin-bottom: 20px;
+    border-radius: 999px;
+    background: #fff;
+    border: 1px solid #dee2e6;
+}
+
+.mz-search input {
+    border: none;
+    border-radius: 999px;
+    padding: 10px 16px;
+    font-weight: 600;
+    outline: none;
+    background: transparent;
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+.mz-search input::placeholder {
+    color: #adb5bd;
+    font-weight: 500;
+}
+
+.mz-search input:focus {
+    background: #f8f9fa;
+}
+
+/* 커스텀 카테고리 드롭다운 (네이티브 select는 브라우저마다 목록 모서리를 못 둥글릴 수 있어서 직접 구현) */
+.mz-dropdown {
+    position: relative;
+    flex: 0 0 auto;
+}
+
+.mz-dropdown-toggle {
+    border: none;
+    border-radius: 999px;
+    padding: 10px 16px;
+    font-weight: 600;
+    background: transparent;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.mz-dropdown-toggle:hover {
+    background: #f8f9fa;
+}
+
+.mz-dropdown-toggle::after {
+    content: "";
+    width: 6px;
+    height: 6px;
+    border-right: 2px solid #adb5bd;
+    border-bottom: 2px solid #adb5bd;
+    transform: rotate(45deg);
+    margin-top: -4px;
+}
+
+.mz-dropdown-menu {
+    display: none;
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    min-width: 100%;
+    margin: 0;
+    padding: 6px;
+    list-style: none;
+    background: #fff;
+    border: 1px solid #dee2e6;
+    border-radius: 16px;
+    z-index: 10;
+}
+
+.mz-dropdown.open .mz-dropdown-menu {
+    display: block;
+}
+
+.mz-dropdown-menu li {
+    padding: 8px 14px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+.mz-dropdown-menu li:hover {
+    background: #f1f3f5;
+}
+
+.mz-dropdown-menu li.active {
+    background: #212529;
+    color: #fff;
+}
+
+.mz-search-btn {
+    flex: 0 0 auto;
+    border: none;
+    border-radius: 999px;
+    padding: 10px 22px;
+    font-weight: 700;
+    color: #fff;
+    background: #212529;
+}
+
+.mz-search-btn:hover {
+    background: #000;
+    color: #fff;
+}
