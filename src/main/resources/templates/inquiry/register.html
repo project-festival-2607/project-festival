@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ko"
+      layout:decorate="~{layout/layout}"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org">
+
+<body>
+<div layout:fragment="content">
+    <div class="container">
+        <h1 class="mb-3">1:1 문의</h1>
+
+        <ul class="nav nav-tabs mb-4">
+            <li class="nav-item">
+                <a class="nav-link active" th:href="@{/inquiry/register}">문의하기</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/inquiry/list}">나의 문의내역</a>
+            </li>
+        </ul>
+
+        <form th:action="@{/inquiry/register}" method="post" enctype="multipart/form-data" id="inquiryForm">
+            <div class="mb-3">
+                <label for="title" class="form-label">제목</label>
+                <input type="text" class="form-control" name="title" id="title" placeholder="제목을 입력해주세요">
+            </div>
+
+            <div class="mb-3">
+                <label for="content" class="form-label">문의 내용</label>
+                <textarea class="form-control" name="content" id="content" rows="10" maxlength="2000"
+                          placeholder="문의하실 내용을 자세히 입력해주세요"></textarea>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">첨부파일 (최대 5개)</label>
+                <div id="fileRows"></div>
+            </div>
+
+            <div class="d-flex justify-content-end gap-2 mt-3">
+                <button type="submit" id="btn" class="btn btn-primary">등록</button>
+            </div>
+        </form>
+
+        <script th:src="@{/js/support/inquiryRegister.js}"></script>
+    </div>
+</div>
+</body>
+</html>

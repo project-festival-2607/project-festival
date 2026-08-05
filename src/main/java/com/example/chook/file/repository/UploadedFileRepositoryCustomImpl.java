@@ -6,6 +6,7 @@ import com.example.chook.recruitment.entity.QRecruitmentFile;
 import com.example.chook.resume.entity.QProfileFile;
 import com.example.chook.resume.entity.QResumeFile;
 import com.example.chook.support.entity.QAdminBoardFile;
+import com.example.chook.support.entity.QInquiryFile;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
@@ -46,6 +47,7 @@ public class UploadedFileRepositoryCustomImpl implements UploadedFileRepositoryC
     QProfileFile profileFile = QProfileFile.profileFile;
     QRecruitmentFile recruitmentFile = QRecruitmentFile.recruitmentFile;
     QResumeFile resumeFile = QResumeFile.resumeFile;
+    QInquiryFile inquiryFile = QInquiryFile.inquiryFile;
 
     return jpaQueryFactory
       .select(uploadedFile.uuid, uploadedFile.uploadedAt)
@@ -78,6 +80,14 @@ public class UploadedFileRepositoryCustomImpl implements UploadedFileRepositoryC
           .selectOne()
           .from(adminBoardFile)
           .where(adminBoardFile.uploadedFile.eq(uploadedFile))
+          .notExists(),
+
+
+              // InquiryFile
+        JPAExpressions
+          .selectOne()
+          .from(inquiryFile)
+          .where(inquiryFile.uploadedFile.eq(uploadedFile))
           .notExists()
 
       )
