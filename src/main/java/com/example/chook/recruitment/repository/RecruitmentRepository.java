@@ -5,9 +5,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface RecruitmentRepository extends JpaRepository<Recruitment, Long> {
+public interface RecruitmentRepository extends JpaRepository<Recruitment, Long>,
+                                               RecruitmentRepositoryCustom {
 
   long countByFestival_ContentId(String contentId);
+
   List<Recruitment> findByFestival_ContentId(String contentId);
 
 }
