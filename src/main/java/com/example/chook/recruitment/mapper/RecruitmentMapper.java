@@ -77,18 +77,26 @@ public class RecruitmentMapper {
     foodTruck.setElectricityProvided(dto.isElectricityProvided());
   }
 
-  public RecruitmentUpdateDTO toUpdateDto(Recruitment recruitment,
+  public RecruitmentUpdateDTO toUpdateDto(Recruitment entity) {
+    return toUpdateDtoBuilder(entity).build();
+  }
+
+  public RecruitmentUpdateDTO toUpdateDto(Recruitment entity,
                                           RecruitmentIndividual individual) {
-    return toUpdateDtoBuilder(recruitment)
+    return toUpdateDtoBuilder(entity)
       .specific(toSpecificDto(individual))
       .build();
   }
 
-  public RecruitmentUpdateDTO toUpdateDto(Recruitment recruitment,
+  public RecruitmentUpdateDTO toUpdateDto(Recruitment entity,
                                           RecruitmentFoodTruck foodTruck) {
-    return toUpdateDtoBuilder(recruitment)
+    return toUpdateDtoBuilder(entity)
       .specific(toSpecificDto(foodTruck))
       .build();
+  }
+
+  public RecruitmentListDTO toListDto(Recruitment entity) {
+    return toListDtoBuilder(entity).build();
   }
 
   public RecruitmentListDTO toListDto(Recruitment entity,
@@ -105,6 +113,10 @@ public class RecruitmentMapper {
       .build();
   }
 
+  public RecruitmentManagementListDTO toManagementListDto(Recruitment entity) {
+    return toManagementListDtoBuilder(entity).build();
+  }
+
   public RecruitmentManagementListDTO toManagementListDto(Recruitment entity,
                                                           RecruitmentIndividual individual) {
     return toManagementListDtoBuilder(entity)
@@ -117,6 +129,10 @@ public class RecruitmentMapper {
     return toManagementListDtoBuilder(entity)
       .specific(toSpecificDto(foodTruck))
       .build();
+  }
+
+  public RecruitmentResponseDTO toResponseDto(Recruitment entity) {
+    return toResponseDtoBuilder(entity).build();
   }
 
   public RecruitmentResponseDTO toResponseDto(Recruitment entity,
