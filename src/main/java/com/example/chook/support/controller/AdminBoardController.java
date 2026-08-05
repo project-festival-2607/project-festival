@@ -111,7 +111,7 @@ public class AdminBoardController {
         @RequestParam("image") MultipartFile image,
         @RequestParam("title") String title
     ) {
-        String relativePath = toFolderName(title); // 파일 저장 경로
+        String relativePath = "adminBoard/" + toFolderName(title); // 파일 저장 경로
         FileDTO fileDto = fileService.uploadAndGetDto(image, relativePath);
         log.info("adminBoard image uploaded: {}", fileDto);
         return ResponseEntity.ok(fileDto);
