@@ -1,8 +1,8 @@
 package com.example.chook.recruitment.record;
 
 import com.example.chook.recruitment.entity.enums.RecruitmentCategory;
+import com.example.chook.recruitment.entity.enums.RecruitmentListCriteria;
 import com.example.chook.recruitment.entity.enums.RecruitmentStatus;
-import com.example.chook.recruitment.entity.enums.RecruitmentWageType;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -23,7 +23,7 @@ public record RecruitmentSearchCondition(
   LocalDate workingStartDate,
   LocalDate workingEndDate,
 
-  RecruitmentWageType wageType
+  RecruitmentListCriteria listCriteria
 
 ) {
 }

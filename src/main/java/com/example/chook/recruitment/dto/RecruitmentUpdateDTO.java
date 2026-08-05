@@ -1,6 +1,5 @@
 package com.example.chook.recruitment.dto;
 
-import com.example.chook.recruitment.entity.enums.RecruitmentWageType;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -21,13 +20,7 @@ public class RecruitmentUpdateDTO {
 
   private String content;
 
-  // RecruitmentIndividual
-  private RecruitmentWageType wageType;
-  private Integer wageValue;
-  // RecruitmentFoodTruck
-  private boolean prepaid;
-  private boolean boothFeeRequired;
-  private boolean electricityProvided;
+  private RecruitmentSpecificDTO specific;
 
   private LocalDate applicationDeadline;
   private Integer recruitmentCount;

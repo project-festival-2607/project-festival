@@ -1,7 +1,10 @@
 package com.example.chook.recruitment.repository;
 
 import com.example.chook.recruitment.entity.Recruitment;
+import com.example.chook.recruitment.entity.RecruitmentFoodTruck;
+import com.example.chook.recruitment.entity.RecruitmentIndividual;
 import com.example.chook.recruitment.entity.enums.RecruitmentCategory;
+import com.example.chook.recruitment.entity.enums.RecruitmentListCriteria;
 import com.example.chook.recruitment.entity.enums.RecruitmentStatus;
 import com.example.chook.recruitment.record.RecruitmentSearchCondition;
 import com.querydsl.core.BooleanBuilder;
@@ -10,12 +13,17 @@ import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Optional;
 
 import static com.example.chook.recruitment.entity.QRecruitment.recruitment;
+import static com.example.chook.recruitment.entity.QRecruitmentFoodTruck.recruitmentFoodTruck;
 import static com.example.chook.recruitment.entity.QRecruitmentIndividual.recruitmentIndividual;
 
 @Slf4j
@@ -28,17 +36,27 @@ public class RecruitmentRepositoryCustomImpl implements RecruitmentRepositoryCus
   }
 
   @Override
-  public List<Recruitment> searchRecruitments(RecruitmentSearchCondition condition) {
+  public Page<Recruitment> searchRecruitments(RecruitmentSearchCondition condition, Pageable pageable) {
 
-    BooleanBuilder booleanBuilder = new BooleanBuilder();
+    RecruitmentCategory category = condition.category();
+    RecruitmentListCriteria listCriteria = condition.listCriteria();
+    if (listCriteria == null) listCriteria = RecruitmentListCriteria.LATEST;
 
-    booleanBuilder
+    if (category != null &&
+      category != RecruitmentCategory.INDIVIDUAL &&
+      listCriteria.getWageType() != null) {
+      throw new IllegalArgumentException("\"개인\"이 아닌 카테고리에서는 급여순 조회를 사용할 수 없습니다.");
+    }
+
+    BooleanBuilder whereCondition = new BooleanBuilder();
+
+    whereCondition
       .and(recruitment.deletedAt.isNull())
       .and(recruitment.published)
       .and(containsAnyKeyword(condition.keywords()))
       .and(regionSidoEq(condition.regionSidoCode()))
       .and(regionSigunguEq(condition.regionSigunguCode()))
-      .and(categoryEq(condition.category()))
+      .and(categoryEq(category))
       .and(statusEq(condition.status()))
       .and(workingStartTimeGoe(condition.workingStartTime()))
       .and(workingEndTimeLoe(condition.workingEndTime()))
@@ -46,26 +64,74 @@ public class RecruitmentRepositoryCustomImpl implements RecruitmentRepositoryCus
       .and(workingEndDateLoe(condition.workingEndDate()))
     ;
 
-    JPAQuery<Recruitment> jpaQuery = jpaQueryFactory
+    JPAQuery<Recruitment> resultQuery = jpaQueryFactory
       .selectFrom(recruitment);
+    JPAQuery<Long> countQuery = jpaQueryFactory
+      .select(recruitment.count())
+      .from(recruitment);
 
-    boolean wageTypeSpecified =
-      condition.category() == RecruitmentCategory.INDIVIDUAL &&
-      condition.wageType() != null;
+    boolean isWageCriteria = listCriteria.isWageCriteria();
 
-    if (wageTypeSpecified) {
-      jpaQuery
+    if (isWageCriteria) {
+
+      resultQuery
         .join(recruitmentIndividual)
         .on(recruitmentIndividual.recruit.eq(recruitment));
-      booleanBuilder
-        .and(recruitmentIndividual.wageType.eq(condition.wageType()));
+
+      countQuery
+        .join(recruitmentIndividual)
+        .on(recruitmentIndividual.recruit.eq(recruitment));
+
+      whereCondition
+        .and(recruitmentIndividual.wageType.eq(listCriteria.getWageType()));
     }
 
-    jpaQuery.where(booleanBuilder);
-    if (wageTypeSpecified)
-      jpaQuery.orderBy(recruitmentIndividual.wageValue.desc());
+    resultQuery.where(whereCondition);
+    countQuery.where(whereCondition);
 
-    return jpaQuery.fetch();
+    Long total = countQuery.fetchOne();
+
+    if (isWageCriteria)
+      resultQuery.orderBy(recruitmentIndividual.wageValue.desc());
+    else {
+      switch (listCriteria) {
+        case LATEST -> resultQuery.orderBy(recruitment.publishedAt.desc());
+        case DEADLINE -> resultQuery.orderBy(recruitment.applicationDeadline.asc());
+      }
+    }
+
+    List<Recruitment> result = resultQuery
+      .offset(pageable.getOffset())
+      .limit(pageable.getPageSize())
+      .fetch();
+
+    return new PageImpl<>(
+      result,
+      pageable,
+      total == null ? 0 : total
+    );
+  }
+
+  @Override
+  public Optional<RecruitmentIndividual> getIndividualById(Long id) {
+
+    RecruitmentIndividual individual = jpaQueryFactory
+      .selectFrom(recruitmentIndividual)
+      .where(recruitmentIndividual.id.eq(id))
+      .fetchOne();
+
+    return Optional.ofNullable(individual);
+  }
+
+  @Override
+  public Optional<RecruitmentFoodTruck> getFoodTruckById(Long id) {
+
+    RecruitmentFoodTruck foodTruck = jpaQueryFactory
+      .selectFrom(recruitmentFoodTruck)
+      .where(recruitmentFoodTruck.id.eq(id))
+      .fetchOne();
+
+    return Optional.ofNullable(foodTruck);
   }
 
   private BooleanBuilder containsAnyKeyword(List<String> keywords) {
