@@ -2,12 +2,10 @@ package com.example.chook.festival;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -40,6 +38,16 @@ public class FestivalAPIController {
 //    }
 
     // 1월 2월 ... 비동기 카테고리
+    @GetMapping("/list")
+    public ResponseEntity<Page<FestivalDTO>> getFestivalList(
+            @RequestParam(name = "page", defaultValue = "1") int pageNo,
+            @RequestParam(name = "type", required = false) String type,
+            @RequestParam(name = "keyword", required = false) String keyword,
+            @RequestParam(name = "month", required = false) String month
+    ){
+        Page<FestivalDTO> festival = festivalService.getList(pageNo, type, keyword, month);
+        return ResponseEntity.ok(festival);
+    }
 
 
 }

@@ -336,6 +336,11 @@
     color: #FEFEFE;
 }
 
+.month.active {
+    background: #0d6efd;
+    color: #FEFEFE;
+}
+
 
 /*반응형 대응*/
 

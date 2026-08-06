@@ -68,9 +68,9 @@ public class FestivalServiceImpl implements FestivalService, ApplicationRunner {
     }
 
     @Override
-    public Page<FestivalDTO> getList(int pageNo, String type, String keyword) {
+    public Page<FestivalDTO> getList(int pageNo, String type, String keyword, String month) {
         Pageable pageable = PageRequest.of(pageNo - 1, 18, Sort.by("startDate").ascending());
-        Page<Festival> pageList = festivalRepository.searchFestival(type, keyword, pageable);
+        Page<Festival> pageList = festivalRepository.searchFestival(type, keyword, month, pageable);
         return pageList.map(this::convertEntityToDTO);
     }
 

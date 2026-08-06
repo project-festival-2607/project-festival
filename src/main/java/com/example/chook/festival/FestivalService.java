@@ -79,9 +79,10 @@ public interface FestivalService {
 
     FestivalDTO getDetail(String contentId);
 
-    Page<FestivalDTO> getList(int pageNo, String type, String keyword);
+    Page<FestivalDTO> getList(int pageNo, String type, String keyword, String month);
 
     void registerFes(FestivalDTO festivalDTO, FesImageDTO fesImage);
 
     void remove(String id);
+
 }

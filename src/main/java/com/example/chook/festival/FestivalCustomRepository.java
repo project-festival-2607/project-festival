@@ -4,5 +4,5 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface FestivalCustomRepository {
-    Page<Festival> searchFestival(String type, String keyword, Pageable pageable);
+    Page<Festival> searchFestival(String type, String keyword, String month, Pageable pageable);
 }
