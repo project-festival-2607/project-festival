@@ -6,6 +6,7 @@ import com.example.chook.recruitment.entity.Recruitment;
 import com.example.chook.recruitment.entity.RecruitmentFoodTruck;
 import com.example.chook.recruitment.entity.RecruitmentIndividual;
 import com.example.chook.recruitment.entity.enums.RecruitmentCategory;
+import com.example.chook.recruitment.entity.enums.RecruitmentStatus;
 import com.example.chook.recruitment.form.RecruitmentCreateForm;
 import com.example.chook.recruitment.form.RecruitmentManagementSearchForm;
 import com.example.chook.recruitment.form.RecruitmentSearchForm;
@@ -193,7 +194,8 @@ public class RecruitmentMapper {
       .regionSidoCode(form.regionSidoCode())
       .regionSigunguCode(form.regionSigunguCode())
       .category(form.category())
-      .status(form.status())
+      // 공개 리스트(/recruitment/list)는 항상 모집중인 공고만 노출
+      .status(RecruitmentStatus.OPEN)
       .workingStartTime(form.workingStartTime())
       .workingEndTime(form.workingEndTime())
       .workingStartDate(form.workingStartDate())
@@ -271,6 +273,7 @@ public class RecruitmentMapper {
       .festivalContentId(entity.getFestival().getContentId())
       .festivalTitle(entity.getFestival().getTitle())
       .category(entity.getCategory())
+      .applicationDeadline(entity.getApplicationDeadline())
       .workingStartDate(entity.getWorkingStartDate())
       .workingEndDate(entity.getWorkingEndDate())
       .workingStartTime(entity.getWorkingStartTime())
@@ -315,6 +318,7 @@ public class RecruitmentMapper {
   }
 
   private List<String> splitByRegex(String keywords, String regex) {
+    if (keywords == null || keywords.isBlank()) return List.of();
     return Arrays.stream(keywords.trim().split(regex)).toList();
   }
 

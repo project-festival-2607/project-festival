@@ -16,7 +16,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Builder
 @Entity
-public class Festival {
+public class  Festival {
     @Id
     @Column(name = "content_id")
     private String contentId;

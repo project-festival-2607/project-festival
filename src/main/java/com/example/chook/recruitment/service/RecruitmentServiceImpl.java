@@ -37,9 +37,9 @@ public class RecruitmentServiceImpl implements RecruitmentService {
 
   private static final int PAGE_SIZE = 10;
 
-  // 본문 마크다운 안에 박혀있는 "/recruit/image/{uuid}" 링크로 첨부 이미지를 역추적 (admin_board와 동일한 패턴)
+  // 본문 마크다운 안에 박혀있는 "/recruitment/image/{uuid}" 링크로 첨부 이미지를 역추적 (admin_board와 동일한 패턴)
   private static final Pattern IMAGE_UUID_PATTERN =
-    Pattern.compile("/recruit/image/([0-9a-fA-F\\-]{36})");
+    Pattern.compile("/recruitment/image/([0-9a-fA-F\\-]{36})");
 
   private final RecruitmentRepository recruitmentRepository;
   private final RecruitmentIndividualRepository recruitmentIndividualRepository;

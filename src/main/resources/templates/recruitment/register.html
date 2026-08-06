@@ -15,7 +15,12 @@
     <div class="container recruit-register">
         <h1>구인공고 등록</h1>
 
-        <p class="recruit-form-error" th:if="${hasError}">입력값을 다시 확인해주세요.</p>
+        <div th:if="${hasError}">
+            <p class="recruit-form-error">입력값을 다시 확인해주세요.</p>
+            <ul class="recruit-form-error">
+                <li th:each="msg : ${errorMessages}" th:text="${msg}"></li>
+            </ul>
+        </div>
 
         <form th:action="@{/recruitment/register}" method="post" id="registerForm">
 

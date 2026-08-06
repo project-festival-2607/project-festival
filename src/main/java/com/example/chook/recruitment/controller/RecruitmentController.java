@@ -141,10 +141,14 @@ public class RecruitmentController {
   }
 
   // 검증 실패로 등록 폼을 다시 보여줄 때, GET /register에서 채우던 드롭다운 데이터를 다시 채움
-  private String registerFormWithReloadedOptions(Model model) {
+  private String registerFormWithReloadedOptions(Model model, BindingResult bindingResult) {
     model.addAttribute("festivals", festivalRepository.findAll());
     model.addAttribute("sidoList", regionService.getSidoList());
     model.addAttribute("hasError", true);
+    List<String> errorMessages = bindingResult.getFieldErrors().stream()
+      .map(error -> error.getField() + ": " + error.getDefaultMessage())
+      .toList();
+    model.addAttribute("errorMessages", errorMessages);
     return "recruitment/register";
   }
 
@@ -154,14 +158,14 @@ public class RecruitmentController {
                          Model model,
                          RedirectAttributes redirectAttributes) {
 
-    if (bindingResult.hasErrors()) return registerFormWithReloadedOptions(model);
+    if (bindingResult.hasErrors()) return registerFormWithReloadedOptions(model, bindingResult);
     if (recruitmentCreateForm.workingStartDate().isAfter(
       recruitmentCreateForm.workingEndDate()))
       bindingResult.rejectValue("workingEndDate",
         "workingEndDate.outOfRange",
         "업무시작날짜는 업무종료날짜보다 늦을 수 없습니다."
       );
-    if (bindingResult.hasErrors()) return registerFormWithReloadedOptions(model);
+    if (bindingResult.hasErrors()) return registerFormWithReloadedOptions(model, bindingResult);
     RecruitmentCreateDTO recruitmentCreateDTO = mapper.toCreateDto(recruitmentCreateForm);
     Long recruitmentId = recruitmentService.createRecruitment(recruitmentCreateDTO);
 
