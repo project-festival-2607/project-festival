@@ -52,7 +52,7 @@ public class RecruitmentRepositoryCustomImpl implements RecruitmentRepositoryCus
 
     whereCondition
       .and(recruitment.deletedAt.isNull())
-      .and(recruitment.published)
+//      .and(recruitment.published)           // 현재 게시(결제) 기능이 없으므로
       .and(containsAnyKeyword(condition.keywordList()))
       .and(regionSidoEq(condition.regionSidoCode()))
       .and(regionSigunguEq(condition.regionSigunguCode()))
