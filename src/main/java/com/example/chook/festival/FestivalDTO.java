@@ -1,7 +1,6 @@
 package com.example.chook.festival;
 
 import lombok.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -32,8 +31,6 @@ public class FestivalDTO {
     private String endDate;
     private String firstImage;
     private String secondImage;
-
-    private MultipartFile imageFile;
 
     public String getOfficialHomepage() {
         if (this.homepage == null || this.homepage.isBlank()) {
