@@ -85,4 +85,5 @@ public interface FestivalService {
 
     void remove(String id);
 
+    List<FestivalDTO> getAll();
 }
