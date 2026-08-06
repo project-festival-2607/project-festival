@@ -83,6 +83,7 @@ public class DevMemberDataInitializer {
     // username이 "admin"인 ADMIN 계정 추가
     // 이미 존재해도 삭제 후 다시 생성
     memberRepository.deleteByUsername("admin");
+    memberRepository.flush();
     memberRepository.save(
       Member.builder()
         .username("admin")
