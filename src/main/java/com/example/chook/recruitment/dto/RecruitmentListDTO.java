@@ -25,6 +25,8 @@ public class RecruitmentListDTO {
   private RecruitmentCategory category;
   private RecruitmentSpecificDTO specific;
 
+  private LocalDate applicationDeadline;
+
   private LocalDate workingStartDate;
   private LocalDate workingEndDate;
   private LocalTime workingStartTime;
