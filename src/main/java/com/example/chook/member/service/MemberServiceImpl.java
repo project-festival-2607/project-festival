@@ -213,6 +213,8 @@ public class MemberServiceImpl implements MemberService {
                 .passwordHash(passwordEncoder.encode(rawPassword))
                 .name(name)
                 .phone(phone)
+                // TODO phoneVerified는 전화번호 인증 추가 후 삭제
+                .phoneVerified(true)
                 .email(email)
                 .role(role)
                 .status(MemberStatus.ACTIVE)
