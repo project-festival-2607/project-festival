@@ -1,6 +1,5 @@
 package com.example.chook.recruitment.handler;
 
-import com.example.chook.recruitment.form.RecruitmentSearchForm;
 import lombok.Getter;
 import lombok.ToString;
 import org.springframework.data.domain.Page;
@@ -9,7 +8,7 @@ import java.util.List;
 
 @Getter
 @ToString
-public class PagingHandler<T> {
+public class PagingHandler<Element, Form> {
 
   private static final int PAGE_GROUP_SIZE = 10;
 
@@ -22,11 +21,11 @@ public class PagingHandler<T> {
   private final boolean prevBtnActive;
   private final boolean nextBtnActive;
 
-  private final List<T> elementList;
+  private final List<Element> elementList;
 
-  private final RecruitmentSearchForm form;
+  private final Form form;
 
-  public PagingHandler(Page<T> page, int pageIdx, RecruitmentSearchForm form) {
+  public PagingHandler(Page<Element> page, int pageIdx, Form form) {
 
     this.elementList = page.getContent();
     this.pageIdx = pageIdx;

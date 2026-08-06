@@ -44,7 +44,8 @@ public class RecruitmentController {
     Page<RecruitmentListDTO> page = recruitmentService.getPage(pageIdx, condition);
     model.addAttribute("page", page);
 
-    PagingHandler<RecruitmentListDTO> pagingHandler = new PagingHandler<>(page, pageIdx, form);
+    PagingHandler<RecruitmentListDTO, RecruitmentSearchForm> pagingHandler =
+      new PagingHandler<>(page, pageIdx, form);
     model.addAttribute("pagingHandler", pagingHandler);
   }
 
