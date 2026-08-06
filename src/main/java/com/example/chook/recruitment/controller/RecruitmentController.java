@@ -1,11 +1,14 @@
 package com.example.chook.recruitment.controller;
 
-import com.example.chook.recruitment.dto.*;
-import com.example.chook.recruitment.entity.enums.RecruitmentCategory;
+import com.example.chook.recruitment.dto.RecruitmentCreateDTO;
+import com.example.chook.recruitment.dto.RecruitmentListDTO;
+import com.example.chook.recruitment.dto.RecruitmentManagementListDTO;
+import com.example.chook.recruitment.dto.RecruitmentResponseDTO;
 import com.example.chook.recruitment.form.RecruitmentCreateForm;
 import com.example.chook.recruitment.form.RecruitmentManagementSearchForm;
 import com.example.chook.recruitment.form.RecruitmentSearchForm;
 import com.example.chook.recruitment.handler.PagingHandler;
+import com.example.chook.recruitment.mapper.RecruitmentMapper;
 import com.example.chook.recruitment.record.RecruitmentSearchCondition;
 import com.example.chook.recruitment.service.RecruitmentService;
 import jakarta.validation.Valid;
@@ -18,9 +21,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.Arrays;
-import java.util.List;
-
 @Controller
 @RequestMapping("/recruit/*")
 @RequiredArgsConstructor
@@ -28,6 +28,7 @@ import java.util.List;
 public class RecruitmentController {
 
   private final RecruitmentService recruitmentService;
+  private final RecruitmentMapper mapper;
 
   @GetMapping("/list")
   public void list(Model model,
@@ -42,7 +43,7 @@ public class RecruitmentController {
         "업무시작날짜는 업무종료날짜보다 늦을 수 없습니다."
       );
     if (bindingResult.hasErrors()) return;
-    RecruitmentSearchCondition condition = toCondition(form);
+    RecruitmentSearchCondition condition = mapper.toCondition(form);
     Page<RecruitmentListDTO> page = recruitmentService.getPage(pageIdx, condition);
     model.addAttribute("page", page);
 
@@ -57,7 +58,7 @@ public class RecruitmentController {
                          @Valid @ModelAttribute RecruitmentManagementSearchForm form,
                          BindingResult bindingResult) {
     if (bindingResult.hasErrors()) return;
-    RecruitmentSearchCondition condition = toCondition(form);
+    RecruitmentSearchCondition condition = mapper.toCondition(form);
     Page<RecruitmentManagementListDTO> page = recruitmentService.getManagementPage(pageIdx, condition);
     model.addAttribute("page", page);
 
@@ -91,7 +92,7 @@ public class RecruitmentController {
         "업무시작날짜는 업무종료날짜보다 늦을 수 없습니다."
       );
     if (bindingResult.hasErrors()) return "recruit/register";
-    RecruitmentCreateDTO recruitmentCreateDTO = toCreateDto(recruitmentCreateForm);
+    RecruitmentCreateDTO recruitmentCreateDTO = mapper.toCreateDto(recruitmentCreateForm);
     Long recruitmentId = recruitmentService.createRecruitment(recruitmentCreateDTO);
 
     redirectAttributes.addAttribute("id", recruitmentId);
@@ -100,74 +101,8 @@ public class RecruitmentController {
     return "redirect:/recruit/{id}";
   }
 
-  private RecruitmentCreateDTO toCreateDto(RecruitmentCreateForm form) {
-    return RecruitmentCreateDTO.builder()
-      .regionSidoCode(form.regionSidoCode())
-      .regionSigunguCode(form.regionSigunguCode())
-      .recruitmentTitle(form.recruitmentTitle())
-      .festivalContentId(form.festivalContentId())
-      .content(form.content())
-      .category(form.category())
-      .specific(toSpecificDto(form))
-      .applicationDeadline(form.applicationDeadline())
-      .recruitmentCount(form.recruitmentCount())
-      .workingLocation(form.workingLocation())
-      .workingStartDate(form.workingStartDate())
-      .workingEndDate(form.workingEndDate())
-      .workingStartTime(form.workingStartTime())
-      .workingEndTime(form.workingEndTime())
-      .build();
-  }
 
-  private RecruitmentSearchCondition toCondition(RecruitmentManagementSearchForm form) {
-    return RecruitmentSearchCondition.builder()
-      .keywordList(getKeywordList(form.keywords()))
-      .regionSidoCode(form.regionSidoCode())
-      .regionSigunguCode(form.regionSigunguCode())
-      .category(form.category())
-      .status(form.status())
-      .festivalContentId(form.festivalContentId())
-      .build();
-  }
 
-  private RecruitmentSearchCondition toCondition(RecruitmentSearchForm form) {
-    return RecruitmentSearchCondition.builder()
-      .keywordList(getKeywordList(form.keywords()))
-      .regionSidoCode(form.regionSidoCode())
-      .regionSigunguCode(form.regionSigunguCode())
-      .category(form.category())
-      .status(form.status())
-      .workingStartTime(form.workingStartTime())
-      .workingEndTime(form.workingEndTime())
-      .workingStartDate(form.workingStartDate())
-      .workingEndDate(form.workingEndDate())
-      .listCriteria(form.listCriteria())
-      .build();
-  }
 
-  private RecruitmentSpecificDTO toSpecificDto(RecruitmentCreateForm form) {
-    RecruitmentCategory category = form.category();
-    if (category == null) return null;
-    switch (category) {
-      case INDIVIDUAL -> {
-        return RecruitmentIndividualDTO.builder()
-          .wageType(form.wageType())
-          .wageValue(form.wageValue())
-          .build();
-      }
-      case FOOD_TRUCK -> {
-        return RecruitmentFoodTruckDTO.builder()
-          .prepaid(form.prepaid())
-          .boothFeeRequired(form.boothFeeRequired())
-          .electricityProvided(form.electricityProvided())
-          .build();
-      }
-    }
-    return null;
-  }
-
-  private List<String> getKeywordList(String keywords) {
-    return Arrays.stream(keywords.trim().split("[\\s,&]+")).toList();
-  }
 
 }
