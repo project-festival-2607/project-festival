@@ -53,7 +53,7 @@ public class RecruitmentRepositoryCustomImpl implements RecruitmentRepositoryCus
     whereCondition
       .and(recruitment.deletedAt.isNull())
       .and(recruitment.published)
-      .and(containsAnyKeyword(condition.keywords()))
+      .and(containsAnyKeyword(condition.keywordList()))
       .and(regionSidoEq(condition.regionSidoCode()))
       .and(regionSigunguEq(condition.regionSigunguCode()))
       .and(categoryEq(category))

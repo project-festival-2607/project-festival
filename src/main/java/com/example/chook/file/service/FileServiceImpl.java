@@ -29,11 +29,45 @@ public class FileServiceImpl implements FileService {
   private final FileStorage fileStorage;
   private final FileDeletionFailureRecorder failureRecorder;
 
+
   @Transactional
   @Override
-  public FileDTO uploadAndGetDto(MultipartFile file, String relativePath) {
+  public UploadedFile upload(MultipartFile file, String relativePath) {
 
-    return toDto(upload(file, relativePath));
+    UUID uuid = UUID.randomUUID();
+    String originalFileName = file.getOriginalFilename();
+    String extension = FilenameUtils.getExtension(originalFileName);
+    String storedFileName = (extension == null || extension.isBlank())
+      ? uuid.toString()
+      : String.format("%s.%s", uuid, extension);
+
+    UploadedFile uploadedFile = UploadedFile.builder()
+      .uuid(uuid)
+      .originalName(originalFileName)
+      .storedName(storedFileName)
+      .relativePath(relativePath)
+      .mimeType(file.getContentType())
+      .fileSize(file.getSize())
+      .uploadedAt(LocalDateTime.now())
+      .build();
+
+    if (!fileStorage.store(file, relativePath, storedFileName)) {
+      throw new IllegalStateException(
+        String.format("파일 \"%s\" 업로드에 실패했습니다.", originalFileName)
+      );
+    }
+
+    try {
+      return uploadedFileRepository.save(uploadedFile);
+    } catch (RuntimeException exception) {
+      log.error("파일 \"{}\" DB 저장 실패. 파일 삭제를 시도합니다.", originalFileName, exception);
+      if (!fileStorage.delete(relativePath, storedFileName)) {
+        throw new IllegalStateException(
+          String.format("파일 \"%s\" 업로드 실패 후 파일 정리에도 실패", storedFileName),
+          exception);
+      }
+      throw exception;
+    }
   }
 
   @Override
@@ -74,44 +108,6 @@ public class FileServiceImpl implements FileService {
     log.info("FileResource: {}", result);
 
     return result;
-  }
-
-  private UploadedFile upload(MultipartFile file, String relativePath) {
-
-    UUID uuid = UUID.randomUUID();
-    String originalFileName = file.getOriginalFilename();
-    String extension = FilenameUtils.getExtension(originalFileName);
-    String storedFileName = (extension == null || extension.isBlank())
-      ? uuid.toString()
-      : String.format("%s.%s", uuid, extension);
-
-    UploadedFile uploadedFile = UploadedFile.builder()
-      .uuid(uuid)
-      .originalName(originalFileName)
-      .storedName(storedFileName)
-      .relativePath(relativePath)
-      .mimeType(file.getContentType())
-      .fileSize(file.getSize())
-      .uploadedAt(LocalDateTime.now())
-      .build();
-
-    if (!fileStorage.store(file, relativePath, storedFileName)) {
-      throw new IllegalStateException(
-        String.format("파일 \"%s\" 업로드에 실패했습니다.", originalFileName)
-      );
-    }
-
-    try {
-      return uploadedFileRepository.save(uploadedFile);
-    } catch (RuntimeException exception) {
-      log.error("파일 \"{}\" DB 저장 실패. 파일 삭제를 시도합니다.", originalFileName, exception);
-      if (!fileStorage.delete(relativePath, storedFileName)) {
-        throw new IllegalStateException(
-          String.format("파일 \"%s\" 업로드 실패 후 파일 정리에도 실패", storedFileName),
-          exception);
-      }
-      throw exception;
-    }
   }
 
   /**

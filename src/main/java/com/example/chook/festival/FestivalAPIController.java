@@ -49,5 +49,10 @@ public class FestivalAPIController {
         return ResponseEntity.ok(festival);
     }
 
+    // map Zone
+    @GetMapping("/map")
+    public ResponseEntity<List<FestivalDTO>> getMapFestivalList() {
+        return ResponseEntity.ok(festivalService.getAll());
+    }
 
 }

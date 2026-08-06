@@ -16,8 +16,8 @@ public interface RecruitmentService {
 
   RecruitmentResponseDTO getRecruitment(Long id);
 
-  Page<RecruitmentListDTO> getPages(int page, RecruitmentSearchCondition condition);
+  Page<RecruitmentListDTO> getPage(int pageIdx, RecruitmentSearchCondition condition);
 
-  Page<RecruitmentManagementListDTO> getManagementPages(int page, RecruitmentSearchCondition condition);
+  Page<RecruitmentManagementListDTO> getManagementPage(int pageIdx, RecruitmentSearchCondition condition);
 
 }
