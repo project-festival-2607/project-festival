@@ -5,8 +5,16 @@ import com.example.chook.recruitment.dto.*;
 import com.example.chook.recruitment.entity.Recruitment;
 import com.example.chook.recruitment.entity.RecruitmentFoodTruck;
 import com.example.chook.recruitment.entity.RecruitmentIndividual;
+import com.example.chook.recruitment.entity.enums.RecruitmentCategory;
+import com.example.chook.recruitment.form.RecruitmentCreateForm;
+import com.example.chook.recruitment.form.RecruitmentManagementSearchForm;
+import com.example.chook.recruitment.form.RecruitmentSearchForm;
+import com.example.chook.recruitment.record.RecruitmentSearchCondition;
 import com.example.chook.region.entity.RegionSigungu;
 import org.springframework.stereotype.Component;
+
+import java.util.Arrays;
+import java.util.List;
 
 @Component
 public class RecruitmentMapper {
@@ -149,6 +157,51 @@ public class RecruitmentMapper {
       .build();
   }
 
+  public RecruitmentCreateDTO toCreateDto(RecruitmentCreateForm form) {
+    return RecruitmentCreateDTO.builder()
+      .regionSidoCode(form.regionSidoCode())
+      .regionSigunguCode(form.regionSigunguCode())
+      .recruitmentTitle(form.recruitmentTitle())
+      .festivalContentId(form.festivalContentId())
+      .content(form.content())
+      .category(form.category())
+      .specific(toSpecificDto(form))
+      .applicationDeadline(form.applicationDeadline())
+      .recruitmentCount(form.recruitmentCount())
+      .workingLocation(form.workingLocation())
+      .workingStartDate(form.workingStartDate())
+      .workingEndDate(form.workingEndDate())
+      .workingStartTime(form.workingStartTime())
+      .workingEndTime(form.workingEndTime())
+      .build();
+  }
+
+  public RecruitmentSearchCondition toCondition(RecruitmentManagementSearchForm form) {
+    return RecruitmentSearchCondition.builder()
+      .keywordList(splitByRegex(form.keywords(), "[\\s,&]+"))
+      .regionSidoCode(form.regionSidoCode())
+      .regionSigunguCode(form.regionSigunguCode())
+      .category(form.category())
+      .status(form.status())
+      .festivalContentId(form.festivalContentId())
+      .build();
+  }
+
+  public RecruitmentSearchCondition toCondition(RecruitmentSearchForm form) {
+    return RecruitmentSearchCondition.builder()
+      .keywordList(splitByRegex(form.keywords(), "[\\s,&]+"))
+      .regionSidoCode(form.regionSidoCode())
+      .regionSigunguCode(form.regionSigunguCode())
+      .category(form.category())
+      .status(form.status())
+      .workingStartTime(form.workingStartTime())
+      .workingEndTime(form.workingEndTime())
+      .workingStartDate(form.workingStartDate())
+      .workingEndDate(form.workingEndDate())
+      .listCriteria(form.listCriteria())
+      .build();
+  }
+
   private RecruitmentUpdateDTO.RecruitmentUpdateDTOBuilder toUpdateDtoBuilder(Recruitment entity) {
     return  RecruitmentUpdateDTO.builder()
       .regionSidoCode(entity.getSigungu().getSido().getCode())
@@ -238,6 +291,31 @@ public class RecruitmentMapper {
       .boothFeeRequired(entity.isBoothFeeRequired())
       .electricityProvided(entity.isElectricityProvided())
       .build();
+  }
+
+  private RecruitmentSpecificDTO toSpecificDto(RecruitmentCreateForm form) {
+    RecruitmentCategory category = form.category();
+    if (category == null) return null;
+    switch (category) {
+      case INDIVIDUAL -> {
+        return RecruitmentIndividualDTO.builder()
+          .wageType(form.wageType())
+          .wageValue(form.wageValue())
+          .build();
+      }
+      case FOOD_TRUCK -> {
+        return RecruitmentFoodTruckDTO.builder()
+          .prepaid(form.prepaid())
+          .boothFeeRequired(form.boothFeeRequired())
+          .electricityProvided(form.electricityProvided())
+          .build();
+      }
+    }
+    return null;
+  }
+
+  private List<String> splitByRegex(String keywords, String regex) {
+    return Arrays.stream(keywords.trim().split(regex)).toList();
   }
 
 }
