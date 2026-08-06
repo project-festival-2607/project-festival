@@ -64,6 +64,7 @@ public class MemberServiceImpl implements MemberService {
         // 사업자번호가 입력되어 있을 때 인증 토큰 유효 확인
         // true → 사업자번호 인증 완료
         // false → 사업자번호 자체를 입력하지 않음
+        // IllegalArgumentException → 사업자번호를 입력했으나 인증 확인에 실패함
         boolean isJobEquip = hasVerifiedBusinessNumber(
                 requestDTO.getBusinessNumber(),
                 requestDTO.getVerificationToken()
