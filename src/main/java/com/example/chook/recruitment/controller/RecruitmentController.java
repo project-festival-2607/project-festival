@@ -34,8 +34,10 @@ public class RecruitmentController {
   }
 
   @GetMapping("/{id}")
-  public String view(@PathVariable String id, Model model) {
-    return "/recruit/detail";
+  public String view(@PathVariable Long id, Model model) {
+    RecruitmentResponseDTO responseDto = recruitmentService.getRecruitment(id);
+    model.addAttribute("recruitment", responseDto);
+    return "recruit/detail";
   }
 
   @GetMapping("/register")
@@ -95,9 +97,6 @@ public class RecruitmentController {
       }
       case FOOD_TRUCK -> {
         return RecruitmentFoodTruckDTO.builder()
-          .prepaid(form.isPrepaid())
-          .boothFeeRequired(form.isBoothFeeRequired())
-          .electricityProvided(form.isElectricityProvided())
           .prepaid(form.prepaid())
           .boothFeeRequired(form.boothFeeRequired())
           .electricityProvided(form.electricityProvided())
