@@ -124,7 +124,7 @@ public class RecruitmentController {
     @RequestParam("title") String title
   ) {
     String relativePath = "recruit/" + toFolderName(title);
-    FileDTO fileDto = fileService.uploadAndGetDto(image, relativePath);
+    FileDTO fileDto = fileService.toDto(fileService.upload(image, relativePath));
     log.info("recruit image uploaded: {}", fileDto);
     return ResponseEntity.ok(fileDto);
   }
