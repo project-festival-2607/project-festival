@@ -41,23 +41,23 @@ public class DevMemberDataInitializer {
 
   @Transactional
   public void generateSampleMembers(
-    int recruiterCount,
-    int jobSeekerCount,
-    int jobEquipCount
+    long recruiterCount,
+    long jobSeekerCount,
+    long jobEquipCount
   ) {
 
     if (memberRepository.count() == 0) {
 
       Set<Integer> generatedNumbers = new HashSet<>();
 
-      for (int i = 0; i < recruiterCount + jobEquipCount; i++) {
+      for (long i = 0; i < recruiterCount + jobEquipCount; i++) {
         generatedNumbers.add(random.nextInt(100000));
       }
 
       Iterator<Integer> businessNumberGenerator = generatedNumbers.iterator();
 
       // RECRUITER
-      for (int i = 1; i <= recruiterCount; i++) {
+      for (long i = 1; i <= recruiterCount; i++) {
         Member member = addMember("r", "행사 구인자", MemberRole.RECRUITER, i);
         member.setPoint(50_000L);
         addEmployerProfile(member, i);
@@ -66,13 +66,13 @@ public class DevMemberDataInitializer {
       }
 
       // JOB_SEEKER
-      for (int i = 1; i <= jobSeekerCount; i++) {
+      for (long i = 1; i <= jobSeekerCount; i++) {
         Member member = addMember("s", "일반 구직자", MemberRole.JOB_SEEKER, i);
         addIndividualProfile(member);
       }
 
       // JOB_EQUIP
-      for (int i = 1; i <= jobEquipCount; i++) {
+      for (long i = 1; i <= jobEquipCount; i++) {
         Member member = addMember("e", "전문 구직자", MemberRole.JOB_EQUIP, i);
         addIndividualProfile(member);
         addBusinessRegistration(member, businessNumberGenerator);
@@ -103,7 +103,7 @@ public class DevMemberDataInitializer {
   private Member addMember(String usernamePrefix,
                            String namePrefix,
                            MemberRole role,
-                           int index) {
+                           long index) {
     String username = String.format("%s%02d", usernamePrefix, index);
 
     return memberRepository.save(
@@ -120,7 +120,7 @@ public class DevMemberDataInitializer {
     );
   }
 
-  private void addEmployerProfile(Member member, int index) {
+  private void addEmployerProfile(Member member, long index) {
     employerProfileRepository.save(
       EmployerProfile.builder()
         .member(member)
