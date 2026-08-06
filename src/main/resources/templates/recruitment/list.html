@@ -115,7 +115,7 @@
                 <div class="recruit-card-date">
                     <span th:text="${r.workingStartDate}"></span>
                     <span> ~ </span>
-                    <span th:text="${r.applicationDeadline != null ? r.applicationDeadline : '상시모집'}"></span>
+                    <span th:text="${r.workingEndDate}"></span>
                 </div>
                 <div class="recruit-card-specific" th:switch="${r.category != null ? r.category.name() : ''}">
                     <span th:case="'INDIVIDUAL'" th:if="${r.specific != null}">
