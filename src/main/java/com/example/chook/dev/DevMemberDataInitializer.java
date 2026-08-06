@@ -1,4 +1,4 @@
-package com.example.chook.member.service;
+package com.example.chook.dev;
 
 import com.example.chook.member.entity.BusinessRegistration;
 import com.example.chook.member.entity.EmployerProfile;
@@ -29,7 +29,7 @@ import java.util.Set;
 @RequiredArgsConstructor
 @Service
 @Slf4j
-public class MemberInitService {
+public class DevMemberDataInitializer {
 
   private final MemberRepository memberRepository;
   private final JobSeekerProfileRepository jobSeekerProfileRepository;

@@ -1,4 +1,4 @@
-package com.example.chook.initializer;
+package com.example.chook.dev;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -8,12 +8,12 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class TestDataInitializer implements CommandLineRunner {
+public class DevDataInitializer implements ApplicationRunner {
 
-  private final MemberInitService memberInitService;
+  private final DevMemberDataInitializer memberDataInitializer;
 
   @Override
-    memberInitService.addSampleMembers(3, 10, 5);
   public void run(@NonNull ApplicationArguments arg) throws Exception {
+    memberDataInitializer.addSampleMembers(3, 10, 5);
   }
 }
