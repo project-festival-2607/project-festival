@@ -1,9 +1,7 @@
 package com.example.chook.dev;
 
 import com.example.chook.festival.Festival;
-import com.example.chook.festival.FestivalFileRepository;
 import com.example.chook.festival.FestivalRepository;
-import com.example.chook.file.service.FileService;
 import com.example.chook.member.entity.Member;
 import com.example.chook.member.entity.enums.MemberRole;
 import com.example.chook.member.repository.MemberRepository;
@@ -22,8 +20,6 @@ import java.util.UUID;
 public class DevFestivalDataInitializer {
 
   private final FestivalRepository festivalRepository;
-  private final FestivalFileRepository festivalFileRepository;
-  private final FileService fileService;
   private final MemberRepository memberRepository;
 
   private final Random random = new Random();
