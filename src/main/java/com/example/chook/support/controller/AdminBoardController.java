@@ -107,7 +107,7 @@ public class AdminBoardController {
         @RequestParam("title") String title
     ) {
         String relativePath = "adminBoard/" + toFolderName(title); // 파일 저장 경로
-        FileDTO fileDto = fileService.uploadAndGetDto(image, relativePath);
+        FileDTO fileDto = fileService.toDto(fileService.upload(image, relativePath));
         log.info("adminBoard image uploaded: {}", fileDto);
         return ResponseEntity.ok(fileDto);
     }
