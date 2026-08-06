@@ -86,6 +86,5 @@ public interface FestivalService {
 
     void remove(String id);
 
-    // map Zone
     List<FestivalDTO> getAll();
 }

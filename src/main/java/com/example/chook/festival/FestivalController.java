@@ -31,6 +31,9 @@ public class FestivalController {
     @Value("${apikey.festival}")
     private String APIKEY;
 
+    @Value("${file.upload-dir}")
+    private String uploadDir;
+
     @GetMapping("/list")
     public String list(Model model,
                        @RequestParam(name = "pageNo", required = false, defaultValue = "1") int pageNo,
