@@ -1,5 +1,7 @@
 package com.example.chook.festival;
 
+import com.example.chook.file.entity.UploadedFile;
+import com.example.chook.file.service.FileService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,11 +16,13 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.multipart.MultipartFile;
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.ObjectMapper;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -26,7 +30,12 @@ import java.util.stream.Collectors;
 @Slf4j
 //public class FestivalServiceImpl implements FestivalService, ApplicationRunner
 public class FestivalServiceImpl implements FestivalService, ApplicationRunner {
+
     private final FestivalRepository festivalRepository;
+    private final FileService fileService;
+    private final FestivalFileRepository festivalFileRepository;
+
+    private static final String RELATIVE_PATH = "festival";
 
     @Value("${apikey.festival}")
     private String apiKey;
@@ -65,10 +74,41 @@ public class FestivalServiceImpl implements FestivalService, ApplicationRunner {
     }
 
     @Override
-    public Page<FestivalDTO> getList(int pageNo, String type, String keyword) {
+    public Page<FestivalDTO> getList(int pageNo, String type, String keyword, String month) {
         Pageable pageable = PageRequest.of(pageNo - 1, 18, Sort.by("startDate").ascending());
-        Page<Festival> pageList = festivalRepository.searchFestival(type, keyword, pageable);
+        Page<Festival> pageList = festivalRepository.searchFestival(type, keyword, month, pageable);
         return pageList.map(this::convertEntityToDTO);
+    }
+
+    @Transactional
+    @Override
+    public void registerFes(FestivalDTO festivalDTO, MultipartFile file) {
+
+        // 행사 등록
+        if(festivalDTO.getContentId() == null || festivalDTO.getContentId().isBlank()){
+            festivalDTO.setContentId(UUID.randomUUID().toString());
+        }
+        Festival festival = convertDTOToEntity(festivalDTO);
+        Festival savedFestival = festivalRepository.save(festival);
+
+        // 이미지 연결
+        if (file != null && !file.isEmpty()) {
+            UploadedFile uploadedFile = fileService.upload(file, RELATIVE_PATH);
+            festivalFileRepository.save(
+              FestivalFile.builder()
+                .festival(savedFestival)
+                .uploadedFile(uploadedFile)
+                .build()
+            );
+            String url = String.format("/festival/image/%s", uploadedFile.getUuid());
+            savedFestival.setFirstImage(url);
+
+        }
+    }
+
+    @Override
+    public void remove(String id) {
+        festivalRepository.deleteById(id);
     }
 
 //    DB에서 API 요청 후 백그라운드에서 동기화
@@ -76,7 +116,7 @@ public class FestivalServiceImpl implements FestivalService, ApplicationRunner {
     @Override
     @Transactional
     public void run(@NonNull ApplicationArguments args) throws Exception{
-        if(festivalRepository.count() >= 0){
+        if(festivalRepository.count() > 0){
             log.info("DB 데이터 동기 완료");
             return;
             // 나중에 새로 갱신될 때를 대비하여 ID로 비교하는 로직으로 바꿀 것! ===> 지금은 TEST

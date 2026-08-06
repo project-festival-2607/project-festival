@@ -1,6 +1,7 @@
 package com.example.chook.festival;
 
 import org.springframework.data.domain.Page;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -36,6 +37,18 @@ public interface FestivalService {
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
 
+        LocalDate startDate = null;
+        if(festivalDTO.getStartDate() != null && !festivalDTO.getStartDate().isBlank()){
+            String start = festivalDTO.getStartDate().replace("-", "");
+            startDate = LocalDate.parse(start, formatter);
+        }
+
+        LocalDate endDate = null;
+        if(festivalDTO.getEndDate() != null && !festivalDTO.getEndDate().isBlank()){
+            String end = festivalDTO.getEndDate().replace("-", "");
+            endDate = LocalDate.parse(end, formatter);
+        }
+
         return Festival.builder()
                 .contentId(festivalDTO.getContentId())
                 .title(festivalDTO.getTitle())
@@ -52,8 +65,8 @@ public interface FestivalService {
                 .playTime(festivalDTO.getPlayTime())
                 .program(festivalDTO.getProgram())
                 .useTime(festivalDTO.getUseTime())
-                .startDate(LocalDate.parse(festivalDTO.getStartDate(), formatter))
-                .endDate(LocalDate.parse(festivalDTO.getEndDate(), formatter))
+                .startDate(startDate)
+                .endDate(endDate)
                 .firstImage(festivalDTO.getFirstImage())
                 .secondImage(festivalDTO.getSecondImage())
                 .build();
@@ -67,8 +80,11 @@ public interface FestivalService {
 
     FestivalDTO getDetail(String contentId);
 
-    Page<FestivalDTO> getList(int pageNo, String type, String keyword);
+    Page<FestivalDTO> getList(int pageNo, String type, String keyword, String month);
 
-    // map Zone
+    void registerFes(FestivalDTO festivalDTO, MultipartFile file);
+
+    void remove(String id);
+
     List<FestivalDTO> getAll();
 }

@@ -156,3 +156,28 @@
     background-color: #597cff;
     color: #FEFEFE;
 }
+
+.deleteBtn {
+    margin-left: auto;
+}
+
+.deleteBtn > button {
+    border: none;
+    padding:0;
+    background: transparent;
+}
+
+.deleteBtn > button > a {
+    border: 1px solid #dc3545;
+    font-size: 12px;
+    color: #dc3545;
+    padding: 5px 10px;
+    border-radius: 15px;
+
+    transition: 0.3s ease;
+}
+
+.deleteBtn > button > a:hover {
+    background: #dc3545;
+    color: #FEFEFE;
+}

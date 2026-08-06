@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ko"
+      layout:decorate="~{layout/layout}"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block layout:fragment="css">
+        <link rel="stylesheet" th:href="@{/css/festival/register.css}">
+    </th:block>
+</head>
+<div layout:fragment="content">
+    <div class="container">
+<!--                모든 inner는 class="container" 로 맞춤        -->
+<!--        이 안에서 작업        -->
+        <div class="h1">
+            축제정보등록
+        </div>
+        <div class="registerBox">
+            <form action="/festival/register" method="post" enctype="multipart/form-data">
+                <div class="regContainer">
+                    <div class="info-box-top">
+                        <div class="fileBox">
+                            <input class="form-control" type="file" id="file" name="imageFile" accept="image/*">
+                        </div>
+                        <div class="fes-infos">
+                            <div>
+                                <span>행사이름</span>
+                                <input type="text" name="title">
+                            </div>
+                            <div>
+                                <span>행사진행일자</span>
+                                <div>
+                                    <input type="date" name="startDate"> ~ <input type="date" name="endDate">
+                                </div>
+                            </div>
+                            <div>
+                                <span>행사진행시간</span>
+                                <input type="text" name="playTime">
+                            </div>
+                            <div>
+                                <span>참여가능연령</span>
+                                <input type="text" name="ageLimit">
+                            </div>
+                            <div>
+                                <span>가격</span>
+                                <input type="text" name="useTime">
+                            </div>
+                            <div>
+                                <span>주최</span>
+                                <input type="text" name="telName">
+                            </div>
+                            <div>
+                                <span>개최장소</span>
+                                <input type="text" name="eventPlace">
+                            </div>
+                            <div>
+                                <span>주소</span>
+                                <input type="text" name="address">
+                            </div>
+                            <div>
+                                <span>주최연락처</span>
+                                <input type="text" name="tel">
+                            </div>
+                            <div>
+                                <span>홈페이지</span>
+                                <input type="text" name="homepage">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="info-box-bottom">
+                        <div>
+                            <span>상세정보</span>
+                            <textarea name="overview"></textarea>
+                        </div>
+                        <div>
+                            <span>주요프로그램</span>
+                            <textarea name="program"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="btn-box">
+                    <button type="submit" class="regBtn">축제등록</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

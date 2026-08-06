@@ -212,6 +212,7 @@
 
 .fes-page-item {
     border: 1px solid #ccc2a4;
+    border-radius: 15px;
     width: 30px;
     height: 30px;
 
@@ -296,6 +297,54 @@
 .fes-form > form > button:hover {
     background: #ccc2a4;
     color: #FEFEFE;
+}
+
+
+/* 1월~12월 카테고리  */
+.monthScript {
+    width: 100%;
+    margin-bottom: 20px;
+
+    font-size: 18px;
+    font-weight: 700;
+    color: #0d6efd;
+}
+
+.monthBtn {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    justify-content: center;
+    align-items: center;
+
+    margin-bottom: 40px;
+}
+
+.month {
+    background: #FEFEFE;
+    border: 1px solid #0d6efd;
+    border-radius: 15px;
+
+    width: 70px;
+    height: 30px;
+
+    transition: 0.3s ease;
+}
+
+.month:hover {
+    background: #0d6efd;
+    color: #FEFEFE;
+}
+
+.month.active {
+    background: #0d6efd;
+    color: #FEFEFE;
+}
+
+.allBtn {
+    padding: 5px 10px;
+    border: 1px solid #0d6efd;
 }
 
 /*반응형 대응*/
