@@ -24,14 +24,16 @@ public class DevFestivalDataInitializer {
 
   private final Random random = new Random();
 
-  public void generateSampleFestivals(int festivalCount) {
+  public void generateSampleFestivals(int festivalCountToAdd) {
+
+    if (festivalRepository.count() > 0) return;
 
     List<Member> recruiters = memberRepository.findByRole(MemberRole.RECRUITER);
     long earliestStartDateEpochDay = LocalDate.now().minusDays(7).toEpochDay();
     long latestStartDateEpochDay = LocalDate.now().plusMonths(3).toEpochDay();
     int maxFestivalDuration = 7;
 
-    for (int i = 1; i <= festivalCount; i++) {
+    for (int i = 1; i <= festivalCountToAdd; i++) {
 
       LocalDate startDate = LocalDate.ofEpochDay(random.nextLong(
         earliestStartDateEpochDay,
