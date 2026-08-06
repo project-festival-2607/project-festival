@@ -2,6 +2,8 @@ package com.example.chook.recruitment.service;
 
 import com.example.chook.festival.Festival;
 import com.example.chook.festival.FestivalRepository;
+import com.example.chook.file.entity.UploadedFile;
+import com.example.chook.file.repository.UploadedFileRepository;
 import com.example.chook.recruitment.dto.*;
 import com.example.chook.recruitment.entity.Recruitment;
 import com.example.chook.recruitment.entity.RecruitmentFile;
@@ -25,6 +27,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.UUID;
+import java.util.regex.Pattern;
 
 @RequiredArgsConstructor
 @Service
@@ -32,12 +36,18 @@ import java.util.List;
 public class RecruitmentServiceImpl implements RecruitmentService {
 
   private static final int PAGE_SIZE = 10;
+
+  // 본문 마크다운 안에 박혀있는 "/recruit/image/{uuid}" 링크로 첨부 이미지를 역추적 (admin_board와 동일한 패턴)
+  private static final Pattern IMAGE_UUID_PATTERN =
+    Pattern.compile("/recruit/image/([0-9a-fA-F\\-]{36})");
+
   private final RecruitmentRepository recruitmentRepository;
   private final RecruitmentIndividualRepository recruitmentIndividualRepository;
   private final RecruitmentFoodTruckRepository recruitmentFoodTruckRepository;
   private final RecruitmentFileRepository recruitmentFileRepository;
   private final RegionSigunguRepository regionSigunguRepository;
   private final FestivalRepository festivalRepository;
+  private final UploadedFileRepository uploadedFileRepository;
   private final RecruitmentMapper mapper;
 
   @Transactional
@@ -63,8 +73,30 @@ public class RecruitmentServiceImpl implements RecruitmentService {
 
     validateSpecificDtoAndSave(recruitment, specificDto);
 
+    for (UUID uuid : extractImageUuids(dto.getContent())) {
+      UploadedFile uploadedFile = uploadedFileRepository.findById(uuid)
+        .orElseThrow(() -> new EntityNotFoundException(
+          String.format("본문에 참조된 이미지(%s)를 업로드 기록에서 찾을 수 없음", uuid)
+        ));
+      recruitmentFileRepository.save(
+        RecruitmentFile.builder()
+          .recruitment(recruitment)
+          .uploadedFile(uploadedFile)
+          .build()
+      );
+    }
+
     return recruitment.getId();
 
+  }
+
+  private List<UUID> extractImageUuids(String content) {
+    if (content == null) return List.of();
+    return IMAGE_UUID_PATTERN.matcher(content)
+      .results()
+      .map(result -> UUID.fromString(result.group(1)))
+      .distinct()
+      .toList();
   }
 
   @Override
