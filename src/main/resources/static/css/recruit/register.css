@@ -27,11 +27,32 @@
     gap: 16px;
 }
 
+/* 입력하는 글자 수가 짧은 필드(날짜/숫자)는 칸을 늘어뜨리지 않고 내용에 맞춤 */
+.recruit-field-row-narrow {
+    grid-template-columns: max-content max-content;
+}
+
+.recruit-field input[type="date"],
+.recruit-field input[type="number"] {
+    width: 160px;
+}
+
+/* 셀렉트도 컨테이너 전체 폭(.form-select 기본값)까지 늘어나지 않도록 내용에 맞는 폭으로 제한 */
+.recruit-field select {
+    max-width: 320px;
+}
+
+.recruit-time-selects select {
+    width: 72px;
+    max-width: none;
+}
+
 .recruit-time-field {
     position: relative;
 }
 
 .recruit-time-trigger {
+    width: 160px;
     text-align: left;
     background-color: #fff;
     cursor: pointer;

@@ -52,3 +52,16 @@ function updateWageOptionAvailability() {
 }
 categorySelect.addEventListener("change", updateWageOptionAvailability);
 updateWageOptionAvailability();
+
+// ===== 3. 모집인력 종류 칩 버튼: 클릭한 칩만 active로 표시하고 숨은 input에 값 반영 =====
+document.querySelectorAll("#categoryChips .recruit-chip").forEach(chip => {
+    chip.addEventListener("click", () => {
+        document.querySelectorAll("#categoryChips .recruit-chip").forEach(c => c.classList.remove("active"));
+        chip.classList.add("active");
+        categorySelect.value = chip.dataset.value;
+        categorySelect.dispatchEvent(new Event("change"));
+    });
+});
+
+// ===== 4. 정렬은 고르는 즉시 다시 검색 =====
+listCriteriaSelect.addEventListener("change", () => listCriteriaSelect.form.submit());
