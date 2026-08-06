@@ -28,14 +28,14 @@ async function uploadPendingImages(markdown) {
         formData.append("image", blob);
         formData.append("title", titleInput.value);
 
-        const res = await fetch("/recruit/uploadImage", {
+        const res = await fetch("/recruitment/uploadImage", {
             method: "POST",
             body: formData
         });
         if (!res.ok) throw new Error("이미지 업로드 실패: " + res.status);
 
         const fileDto = await res.json();
-        result = result.split(previewUrl).join("/recruit/image/" + fileDto.uuid);
+        result = result.split(previewUrl).join("/recruitment/image/" + fileDto.uuid);
     }
     return result;
 }

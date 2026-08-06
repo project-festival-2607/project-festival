@@ -17,7 +17,7 @@
 
         <p class="recruit-form-error" th:if="${hasError}">입력값을 다시 확인해주세요.</p>
 
-        <form th:action="@{/templates/recruitment/register}" method="post" id="registerForm">
+        <form th:action="@{/recruitment/register}" method="post" id="registerForm">
 
             <!-- 1. 행사 선택 -->
             <div class="recruit-field">
@@ -181,7 +181,7 @@
             </div>
 
             <div class="d-flex justify-content-end gap-2 mt-3">
-                <a th:href="@{/templates/recruitment/list}" class="btn btn-outline-secondary">취소</a>
+                <a th:href="@{/recruitment/list}" class="btn btn-outline-secondary">취소</a>
                 <button type="submit" id="btn" class="btn btn-primary">등록</button>
             </div>
 

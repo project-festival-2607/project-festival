@@ -51,20 +51,23 @@ public class RecruitmentController {
   private final RegionService regionService;
   private final FileService fileService;
 
-  // ponytail: 검색/필터 리스트(2번 작업)는 나중에 이 메서드를 다시 "/list"에 매핑해서 완성할 것.
-  // 지금은 /recruit/list를 festivals 화면으로 임시 연결해뒀기 때문에 라우팅을 비워둠.
-  public void searchListDraft(Model model,
-                              @RequestParam(name = "pageIdx", required = false, defaultValue = "1") int pageIdx,
-                              @Valid @ModelAttribute RecruitmentSearchForm form,
-                              BindingResult bindingResult) {
-    if (bindingResult.hasErrors()) return;
-    if (form.workingStartDate().isAfter(
-      form.workingEndDate()))
+  // 헤더 "모집공고"/"축제인력모집" 진입점. 구직자/비로그인은 검색 필터가 붙은 리스트,
+  // 구인자는 검색 없이 "구인공고 등록" 버튼만 보이는 동일한 리스트를 봄 (recruiter 쿼리스트링으로 임시 구분)
+  @GetMapping("/list")
+  public void list(Model model,
+                   @RequestParam(name = "pageIdx", required = false, defaultValue = "1") int pageIdx,
+                   @Valid @ModelAttribute RecruitmentSearchForm form,
+                   BindingResult bindingResult,
+                   // ponytail: 로그인 구현 전 임시 - admin_board의 ?admin=true와 동일하게 쿼리스트링으로 구인자 여부 확인
+                   @RequestParam(name = "recruiter", required = false, defaultValue = "false") boolean recruiter) {
+    if (form.workingStartDate() != null && form.workingEndDate() != null
+      && form.workingStartDate().isAfter(form.workingEndDate()))
       bindingResult.rejectValue("workingEndDate",
         "workingEndDate.outOfRange",
-        "업무시작날짜는 업무종료날짜보다 늦을 수 없습니다."
+        "근무시작날짜는 근무종료날짜보다 늦을 수 없습니다."
       );
     if (bindingResult.hasErrors()) return;
+
     RecruitmentSearchCondition condition = mapper.toCondition(form);
     Page<RecruitmentListDTO> page = recruitmentService.getPage(pageIdx, condition);
     model.addAttribute("page", page);
@@ -72,6 +75,9 @@ public class RecruitmentController {
     PagingHandler<RecruitmentListDTO, RecruitmentSearchForm> pagingHandler =
       new PagingHandler<>(page, pageIdx, form);
     model.addAttribute("pagingHandler", pagingHandler);
+
+    model.addAttribute("recruiter", recruiter);
+    model.addAttribute("sidoList", regionService.getSidoList());
   }
 
   @GetMapping("/manage/list")
@@ -94,18 +100,7 @@ public class RecruitmentController {
   public String view(@PathVariable Long id, Model model) {
     RecruitmentResponseDTO responseDto = recruitmentService.getRecruitment(id);
     model.addAttribute("recruitment", responseDto);
-    return "recruit/detail";
-  }
-
-  // 헤더 "모집공고"/"축제인력모집" 진입점: 구인공고를 올릴 행사를 고르는 화면
-  // ponytail: 검색/필터가 붙은 진짜 리스트(2번 작업)가 완성되면 이 화면 대신 그걸 "/list"에 연결할 것
-  @GetMapping("/list")
-  public void list(Model model,
-                   // ponytail: 로그인 구현 전 임시 - admin_board의 ?admin=true와 동일하게 쿼리스트링으로 구인자 여부 확인
-                   @RequestParam(name = "recruiter", required = false, defaultValue = "false") boolean recruiter) {
-    List<Festival> festivals = festivalRepository.findAll();
-    model.addAttribute("festivals", festivals);
-    model.addAttribute("recruiter", recruiter);
+    return "recruitment/detail";
   }
 
   @GetMapping("/register")
