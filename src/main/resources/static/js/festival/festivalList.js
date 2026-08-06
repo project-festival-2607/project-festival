@@ -39,5 +39,5 @@ document.querySelector(".topBtn").addEventListener("click", (e) => {
 
 // monthBtn
 for(let i = 1; i <=12; i ++){
-    document.querySelector(".monthBtn").innerHTML += `<button>${i}월</button>`;
+    document.querySelector(".monthBtn").innerHTML += `<button class="month" value="${i}">${i}월</button>`;
 }

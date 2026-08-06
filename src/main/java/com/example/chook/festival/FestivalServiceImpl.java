@@ -19,6 +19,7 @@ import tools.jackson.databind.ObjectMapper;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -71,12 +72,27 @@ public class FestivalServiceImpl implements FestivalService, ApplicationRunner {
         return pageList.map(this::convertEntityToDTO);
     }
 
+    @Override
+    public void registerFes(FestivalDTO festivalDTO, FesImageDTO fesImage) {
+        if(fesImage != null && fesImage.getUploadImagePath() != null){
+            festivalDTO.setFirstImage(fesImage.getUploadImagePath());
+        }
+
+        if(festivalDTO.getContentId() == null || festivalDTO.getContentId().isBlank()){
+            festivalDTO.setContentId(UUID.randomUUID().toString());
+        }
+
+        Festival festival = convertDTOToEntity(festivalDTO);
+
+        festivalRepository.save(festival);
+    }
+
 //    DB에서 API 요청 후 백그라운드에서 동기화
 
     @Override
     @Transactional
     public void run(@NonNull ApplicationArguments args) throws Exception{
-        if(festivalRepository.count() >= 0){
+        if(festivalRepository.count() > 0){
             log.info("DB 데이터 동기 완료");
             return;
             // 나중에 새로 갱신될 때를 대비하여 ID로 비교하는 로직으로 바꿀 것! ===> 지금은 TEST
