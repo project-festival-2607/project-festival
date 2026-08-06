@@ -8,6 +8,7 @@ import com.example.chook.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -24,6 +25,7 @@ public class DevFestivalDataInitializer {
 
   private final Random random = new Random();
 
+  @Transactional
   public void generateSampleFestivals(long targetFestivalCount) {
 
     long festivalCountToAdd = Math.max(targetFestivalCount - festivalRepository.count(), 0);
