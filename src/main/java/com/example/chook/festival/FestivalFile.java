@@ -1,7 +1,6 @@
 package com.example.chook.festival;
 
 import com.example.chook.file.entity.UploadedFile;
-import com.example.chook.recruitment.entity.Recruitment;
 import jakarta.persistence.*;
 import lombok.*;
 
