@@ -212,6 +212,7 @@
 
 .fes-page-item {
     border: 1px solid #ccc2a4;
+    border-radius: 15px;
     width: 30px;
     height: 30px;
 
@@ -341,6 +342,10 @@
     color: #FEFEFE;
 }
 
+.allBtn {
+    padding: 5px 10px;
+    border: 1px solid #0d6efd;
+}
 
 /*반응형 대응*/
 
