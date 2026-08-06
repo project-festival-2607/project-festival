@@ -68,4 +68,7 @@ public interface FestivalService {
     FestivalDTO getDetail(String contentId);
 
     Page<FestivalDTO> getList(int pageNo, String type, String keyword);
+
+    // map Zone
+    List<FestivalDTO> getAll();
 }

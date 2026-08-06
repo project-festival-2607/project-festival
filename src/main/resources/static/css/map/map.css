@@ -1,0 +1,171 @@
+/* ===========================
+   Map Page CSS
+=========================== */
+
+/* 카드 */
+.card {
+    border: none;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.card-header {
+    background: #fff;
+    font-size: 20px;
+    font-weight: 700;
+    padding: 18px 24px;
+    border-bottom: 1px solid #ececec;
+}
+
+.card-body {
+    padding: 20px;
+}
+
+/* 검색창 */
+.input-group {
+    margin-bottom: 20px;
+}
+
+.input-group .form-control {
+    height: 46px;
+    border-radius: 8px 0 0 8px !important;
+}
+
+.form-control:focus {
+    border-color: #dc3545;
+    box-shadow: none;
+}
+
+.input-group .btn-danger {
+    padding: 0 24px;
+    border-radius: 0 8px 8px 0 !important;
+}
+
+/* 지도 */
+#map {
+    width: 100%;
+    height: 600px;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+/* 리스트 컨테이너 (평소 상태) */
+.festival-list {
+    height: 600px;
+    overflow-y: auto;
+}
+
+/* 검색 시 상하 분할 컨테이너 */
+#splitListWrapper {
+    height: 600px;
+    display: flex;
+    flex-direction: column;
+}
+
+/* 상하 구역 각각 (반반 나누기) */
+.list-section {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.section-sub-header {
+    background-color: #f8f9fa;
+    padding: 8px 16px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #555;
+    border-bottom: 1px solid #ececec;
+}
+
+/* 분할된 각 리스트 영역 스크롤 */
+.sub-festival-list {
+    flex: 1;
+    overflow-y: auto;
+}
+
+/* 스크롤바 디자인 */
+.festival-list::-webkit-scrollbar,
+.sub-festival-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.festival-list::-webkit-scrollbar-thumb,
+.sub-festival-list::-webkit-scrollbar-thumb {
+    background: #cfcfcf;
+    border-radius: 20px;
+}
+
+.festival-list::-webkit-scrollbar-track,
+.sub-festival-list::-webkit-scrollbar-track {
+    background: #f7f7f7;
+}
+
+/* 아코디언 */
+.accordion-item {
+    border: none;
+    border-bottom: 1px solid #ececec;
+}
+
+.accordion-button {
+    padding: 20px;
+    font-size: 18px;
+    font-weight: 600;
+    background: #fff;
+}
+
+.accordion-button:not(.collapsed) {
+    color: #dc3545;
+    background: #fff;
+}
+
+.accordion-button:focus {
+    box-shadow: none;
+}
+
+.accordion-body {
+    padding: 18px 20px 22px;
+}
+
+.accordion-body strong {
+    color: #444;
+}
+
+.accordion-body p {
+    margin-bottom: 15px;
+    color: #666;
+    line-height: 1.6;
+}
+
+/* 상세보기 버튼 */
+.accordion-body .btn {
+    border-radius: 8px;
+    padding: 6px 18px;
+}
+
+/* 더보기 버튼 래퍼 */
+.more-btn-wrapper {
+    display: flex;
+    justify-content: center;
+    padding: 24px 0;
+}
+
+.more-btn-wrapper .btn {
+    width: 220px;
+    border-radius: 8px;
+    font-weight: 600;
+}
+
+/* 반응형 */
+@media (max-width: 991px) {
+    #map {
+        height: 500px;
+    }
+
+    .festival-list,
+    #splitListWrapper {
+        height: auto;
+        max-height: 500px;
+    }
+}
