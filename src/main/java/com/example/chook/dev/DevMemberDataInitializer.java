@@ -40,7 +40,7 @@ public class DevMemberDataInitializer {
   private final Random random = new Random();
 
   @Transactional
-  public void addSampleMembers(
+  public void generateSampleMembers(
     int recruiterCount,
     int jobSeekerCount,
     int jobEquipCount
