@@ -1,5 +1,6 @@
 package com.example.chook.festival;
 
+import com.example.chook.file.service.FileService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,6 +29,7 @@ import java.util.stream.Collectors;
 //public class FestivalServiceImpl implements FestivalService, ApplicationRunner
 public class FestivalServiceImpl implements FestivalService, ApplicationRunner {
     private final FestivalRepository festivalRepository;
+    private final FileService fileService;
 
     @Value("${apikey.festival}")
     private String apiKey;
@@ -85,6 +87,11 @@ public class FestivalServiceImpl implements FestivalService, ApplicationRunner {
         Festival festival = convertDTOToEntity(festivalDTO);
 
         festivalRepository.save(festival);
+    }
+
+    @Override
+    public void remove(String id) {
+        festivalRepository.deleteById(id);
     }
 
 //    DB에서 API 요청 후 백그라운드에서 동기화

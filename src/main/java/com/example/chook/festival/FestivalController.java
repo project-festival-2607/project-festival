@@ -77,6 +77,12 @@ public class FestivalController {
         return "redirect:/festival/list";
     }
 
+    @GetMapping("/remove")
+    public String remove(@RequestParam("id") String id){
+        festivalService.remove(id);
+        return "redirect:/festival/list";
+    }
+
     @GetMapping("/display")
     @ResponseBody
     public ResponseEntity<Resource> displayImage(@RequestParam("fileName") String fileName){

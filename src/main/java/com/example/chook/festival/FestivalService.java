@@ -82,4 +82,6 @@ public interface FestivalService {
     Page<FestivalDTO> getList(int pageNo, String type, String keyword);
 
     void registerFes(FestivalDTO festivalDTO, FesImageDTO fesImage);
+
+    void remove(String id);
 }
