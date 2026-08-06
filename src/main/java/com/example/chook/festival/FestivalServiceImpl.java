@@ -1,5 +1,6 @@
 package com.example.chook.festival;
 
+import com.example.chook.file.entity.UploadedFile;
 import com.example.chook.file.service.FileService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +16,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.multipart.MultipartFile;
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.ObjectMapper;
 
@@ -28,8 +30,12 @@ import java.util.stream.Collectors;
 @Slf4j
 //public class FestivalServiceImpl implements FestivalService, ApplicationRunner
 public class FestivalServiceImpl implements FestivalService, ApplicationRunner {
+
     private final FestivalRepository festivalRepository;
     private final FileService fileService;
+    private final FestivalFileRepository festivalFileRepository;
+
+    private static final String RELATIVE_PATH = "festival";
 
     @Value("${apikey.festival}")
     private String apiKey;
@@ -74,19 +80,30 @@ public class FestivalServiceImpl implements FestivalService, ApplicationRunner {
         return pageList.map(this::convertEntityToDTO);
     }
 
+    @Transactional
     @Override
-    public void registerFes(FestivalDTO festivalDTO, FesImageDTO fesImage) {
-        if(fesImage != null && fesImage.getUploadImagePath() != null){
-            festivalDTO.setFirstImage(fesImage.getUploadImagePath());
-        }
+    public void registerFes(FestivalDTO festivalDTO, MultipartFile file) {
 
+        // 행사 등록
         if(festivalDTO.getContentId() == null || festivalDTO.getContentId().isBlank()){
             festivalDTO.setContentId(UUID.randomUUID().toString());
         }
-
         Festival festival = convertDTOToEntity(festivalDTO);
+        Festival savedFestival = festivalRepository.save(festival);
 
-        festivalRepository.save(festival);
+        // 이미지 연결
+        if (file != null && !file.isEmpty()) {
+            UploadedFile uploadedFile = fileService.upload(file, RELATIVE_PATH);
+            festivalFileRepository.save(
+              FestivalFile.builder()
+                .festival(savedFestival)
+                .uploadedFile(uploadedFile)
+                .build()
+            );
+            String url = String.format("/festival/image/%s", uploadedFile.getUuid());
+            savedFestival.setFirstImage(url);
+
+        }
     }
 
     @Override

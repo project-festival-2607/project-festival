@@ -1,6 +1,7 @@
 package com.example.chook.festival;
 
 import org.springframework.data.domain.Page;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -81,7 +82,7 @@ public interface FestivalService {
 
     Page<FestivalDTO> getList(int pageNo, String type, String keyword, String month);
 
-    void registerFes(FestivalDTO festivalDTO, FesImageDTO fesImage);
+    void registerFes(FestivalDTO festivalDTO, MultipartFile file);
 
     void remove(String id);
 

@@ -1,5 +1,6 @@
 package com.example.chook.file.repository;
 
+import com.example.chook.festival.QFestivalFile;
 import com.example.chook.file.record.FilePath;
 import com.example.chook.file.record.UnreferencedFile;
 import com.example.chook.recruitment.entity.QRecruitmentFile;
@@ -48,6 +49,7 @@ public class UploadedFileRepositoryCustomImpl implements UploadedFileRepositoryC
     QRecruitmentFile recruitmentFile = QRecruitmentFile.recruitmentFile;
     QResumeFile resumeFile = QResumeFile.resumeFile;
     QInquiryFile inquiryFile = QInquiryFile.inquiryFile;
+    QFestivalFile festivalFile = QFestivalFile.festivalFile;
 
     return jpaQueryFactory
       .select(uploadedFile.uuid, uploadedFile.uploadedAt)
@@ -83,11 +85,18 @@ public class UploadedFileRepositoryCustomImpl implements UploadedFileRepositoryC
           .notExists(),
 
 
-              // InquiryFile
+        // InquiryFile
         JPAExpressions
           .selectOne()
           .from(inquiryFile)
           .where(inquiryFile.uploadedFile.eq(uploadedFile))
+          .notExists(),
+
+        // FestivalFile
+        JPAExpressions
+          .selectOne()
+          .from(festivalFile)
+          .where(festivalFile.uploadedFile.eq(uploadedFile))
           .notExists()
 
       )

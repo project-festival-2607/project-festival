@@ -1,31 +1,31 @@
 package com.example.chook.festival;
 
+import com.example.chook.file.record.FileResource;
+import com.example.chook.file.service.FileService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.util.UUID;
 
 @Controller
 @RequestMapping("/festival/*")
 @Slf4j
 @RequiredArgsConstructor
 public class FestivalController {
+
     private final FestivalService festivalService;
-    private final FesImageHandler fesImageHandler;
+    private final FileService fileService;
 
     // 프론트에서 JS로 API 받아올 때 필요한 키
     @Value("${apikey.festival}")
@@ -66,15 +66,7 @@ public class FestivalController {
     @PostMapping("/register")
     public String register(FestivalDTO festivalDTO, @RequestParam(name = "imageFile", required = false)MultipartFile file){
         log.info(">>> register >>> {}", festivalDTO);
-
-        FesImageDTO fesImage = null;
-
-        if(file != null) {
-            fesImage = fesImageHandler.uploadFile(file);
-        }
-
-        festivalService.registerFes(festivalDTO, fesImage);
-
+        festivalService.registerFes(festivalDTO, file);
         return "redirect:/festival/list";
     }
 
@@ -84,26 +76,17 @@ public class FestivalController {
         return "redirect:/festival/list";
     }
 
-    @GetMapping("/display")
+    @GetMapping("/image/{uuid}")
     @ResponseBody
-    public ResponseEntity<Resource> displayImage(@RequestParam("fileName") String fileName){
-        File file = new File(uploadDir + "/festival", fileName);
-
-        if(!file.exists()){
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-
-        Resource resource = new FileSystemResource(file);
+    public ResponseEntity<Resource> getImage(@PathVariable UUID uuid){
+        FileResource file = fileService.getFile(uuid);
         HttpHeaders headers = new HttpHeaders();
-
-        try{
-            Path path = Paths.get(file.getAbsolutePath());
-            headers.add("Content-Type", Files.probeContentType(path));
-        }catch (Exception e){
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-
-        return new ResponseEntity<>(resource, headers, HttpStatus.OK);
+        headers.setContentType(MediaType.parseMediaType(file.mimeType()));
+        return new ResponseEntity<>(
+          file.resource(),
+          headers,
+          HttpStatus.OK
+        );
 
     }
 
