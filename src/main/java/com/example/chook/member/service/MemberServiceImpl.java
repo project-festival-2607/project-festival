@@ -218,8 +218,6 @@ public class MemberServiceImpl implements MemberService {
                 .email(email)
                 .role(role)
                 .status(MemberStatus.ACTIVE)
-                .createdAt(LocalDateTime.now())
-                .point(0L)
                 .build();
     }
 
