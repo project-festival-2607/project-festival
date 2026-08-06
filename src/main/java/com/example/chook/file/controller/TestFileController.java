@@ -70,7 +70,7 @@ public class TestFileController {
       redirectAttributes.addFlashAttribute("FailureMsg", "올리려는 파일이 비어있습니다.");
       return "redirect:/test/file";
     }
-    FileDTO uploadedFileDto = fileService.uploadAndGetDto(file, RELATIVE_PATH);
+    FileDTO uploadedFileDto = fileService.toDto(fileService.upload(file, RELATIVE_PATH));
     log.info("uploadedFileDto: {}", uploadedFileDto);
     redirectAttributes.addFlashAttribute(
       "SuccessMsg",

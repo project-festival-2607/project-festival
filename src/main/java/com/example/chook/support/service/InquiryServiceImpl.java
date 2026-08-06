@@ -1,6 +1,5 @@
 package com.example.chook.support.service;
 
-import com.example.chook.file.dto.FileDTO;
 import com.example.chook.file.entity.UploadedFile;
 import com.example.chook.file.repository.UploadedFileRepository;
 import com.example.chook.file.service.FileService;
@@ -18,7 +17,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.UUID;
 
 @RequiredArgsConstructor
 @Service
@@ -51,8 +49,7 @@ public class InquiryServiceImpl implements InquiryService {
       for (MultipartFile file : files) {
         if (file == null || file.isEmpty()) continue;
 
-        FileDTO fileDto = fileService.uploadAndGetDto(file, FILE_RELATIVE_PATH);
-        UploadedFile uploadedFile = uploadedFileRepository.getReferenceById(UUID.fromString(fileDto.getUuid()));
+        UploadedFile uploadedFile =  fileService.upload(file, FILE_RELATIVE_PATH);
 
         inquiryFileRepository.save(
           InquiryFile.builder()

@@ -1,18 +1,15 @@
-package com.example.chook.recruitment.record;
+package com.example.chook.recruitment.form;
 
 import com.example.chook.recruitment.entity.enums.RecruitmentCategory;
 import com.example.chook.recruitment.entity.enums.RecruitmentListCriteria;
 import com.example.chook.recruitment.entity.enums.RecruitmentStatus;
-import lombok.Builder;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.List;
 
-@Builder
-public record RecruitmentSearchCondition(
+public record RecruitmentSearchForm(
 
-  List<String> keywordList,
+  String keywords,
 
   String regionSidoCode,
   String regionSigunguCode,
@@ -20,16 +17,12 @@ public record RecruitmentSearchCondition(
   RecruitmentCategory category,
   RecruitmentStatus status,
 
-  // 구직자 검색 전용
-  RecruitmentListCriteria listCriteria,
-
   LocalTime workingStartTime,
   LocalTime workingEndTime,
   LocalDate workingStartDate,
   LocalDate workingEndDate,
 
-  // 구인자 검색 전용
-  String festivalContentId
+  RecruitmentListCriteria listCriteria
 
 ) {
 }
