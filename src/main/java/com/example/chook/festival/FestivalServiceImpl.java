@@ -160,4 +160,13 @@ public class FestivalServiceImpl implements FestivalService, ApplicationRunner {
             throw new RuntimeException(e);
         }
     }
+
+    // map Zone
+    @Override
+    public List<FestivalDTO> getAll() {
+        return festivalRepository.findAll()
+                .stream()
+                .map(this::convertEntityToDTO)
+                .toList();
+    }
 }
