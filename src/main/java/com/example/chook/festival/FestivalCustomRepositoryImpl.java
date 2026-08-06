@@ -26,8 +26,8 @@ public class FestivalCustomRepositoryImpl implements FestivalCustomRepository{
     }
 
     @Override
-    public Page<Festival> searchFestival(String type, String keyword, Pageable pageable){
-        BooleanExpression condition = eqSearchType(type, keyword);
+    public Page<Festival> searchFestival(String type, String keyword, String month, Pageable pageable){
+        BooleanExpression condition = eqSearchType(type, keyword, month);
 
         List<Festival> festivalList = jpaQueryFactory
                 .selectFrom(festival)
@@ -45,7 +45,17 @@ public class FestivalCustomRepositoryImpl implements FestivalCustomRepository{
         return PageableExecutionUtils.getPage(festivalList, pageable, count::fetchOne);
     }
 
-    private BooleanExpression eqSearchType(String type, String keyword){
+    private BooleanExpression eqSearchType(String type, String keyword, String month){
+
+        if(StringUtils.hasText(month)){
+            try{
+                int monthValue = Integer.parseInt(month);
+                return festival.startDate.month().eq(monthValue);
+            } catch (Exception e){
+                return null;
+            }
+        }
+
         if(!StringUtils.hasText(type) || !StringUtils.hasText(keyword)){
             return null;
         }

@@ -1,5 +1,6 @@
 package com.example.chook.festival;
 
+import com.example.chook.file.service.FileService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,6 +20,7 @@ import tools.jackson.databind.ObjectMapper;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -27,6 +29,7 @@ import java.util.stream.Collectors;
 //public class FestivalServiceImpl implements FestivalService, ApplicationRunner
 public class FestivalServiceImpl implements FestivalService, ApplicationRunner {
     private final FestivalRepository festivalRepository;
+    private final FileService fileService;
 
     @Value("${apikey.festival}")
     private String apiKey;
@@ -65,10 +68,30 @@ public class FestivalServiceImpl implements FestivalService, ApplicationRunner {
     }
 
     @Override
-    public Page<FestivalDTO> getList(int pageNo, String type, String keyword) {
+    public Page<FestivalDTO> getList(int pageNo, String type, String keyword, String month) {
         Pageable pageable = PageRequest.of(pageNo - 1, 18, Sort.by("startDate").ascending());
-        Page<Festival> pageList = festivalRepository.searchFestival(type, keyword, pageable);
+        Page<Festival> pageList = festivalRepository.searchFestival(type, keyword, month, pageable);
         return pageList.map(this::convertEntityToDTO);
+    }
+
+    @Override
+    public void registerFes(FestivalDTO festivalDTO, FesImageDTO fesImage) {
+        if(fesImage != null && fesImage.getUploadImagePath() != null){
+            festivalDTO.setFirstImage(fesImage.getUploadImagePath());
+        }
+
+        if(festivalDTO.getContentId() == null || festivalDTO.getContentId().isBlank()){
+            festivalDTO.setContentId(UUID.randomUUID().toString());
+        }
+
+        Festival festival = convertDTOToEntity(festivalDTO);
+
+        festivalRepository.save(festival);
+    }
+
+    @Override
+    public void remove(String id) {
+        festivalRepository.deleteById(id);
     }
 
 //    DB에서 API 요청 후 백그라운드에서 동기화
@@ -76,7 +99,7 @@ public class FestivalServiceImpl implements FestivalService, ApplicationRunner {
     @Override
     @Transactional
     public void run(@NonNull ApplicationArguments args) throws Exception{
-        if(festivalRepository.count() >= 0){
+        if(festivalRepository.count() > 0){
             log.info("DB 데이터 동기 완료");
             return;
             // 나중에 새로 갱신될 때를 대비하여 ID로 비교하는 로직으로 바꿀 것! ===> 지금은 TEST
