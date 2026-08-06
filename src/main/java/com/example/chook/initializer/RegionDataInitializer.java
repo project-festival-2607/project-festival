@@ -5,6 +5,7 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -13,6 +14,7 @@ public class RegionDataInitializer implements ApplicationRunner {
 
   private final RegionDataInitService regionDataInitService;
 
+  @Profile("!dev")
   @Override
   public void run(@NonNull ApplicationArguments args) throws Exception {
     regionDataInitService.importData();
