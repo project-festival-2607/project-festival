@@ -4,15 +4,16 @@ import com.example.chook.recruitment.dto.*;
 import com.example.chook.recruitment.entity.enums.RecruitmentCategory;
 import com.example.chook.recruitment.form.RecruitmentCreateForm;
 import com.example.chook.recruitment.form.RecruitmentSearchForm;
+import com.example.chook.recruitment.handler.PagingHandler;
 import com.example.chook.recruitment.record.RecruitmentSearchCondition;
 import com.example.chook.recruitment.service.RecruitmentService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -28,7 +29,23 @@ public class RecruitmentController {
   private final RecruitmentService recruitmentService;
 
   @GetMapping("/list")
-  public void list(Model model) {
+  public void list(Model model,
+                   @RequestParam(name = "pageIdx", required = false, defaultValue = "1") int pageIdx,
+                   @Valid @ModelAttribute RecruitmentSearchForm form,
+                   BindingResult bindingResult) {
+    if (form.workingStartDate().isAfter(
+      form.workingEndDate()))
+      bindingResult.rejectValue("workingEndDate",
+        "workingEndDate.outOfRange",
+        "업무시작날짜는 업무종료날짜보다 늦을 수 없습니다."
+      );
+    if (bindingResult.hasErrors()) return;
+    RecruitmentSearchCondition condition = toCondition(form);
+    Page<RecruitmentListDTO> page = recruitmentService.getPage(pageIdx, condition);
+    model.addAttribute("page", page);
+
+    PagingHandler<RecruitmentListDTO> pagingHandler = new PagingHandler<>(page, pageIdx, form);
+    model.addAttribute("pagingHandler", pagingHandler);
   }
 
   @GetMapping("/manage/list")
