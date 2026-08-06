@@ -10,7 +10,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class EmployerSignupRequestDTO {
+public class EmployerSignUpRequestDTO {
 
     // 공통 회원정보
     private String username;
