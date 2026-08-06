@@ -1,11 +1,10 @@
 package com.example.chook.recruitment.controller;
 
-import com.example.chook.recruitment.dto.RecruitmentCreateDTO;
-import com.example.chook.recruitment.dto.RecruitmentFoodTruckDTO;
-import com.example.chook.recruitment.dto.RecruitmentIndividualDTO;
-import com.example.chook.recruitment.dto.RecruitmentSpecificDTO;
+import com.example.chook.recruitment.dto.*;
 import com.example.chook.recruitment.entity.enums.RecruitmentCategory;
 import com.example.chook.recruitment.form.RecruitmentCreateForm;
+import com.example.chook.recruitment.form.RecruitmentSearchForm;
+import com.example.chook.recruitment.record.RecruitmentSearchCondition;
 import com.example.chook.recruitment.service.RecruitmentService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +15,9 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.util.Arrays;
+import java.util.List;
 
 @Controller
 @RequestMapping("/recruit/*")
@@ -85,6 +87,21 @@ public class RecruitmentController {
       .build();
   }
 
+  private RecruitmentSearchCondition toCondition(RecruitmentSearchForm form) {
+    return RecruitmentSearchCondition.builder()
+      .keywordList(getKeywordList(form.keywords()))
+      .regionSidoCode(form.regionSidoCode())
+      .regionSigunguCode(form.regionSigunguCode())
+      .category(form.category())
+      .status(form.status())
+      .workingStartTime(form.workingStartTime())
+      .workingEndTime(form.workingEndTime())
+      .workingStartDate(form.workingStartDate())
+      .workingEndDate(form.workingEndDate())
+      .listCriteria(form.listCriteria())
+      .build();
+  }
+
   private RecruitmentSpecificDTO toSpecificDto(RecruitmentCreateForm form) {
     RecruitmentCategory category = form.category();
     if (category == null) return null;
@@ -104,6 +121,10 @@ public class RecruitmentController {
       }
     }
     return null;
+  }
+
+  private List<String> getKeywordList(String keywords) {
+    return Arrays.stream(keywords.trim().split("[\\s,&]+")).toList();
   }
 
 }
