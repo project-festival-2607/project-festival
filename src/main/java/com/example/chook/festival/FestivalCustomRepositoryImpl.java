@@ -1,7 +1,6 @@
 package com.example.chook.festival;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
@@ -14,8 +13,6 @@ import org.springframework.util.StringUtils;
 import java.util.List;
 
 import static com.example.chook.festival.QFestival.festival;
-import static com.example.chook.region.entity.QRegionSido.regionSido;
-import static com.example.chook.region.entity.QRegionSigungu.regionSigungu;
 
 @Slf4j
 public class FestivalCustomRepositoryImpl implements FestivalCustomRepository{
