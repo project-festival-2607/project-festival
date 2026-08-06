@@ -3,63 +3,59 @@ package com.example.chook.recruitment.form;
 import com.example.chook.recruitment.entity.enums.RecruitmentCategory;
 import com.example.chook.recruitment.entity.enums.RecruitmentWageType;
 import jakarta.validation.constraints.*;
-import lombok.*;
+import lombok.Builder;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-@Getter
-@Setter
-@ToString
-@AllArgsConstructor
-@NoArgsConstructor
 @Builder
-public class RecruitmentCreateForm {
+public record RecruitmentCreateForm(
 
   @NotNull
   @Pattern(regexp = "^[0-9]{2}$")
-  private String regionSidoCode;
+  String regionSidoCode,
   @NotNull
   @Pattern(regexp = "^[0-9]{5}$")
-  private String regionSigunguCode;
+  String regionSigunguCode,
 
   @Size(max = 100)
   @NotBlank
-  private String recruitmentTitle;
+  String recruitmentTitle,
 
   @NotNull
-  private String festivalContentId;
+  String festivalContentId,
 
-  private String content;
+  String content,
 
   @NotNull
-  private RecruitmentCategory category;
+  RecruitmentCategory category,
 
   // RecruitmentIndividual
-  private RecruitmentWageType wageType;
+  RecruitmentWageType wageType,
   @PositiveOrZero
-  private Integer wageValue;
+  Integer wageValue,
 
   // RecruitmentFoodTruck
-  private boolean prepaid;
-  private boolean boothFeeRequired;
-  private boolean electricityProvided;
+  boolean prepaid,
+  boolean boothFeeRequired,
+  boolean electricityProvided,
 
   @FutureOrPresent
   @NotNull
-  private LocalDate applicationDeadline;
+  LocalDate applicationDeadline,
   @PositiveOrZero
-  private Integer recruitmentCount;
+  Integer recruitmentCount,
 
   @Size(max = 255)
-  private String workingLocation;
+  String workingLocation,
   @NotNull
   @FutureOrPresent
-  private LocalDate workingStartDate;
+  LocalDate workingStartDate,
   @NotNull
   @FutureOrPresent
-  private LocalDate workingEndDate;
-  private LocalTime workingStartTime;
-  private LocalTime workingEndTime;
+  LocalDate workingEndDate,
+  LocalTime workingStartTime,
+  LocalTime workingEndTime
 
+) {
 }

@@ -48,8 +48,8 @@ public class RecruitmentController {
                          RedirectAttributes redirectAttributes) {
 
     if (bindingResult.hasErrors()) return "recruit/register";
-    if (recruitmentCreateForm.getWorkingStartDate().isAfter(
-      recruitmentCreateForm.getWorkingEndDate()))
+    if (recruitmentCreateForm.workingStartDate().isAfter(
+      recruitmentCreateForm.workingEndDate()))
       bindingResult.rejectValue("workingEndDate",
         "workingEndDate.outOfRange",
         "업무시작날짜는 업무종료날짜보다 늦을 수 없습니다."
@@ -66,31 +66,31 @@ public class RecruitmentController {
 
   private RecruitmentCreateDTO toCreateDto(RecruitmentCreateForm form) {
     return RecruitmentCreateDTO.builder()
-      .regionSidoCode(form.getRegionSidoCode())
-      .regionSigunguCode(form.getRegionSigunguCode())
-      .recruitmentTitle(form.getRecruitmentTitle())
-      .festivalContentId(form.getFestivalContentId())
-      .content(form.getContent())
-      .category(form.getCategory())
+      .regionSidoCode(form.regionSidoCode())
+      .regionSigunguCode(form.regionSigunguCode())
+      .recruitmentTitle(form.recruitmentTitle())
+      .festivalContentId(form.festivalContentId())
+      .content(form.content())
+      .category(form.category())
       .specific(toSpecificDto(form))
-      .applicationDeadline(form.getApplicationDeadline())
-      .recruitmentCount(form.getRecruitmentCount())
-      .workingLocation(form.getWorkingLocation())
-      .workingStartDate(form.getWorkingStartDate())
-      .workingEndDate(form.getWorkingEndDate())
-      .workingStartTime(form.getWorkingStartTime())
-      .workingEndTime(form.getWorkingEndTime())
+      .applicationDeadline(form.applicationDeadline())
+      .recruitmentCount(form.recruitmentCount())
+      .workingLocation(form.workingLocation())
+      .workingStartDate(form.workingStartDate())
+      .workingEndDate(form.workingEndDate())
+      .workingStartTime(form.workingStartTime())
+      .workingEndTime(form.workingEndTime())
       .build();
   }
 
   private RecruitmentSpecificDTO toSpecificDto(RecruitmentCreateForm form) {
-    RecruitmentCategory category = form.getCategory();
+    RecruitmentCategory category = form.category();
     if (category == null) return null;
     switch (category) {
       case INDIVIDUAL -> {
         return RecruitmentIndividualDTO.builder()
-          .wageType(form.getWageType())
-          .wageValue(form.getWageValue())
+          .wageType(form.wageType())
+          .wageValue(form.wageValue())
           .build();
       }
       case FOOD_TRUCK -> {
@@ -98,6 +98,9 @@ public class RecruitmentController {
           .prepaid(form.isPrepaid())
           .boothFeeRequired(form.isBoothFeeRequired())
           .electricityProvided(form.isElectricityProvided())
+          .prepaid(form.prepaid())
+          .boothFeeRequired(form.boothFeeRequired())
+          .electricityProvided(form.electricityProvided())
           .build();
       }
     }
