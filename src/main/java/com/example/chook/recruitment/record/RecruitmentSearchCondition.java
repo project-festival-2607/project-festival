@@ -20,12 +20,16 @@ public record RecruitmentSearchCondition(
   RecruitmentCategory category,
   RecruitmentStatus status,
 
+  // 구직자 검색 전용
+  RecruitmentListCriteria listCriteria,
+
   LocalTime workingStartTime,
   LocalTime workingEndTime,
   LocalDate workingStartDate,
   LocalDate workingEndDate,
 
-  RecruitmentListCriteria listCriteria
+  // 구인자 검색 전용
+  String festivalContentId
 
 ) {
 }

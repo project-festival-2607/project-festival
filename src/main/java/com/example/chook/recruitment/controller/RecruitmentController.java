@@ -3,6 +3,7 @@ package com.example.chook.recruitment.controller;
 import com.example.chook.recruitment.dto.*;
 import com.example.chook.recruitment.entity.enums.RecruitmentCategory;
 import com.example.chook.recruitment.form.RecruitmentCreateForm;
+import com.example.chook.recruitment.form.RecruitmentManagementSearchForm;
 import com.example.chook.recruitment.form.RecruitmentSearchForm;
 import com.example.chook.recruitment.handler.PagingHandler;
 import com.example.chook.recruitment.record.RecruitmentSearchCondition;
@@ -33,6 +34,7 @@ public class RecruitmentController {
                    @RequestParam(name = "pageIdx", required = false, defaultValue = "1") int pageIdx,
                    @Valid @ModelAttribute RecruitmentSearchForm form,
                    BindingResult bindingResult) {
+    if (bindingResult.hasErrors()) return;
     if (form.workingStartDate().isAfter(
       form.workingEndDate()))
       bindingResult.rejectValue("workingEndDate",
@@ -50,7 +52,19 @@ public class RecruitmentController {
   }
 
   @GetMapping("/manage/list")
-  public void manageList(Model model) {
+  public void manageList(Model model,
+                         @RequestParam(name = "pageIdx", required = false, defaultValue = "1") int pageIdx,
+                         @Valid @ModelAttribute RecruitmentManagementSearchForm form,
+                         BindingResult bindingResult) {
+    if (bindingResult.hasErrors()) return;
+    RecruitmentSearchCondition condition = toCondition(form);
+    Page<RecruitmentManagementListDTO> page = recruitmentService.getManagementPage(pageIdx, condition);
+    model.addAttribute("page", page);
+
+    PagingHandler<RecruitmentManagementListDTO, RecruitmentManagementSearchForm> pagingHandler =
+      new PagingHandler<>(page, pageIdx, form);
+    model.addAttribute("pagingHandler", pagingHandler);
+
   }
 
   @GetMapping("/{id}")
@@ -102,6 +116,17 @@ public class RecruitmentController {
       .workingEndDate(form.workingEndDate())
       .workingStartTime(form.workingStartTime())
       .workingEndTime(form.workingEndTime())
+      .build();
+  }
+
+  private RecruitmentSearchCondition toCondition(RecruitmentManagementSearchForm form) {
+    return RecruitmentSearchCondition.builder()
+      .keywordList(getKeywordList(form.keywords()))
+      .regionSidoCode(form.regionSidoCode())
+      .regionSigunguCode(form.regionSigunguCode())
+      .category(form.category())
+      .status(form.status())
+      .festivalContentId(form.festivalContentId())
       .build();
   }
 
