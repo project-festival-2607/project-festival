@@ -58,7 +58,8 @@ public class Member {
     @Column(name = "status", nullable = false, length = 20)
     private MemberStatus status;
 
-    @Column(name = "created_at", nullable = false, updatable = false)
+    @Column(name = "created_at", nullable = false, insertable = false, updatable = false,
+      columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime createdAt;
 
     @Column(name = "updated_at")
@@ -68,6 +69,7 @@ public class Member {
     private LocalDateTime deletedAt;
 
     @Column(name = "point", nullable = false)
+    @Builder.Default
     // 오버플로우 리스크 방지를 위해 Long 사용
     // 결제 시스템의 금액 컬럼들은 보통 Long이나 BigDecimal 사용
     private Long point = 0L;
