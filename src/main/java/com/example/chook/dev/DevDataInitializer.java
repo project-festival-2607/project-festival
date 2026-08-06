@@ -11,9 +11,20 @@ import org.springframework.stereotype.Component;
 public class DevDataInitializer implements ApplicationRunner {
 
   private final DevMemberDataInitializer memberDataInitializer;
+  private final DevFestivalDataInitializer festivalDataInitializer;
+
+  private static final int RECRUITER_COUNT = 3;
+  private static final int JOB_SEEKER_COUNT = 10;
+  private static final int JOB_EQUIP_COUNT = 5;
+  private static final int FESTIVAL_COUNT = 6;
+
 
   @Override
   public void run(@NonNull ApplicationArguments arg) throws Exception {
-    memberDataInitializer.addSampleMembers(3, 10, 5);
+
+
+    memberDataInitializer.generateSampleMembers(RECRUITER_COUNT, JOB_SEEKER_COUNT, JOB_EQUIP_COUNT);
+    festivalDataInitializer.generateSampleFestivals(FESTIVAL_COUNT);
+
   }
 }
