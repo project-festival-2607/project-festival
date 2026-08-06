@@ -22,7 +22,7 @@ public interface FileService {
       .build();
   }
 
-  FileDTO uploadAndGetDto(MultipartFile file, String relativePath);
+  UploadedFile upload(MultipartFile file, String relativePath);
 
   List<FileDTO> getList();
 
