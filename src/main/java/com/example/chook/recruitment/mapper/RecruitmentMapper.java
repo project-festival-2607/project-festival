@@ -188,7 +188,7 @@ public class RecruitmentMapper {
       .build();
   }
 
-  public RecruitmentSearchCondition toCondition(RecruitmentSearchForm form, boolean recruiter) {
+  public RecruitmentSearchCondition toCondition(RecruitmentSearchForm form, boolean recruiter, Long ownerMemberId) {
     RecruitmentSearchCondition.RecruitmentSearchConditionBuilder builder = RecruitmentSearchCondition.builder()
       .keywordList(splitByRegex(form.keywords(), "[\\s,&]+"))
       .regionSidoCode(form.regionSidoCode())
@@ -202,7 +202,8 @@ public class RecruitmentMapper {
       .wageType(form.wageType())
       .boothFeeRequired(form.boothFeeRequired())
       .electricityProvided(form.electricityProvided())
-      .prepaid(form.prepaid());
+      .prepaid(form.prepaid())
+      .ownerMemberId(ownerMemberId);
 
     // 희망금액은 정확히 일치하는 공고가 드무니 입력값의 위아래 10% 범위로 검색
     if (form.wageValue() != null) {

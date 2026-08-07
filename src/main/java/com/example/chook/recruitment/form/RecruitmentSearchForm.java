@@ -32,7 +32,10 @@ public record RecruitmentSearchForm(
   // 푸드트럭(FOOD_TRUCK) 전용 필터
   Boolean boothFeeRequired,
   Boolean electricityProvided,
-  Boolean prepaid
+  Boolean prepaid,
+
+  // 구인자 전용: true면 로그인한 본인이 등록한 축제의 공고만
+  Boolean mine
 
 ) {
 }

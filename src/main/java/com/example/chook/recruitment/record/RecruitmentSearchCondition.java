@@ -32,6 +32,7 @@ public record RecruitmentSearchCondition(
 
   // 구인자 검색 전용
   String festivalContentId,
+  Long ownerMemberId,
 
   // 알바(INDIVIDUAL) 전용 필터
   RecruitmentWageType wageType,

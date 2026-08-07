@@ -63,6 +63,7 @@ public class RecruitmentRepositoryCustomImpl implements RecruitmentRepositoryCus
       .and(workingEndTimeLoe(condition.workingEndTime()))
       .and(workingStartDateGoe(condition.workingStartDate()))
       .and(workingEndDateLoe(condition.workingEndDate()))
+      .and(ownerMemberIdEq(condition.ownerMemberId()))
     ;
 
     JPAQuery<Recruitment> resultQuery = jpaQueryFactory
@@ -176,6 +177,10 @@ public class RecruitmentRepositoryCustomImpl implements RecruitmentRepositoryCus
 
   private BooleanExpression statusEq(RecruitmentStatus status) {
     return status == null ? null : recruitment.status.eq(status);
+  }
+
+  private BooleanExpression ownerMemberIdEq(Long memberId) {
+    return memberId == null ? null : recruitment.festival.member.id.eq(memberId);
   }
 
   private BooleanExpression publishedOnlyCondition(Boolean publishedOnly) {

@@ -65,6 +65,8 @@ public class RecruitmentController {
                    HttpSession session) {
     LoginResponseDTO loginMember = (LoginResponseDTO) session.getAttribute("loginMember");
     boolean recruiter = loginMember != null && loginMember.getRole() == MemberRole.RECRUITER;
+    // 구인자 전용 "내가 쓴 글만" 필터: 처음 들어왔을 때(mine 파라미터 없음)는 전체 노출
+    Long ownerMemberId = (recruiter && Boolean.TRUE.equals(form.mine())) ? loginMember.getId() : null;
 
     if (form.workingStartDate() != null && form.workingEndDate() != null
       && form.workingStartDate().isAfter(form.workingEndDate()))
@@ -74,7 +76,7 @@ public class RecruitmentController {
       );
     if (bindingResult.hasErrors()) return;
 
-    RecruitmentSearchCondition condition = mapper.toCondition(form, recruiter);
+    RecruitmentSearchCondition condition = mapper.toCondition(form, recruiter, ownerMemberId);
     Page<RecruitmentListDTO> page = recruitmentService.getPage(pageIdx, condition);
     model.addAttribute("page", page);
 
