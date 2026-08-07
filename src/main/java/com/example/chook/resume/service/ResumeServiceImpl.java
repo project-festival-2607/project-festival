@@ -113,10 +113,10 @@ public class ResumeServiceImpl implements ResumeService{
 
     // 이력서 조회 하기 기능
     @Override
-    public ResumeResponseDTO getResume(Long memberId) {
+    public ResumeResponseDTO getResume(Long resumeId) {
 
         // 이력서 조회
-        Resume resume = resumeRepository.findByMember_Id(memberId)
+        Resume resume = resumeRepository.findById(resumeId)
                 .orElseThrow();
 
         ResumeResponseDTO resumeResponseDTO = resumeEntityToDto(resume);
@@ -171,11 +171,11 @@ public class ResumeServiceImpl implements ResumeService{
 
     // 이력서 수정
     @Override
-    public void modify(ResumeRequestDTO resumeRequestDTO, Long memberId) {
+    public void modify(ResumeRequestDTO resumeRequestDTO, Long resumeId) {
 
         // 기존 이력서 조회
         Resume resume =
-                resumeRepository.findByMember_Id(memberId)
+                resumeRepository.findById(resumeId)
                         .orElseThrow();
 
         // 기존 자기소개서 수정
@@ -258,11 +258,11 @@ public class ResumeServiceImpl implements ResumeService{
 
     // 이력서 삭제
     @Override
-    public void delete(Long memberId){
+    public void delete(Long resumeId){
 
         // 기존 이력서 조회
         Resume resume =
-                resumeRepository.findByMember_Id(memberId)
+                resumeRepository.findById(resumeId)
                         .orElseThrow();
         // 경력 삭제
         resumeCareerRepository.deleteAllByResume_Id(

@@ -28,11 +28,11 @@ public class ResumeController {
     @PostMapping("/register")
     public String register(
             @ModelAttribute ResumeRequestDTO resumeRequestDTO,
-            @RequestParam Long memberId
+            @RequestParam Long resumeId
     ){
         resumeService.register(
                 resumeRequestDTO,
-                memberId
+                resumeId
         );
         return "redirect:/resume/read";
     }
@@ -40,10 +40,10 @@ public class ResumeController {
     // 이력서 조회
     @GetMapping("/read")
     public String read(
-            @RequestParam Long memberId,
+            @RequestParam Long resumeId,
             Model model
     ){
-        ResumeResponseDTO resumeResponseDTO = resumeService.getResume(memberId);
+        ResumeResponseDTO resumeResponseDTO = resumeService.getResume(resumeId);
 
         model.addAttribute("resume", resumeResponseDTO);
 
@@ -53,11 +53,11 @@ public class ResumeController {
     // 이력서 수정 페이지 이동
     @GetMapping("/modify")
     public String modify(
-            @RequestParam Long memberId,
+            @RequestParam Long resumeId,
             Model model
     ){
         ResumeResponseDTO resumeResponseDTO =
-                resumeService.getResume(memberId);
+                resumeService.getResume(resumeId);
         model.addAttribute(
                 "resume",
                 resumeResponseDTO
@@ -69,21 +69,21 @@ public class ResumeController {
     @PostMapping("/modify")
     public String modify(
             @ModelAttribute ResumeRequestDTO resumeRequestDTO,
-            @RequestParam Long memberId
+            @RequestParam Long resumeId
     ){
         resumeService.modify(
                 resumeRequestDTO,
-                memberId
+                resumeId
         );
-        return "redirect:/resume/read?memberId=" + memberId;
+        return "redirect:/resume/read?memberId=" + resumeId;
     }
 
     // 이력서 삭제
     @PostMapping("/delete")
     public String delete(
-            @RequestParam Long memberId
+            @RequestParam Long resumeId
     ){
-        resumeService.delete(memberId);
+        resumeService.delete(resumeId);
 
         return "redirect:/";
     }

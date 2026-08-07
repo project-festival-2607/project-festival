@@ -7,7 +7,4 @@ import java.util.Optional;
 
 public interface ResumeRepository extends JpaRepository<Resume, Long> {
 
-    // 이력서 조회
-    Optional<Resume> findByMember_Id(Long memberId);
-
 }

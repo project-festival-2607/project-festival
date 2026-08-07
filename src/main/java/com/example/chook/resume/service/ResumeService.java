@@ -127,6 +127,7 @@ public interface ResumeService {
     ){
         return ResumePortfolio.builder()
                 .id(resumePortfolioDTO.getId())
+                .resume(resume)
                 .type(resumePortfolioDTO.getType())
                 .title(resumePortfolioDTO.getTitle())
                 .registeredAt(resumePortfolioDTO.getRegisteredAt())
@@ -137,11 +138,11 @@ public interface ResumeService {
     void register(ResumeRequestDTO resumeRequestDTO, Long memberId);
 
     // 이력서 조회 기능
-    ResumeResponseDTO getResume(Long memberId);
+    ResumeResponseDTO getResume(Long resumeId);
 
     // 이력서 수정
-    void modify(ResumeRequestDTO resumeRequestDTO, Long memberId);
+    void modify(ResumeRequestDTO resumeRequestDTO, Long resumeId);
 
     // 이력서 삭제
-    void delete(Long memberId);
+    void delete(Long resumeId);
 }
