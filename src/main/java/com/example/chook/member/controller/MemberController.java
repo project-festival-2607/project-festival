@@ -47,6 +47,13 @@ public class MemberController {
         }
     }
 
+    // 로그아웃
+    @GetMapping("/logout")
+    public String logout(HttpSession session) {
+        session.invalidate();
+        return "redirect:/";
+    }
+
     // 회원가입
     @GetMapping("/signup")
     public String signupSelect() {
