@@ -36,19 +36,30 @@ sidoSelect.addEventListener("change", () => loadSigunguList(sidoSelect.value, ""
 
 if (initialSido) loadSigunguList(initialSido, initialSigungu);
 
-// ===== 2. 모집인력 종류가 "알바"가 아니면 급여순 정렬 옵션은 사용할 수 없음 (백엔드 검증과 동일한 규칙) =====
 const categorySelect = document.getElementById("filterCategory");
 const listCriteriaSelect = document.querySelector("select[name='listCriteria']");
-const wageOptions = listCriteriaSelect.querySelectorAll(".recruit-wage-option");
 
-function updateWageOptionAvailability() {
-    const isIndividualOrAll = categorySelect.value === "" || categorySelect.value === "INDIVIDUAL";
-    wageOptions.forEach(option => {
-        option.disabled = !isIndividualOrAll;
+// ===== 2. 모집인력 종류별 세부 필터 표시/숨김 (알바=급여유형, 푸드트럭=조건, 장비/기타=없음) =====
+const specificBlocks = document.querySelectorAll(".recruit-sidebar-specific");
+
+function updateSpecificVisibility() {
+    const category = categorySelect.value;
+    specificBlocks.forEach(block => {
+        block.style.display = (block.dataset.category === category) ? "" : "none";
     });
-    if (!isIndividualOrAll && listCriteriaSelect.value.startsWith("WAGE_")) {
-        listCriteriaSelect.value = "LATEST";
-    }
 }
-categorySelect.addEventListener("change", updateWageOptionAvailability);
-updateWageOptionAvailability();
+categorySelect.addEventListener("change", updateSpecificVisibility);
+updateSpecificVisibility();
+
+// ===== 3. 모집인력 종류 칩 버튼: 클릭한 칩만 active로 표시하고 숨은 input에 값 반영 =====
+document.querySelectorAll("#categoryChips .recruit-chip").forEach(chip => {
+    chip.addEventListener("click", () => {
+        document.querySelectorAll("#categoryChips .recruit-chip").forEach(c => c.classList.remove("active"));
+        chip.classList.add("active");
+        categorySelect.value = chip.dataset.value;
+        categorySelect.dispatchEvent(new Event("change"));
+    });
+});
+
+// ===== 4. 정렬은 고르는 즉시 다시 검색 =====
+listCriteriaSelect.addEventListener("change", () => listCriteriaSelect.form.submit());

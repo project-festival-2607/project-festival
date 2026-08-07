@@ -103,9 +103,36 @@ categorySelect.addEventListener("change", updateSpecificVisibility);
 updateSpecificVisibility();
 
 // ===== 4. 근무 시작~종료 시간: 팝오버에서 시/분을 고르고 "확인"으로 확정, 총 시간은 자동 계산 =====
+// 종료 시간이 시작 시간보다 빠를 수 없도록, 상대편 시간을 기준으로 선택 불가능한 시/분 옵션을 아예 비활성화함
 const totalHoursEl = document.getElementById("totalHours");
 
-function buildTimePicker(prefix) {
+// direction "after": boundValue보다 늦은 시간만 허용 (종료 시간 <- 시작 시간 기준)
+// direction "before": boundValue보다 빠른 시간만 허용 (시작 시간 <- 종료 시간 기준)
+function applyTimeBound(hourSelect, minuteSelect, boundValue, direction) {
+    const [boundH, boundM] = boundValue ? boundValue.split(":").map(Number) : [null, null];
+
+    [...hourSelect.options].forEach(option => {
+        const h = Number(option.value);
+        option.disabled = !!boundValue && (direction === "after" ? h < boundH : h > boundH);
+    });
+    if (hourSelect.selectedOptions[0]?.disabled) {
+        const firstEnabled = [...hourSelect.options].find(o => !o.disabled);
+        if (firstEnabled) hourSelect.value = firstEnabled.value;
+    }
+
+    const selectedHour = Number(hourSelect.value);
+    [...minuteSelect.options].forEach(option => {
+        const m = Number(option.value);
+        option.disabled = !!boundValue && selectedHour === boundH
+            && (direction === "after" ? m <= boundM : m >= boundM);
+    });
+    if (minuteSelect.selectedOptions[0]?.disabled) {
+        const firstEnabled = [...minuteSelect.options].find(o => !o.disabled);
+        if (firstEnabled) minuteSelect.value = firstEnabled.value;
+    }
+}
+
+function buildTimePicker(prefix, direction, getBoundValue) {
     const trigger = document.getElementById(prefix + "TimeTrigger");
     const popover = document.getElementById(prefix + "TimePopover");
     const hourSelect = document.getElementById(prefix + "Hour");
@@ -122,13 +149,29 @@ function buildTimePicker(prefix) {
         minuteSelect.appendChild(new Option(mm, mm));
     });
 
+    hourSelect.addEventListener("change", () => applyTimeBound(hourSelect, minuteSelect, getBoundValue(), direction));
+
     trigger.addEventListener("click", (e) => {
         e.stopPropagation();
-        popover.hidden = !popover.hidden;
+        if (!popover.hidden) {
+            popover.hidden = true;
+            return;
+        }
+        applyTimeBound(hourSelect, minuteSelect, getBoundValue(), direction);
+        popover.hidden = false;
     });
 
     confirmBtn.addEventListener("click", () => {
         const value = `${hourSelect.value}:${minuteSelect.value}`;
+        const boundValue = getBoundValue();
+        // "HH:MM" 형식은 항상 0으로 채워진 2자리라 문자열 비교로도 시간 순서가 정확히 맞음
+        const isValid = !boundValue || (direction === "after" ? value > boundValue : value < boundValue);
+        if (!isValid) {
+            alert(direction === "after"
+                ? "근무 종료 시간은 근무 시작 시간보다 늦어야 합니다."
+                : "근무 시작 시간은 근무 종료 시간보다 빨라야 합니다.");
+            return;
+        }
         hiddenInput.value = value;
         trigger.textContent = value;
         popover.hidden = true;
@@ -138,8 +181,8 @@ function buildTimePicker(prefix) {
     return { trigger, popover, hiddenInput };
 }
 
-const startTimePicker = buildTimePicker("workingStart");
-const endTimePicker = buildTimePicker("workingEnd");
+const startTimePicker = buildTimePicker("workingStart", "before", () => endTimePicker.hiddenInput.value);
+const endTimePicker = buildTimePicker("workingEnd", "after", () => startTimePicker.hiddenInput.value);
 // "바깥 클릭 시 자동 닫기"는 네이티브 select와의 클릭 버블링이 브라우저마다 달라 오작동이 잦아 제거함.
 // 트리거 버튼을 다시 누르면 토글되고, "확인"을 누르면 닫히는 것만으로 충분함.
 
@@ -153,8 +196,7 @@ function updateTotalHours() {
 
     const [startH, startM] = start.split(":").map(Number);
     const [endH, endM] = end.split(":").map(Number);
-    let minutes = (endH * 60 + endM) - (startH * 60 + startM);
-    if (minutes < 0) minutes += 24 * 60; // 자정을 넘기는 근무 (예: 22:00 ~ 02:00)
+    const minutes = (endH * 60 + endM) - (startH * 60 + startM);
 
     const hours = Math.floor(minutes / 60);
     const remainMinutes = minutes % 60;
@@ -165,4 +207,21 @@ function updateTotalHours() {
 const today = new Date().toISOString().split("T")[0];
 ["applicationDeadline", "workingStartDate", "workingEndDate"].forEach(id => {
     document.getElementById(id).min = today;
+});
+
+// ===== 6. 근무 종료일이 근무 시작일보다 빠를 수 없도록 입력창 자체에서 막기 =====
+const workingStartDateInput = document.getElementById("workingStartDate");
+const workingEndDateInput = document.getElementById("workingEndDate");
+
+workingStartDateInput.addEventListener("change", () => {
+    workingEndDateInput.min = workingStartDateInput.value || today;
+    if (workingEndDateInput.value && workingEndDateInput.value < workingEndDateInput.min) {
+        workingEndDateInput.value = "";
+    }
+});
+workingEndDateInput.addEventListener("change", () => {
+    workingStartDateInput.max = workingEndDateInput.value || "";
+    if (workingStartDateInput.value && workingEndDateInput.value && workingStartDateInput.value > workingEndDateInput.value) {
+        workingStartDateInput.value = "";
+    }
 });

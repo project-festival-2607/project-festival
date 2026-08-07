@@ -29,68 +29,201 @@
     border-color: #928c76;
 }
 
-.recruit-filter {
+/* 당근알바 스타일: 왼쪽 필터 사이드바 + 오른쪽 리스트 2단 레이아웃 */
+.recruit-layout {
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    align-items: start;
+    gap: 28px;
+}
+
+.recruit-layout-full {
+    grid-template-columns: 1fr;
+}
+
+.recruit-sidebar {
     background-color: #faf9f6;
     border: 1px solid #e5e0d3;
-    border-radius: 10px;
-    padding: 20px;
-    margin-bottom: 30px;
+    border-radius: 12px;
+    padding: 18px;
+    position: sticky;
+    top: 20px;
 }
 
-.recruit-filter-row {
-    margin-bottom: 14px;
+.recruit-sidebar-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-size: 17px;
+    font-weight: 900;
+    color: #2c2c2c;
+    padding-bottom: 12px;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #e5e0d3;
 }
 
-.recruit-filter-row:last-child {
-    margin-bottom: 0;
+.recruit-filter-reset {
+    color: #928c76;
+    font-size: 13px;
+    font-weight: 400;
+    text-decoration: underline;
 }
 
-.recruit-filter-row > input[type="text"] {
-    width: 100%;
-    height: 44px;
-    padding: 0 14px;
-    border: 1px solid #ccc2a4;
-    border-radius: 6px;
+.recruit-sidebar-section {
+    padding: 14px 0;
+    border-bottom: 1px solid #efece2;
 }
 
-.recruit-filter-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 14px;
+.recruit-sidebar-section:last-of-type {
+    border-bottom: none;
 }
 
-.recruit-filter-grid label {
+.recruit-sidebar-section > label {
     display: block;
     font-size: 13px;
     font-weight: 700;
     color: #6b6656;
-    margin-bottom: 4px;
+    margin-bottom: 8px;
 }
 
-.recruit-filter-grid select,
-.recruit-filter-grid input {
+.recruit-sidebar-section input,
+.recruit-sidebar-section select {
     width: 100%;
-    height: 40px;
+    height: 38px;
     padding: 0 10px;
     border: 1px solid #ccc2a4;
     border-radius: 6px;
     background-color: #fff;
 }
 
-.recruit-filter-actions {
-    display: flex;
-    align-items: center;
-    gap: 14px;
+.recruit-sidebar-section input + select,
+.recruit-sidebar-section select + select {
+    margin-top: 8px;
 }
 
-.recruit-filter-reset {
+.recruit-sidebar-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.recruit-sidebar-row input {
+    width: 0;
+    flex: 1;
+}
+
+.recruit-sidebar-row span {
     color: #928c76;
-    text-decoration: underline;
+}
+
+.recruit-sidebar-specific[data-category="INDIVIDUAL"] > label {
+    font-size: 15px;
+}
+
+.recruit-checkbox-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 8px;
+}
+
+.recruit-checkbox-group .form-check {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding-left: 0;
+    margin-bottom: 0;
+    min-height: 0;
+}
+
+.recruit-checkbox-group .form-check-input {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 14px;
+    height: 14px;
+    aspect-ratio: 1 / 1;
+    margin: 0;
+    padding: 0;
+    float: none;
+    box-sizing: border-box;
+    border: 1px solid #ccc2a4;
+    border-radius: 50%;
+    background-color: #fff;
+    order: 2;
+}
+
+.recruit-checkbox-group .form-check-input:checked {
+    background-color: #afa992;
+    border-color: #afa992;
+}
+
+.recruit-checkbox-group .form-check-label {
+    font-size: 15px;
+    color: #2c2c2c;
+    order: 1;
+}
+
+/* 리모컨 느낌의 칩(pill) 버튼 그룹 */
+.recruit-chip-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.recruit-chip {
+    padding: 7px 14px;
+    border: 1px solid #ccc2a4;
+    border-radius: 20px;
+    background-color: #fff;
+    color: #6b6656;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.15s ease;
+}
+
+.recruit-chip:hover {
+    border-color: #afa992;
+}
+
+.recruit-chip.active {
+    background-color: #afa992;
+    border-color: #afa992;
+    color: #fff;
+}
+
+.recruit-sidebar-apply {
+    width: 100%;
+    margin-top: 16px;
+    background-color: #afa992;
+    border-color: #afa992;
+}
+
+.recruit-sidebar-apply:hover {
+    background-color: #928c76;
+    border-color: #928c76;
+}
+
+.recruit-main-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    color: #6b6656;
+    font-size: 14px;
+}
+
+.recruit-main-toolbar select {
+    height: 36px;
+    padding: 0 10px;
+    border: 1px solid #ccc2a4;
+    border-radius: 6px;
+    background-color: #fff;
 }
 
 .recruit-card-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
     gap: 24px 20px;
     margin-bottom: 60px;
 }
@@ -170,8 +303,11 @@
 }
 
 @media (max-width: 767px) {
-    .recruit-filter-grid,
-    .recruit-card-grid {
+    .recruit-layout {
         grid-template-columns: 1fr;
+    }
+
+    .recruit-sidebar {
+        position: static;
     }
 }

@@ -36,7 +36,7 @@
             </div>
 
             <!-- 2. 지역 선택 (시도 -> 시군구 연동) -->
-            <div class="recruit-field recruit-field-row">
+            <div class="recruit-field recruit-field-row recruit-field-row-narrow">
                 <div>
                     <label for="regionSidoCode">지역(시/도)</label>
                     <select name="regionSidoCode" id="regionSidoCode" class="form-select" required>
@@ -54,10 +54,16 @@
                 </div>
             </div>
 
-            <!-- 3. 모집마감 날짜 -->
-            <div class="recruit-field">
-                <label for="applicationDeadline">모집마감 날짜</label>
-                <input type="date" name="applicationDeadline" id="applicationDeadline" class="form-control" required>
+            <!-- 3. 모집마감 날짜 + 모집 인원 -->
+            <div class="recruit-field recruit-field-row recruit-field-row-narrow">
+                <div>
+                    <label for="applicationDeadline">모집마감 날짜</label>
+                    <input type="date" name="applicationDeadline" id="applicationDeadline" class="form-control" required>
+                </div>
+                <div>
+                    <label for="recruitmentCount">모집 인원</label>
+                    <input type="number" name="recruitmentCount" id="recruitmentCount" class="form-control" min="0" required>
+                </div>
             </div>
 
             <!-- 4. 모집인력 종류 -->
@@ -114,14 +120,8 @@
             <p class="recruit-specific recruit-specific-note" data-category="EQUIPMENT">모집하는 장비 관련 내용을 아래 업무내용에 작성해주세요.</p>
             <p class="recruit-specific recruit-specific-note" data-category="ETC">모집 관련 세부 내용을 아래 업무내용에 작성해주세요.</p>
 
-            <!-- 5. 모집 인원 -->
-            <div class="recruit-field">
-                <label for="recruitmentCount">모집 인원</label>
-                <input type="number" name="recruitmentCount" id="recruitmentCount" class="form-control" min="0" required>
-            </div>
-
             <!-- 6. 근무 시간 (시/분을 고른 뒤 팝오버 안의 확인 버튼으로 확정) -->
-            <div class="recruit-field recruit-field-row">
+            <div class="recruit-field recruit-field-row recruit-field-row-narrow">
                 <div class="recruit-time-field">
                     <label for="workingStartTimeTrigger">근무 시작 시간</label>
                     <button type="button" class="form-control recruit-time-trigger" id="workingStartTimeTrigger">
@@ -155,7 +155,7 @@
             <p class="recruit-total-hours" id="totalHours">시간을 고른 뒤 확인 버튼을 눌러주세요.</p>
 
             <!-- 7. 근무 일자 -->
-            <div class="recruit-field recruit-field-row">
+            <div class="recruit-field recruit-field-row recruit-field-row-narrow">
                 <div>
                     <label for="workingStartDate">근무 시작일</label>
                     <input type="date" name="workingStartDate" id="workingStartDate" class="form-control" required>
