@@ -27,15 +27,22 @@ public record RecruitmentSearchForm(
 
   // 알바(INDIVIDUAL) 전용 필터
   RecruitmentWageType wageType,
-  Integer wageValue,
 
   // 푸드트럭(FOOD_TRUCK) 전용 필터
   Boolean boothFeeRequired,
   Boolean electricityProvided,
-  Boolean prepaid,
-
-  // 구인자 전용: true면 로그인한 본인이 등록한 축제의 공고만
-  Boolean mine
+  Boolean prepaid
 
 ) {
+  public RecruitmentSearchForm{
+
+    if (category != RecruitmentCategory.INDIVIDUAL) {
+      wageType = null;
+    }
+    if (category != RecruitmentCategory.FOOD_TRUCK) {
+      boothFeeRequired = null;
+      electricityProvided = null;
+      prepaid = null;
+    }
+  }
 }

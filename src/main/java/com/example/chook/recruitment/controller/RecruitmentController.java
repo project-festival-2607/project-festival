@@ -1,5 +1,6 @@
 package com.example.chook.recruitment.controller;
 
+import com.example.chook.common.handler.PagingHandler;
 import com.example.chook.festival.Festival;
 import com.example.chook.festival.FestivalRepository;
 import com.example.chook.file.dto.FileDTO;
@@ -9,12 +10,10 @@ import com.example.chook.member.dto.LoginResponseDTO;
 import com.example.chook.member.entity.enums.MemberRole;
 import com.example.chook.recruitment.dto.RecruitmentCreateDTO;
 import com.example.chook.recruitment.dto.RecruitmentListDTO;
-import com.example.chook.recruitment.dto.RecruitmentManagementListDTO;
 import com.example.chook.recruitment.dto.RecruitmentResponseDTO;
 import com.example.chook.recruitment.form.RecruitmentCreateForm;
-import com.example.chook.recruitment.form.RecruitmentManagementSearchForm;
+import com.example.chook.recruitment.form.RecruitmentManagementForm;
 import com.example.chook.recruitment.form.RecruitmentSearchForm;
-import com.example.chook.common.handler.PagingHandler;
 import com.example.chook.recruitment.mapper.RecruitmentMapper;
 import com.example.chook.recruitment.record.RecruitmentSearchCondition;
 import com.example.chook.recruitment.service.RecruitmentService;
@@ -65,8 +64,6 @@ public class RecruitmentController {
                    HttpSession session) {
     LoginResponseDTO loginMember = (LoginResponseDTO) session.getAttribute("loginMember");
     boolean recruiter = loginMember != null && loginMember.getRole() == MemberRole.RECRUITER;
-    // 구인자 전용 "내가 쓴 글만" 필터: 처음 들어왔을 때(mine 파라미터 없음)는 전체 노출
-    Long ownerMemberId = (recruiter && Boolean.TRUE.equals(form.mine())) ? loginMember.getId() : null;
 
     if (form.workingStartDate() != null && form.workingEndDate() != null
       && form.workingStartDate().isAfter(form.workingEndDate()))
@@ -76,7 +73,7 @@ public class RecruitmentController {
       );
     if (bindingResult.hasErrors()) return;
 
-    RecruitmentSearchCondition condition = mapper.toCondition(form, recruiter, ownerMemberId);
+    RecruitmentSearchCondition condition = mapper.toCondition(form);
     Page<RecruitmentListDTO> page = recruitmentService.getPage(pageIdx, condition);
     model.addAttribute("page", page);
 
@@ -91,16 +88,8 @@ public class RecruitmentController {
   @GetMapping("/manage/list")
   public void manageList(Model model,
                          @RequestParam(name = "pageIdx", required = false, defaultValue = "1") int pageIdx,
-                         @Valid @ModelAttribute RecruitmentManagementSearchForm form,
+                         @Valid @ModelAttribute RecruitmentManagementForm form,
                          BindingResult bindingResult) {
-    if (bindingResult.hasErrors()) return;
-    RecruitmentSearchCondition condition = mapper.toCondition(form);
-    Page<RecruitmentManagementListDTO> page = recruitmentService.getManagementPage(pageIdx, condition);
-    model.addAttribute("page", page);
-
-    PagingHandler<RecruitmentManagementListDTO, RecruitmentManagementSearchForm> pagingHandler =
-      new PagingHandler<>(page, form, PAGINATION_SIZE, pageIdx);
-    model.addAttribute("pagingHandler", pagingHandler);
 
   }
 

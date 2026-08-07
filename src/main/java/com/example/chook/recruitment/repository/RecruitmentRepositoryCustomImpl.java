@@ -45,7 +45,7 @@ public class RecruitmentRepositoryCustomImpl implements RecruitmentRepositoryCus
 
     if (category != null &&
       category != RecruitmentCategory.INDIVIDUAL &&
-      listCriteria.getWageType() != null) {
+      condition.wageType() != null) {
       throw new IllegalArgumentException("\"개인\"이 아닌 카테고리에서는 급여순 조회를 사용할 수 없습니다.");
     }
 
@@ -63,7 +63,6 @@ public class RecruitmentRepositoryCustomImpl implements RecruitmentRepositoryCus
       .and(workingEndTimeLoe(condition.workingEndTime()))
       .and(workingStartDateGoe(condition.workingStartDate()))
       .and(workingEndDateLoe(condition.workingEndDate()))
-      .and(ownerMemberIdEq(condition.ownerMemberId()))
     ;
 
     JPAQuery<Recruitment> resultQuery = jpaQueryFactory
@@ -72,10 +71,8 @@ public class RecruitmentRepositoryCustomImpl implements RecruitmentRepositoryCus
       .select(recruitment.count())
       .from(recruitment);
 
-    boolean isWageCriteria = listCriteria.isWageCriteria();
-    boolean needsIndividualJoin = isWageCriteria
-      || condition.wageType() != null
-      || condition.wageValueMin() != null;
+    boolean needsIndividualJoin = condition.wageType() != null;
+
     boolean needsFoodTruckJoin = Boolean.TRUE.equals(condition.boothFeeRequired())
       || Boolean.TRUE.equals(condition.electricityProvided())
       || Boolean.TRUE.equals(condition.prepaid());
@@ -83,21 +80,16 @@ public class RecruitmentRepositoryCustomImpl implements RecruitmentRepositoryCus
     if (needsIndividualJoin) {
       resultQuery.join(recruitmentIndividual).on(recruitmentIndividual.recruit.eq(recruitment));
       countQuery.join(recruitmentIndividual).on(recruitmentIndividual.recruit.eq(recruitment));
+      whereCondition
+        .and(wageTypeEq(condition.wageType()));
     }
     if (needsFoodTruckJoin) {
       resultQuery.join(recruitmentFoodTruck).on(recruitmentFoodTruck.recruit.eq(recruitment));
       countQuery.join(recruitmentFoodTruck).on(recruitmentFoodTruck.recruit.eq(recruitment));
-    }
-
-    whereCondition
-      .and(wageTypeEq(condition.wageType()))
-      .and(wageValueBetween(condition.wageValueMin(), condition.wageValueMax()))
-      .and(boothFeeRequiredEq(condition.boothFeeRequired()))
-      .and(electricityProvidedEq(condition.electricityProvided()))
-      .and(prepaidEq(condition.prepaid()));
-
-    if (isWageCriteria) {
-      whereCondition.and(recruitmentIndividual.wageType.eq(listCriteria.getWageType()));
+      whereCondition
+        .and(boothFeeRequiredEq(condition.boothFeeRequired()))
+        .and(electricityProvidedEq(condition.electricityProvided()))
+        .and(prepaidEq(condition.prepaid()));
     }
 
     resultQuery.where(whereCondition);
@@ -105,13 +97,13 @@ public class RecruitmentRepositoryCustomImpl implements RecruitmentRepositoryCus
 
     Long total = countQuery.fetchOne();
 
-    if (isWageCriteria)
+    // 급여순 정렬을 선택한 경우 우선 정렬
+    if (condition.wageType() != null)
       resultQuery.orderBy(recruitmentIndividual.wageValue.desc());
-    else {
-      switch (listCriteria) {
-        case LATEST -> resultQuery.orderBy(recruitment.publishedAt.desc());
-        case DEADLINE -> resultQuery.orderBy(recruitment.applicationDeadline.asc());
-      }
+
+    switch (listCriteria) {
+      case LATEST -> resultQuery.orderBy(recruitment.publishedAt.desc());
+      case DEADLINE -> resultQuery.orderBy(recruitment.applicationDeadline.asc());
     }
 
     List<Recruitment> result = resultQuery
@@ -179,20 +171,12 @@ public class RecruitmentRepositoryCustomImpl implements RecruitmentRepositoryCus
     return status == null ? null : recruitment.status.eq(status);
   }
 
-  private BooleanExpression ownerMemberIdEq(Long memberId) {
-    return memberId == null ? null : recruitment.festival.member.id.eq(memberId);
-  }
-
   private BooleanExpression publishedOnlyCondition(Boolean publishedOnly) {
     return Boolean.TRUE.equals(publishedOnly) ? recruitment.publishedAt.isNotNull() : null;
   }
 
   private BooleanExpression wageTypeEq(RecruitmentWageType wageType) {
     return wageType == null ? null : recruitmentIndividual.wageType.eq(wageType);
-  }
-
-  private BooleanExpression wageValueBetween(Integer min, Integer max) {
-    return (min == null || max == null) ? null : recruitmentIndividual.wageValue.between(min, max);
   }
 
   private BooleanExpression boothFeeRequiredEq(Boolean value) {
