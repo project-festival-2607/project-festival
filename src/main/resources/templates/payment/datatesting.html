@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="ko">
+<!--datatesting.html-->
+<head>
+    <meta charset="UTF-8">
+    <title>Response 확인</title>
+
+    <style>
+        body{
+            font-family: Arial, sans-serif;
+            margin:40px;
+        }
+
+        pre{
+            background:#f4f4f4;
+            padding:15px;
+            border-radius:8px;
+            overflow:auto;
+        }
+
+        .box{
+            margin-top:30px;
+            border:1px solid #ddd;
+            border-radius:10px;
+            padding:20px;
+            background:#fafafa;
+        }
+
+        .box.db-box{
+            border-color:#3182f6;
+            background:#eef4ff;
+        }
+
+        .item{
+            margin:10px 0;
+            font-size:18px;
+        }
+
+        .label{
+            font-weight:bold;
+            display:inline-block;
+            width:150px;
+        }
+
+        #backBtn{
+            margin-top:30px;
+            padding:12px 25px;
+            font-size:16px;
+            border:none;
+            border-radius:8px;
+            background:#4CAF50;
+            color:white;
+            cursor:pointer;
+        }
+
+        #backBtn:hover{
+            background:#45a049;
+        }
+
+    </style>
+</head>
+<body>
+
+<h2>결제 Response</h2>
+
+<pre id="result"></pre>
+
+<div class="box">
+    <h3>DB에 저장할 데이터 예시</h3>
+
+    <div class="item">
+        <span class="label">paymentKey</span>
+        <span id="paymentKey"></span>
+    </div>
+
+    <div class="item">
+        <span class="label">approvedAt</span>
+        <span id="approvedAt"></span>
+    </div>
+
+    <div class="item">
+        <span class="label">간편결제</span>
+        <span id="provider"></span>
+    </div>
+
+
+</div>
+
+<div class="box db-box">
+    <h3>실제 DB에 저장된 데이터</h3>
+    <div id="db-result">불러오는 중...</div>
+</div>
+
+<button id="backBtn">
+    싱싱 로그인으로 돌아가기
+</button>
+
+<script>
+
+    const response = sessionStorage.getItem("paymentResponse");
+
+    if(response){
+
+        // 문자열 → 객체
+        const data = JSON.parse(response);
+
+        // 전체 Response 출력
+        document.getElementById("result").textContent =
+            JSON.stringify(data, null, 4);
+
+        // 필요한 데이터만 따로 출력
+        document.getElementById("paymentKey").textContent =
+            data.paymentKey ?? "-";
+
+        document.getElementById("approvedAt").textContent =
+            data.approvedAt ?? "-";
+
+        document.getElementById("provider").textContent =
+            data.easyPay?.provider ?? "-";
+
+        // 실제 DB에 저장된 내용 조회
+        loadDbResult(data.orderId);
+
+    }else{
+
+        document.getElementById("result").textContent =
+            "저장된 Response가 없습니다.";
+        document.getElementById("db-result").textContent =
+            "orderId가 없어서 DB 데이터를 조회할 수 없습니다.";
+
+    }
+
+    async function loadDbResult(orderId) {
+        const dbResultEl = document.getElementById("db-result");
+
+        if (!orderId) {
+            dbResultEl.textContent = "orderId가 없습니다.";
+            return;
+        }
+
+        try {
+            const res = await fetch("/paying/order/" + orderId);
+
+            if (!res.ok) {
+                dbResultEl.textContent = "DB에서 이 결제 건을 찾지 못했습니다. (아직 처리가 안 됐거나 실패했을 수 있어요. 서버 콘솔 로그를 확인해보세요)";
+                return;
+            }
+
+            const saved = await res.json();
+
+            dbResultEl.innerHTML =
+                "<div class='item'><span class='label'>결제 상태</span>" + saved.paymentStatus + "</div>" +
+                "<div class='item'><span class='label'>상품</span>" + saved.productName + "</div>" +
+                "<div class='item'><span class='label'>지급 포인트</span>" + saved.pointGet + "</div>" +
+                "<div class='item'><span class='label'>결제 수단</span>" + (saved.method ?? "-") + "</div>" +
+                "<div class='item'><span class='label'>승인 시각</span>" + (saved.approvedAt ?? "-") + "</div>" +
+                "<div class='item'><span class='label'>회원</span>" + saved.memberUsername + " (id:" + saved.memberId + ")</div>" +
+                "<div class='item'><span class='label'>현재 보유 포인트</span>" + saved.memberPointAfter + "</div>";
+        } catch (e) {
+            dbResultEl.textContent = "DB 데이터를 불러오는 중 오류가 발생했습니다.";
+        }
+    }
+
+
+    document.getElementById("backBtn").addEventListener("click", function(){
+
+        location.href="/payCreationTest";
+
+    });
+
+
+</script>
+
+
+</body>
+</html>
