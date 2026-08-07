@@ -32,4 +32,15 @@ public record RecruitmentSearchCondition(
   String festivalContentId
 
 ) {
+
+  public RecruitmentSearchCondition {
+    regionSidoCode = blankToNull(regionSidoCode);
+    regionSigunguCode = blankToNull(regionSigunguCode);
+    festivalContentId = blankToNull(festivalContentId);
+  }
+
+  private String blankToNull(String string) {
+    return (string == null || string.isBlank()) ? null : string;
+  }
+
 }

@@ -1,8 +1,7 @@
 package com.example.chook.festival;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import com.example.chook.member.entity.Member;
+import jakarta.persistence.*;
 import lombok.*;
 
 import java.math.BigDecimal;
@@ -15,7 +14,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Builder
 @Entity
-public class Festival {
+public class  Festival {
     @Id
     @Column(name = "content_id")
     private String contentId;
@@ -70,4 +69,13 @@ public class Festival {
 
     @Column(name = "second_image")
     private String secondImage;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(
+      name = "member_id",
+      nullable = true,
+      foreignKey = @ForeignKey(name = "fk_festival_member_id")
+    )
+    @ToString.Exclude
+    private Member member;
 }

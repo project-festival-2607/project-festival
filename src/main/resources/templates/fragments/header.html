@@ -22,10 +22,10 @@
                         </li>
 <!--                         2메뉴 -->
                         <li class="nav-item">
-                            <a href="/" class="nav-link">모집공고</a>
+                            <a href="/recruitment/list" class="nav-link">모집공고</a>
                             <div class="dropdown-menu-box">
                                 <ul class="submenu">
-                                    <li><a href="/">축제인력모집</a></li>
+                                    <li><a href="/recruitment/list">축제인력모집</a></li>
                                 </ul>
                             </div>
                         </li>
@@ -54,8 +54,9 @@
                 </div>
                 <div class="user-box">
                     <ul class="user-sub">
-                        <li><a href="/" class="nav-link">회원가입</a></li>
-                        <li><a href="/" class="nav-link">로그인</a></li>
+<!--                        회원가입, 로그인 임시 연결                           -->
+                        <li><a th:href="@{/member/signup}" class="nav-link">회원가입</a></li>
+                        <li><a th:href="@{/member/login}" class="nav-link">로그인</a></li>
 <!--                        security이후 조건 숨김 메뉴                         -->
                         <li><a href="/" class="nav-link">마이페이지</a></li>
                     </ul>
