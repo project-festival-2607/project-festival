@@ -63,3 +63,103 @@ document.querySelectorAll("#categoryChips .recruit-chip").forEach(chip => {
 
 // ===== 4. 정렬은 고르는 즉시 다시 검색 =====
 listCriteriaSelect.addEventListener("change", () => listCriteriaSelect.form.submit());
+
+// ===== 5. 근무 시작일이 근무 종료일보다 늦을 수 없도록 입력창 자체에서 막기 (register 페이지와 동일 패턴) =====
+const workingStartDateInput = document.getElementById("workingStartDate");
+const workingEndDateInput = document.getElementById("workingEndDate");
+
+workingStartDateInput.addEventListener("change", () => {
+    workingEndDateInput.min = workingStartDateInput.value || "";
+    if (workingEndDateInput.value && workingStartDateInput.value && workingEndDateInput.value < workingStartDateInput.value) {
+        workingEndDateInput.value = "";
+    }
+});
+workingEndDateInput.addEventListener("change", () => {
+    workingStartDateInput.max = workingEndDateInput.value || "";
+    if (workingStartDateInput.value && workingEndDateInput.value && workingStartDateInput.value > workingEndDateInput.value) {
+        workingStartDateInput.value = "";
+    }
+});
+
+// ===== 6. 근무시간: register 페이지와 동일하게 시/분을 고르고 "확인"으로 확정, 종료 시간이 시작 시간보다 빠를 수 없음 =====
+// direction "after": boundValue보다 늦은 시간만 허용 (종료 시간 <- 시작 시간 기준)
+// direction "before": boundValue보다 빠른 시간만 허용 (시작 시간 <- 종료 시간 기준)
+function applyTimeBound(hourSelect, minuteSelect, boundValue, direction) {
+    const [boundH, boundM] = boundValue ? boundValue.split(":").map(Number) : [null, null];
+
+    [...hourSelect.options].forEach(option => {
+        const h = Number(option.value);
+        option.disabled = !!boundValue && (direction === "after" ? h < boundH : h > boundH);
+    });
+    if (hourSelect.selectedOptions[0]?.disabled) {
+        const firstEnabled = [...hourSelect.options].find(o => !o.disabled);
+        if (firstEnabled) hourSelect.value = firstEnabled.value;
+    }
+
+    const selectedHour = Number(hourSelect.value);
+    [...minuteSelect.options].forEach(option => {
+        const m = Number(option.value);
+        option.disabled = !!boundValue && selectedHour === boundH
+            && (direction === "after" ? m <= boundM : m >= boundM);
+    });
+    if (minuteSelect.selectedOptions[0]?.disabled) {
+        const firstEnabled = [...minuteSelect.options].find(o => !o.disabled);
+        if (firstEnabled) minuteSelect.value = firstEnabled.value;
+    }
+}
+
+function buildTimePicker(prefix, direction, getBoundValue) {
+    const trigger = document.getElementById(prefix + "TimeTrigger");
+    const popover = document.getElementById(prefix + "TimePopover");
+    const hourSelect = document.getElementById(prefix + "Hour");
+    const minuteSelect = document.getElementById(prefix + "Minute");
+    const confirmBtn = document.getElementById(prefix + "TimeConfirm");
+    const hiddenInput = document.getElementById(prefix + "Time");
+
+    for (let h = 0; h < 24; h++) {
+        const hh = String(h).padStart(2, "0");
+        hourSelect.appendChild(new Option(hh, hh));
+    }
+    [0, 10, 20, 30, 40, 50].forEach(m => {
+        const mm = String(m).padStart(2, "0");
+        minuteSelect.appendChild(new Option(mm, mm));
+    });
+
+    if (hiddenInput.value) {
+        const [h, m] = hiddenInput.value.split(":");
+        hourSelect.value = h;
+        minuteSelect.value = String(Math.floor(Number(m) / 10) * 10).padStart(2, "0");
+    }
+
+    hourSelect.addEventListener("change", () => applyTimeBound(hourSelect, minuteSelect, getBoundValue(), direction));
+
+    trigger.addEventListener("click", (e) => {
+        e.stopPropagation();
+        if (!popover.hidden) {
+            popover.hidden = true;
+            return;
+        }
+        applyTimeBound(hourSelect, minuteSelect, getBoundValue(), direction);
+        popover.hidden = false;
+    });
+
+    confirmBtn.addEventListener("click", () => {
+        const value = `${hourSelect.value}:${minuteSelect.value}`;
+        const boundValue = getBoundValue();
+        const isValid = !boundValue || (direction === "after" ? value > boundValue : value < boundValue);
+        if (!isValid) {
+            alert(direction === "after"
+                ? "근무 종료 시간은 근무 시작 시간보다 늦어야 합니다."
+                : "근무 시작 시간은 근무 종료 시간보다 빨라야 합니다.");
+            return;
+        }
+        hiddenInput.value = value;
+        trigger.textContent = value;
+        popover.hidden = true;
+    });
+
+    return { trigger, popover, hiddenInput };
+}
+
+const startTimePicker = buildTimePicker("workingStart", "before", () => endTimePicker.hiddenInput.value);
+const endTimePicker = buildTimePicker("workingEnd", "after", () => startTimePicker.hiddenInput.value);
