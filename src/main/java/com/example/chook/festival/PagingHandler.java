@@ -28,7 +28,18 @@ public class PagingHandler {
         this.endPage = (int)Math.ceil(this.pageNo / 10.0) * 10;
         this.startPage = this.endPage - 9;
 
-        this.endPage = Math.min(this.endPage, this.totalPage);
+        this.endPage = (int)Math.ceil(this.pageNo / 10.0) * 10;
+        this.startPage = this.endPage - 9;
+
+        if (this.totalPage == 0) {
+            this.endPage = 1;
+            this.startPage = 1;
+        } else {
+            this.endPage = Math.min(this.endPage, this.totalPage);
+            if (this.startPage > this.endPage) {
+                this.startPage = this.endPage;
+            }
+        }
 
         this.prev = list.hasPrevious();
         this.next = list.hasNext();
