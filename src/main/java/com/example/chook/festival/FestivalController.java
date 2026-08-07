@@ -1,5 +1,6 @@
 package com.example.chook.festival;
 
+import com.example.chook.common.handler.PagingHandler;
 import com.example.chook.file.record.FileResource;
 import com.example.chook.file.service.FileService;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +27,7 @@ public class FestivalController {
 
     private final FestivalService festivalService;
     private final FileService fileService;
+    private static final int PAGINATION_SIZE = 10;
 
     // 프론트에서 JS로 API 받아올 때 필요한 키
     @Value("${apikey.festival}")
@@ -44,8 +46,15 @@ public class FestivalController {
         // 프론트에서 API 요청하기 위해 심는 키 (백에서 요청하면 필요 X) 우선은 TEST로 놔둠
         model.addAttribute("apikey", APIKEY);
 
-        Page<FestivalDTO> list = festivalService.getList(pageNo, type, keyword, month);
-        PagingHandler fes = new PagingHandler(list, pageNo, type, keyword, month);
+        Page<FestivalDTO> page = festivalService.getList(pageNo, type, keyword, month);
+        FestivalSearchForm form = FestivalSearchForm.builder()
+          .type(type)
+          .keyword(keyword)
+          .month(month)
+          .build();
+        PagingHandler<FestivalDTO, FestivalSearchForm> fes = new PagingHandler<>(
+          page, form, PAGINATION_SIZE, pageNo
+        );
 
         model.addAttribute("fes", fes);
 
