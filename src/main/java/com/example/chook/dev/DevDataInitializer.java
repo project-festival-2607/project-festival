@@ -17,10 +17,10 @@ public class DevDataInitializer implements ApplicationRunner {
   private final DevRecruitmentInitializer recruitmentInitializer;
   private final RegionDataInitService regionDataInitService;
 
-  private static final long RECRUITER_COUNT = 3;
+  private static final long RECRUITER_COUNT = 50;
   private static final long JOB_SEEKER_COUNT = 10;
   private static final long JOB_EQUIP_COUNT = 5;
-  private static final long TARGET_FESTIVAL_COUNT = 6;
+  private static final long TARGET_FESTIVAL_COUNT = 200;
 
   @Profile("dev")
   @Override
