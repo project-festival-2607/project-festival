@@ -110,8 +110,10 @@ public class DevRecruitmentInitializer {
         .recruitmentCount(category == RecruitmentCategory.INDIVIDUAL ? random.nextInt(5 + 1) : 1)
         .workingStartTime(LocalTime.of(startTime / 2, 30 * (startTime % 2)))
         .workingEndTime(LocalTime.of(endTime / 2, 30 * (endTime % 2)))
-        .workingStartDate(festival.getStartDate().minusDays(random.nextInt(-3, 0 + 1)))
-        .workingEndDate(festival.getEndDate().plusDays(random.nextInt(0, 1 + 1)))
+              .workingStartDate((festival.getStartDate() != null ? festival.getStartDate() : LocalDate.now())
+                      .minusDays(random.nextInt(-3, 0 + 1)))
+              .workingEndDate((festival.getEndDate() != null ? festival.getEndDate() : LocalDate.now())
+                      .plusDays(random.nextInt(0, 1 + 1)))
         .build()
     );
   }

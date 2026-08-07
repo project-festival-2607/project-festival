@@ -3,6 +3,8 @@ package com.example.chook.festival;
 import com.example.chook.common.handler.PagingHandler;
 import com.example.chook.file.record.FileResource;
 import com.example.chook.file.service.FileService;
+import com.example.chook.member.dto.LoginResponseDTO;
+import com.example.chook.member.entity.Member;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -75,8 +77,10 @@ public class FestivalController {
     }
 
     @PostMapping("/register")
-    public String register(FestivalDTO festivalDTO, @RequestParam(name = "imageFile", required = false)MultipartFile file){
+    public String register(FestivalDTO festivalDTO, @RequestParam(name = "imageFile", required = false)MultipartFile file, @SessionAttribute("loginMember") LoginResponseDTO member){
         log.info(">>> register >>> {}", festivalDTO);
+        festivalDTO.setMember(member.getId());
+
         festivalService.registerFes(festivalDTO, file);
         return "redirect:/festival/list";
     }
