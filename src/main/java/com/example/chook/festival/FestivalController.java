@@ -70,8 +70,8 @@ public class FestivalController {
     }
 
     @GetMapping("/register")
-    public void register(){
-
+    public void register(Model model){
+        model.addAttribute("mapApiKey", mapApiKey);
     }
 
     @PostMapping("/register")
