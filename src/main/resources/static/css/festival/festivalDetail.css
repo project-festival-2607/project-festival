@@ -181,3 +181,15 @@
     background: #dc3545;
     color: #FEFEFE;
 }
+
+.mapBox {
+    width: 70%;
+    height: 300px;
+
+    margin-left: 30px;
+
+    margin-bottom: 30px;
+
+    border-radius: 15px;
+    border: 1px solid #ccc2a4;
+}

@@ -2,6 +2,8 @@ package com.example.chook.resume.dto;
 
 import lombok.*;
 
+import java.util.UUID;
+
 @Getter
 @Setter
 @ToString
@@ -14,8 +16,8 @@ public class ProfileFileDTO {
     private Long id;
 
     // 파일 아이디
-    private String fileUuid;
+    private UUID uuid;
 
     // 화면 표시용 원본 파일명
-    private String originalFileName;
+    private String originalName;
 }

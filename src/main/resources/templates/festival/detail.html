@@ -81,9 +81,16 @@
                     상세지도
                 </div>
                 <div class="detail-h3">[[${fes.address}]]</div>
+                <div class="mapBox"
+                    th:data-map-y="${fes.mapY}"
+                    th:data-map-x="${fes.mapX}"
+                >
+<!--                    지도 API 연결 + 정적지도              -->
+
+                </div>
                 <div class="goToMap">
-                    <a href="/">
-                        위치보러가기 ↗
+                    <a href="/map/map">
+                        지도보러가기 ↗
                     </a>
                 </div>
             </div>
@@ -95,4 +102,8 @@
             </a>
         </div>
     </div>
+
+<!--    SCRIPT      -->
+    <script th:src="@{|//dapi.kakao.com/v2/maps/sdk.js?appkey=${mapApiKey}&libraries=services,clusterer|}"></script>
+    <script th:src="@{/js/festival/festivalDetail.js}"></script>
 </div>

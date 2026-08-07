@@ -125,7 +125,7 @@ public class FestivalServiceImpl implements FestivalService, ApplicationRunner {
         log.info("Festival DB 데이터 동기화 시작...");
 
         try {
-            String url = "https://apis.data.go.kr/B551011/KorService2/searchFestival2?numOfRows=100&MobileOS=WEB&MobileApp=CHUCK&_type=json&arrange=R&eventStartDate=20260101&serviceKey=" + apiKey;
+            String url = "https://apis.data.go.kr/B551011/KorService2/searchFestival2?numOfRows=10&MobileOS=WEB&MobileApp=CHUCK&_type=json&arrange=R&eventStartDate=20260101&serviceKey=" + apiKey;
 
             RestTemplate restTemplate = new RestTemplate(); // 백엔드에서 RestAPI 실행시켜주는 객체
             String listResponse = restTemplate.getForObject(url, String.class);

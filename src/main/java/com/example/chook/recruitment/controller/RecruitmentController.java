@@ -14,7 +14,7 @@ import com.example.chook.recruitment.dto.RecruitmentResponseDTO;
 import com.example.chook.recruitment.form.RecruitmentCreateForm;
 import com.example.chook.recruitment.form.RecruitmentManagementSearchForm;
 import com.example.chook.recruitment.form.RecruitmentSearchForm;
-import com.example.chook.recruitment.handler.PagingHandler;
+import com.example.chook.common.handler.PagingHandler;
 import com.example.chook.recruitment.mapper.RecruitmentMapper;
 import com.example.chook.recruitment.record.RecruitmentSearchCondition;
 import com.example.chook.recruitment.service.RecruitmentService;
@@ -47,6 +47,7 @@ public class RecruitmentController {
 
   // ponytail: 폴더명으로 못 쓰는 문자만 제거, admin_board와 동일한 규칙
   private static final Pattern INVALID_FOLDER_CHARS = Pattern.compile("[\\\\/:*?\"<>|]");
+  private static final int PAGINATION_SIZE = 5;
 
   private final RecruitmentService recruitmentService;
   private final RecruitmentMapper mapper;
@@ -78,7 +79,7 @@ public class RecruitmentController {
     model.addAttribute("page", page);
 
     PagingHandler<RecruitmentListDTO, RecruitmentSearchForm> pagingHandler =
-      new PagingHandler<>(page, pageIdx, form);
+      new PagingHandler<>(page, form, PAGINATION_SIZE, pageIdx);
     model.addAttribute("pagingHandler", pagingHandler);
 
     model.addAttribute("recruiter", recruiter);
@@ -96,7 +97,7 @@ public class RecruitmentController {
     model.addAttribute("page", page);
 
     PagingHandler<RecruitmentManagementListDTO, RecruitmentManagementSearchForm> pagingHandler =
-      new PagingHandler<>(page, pageIdx, form);
+      new PagingHandler<>(page, form, PAGINATION_SIZE, pageIdx);
     model.addAttribute("pagingHandler", pagingHandler);
 
   }

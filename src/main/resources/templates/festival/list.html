@@ -48,7 +48,7 @@
 <!--                모든 inner는 class="container" 로 맞춤        -->
 <!--        이 안에서 작업        -->
         <div class="fesContainer">
-            <div class="fes-box" th:each="fes : ${fes.list}">
+            <div class="fes-box" th:each="fes : ${fes.elementList}">
                 <div th:switch="${fes.status}">
                     <div th:case="'진행예정'" class="fes-pro upComing">진행예정</div>
                     <div th:case="'진행중'" class="fes-pro onGoing">진행중</div>
@@ -73,22 +73,22 @@
 <!--    페이징        -->
     <div class="pageBtn">
             <div class="fes-pagination">
-                <div class="fes-page-item" th:classappend="${fes.prev eq false ? 'disabled' : '' }">
-                    <a class="fes-page-link" th:href="@{/festival/list(pageNo=${fes.pageNo} - 1)}">
+                <div class="fes-page-item" th:classappend="${fes.prevBtnActive eq false ? 'disabled' : '' }">
+                    <a class="fes-page-link" th:href="@{/festival/list(pageNo=${fes.pageIdx} - 1)}">
                         ←
                     </a>
                 </div>
 
-                <th:block th:each="i:${#numbers.sequence(fes.startPage, fes.endPage)}">
-                    <div class="fes-page-item" th:classappend="${fes.pageNo == i ? 'active' : ''}">
+                <th:block th:each="i:${#numbers.sequence(fes.startPageIdx, fes.endPageIdx)}">
+                    <div class="fes-page-item" th:classappend="${fes.pageIdx == i ? 'active' : ''}">
                         <a class="fes-page-link" th:href="@{/festival/list(pageNo=${i})}">
                             [[${i}]]
                         </a>
                     </div>
                 </th:block>
 
-                <div class="fes-page-item" th:classappend="${fes.next eq false ? 'disabled' : '' }">
-                    <a class="fes-page-link" th:href="@{/festival/list(pageNo=${fes.pageNo} + 1)}">
+                <div class="fes-page-item" th:classappend="${fes.nextBtnActive eq false ? 'disabled' : '' }">
+                    <a class="fes-page-link" th:href="@{/festival/list(pageNo=${fes.pageIdx} + 1)}">
                         →
                     </a>
                 </div>
@@ -98,16 +98,18 @@
 <!--    검색라인        -->
 
     <div class="fes-form container">
-        <form action="/festival/list">
-            <select name="type" class="form-select">
-                <option>카테고리</option>
+        <form action="/festival/list" class="festival-search">
+            <select name="type" class="search-select">
                 <option value="t">축제이름</option>
                 <option value="c">축제내용</option>
                 <option value="r">지역</option>
             </select>
-            <input name="keyword" type="text" placeholder="검색어를 입력하세요">
+
+            <input name="keyword" type="text" class="search-input" placeholder="검색어를 입력하세요">
+
             <input type="hidden" name="pageNo" value="1">
-            <button class="searchBtn" type="submit">검색</button>
+
+            <button class="search-btn" type="submit">검색</button>
         </form>
     </div>
 
