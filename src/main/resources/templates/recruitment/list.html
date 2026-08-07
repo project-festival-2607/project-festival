@@ -47,22 +47,26 @@
 
                 <div class="recruit-sidebar-section recruit-sidebar-specific" data-category="INDIVIDUAL">
                     <label>급여 유형</label>
-                    <div class="recruit-checkbox-group">
+                    <div class="recruit-checkbox-group" id="wageTypeRadios">
                         <div class="form-check">
-                            <input type="radio" class="form-check-input" name="wageType" id="wageTypeHourly" value="HOURLY">
+                            <input type="radio" class="form-check-input" name="wageType" id="wageTypeHourly" value="HOURLY"
+                                   th:checked="${form.wageType == null or form.wageType.name() == 'HOURLY'}">
                             <label class="form-check-label" for="wageTypeHourly">시급</label>
                         </div>
                         <div class="form-check">
-                            <input type="radio" class="form-check-input" name="wageType" id="wageTypeDaily" value="DAILY">
+                            <input type="radio" class="form-check-input" name="wageType" id="wageTypeDaily" value="DAILY"
+                                   th:checked="${form.wageType != null and form.wageType.name() == 'DAILY'}">
                             <label class="form-check-label" for="wageTypeDaily">일급</label>
                         </div>
                         <div class="form-check">
-                            <input type="radio" class="form-check-input" name="wageType" id="wageTypeWeekly" value="WEEKLY">
+                            <input type="radio" class="form-check-input" name="wageType" id="wageTypeWeekly" value="WEEKLY"
+                                   th:checked="${form.wageType != null and form.wageType.name() == 'WEEKLY'}">
                             <label class="form-check-label" for="wageTypeWeekly">주급</label>
                         </div>
                         <div class="form-check">
-                            <input type="radio" class="form-check-input" name="wageType" id="wageTypePerTask" value="PER_TASK">
-                            <label class="form-check-label" for="wageTypePerTask">건당</label>
+                            <input type="radio" class="form-check-input" name="wageType" id="wageTypePerTask" value="PER_TASK"
+                                   th:checked="${form.wageType != null and form.wageType.name() == 'PER_TASK'}">
+                            <label class="form-check-label" for="wageTypePerTask">건별</label>
                         </div>
                     </div>
                 </div>
@@ -72,15 +76,18 @@
                     <label>푸드트럭 조건</label>
                     <div class="recruit-checkbox-group">
                         <div class="form-check">
-                            <input type="checkbox" class="form-check-input" name="boothFeeRequired" id="filterBoothFeeRequired" value="true">
+                            <input type="checkbox" class="form-check-input" name="boothFeeRequired" id="filterBoothFeeRequired" value="true"
+                                   th:checked="${form.boothFeeRequired}">
                             <label class="form-check-label" for="filterBoothFeeRequired">입점료</label>
                         </div>
                         <div class="form-check">
-                            <input type="checkbox" class="form-check-input" name="electricityProvided" id="filterElectricityProvided" value="true">
+                            <input type="checkbox" class="form-check-input" name="electricityProvided" id="filterElectricityProvided" value="true"
+                                   th:checked="${form.electricityProvided}">
                             <label class="form-check-label" for="filterElectricityProvided">전기사용</label>
                         </div>
                         <div class="form-check">
-                            <input type="checkbox" class="form-check-input" name="prepaid" id="filterPrepaid" value="true">
+                            <input type="checkbox" class="form-check-input" name="prepaid" id="filterPrepaid" value="true"
+                                   th:checked="${form.prepaid}">
                             <label class="form-check-label" for="filterPrepaid">선결제</label>
                         </div>
                     </div>
