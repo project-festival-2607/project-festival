@@ -6,11 +6,25 @@
     <link rel="stylesheet" th:href="@{/libs/bootstrap-5.3.8-dist/css/bootstrap.min.css}">
 </head>
 <body>
-<div class="container" style="max-width: 400px;">
+<div class="container" style="max-width: 600px;">
     <h1 class="mb-4 text-center mt-5">회원가입</h1>
-    <div class="d-grid gap-3">
-        <a th:href="@{/member/signup/job-seeker}" class="btn btn-outline-primary btn-lg">구직자로 가입</a>
-        <a th:href="@{/member/signup/employer}" class="btn btn-outline-primary btn-lg">구인자로 가입</a>
+    <div class="row g-3">
+
+        <!-- 구직자 -->
+        <div class="col-6 d-flex flex-column gap-2">
+            <a th:href="@{/member/signup/job-seeker}" class="btn btn-outline-primary btn-lg w-100">개인회원 가입</a>
+            <div class="d-flex gap-1">
+                <a href="/oauth2/authorization/google" class="btn btn-outline-dark flex-fill">G</a>
+                <a href="/oauth2/authorization/naver" class="btn btn-outline-success flex-fill">N</a>
+                <a href="/oauth2/authorization/kakao" class="btn btn-outline-warning flex-fill">K</a>
+            </div>
+        </div>
+
+        <!-- 구인자 -->
+        <div class="col-6">
+            <a th:href="@{/member/signup/employer}" class="btn btn-outline-primary btn-lg w-100">기업회원 가입</a>
+        </div>
+
     </div>
 </div>
 </body>
