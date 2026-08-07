@@ -188,20 +188,35 @@ public class RecruitmentMapper {
       .build();
   }
 
-  public RecruitmentSearchCondition toCondition(RecruitmentSearchForm form) {
-    return RecruitmentSearchCondition.builder()
+  public RecruitmentSearchCondition toCondition(RecruitmentSearchForm form, boolean recruiter) {
+    RecruitmentSearchCondition.RecruitmentSearchConditionBuilder builder = RecruitmentSearchCondition.builder()
       .keywordList(splitByRegex(form.keywords(), "[\\s,&]+"))
       .regionSidoCode(form.regionSidoCode())
       .regionSigunguCode(form.regionSigunguCode())
       .category(form.category())
-      // 공개 리스트(/recruitment/list)는 항상 모집중인 공고만 노출
-      .status(RecruitmentStatus.OPEN)
       .workingStartTime(form.workingStartTime())
       .workingEndTime(form.workingEndTime())
       .workingStartDate(form.workingStartDate())
       .workingEndDate(form.workingEndDate())
       .listCriteria(form.listCriteria())
-      .build();
+      .wageType(form.wageType())
+      .boothFeeRequired(form.boothFeeRequired())
+      .electricityProvided(form.electricityProvided())
+      .prepaid(form.prepaid());
+
+    // 희망금액은 정확히 일치하는 공고가 드무니 입력값의 위아래 10% 범위로 검색
+    if (form.wageValue() != null) {
+      int delta = (int) Math.round(form.wageValue() * 0.1);
+      builder.wageValueMin(form.wageValue() - delta);
+      builder.wageValueMax(form.wageValue() + delta);
+    }
+
+    // 구직자는 게시(공개)된 모집중 공고만 보고, 구인자는 상태/게시 여부와 무관하게 전부 봄
+    if (!recruiter) {
+      builder.status(RecruitmentStatus.OPEN).publishedOnly(true);
+    }
+
+    return builder.build();
   }
 
   private RecruitmentUpdateDTO.RecruitmentUpdateDTOBuilder toUpdateDtoBuilder(Recruitment entity) {

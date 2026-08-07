@@ -6,6 +6,7 @@ import com.example.chook.recruitment.entity.RecruitmentIndividual;
 import com.example.chook.recruitment.entity.enums.RecruitmentCategory;
 import com.example.chook.recruitment.entity.enums.RecruitmentListCriteria;
 import com.example.chook.recruitment.entity.enums.RecruitmentStatus;
+import com.example.chook.recruitment.entity.enums.RecruitmentWageType;
 import com.example.chook.recruitment.record.RecruitmentSearchCondition;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -52,7 +53,7 @@ public class RecruitmentRepositoryCustomImpl implements RecruitmentRepositoryCus
 
     whereCondition
       .and(recruitment.deletedAt.isNull())
-//      .and(recruitment.published)           // 현재 게시(결제) 기능이 없으므로
+      .and(publishedOnlyCondition(condition.publishedOnly()))
       .and(containsAnyKeyword(condition.keywordList()))
       .and(regionSidoEq(condition.regionSidoCode()))
       .and(regionSigunguEq(condition.regionSigunguCode()))
@@ -71,19 +72,31 @@ public class RecruitmentRepositoryCustomImpl implements RecruitmentRepositoryCus
       .from(recruitment);
 
     boolean isWageCriteria = listCriteria.isWageCriteria();
+    boolean needsIndividualJoin = isWageCriteria
+      || condition.wageType() != null
+      || condition.wageValueMin() != null;
+    boolean needsFoodTruckJoin = Boolean.TRUE.equals(condition.boothFeeRequired())
+      || Boolean.TRUE.equals(condition.electricityProvided())
+      || Boolean.TRUE.equals(condition.prepaid());
+
+    if (needsIndividualJoin) {
+      resultQuery.join(recruitmentIndividual).on(recruitmentIndividual.recruit.eq(recruitment));
+      countQuery.join(recruitmentIndividual).on(recruitmentIndividual.recruit.eq(recruitment));
+    }
+    if (needsFoodTruckJoin) {
+      resultQuery.join(recruitmentFoodTruck).on(recruitmentFoodTruck.recruit.eq(recruitment));
+      countQuery.join(recruitmentFoodTruck).on(recruitmentFoodTruck.recruit.eq(recruitment));
+    }
+
+    whereCondition
+      .and(wageTypeEq(condition.wageType()))
+      .and(wageValueBetween(condition.wageValueMin(), condition.wageValueMax()))
+      .and(boothFeeRequiredEq(condition.boothFeeRequired()))
+      .and(electricityProvidedEq(condition.electricityProvided()))
+      .and(prepaidEq(condition.prepaid()));
 
     if (isWageCriteria) {
-
-      resultQuery
-        .join(recruitmentIndividual)
-        .on(recruitmentIndividual.recruit.eq(recruitment));
-
-      countQuery
-        .join(recruitmentIndividual)
-        .on(recruitmentIndividual.recruit.eq(recruitment));
-
-      whereCondition
-        .and(recruitmentIndividual.wageType.eq(listCriteria.getWageType()));
+      whereCondition.and(recruitmentIndividual.wageType.eq(listCriteria.getWageType()));
     }
 
     resultQuery.where(whereCondition);
@@ -163,6 +176,30 @@ public class RecruitmentRepositoryCustomImpl implements RecruitmentRepositoryCus
 
   private BooleanExpression statusEq(RecruitmentStatus status) {
     return status == null ? null : recruitment.status.eq(status);
+  }
+
+  private BooleanExpression publishedOnlyCondition(Boolean publishedOnly) {
+    return Boolean.TRUE.equals(publishedOnly) ? recruitment.publishedAt.isNotNull() : null;
+  }
+
+  private BooleanExpression wageTypeEq(RecruitmentWageType wageType) {
+    return wageType == null ? null : recruitmentIndividual.wageType.eq(wageType);
+  }
+
+  private BooleanExpression wageValueBetween(Integer min, Integer max) {
+    return (min == null || max == null) ? null : recruitmentIndividual.wageValue.between(min, max);
+  }
+
+  private BooleanExpression boothFeeRequiredEq(Boolean value) {
+    return Boolean.TRUE.equals(value) ? recruitmentFoodTruck.boothFeeRequired.isTrue() : null;
+  }
+
+  private BooleanExpression electricityProvidedEq(Boolean value) {
+    return Boolean.TRUE.equals(value) ? recruitmentFoodTruck.electricityProvided.isTrue() : null;
+  }
+
+  private BooleanExpression prepaidEq(Boolean value) {
+    return Boolean.TRUE.equals(value) ? recruitmentFoodTruck.prepaid.isTrue() : null;
   }
 
   private BooleanExpression workingStartTimeGoe(LocalTime time) {

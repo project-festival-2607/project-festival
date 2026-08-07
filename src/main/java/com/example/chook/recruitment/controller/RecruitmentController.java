@@ -5,6 +5,8 @@ import com.example.chook.festival.FestivalRepository;
 import com.example.chook.file.dto.FileDTO;
 import com.example.chook.file.record.FileResource;
 import com.example.chook.file.service.FileService;
+import com.example.chook.member.dto.LoginResponseDTO;
+import com.example.chook.member.entity.enums.MemberRole;
 import com.example.chook.recruitment.dto.RecruitmentCreateDTO;
 import com.example.chook.recruitment.dto.RecruitmentListDTO;
 import com.example.chook.recruitment.dto.RecruitmentManagementListDTO;
@@ -18,6 +20,7 @@ import com.example.chook.recruitment.record.RecruitmentSearchCondition;
 import com.example.chook.recruitment.service.RecruitmentService;
 import com.example.chook.region.dto.RegionDTO;
 import com.example.chook.region.service.RegionService;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -52,14 +55,16 @@ public class RecruitmentController {
   private final FileService fileService;
 
   // 헤더 "모집공고"/"축제인력모집" 진입점. 구직자/비로그인은 검색 필터가 붙은 리스트,
-  // 구인자는 검색 없이 "구인공고 등록" 버튼만 보이는 동일한 리스트를 봄 (recruiter 쿼리스트링으로 임시 구분)
+  // 구인자는 검색 없이 "구인공고 등록" 버튼만 보이는 동일한 리스트를 봄 (세션의 로그인 회원 role로 구분)
   @GetMapping("/list")
   public void list(Model model,
                    @RequestParam(name = "pageIdx", required = false, defaultValue = "1") int pageIdx,
                    @Valid @ModelAttribute RecruitmentSearchForm form,
                    BindingResult bindingResult,
-                   // ponytail: 로그인 구현 전 임시 - admin_board의 ?admin=true와 동일하게 쿼리스트링으로 구인자 여부 확인
-                   @RequestParam(name = "recruiter", required = false, defaultValue = "false") boolean recruiter) {
+                   HttpSession session) {
+    LoginResponseDTO loginMember = (LoginResponseDTO) session.getAttribute("loginMember");
+    boolean recruiter = loginMember != null && loginMember.getRole() == MemberRole.RECRUITER;
+
     if (form.workingStartDate() != null && form.workingEndDate() != null
       && form.workingStartDate().isAfter(form.workingEndDate()))
       bindingResult.rejectValue("workingEndDate",
@@ -68,7 +73,7 @@ public class RecruitmentController {
       );
     if (bindingResult.hasErrors()) return;
 
-    RecruitmentSearchCondition condition = mapper.toCondition(form);
+    RecruitmentSearchCondition condition = mapper.toCondition(form, recruiter);
     Page<RecruitmentListDTO> page = recruitmentService.getPage(pageIdx, condition);
     model.addAttribute("page", page);
 

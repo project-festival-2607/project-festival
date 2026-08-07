@@ -3,6 +3,7 @@ package com.example.chook.recruitment.record;
 import com.example.chook.recruitment.entity.enums.RecruitmentCategory;
 import com.example.chook.recruitment.entity.enums.RecruitmentListCriteria;
 import com.example.chook.recruitment.entity.enums.RecruitmentStatus;
+import com.example.chook.recruitment.entity.enums.RecruitmentWageType;
 import lombok.Builder;
 
 import java.time.LocalDate;
@@ -22,6 +23,7 @@ public record RecruitmentSearchCondition(
 
   // 구직자 검색 전용
   RecruitmentListCriteria listCriteria,
+  Boolean publishedOnly,
 
   LocalTime workingStartTime,
   LocalTime workingEndTime,
@@ -29,7 +31,17 @@ public record RecruitmentSearchCondition(
   LocalDate workingEndDate,
 
   // 구인자 검색 전용
-  String festivalContentId
+  String festivalContentId,
+
+  // 알바(INDIVIDUAL) 전용 필터
+  RecruitmentWageType wageType,
+  Integer wageValueMin,
+  Integer wageValueMax,
+
+  // 푸드트럭(FOOD_TRUCK) 전용 필터
+  Boolean boothFeeRequired,
+  Boolean electricityProvided,
+  Boolean prepaid
 
 ) {
 
