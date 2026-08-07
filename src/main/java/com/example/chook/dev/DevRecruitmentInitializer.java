@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Random;
@@ -66,14 +67,18 @@ public class DevRecruitmentInitializer {
     String recruitmentTitle = "기타 공고";
     Recruitment savedRecruitment = addRecruitment(festival, RecruitmentCategory.ETC, recruitmentTitle);
     savedRecruitment.setTitle(String.format("기타 공고 #%d", savedRecruitment.getId()));
-    log.debug("\"{}\" 공고가 추가됨: {}", recruitmentTitle, savedRecruitment);
+    // 구직자 목록 페이지 검증용
+    savedRecruitment.setPublished(true);
+    savedRecruitment.setPublishedAt(LocalDateTime.now());
   }
 
   private void addRecruitmentEquipment(Festival festival) {
     String recruitmentTitle = "장비 공고";
     Recruitment savedRecruitment = addRecruitment(festival, RecruitmentCategory.EQUIPMENT, recruitmentTitle);
     savedRecruitment.setTitle(String.format("장비 공고 #%d", savedRecruitment.getId()));
-    log.debug("\"{}\" 공고가 추가됨: {}", recruitmentTitle, savedRecruitment);
+    // 구직자 목록 페이지 검증용
+    savedRecruitment.setPublished(true);
+    savedRecruitment.setPublishedAt(LocalDateTime.now());
   }
 
   private void addRecruitmentFoodTruck(Festival festival) {
@@ -81,7 +86,9 @@ public class DevRecruitmentInitializer {
     Recruitment savedRecruitment = addRecruitment(festival, RecruitmentCategory.FOOD_TRUCK, recruitmentTitle);
     savedRecruitment.setTitle(String.format("푸드트럭 공고 #%d", savedRecruitment.getId()));
     addRecruitmentFoodTruckSpecific(savedRecruitment);
-    log.debug("\"{}\" 공고가 추가됨: {}", recruitmentTitle, savedRecruitment);
+    // 구직자 목록 페이지 검증용
+    savedRecruitment.setPublished(true);
+    savedRecruitment.setPublishedAt(LocalDateTime.now());
   }
 
   private void addRecruitmentIndividual(Festival festival) {
@@ -89,7 +96,9 @@ public class DevRecruitmentInitializer {
     Recruitment savedRecruitment = addRecruitment(festival, RecruitmentCategory.INDIVIDUAL, recruitmentTitle);
     savedRecruitment.setTitle(String.format("일반 구인 공고 #%d", savedRecruitment.getId()));
     addRecruitmentIndividualSpecific(savedRecruitment);
-    log.debug("\"{}\" 공고가 추가됨: {}", recruitmentTitle, savedRecruitment);
+    // 구직자 목록 페이지 검증용
+    savedRecruitment.setPublished(true);
+    savedRecruitment.setPublishedAt(LocalDateTime.now());
   }
 
   private Recruitment addRecruitment(Festival festival, RecruitmentCategory category, String recruitmentTitle) {
@@ -119,11 +128,12 @@ public class DevRecruitmentInitializer {
   }
 
   private void addRecruitmentIndividualSpecific(Recruitment recruitment) {
+    RecruitmentWageType[] wageTypes = RecruitmentWageType.values();
     recruitmentIndividualRepository.save(
       RecruitmentIndividual.builder()
         .recruit(recruitment)
-        .wageType(RecruitmentWageType.HOURLY)
-        .wageValue(random.nextInt(3, 10 + 1) * 5000)
+        .wageType(wageTypes[random.nextInt(wageTypes.length)])
+        .wageValue(random.nextInt(3, 30 + 1) * 5000)
         .build()
     );
   }
