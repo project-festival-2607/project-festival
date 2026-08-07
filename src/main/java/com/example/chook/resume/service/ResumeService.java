@@ -135,7 +135,7 @@ public interface ResumeService {
     }
 
     // 이력서 등록하기 기능
-    void register(ResumeRequestDTO resumeRequestDTO, Long memberId);
+    Long register(ResumeRequestDTO resumeRequestDTO, Long memberId);
 
     // 이력서 조회 기능
     ResumeResponseDTO getResume(Long resumeId);

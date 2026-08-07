@@ -30,14 +30,14 @@ public class ResumeServiceImpl implements ResumeService{
 
     // 이력서 등록하기 기능
     @Override
-    public void register(ResumeRequestDTO resumeRequestDTO, Long resumeId) {
+    public Long register(ResumeRequestDTO resumeRequestDTO, Long memberId) {
         // 회원 정보 조회
-        Member member = memberRepository.findById(resumeId)
+        Member member = memberRepository.findById(memberId)
                 .orElseThrow();
 
         Resume resume = resumeDtoToEntity(resumeRequestDTO, member);
 
-        resumeRepository.save(resume);
+        Resume savedResume = resumeRepository.save(resume);
 
         // 프로필 파일 저장
         if (resumeRequestDTO.getProfileFileUuid() != null) {
@@ -109,6 +109,7 @@ public class ResumeServiceImpl implements ResumeService{
                 }
             }
         }
+        return savedResume.getId();
     }
 
     // 이력서 조회 하기 기능
@@ -273,7 +274,7 @@ public class ResumeServiceImpl implements ResumeService{
                 resume.getId()
         );
         // 포트폴리오 삭제
-        resumePortfolioRepository.deleteAllByResume_Id(
+        resumePortfolioRepository.deleteByResume_Id(
                 resume.getId()
         );
         // 프로필파일 삭제

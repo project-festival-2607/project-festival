@@ -11,5 +11,5 @@ public interface ResumePortfolioRepository extends JpaRepository<ResumePortfolio
     List<ResumePortfolio> findByResume_Id(Long resumeId);
 
     // 포트폴리오 삭제
-    void deleteAllByResume_Id(Long resumeId);
+    void deleteByResume_Id(Long resumeId);
 }

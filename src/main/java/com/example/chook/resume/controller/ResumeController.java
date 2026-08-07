@@ -39,11 +39,11 @@ public class ResumeController {
                 authentication.getName()
         ).orElseThrow();
 
-        resumeService.register(
+        Long resumeId = resumeService.register(
                 resumeRequestDTO,
                 member.getId()
         );
-        return "redirect:/resume/read";
+        return "redirect:/resume/read?resumeId=" + resumeId;
     }
 
     // 이력서 조회
