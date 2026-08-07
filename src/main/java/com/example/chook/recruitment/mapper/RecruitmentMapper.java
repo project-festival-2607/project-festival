@@ -6,7 +6,9 @@ import com.example.chook.recruitment.entity.Recruitment;
 import com.example.chook.recruitment.entity.RecruitmentFoodTruck;
 import com.example.chook.recruitment.entity.RecruitmentIndividual;
 import com.example.chook.recruitment.entity.enums.RecruitmentCategory;
+import com.example.chook.recruitment.entity.enums.RecruitmentListCriteria;
 import com.example.chook.recruitment.entity.enums.RecruitmentStatus;
+import com.example.chook.recruitment.entity.enums.RecruitmentWageType;
 import com.example.chook.recruitment.form.RecruitmentCreateForm;
 import com.example.chook.recruitment.form.RecruitmentManagementSearchForm;
 import com.example.chook.recruitment.form.RecruitmentSearchForm;
@@ -212,12 +214,30 @@ public class RecruitmentMapper {
       builder.wageValueMax(form.wageValue() + delta);
     }
 
+    // 알바 카테고리에서 급여유형을 고르면 해당 유형의 급여 내림차순으로 정렬
+    if (form.category() == RecruitmentCategory.INDIVIDUAL && form.wageType() != null) {
+      RecruitmentListCriteria wageListCriteria = toWageListCriteria(form.wageType());
+      if (wageListCriteria != null) {
+        builder.listCriteria(wageListCriteria);
+      }
+    }
+
     // 구직자는 게시(공개)된 모집중 공고만 보고, 구인자는 상태/게시 여부와 무관하게 전부 봄
     if (!recruiter) {
       builder.status(RecruitmentStatus.OPEN).publishedOnly(true);
     }
 
     return builder.build();
+  }
+
+  private RecruitmentListCriteria toWageListCriteria(RecruitmentWageType wageType) {
+    return switch (wageType) {
+      case HOURLY -> RecruitmentListCriteria.WAGE_HOURLY;
+      case DAILY -> RecruitmentListCriteria.WAGE_DAILY;
+      case WEEKLY -> RecruitmentListCriteria.WAGE_WEEKLY;
+      case PER_TASK -> RecruitmentListCriteria.WAGE_PER_TASK;
+      case NEGOTIABLE -> null;
+    };
   }
 
   private RecruitmentUpdateDTO.RecruitmentUpdateDTOBuilder toUpdateDtoBuilder(Recruitment entity) {

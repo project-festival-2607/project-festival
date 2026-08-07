@@ -108,6 +108,7 @@ public class RecruitmentController {
   public String view(@PathVariable Long id, Model model) {
     RecruitmentResponseDTO responseDto = recruitmentService.getRecruitment(id);
     model.addAttribute("recruitment", responseDto);
+    log.info("recruitment view: {}", responseDto);
     return "recruitment/detail";
   }
 
