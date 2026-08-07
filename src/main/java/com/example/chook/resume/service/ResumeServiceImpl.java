@@ -274,7 +274,7 @@ public class ResumeServiceImpl implements ResumeService{
                 resume.getId()
         );
         // 포트폴리오 삭제
-        resumePortfolioRepository.deleteByResume_Id(
+        resumePortfolioRepository.deleteAllByResume_Id(
                 resume.getId()
         );
         // 프로필파일 삭제
