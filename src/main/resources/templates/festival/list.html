@@ -98,16 +98,18 @@
 <!--    검색라인        -->
 
     <div class="fes-form container">
-        <form action="/festival/list">
-            <select name="type" class="form-select">
-                <option>카테고리</option>
+        <form action="/festival/list" class="festival-search">
+            <select name="type" class="search-select">
                 <option value="t">축제이름</option>
                 <option value="c">축제내용</option>
                 <option value="r">지역</option>
             </select>
-            <input name="keyword" type="text" placeholder="검색어를 입력하세요">
+
+            <input name="keyword" type="text" class="search-input" placeholder="검색어를 입력하세요">
+
             <input type="hidden" name="pageNo" value="1">
-            <button class="searchBtn" type="submit">검색</button>
+
+            <button class="search-btn" type="submit">검색</button>
         </form>
     </div>
 
