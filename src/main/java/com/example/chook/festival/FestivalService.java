@@ -1,5 +1,6 @@
 package com.example.chook.festival;
 
+import com.example.chook.member.entity.Member;
 import org.springframework.data.domain.Page;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -12,6 +13,7 @@ public interface FestivalService {
     default FestivalDTO convertEntityToDTO(Festival festival){
         return FestivalDTO.builder()
                 .contentId(festival.getContentId())
+                .member(festival.getMember().getId())
                 .title(festival.getTitle())
                 .homepage(festival.getHomepage())
                 .mapX(festival.getMapX())
@@ -26,8 +28,8 @@ public interface FestivalService {
                 .playTime(festival.getPlayTime())
                 .program(festival.getProgram())
                 .useTime(festival.getUseTime())
-                .startDate(festival.getStartDate().toString())
-                .endDate(festival.getEndDate().toString())
+                .startDate(festival.getStartDate() != null ? festival.getStartDate().toString() : null)
+                .endDate(festival.getEndDate() != null ? festival.getEndDate().toString() : null)
                 .firstImage(festival.getFirstImage())
                 .secondImage(festival.getSecondImage())
                 .build();
@@ -49,8 +51,17 @@ public interface FestivalService {
             endDate = LocalDate.parse(end, formatter);
         }
 
+        Member member = null;
+        if(festivalDTO.getMember() != null && festivalDTO.getMember() != 0L){
+            member = Member.builder()
+                    .id(festivalDTO.getMember())
+                    .build();
+        }
+
+
         return Festival.builder()
                 .contentId(festivalDTO.getContentId())
+                .member(member)
                 .title(festivalDTO.getTitle())
                 .homepage(festivalDTO.getHomepage())
                 .mapX(festivalDTO.getMapX())

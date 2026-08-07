@@ -6,6 +6,8 @@ import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -78,4 +80,9 @@ public class  Festival {
     )
     @ToString.Exclude
     private Member member;
+
+    @Builder.Default
+    @OneToMany(mappedBy = "festival", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @ToString.Exclude
+    private List<FestivalFile> festivalFiles = new ArrayList<>();
 }
