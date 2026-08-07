@@ -56,19 +56,19 @@ public class MemberController {
 
     // 회원가입
     @GetMapping("/signup")
-    public String signupSelect() {
+    public String signUpSelect() {
         return "member/signup";
     }
 
     // 구직자 회원가입
     @GetMapping("/signup/job-seeker")
-    public String signupJobSeekerForm() {
+    public String signUpJobSeekerForm() {
         return "member/signup-job";
     }
 
     // 구직자 회원가입 처리
     @PostMapping("/signup/job-seeker")
-    public String signupJobSeeker(
+    public String signUpJobSeeker(
             @ModelAttribute JobSeekerSignUpRequestDTO requestDTO,
             HttpSession session,
             RedirectAttributes redirectAttributes
@@ -85,13 +85,13 @@ public class MemberController {
 
     // 구인자 회원가입
     @GetMapping("/signup/employer")
-    public String signupEmployerForm() {
+    public String signUpEmployerForm() {
         return "member/signup-recruit";
     }
 
     // 구인자 회원가입 처리
     @PostMapping("/signup/employer")
-    public String signupEmployer(
+    public String signUpEmployer(
             @ModelAttribute EmployerSignUpRequestDTO requestDTO,
             HttpSession session,
             RedirectAttributes redirectAttributes

@@ -1,34 +1,5 @@
 console.log("LIST IN");
 
-document.querySelectorAll(".fes-img").forEach(img => {
-
-    img.addEventListener("mousemove", (e) => {
-
-        const rect = img.getBoundingClientRect();
-
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
-
-        const centerX = rect.width / 2;
-        const centerY = rect.height / 2;
-
-        const rotateY = ((x - centerX) / centerX) * 5;
-        const rotateX = -((y - centerY) / centerY) * 5;
-
-        img.style.transform =
-            `perspective(1000px)
-             rotateX(${rotateX}deg)
-             rotateY(${rotateY}deg)
-             scale(1.05)`;
-    });
-
-    img.addEventListener("mouseleave", () => {
-        img.style.transform =
-            "perspective(1000px) rotateX(0) rotateY(0) scale(1)";
-    });
-
-});
-
 document.querySelector(".topBtn").addEventListener("click", (e) => {
     window.scrollTo({
         top: 0,
@@ -36,6 +7,29 @@ document.querySelector(".topBtn").addEventListener("click", (e) => {
     });
 });
 
+const ImageHoverAnimation = () => {
+    document.querySelectorAll(".fes-img").forEach(img => {
+        img.addEventListener("mousemove", (e) => {
+            const rect = img.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+
+            const rotateY = ((x - centerX) / centerX) * 5;
+            const rotateX = -((y - centerY) / centerY) * 5;
+
+            img.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.05)`;
+        });
+
+        img.addEventListener("mouseleave", () => {
+            img.style.transform = "perspective(1000px) rotateX(0) rotateY(0) scale(1)";
+        });
+    });
+};
+
+ImageHoverAnimation();
 
 // monthBtn
 for(let i = 1; i <=12; i ++){
@@ -70,6 +64,8 @@ const renderMonthFes = (data) => {
         return;
     }
 
+    let html = '';
+
     data.forEach((fes) => {
 
             let statusClass = 'past';
@@ -86,7 +82,7 @@ const renderMonthFes = (data) => {
                 statusText = '종료';
             }
 
-            let html = `
+            html += `
             <div class="fes-box">
                 <div class="fes-pro ${statusClass}">${statusText}</div>
 
@@ -104,7 +100,9 @@ const renderMonthFes = (data) => {
             </div>
         `;
 
-        container.innerHTML += html;
+        container.innerHTML = html;
     });
+
+    ImageHoverAnimation();
 
 }

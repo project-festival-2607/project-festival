@@ -23,7 +23,12 @@
     /*border-top: 1px solid #2C2C2C;*/
     /*border-bottom: 1px solid #2C2C2C;*/
 
-    background: #ccc2a4;
+    /*background: #ccc2a4;*/
+
+    background-image: url("https://images.unsplash.com/photo-1583173451851-dd9ba01f891e?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
 
     display: flex;
     flex-direction: column;
@@ -247,56 +252,114 @@
 
 /*검색창*/
 
+/*.fes-form {*/
+/*    display: flex;*/
+/*    flex-direction: column;*/
+/*    justify-content: center;*/
+/*    align-items: center;*/
+
+/*    margin-top: 30px;*/
+/*}*/
+
+/*.fes-form > form {*/
+/*    width: 70%;*/
+/*    display: flex;*/
+/*    flex-direction: row;*/
+/*    justify-content: center;*/
+/*    align-items: center;*/
+/*    gap: 10px;*/
+/*}*/
+
+/*.fes-form > form > select {*/
+/*    width: 140px;*/
+/*    height: 50px;*/
+/*}*/
+
+/*.fes-form > form > input {*/
+/*    width: 600px;*/
+/*    height: 50px;*/
+/*    outline: none;*/
+/*    border: 1px solid #ccc2a4;*/
+/*    border-radius: 5px;*/
+/*    padding: 0 15px;*/
+/*}*/
+
+/*.fes-form > form > input:focus {*/
+/*    border: 1px solid #597cff;*/
+/*}*/
+
+/*.fes-form > form > button {*/
+/*    width: 90px;*/
+/*    height: 50px;*/
+/*    background: #FEFEFE;*/
+/*    border: 1px solid #ccc2a4;*/
+/*    color: #ccc2a4;*/
+/*    border-radius: 5px;*/
+
+/*    transition: 0.3s ease;*/
+/*}*/
+
+/*.fes-form > form > button:hover {*/
+/*    background: #ccc2a4;*/
+/*    color: #FEFEFE;*/
+/*}*/
+
 .fes-form {
+    margin-top: 20px;
+}
+
+.festival-search{
+    width: 100%;
+    max-width: 1100px;
+    margin: 0 auto;
+
     display: flex;
-    flex-direction: column;
-    justify-content: center;
     align-items: center;
 
-    margin-top: 30px;
+    border: 1px solid #ddd;
+    border-radius: 40px;
+    background: #fff;
+    padding: 8px;
 }
 
-.fes-form > form {
-    width: 70%;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-}
-
-.fes-form > form > select {
-    width: 140px;
-    height: 50px;
-}
-
-.fes-form > form > input {
-    width: 600px;
-    height: 50px;
-    outline: none;
-    border: 1px solid #ccc2a4;
-    border-radius: 5px;
+.search-select{
+    width: 130px;
+    border: none;
+    background: transparent;
+    font-size: 18px;
+    font-weight: 700;
     padding: 0 15px;
+    outline: none;
 }
 
-.fes-form > form > input:focus {
-    border: 1px solid #597cff;
+.search-input{
+    flex: 1;
+    border: none;
+    outline: none;
+    height: 40px;
+    font-size: 18px;
+    padding: 0 20px;
 }
 
-.fes-form > form > button {
-    width: 90px;
-    height: 50px;
-    background: #FEFEFE;
-    border: 1px solid #ccc2a4;
-    color: #ccc2a4;
-    border-radius: 5px;
-
-    transition: 0.3s ease;
+.search-btn{
+    width: 110px;
+    height: 40px;
+    border: none;
+    border-radius: 26px;
+    background: #dc3545;
+    color: #fff;
+    font-size: 18px;
+    font-weight: 700;
+    transition: .2s;
 }
 
-.fes-form > form > button:hover {
-    background: #ccc2a4;
-    color: #FEFEFE;
+.search-btn:hover{
+    background: #c82333;
+}
+
+.festival-search:focus-within{
+    border-color: #dc3545;
+    box-shadow: 0 0 0 3px rgba(220,53,69,.12);
 }
 
 
