@@ -56,10 +56,6 @@ public class DevFestivalDataInitializer {
           ))
           .build()
       );
-
     }
-
-
   }
-
 }
