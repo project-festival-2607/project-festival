@@ -88,4 +88,11 @@ public class Recruitment {
   @Column(name = "deleted_at")
   private LocalDateTime deletedAt;
 
+  @OneToOne(mappedBy = "recruit", cascade = CascadeType.REMOVE, orphanRemoval = true)
+  @ToString.Exclude
+  private RecruitmentFoodTruck recruitmentFoodTruck;
+
+  @OneToOne(mappedBy = "recruit", cascade = CascadeType.REMOVE, orphanRemoval = true)
+  @ToString.Exclude
+  private RecruitmentIndividual recruitmentIndividual;
 }

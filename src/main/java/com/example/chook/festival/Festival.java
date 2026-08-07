@@ -1,6 +1,7 @@
 package com.example.chook.festival;
 
 import com.example.chook.member.entity.Member;
+import com.example.chook.recruitment.entity.Recruitment;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -85,4 +86,10 @@ public class  Festival {
     @OneToMany(mappedBy = "festival", cascade = CascadeType.REMOVE, orphanRemoval = true)
     @ToString.Exclude
     private List<FestivalFile> festivalFiles = new ArrayList<>();
+
+    @Builder.Default
+    @OneToMany(mappedBy = "festival", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @ToString.Exclude
+    private List<Recruitment> recruitments = new ArrayList<>();
+
 }

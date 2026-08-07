@@ -108,7 +108,9 @@ public class FestivalServiceImpl implements FestivalService, ApplicationRunner {
 
     @Override
     public void remove(String id) {
-        festivalRepository.deleteById(id);
+        Festival festival = festivalRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 축제가 존재하지 않습니다."));
+
+        festivalRepository.delete(festival);
     }
 
 //    DB에서 API 요청 후 백그라운드에서 동기화
