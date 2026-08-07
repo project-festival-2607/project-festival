@@ -45,6 +45,49 @@
                     <input type="hidden" name="category" id="filterCategory" th:value="${form.category}">
                 </div>
 
+                <!-- 알바(INDIVIDUAL) 선택 시: 급여유형 체크박스 + 희망 금액 -->
+                <div class="recruit-sidebar-section recruit-sidebar-specific" data-category="INDIVIDUAL">
+                    <label>급여 유형</label>
+                    <div class="recruit-checkbox-group">
+                        <div class="form-check">
+                            <input type="radio" class="form-check-input" name="wageType" id="wageTypeHourly" value="HOURLY">
+                            <label class="form-check-label" for="wageTypeHourly">시급</label>
+                        </div>
+                        <div class="form-check">
+                            <input type="radio" class="form-check-input" name="wageType" id="wageTypeDaily" value="DAILY">
+                            <label class="form-check-label" for="wageTypeDaily">일급</label>
+                        </div>
+                        <div class="form-check">
+                            <input type="radio" class="form-check-input" name="wageType" id="wageTypeWeekly" value="WEEKLY">
+                            <label class="form-check-label" for="wageTypeWeekly">주급</label>
+                        </div>
+                        <div class="form-check">
+                            <input type="radio" class="form-check-input" name="wageType" id="wageTypePerTask" value="PER_TASK">
+                            <label class="form-check-label" for="wageTypePerTask">건당</label>
+                        </div>
+                    </div>
+                    <input type="number" name="wageValue" id="wageValue" placeholder="희망 금액(원)" min="0">
+                </div>
+
+                <!-- 푸드트럭(FOOD_TRUCK) 선택 시: 조건 체크박스 -->
+                <div class="recruit-sidebar-section recruit-sidebar-specific" data-category="FOOD_TRUCK">
+                    <label>푸드트럭 조건</label>
+                    <div class="recruit-checkbox-group">
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" name="boothFeeRequired" id="filterBoothFeeRequired" value="true">
+                            <label class="form-check-label" for="filterBoothFeeRequired">입점료</label>
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" name="electricityProvided" id="filterElectricityProvided" value="true">
+                            <label class="form-check-label" for="filterElectricityProvided">전기사용</label>
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" name="prepaid" id="filterPrepaid" value="true">
+                            <label class="form-check-label" for="filterPrepaid">선결제</label>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="recruit-sidebar-section">
                     <label for="filterSido">지역</label>
                     <select name="regionSidoCode" id="filterSido">
@@ -86,10 +129,6 @@
                     <select name="listCriteria" id="listCriteria">
                         <option value="LATEST" th:selected="${form.listCriteria == null or form.listCriteria.name() == 'LATEST'}">최신순</option>
                         <option value="DEADLINE" th:selected="${form.listCriteria != null and form.listCriteria.name() == 'DEADLINE'}">마감임박순</option>
-                        <option value="WAGE_HOURLY" class="recruit-wage-option" th:selected="${form.listCriteria != null and form.listCriteria.name() == 'WAGE_HOURLY'}">시급순</option>
-                        <option value="WAGE_DAILY" class="recruit-wage-option" th:selected="${form.listCriteria != null and form.listCriteria.name() == 'WAGE_DAILY'}">일급순</option>
-                        <option value="WAGE_WEEKLY" class="recruit-wage-option" th:selected="${form.listCriteria != null and form.listCriteria.name() == 'WAGE_WEEKLY'}">주급순</option>
-                        <option value="WAGE_PER_TASK" class="recruit-wage-option" th:selected="${form.listCriteria != null and form.listCriteria.name() == 'WAGE_PER_TASK'}">건당순</option>
                     </select>
                 </div>
 

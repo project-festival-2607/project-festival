@@ -116,6 +116,53 @@
     color: #928c76;
 }
 
+.recruit-sidebar-specific[data-category="INDIVIDUAL"] > label {
+    font-size: 15px;
+}
+
+.recruit-checkbox-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 8px;
+}
+
+.recruit-checkbox-group .form-check {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding-left: 0;
+    margin-bottom: 0;
+    min-height: 0;
+}
+
+.recruit-checkbox-group .form-check-input {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 14px;
+    height: 14px;
+    aspect-ratio: 1 / 1;
+    margin: 0;
+    padding: 0;
+    float: none;
+    box-sizing: border-box;
+    border: 1px solid #ccc2a4;
+    border-radius: 50%;
+    background-color: #fff;
+    order: 2;
+}
+
+.recruit-checkbox-group .form-check-input:checked {
+    background-color: #afa992;
+    border-color: #afa992;
+}
+
+.recruit-checkbox-group .form-check-label {
+    font-size: 15px;
+    color: #2c2c2c;
+    order: 1;
+}
+
 /* 리모컨 느낌의 칩(pill) 버튼 그룹 */
 .recruit-chip-group {
     display: flex;
