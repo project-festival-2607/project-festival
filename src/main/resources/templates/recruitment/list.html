@@ -179,14 +179,14 @@
                 <nav th:if="${pagingHandler.totalPageCount > 1}">
                     <ul class="pagination justify-content-center">
                         <li class="page-item" th:if="${pagingHandler.prevBtnActive}">
-                            <a class="page-link" th:href="@{/recruitment/list(pageIdx=${pagingHandler.startPageIdx - 1}, recruiter=${recruiter}, keywords=${form.keywords}, category=${form.category}, listCriteria=${form.listCriteria}, regionSidoCode=${form.regionSidoCode}, regionSigunguCode=${form.regionSigunguCode}, workingStartDate=${form.workingStartDate}, workingEndDate=${form.workingEndDate}, workingStartTime=${form.workingStartTime}, workingEndTime=${form.workingEndTime})}">이전</a>
+                            <a class="page-link" th:href="@{/recruitment/list(pageIdx=${pagingHandler.pageIdx - 1}, recruiter=${recruiter}, keywords=${form.keywords}, category=${form.category}, listCriteria=${form.listCriteria}, regionSidoCode=${form.regionSidoCode}, regionSigunguCode=${form.regionSigunguCode}, workingStartDate=${form.workingStartDate}, workingEndDate=${form.workingEndDate}, workingStartTime=${form.workingStartTime}, workingEndTime=${form.workingEndTime})}">이전</a>
                         </li>
                         <li class="page-item" th:each="i : ${#numbers.sequence(pagingHandler.startPageIdx, pagingHandler.endPageIdx)}"
                             th:classappend="${i == pagingHandler.pageIdx} ? 'active'">
                             <a class="page-link" th:href="@{/recruitment/list(pageIdx=${i}, recruiter=${recruiter}, keywords=${form.keywords}, category=${form.category}, listCriteria=${form.listCriteria}, regionSidoCode=${form.regionSidoCode}, regionSigunguCode=${form.regionSigunguCode}, workingStartDate=${form.workingStartDate}, workingEndDate=${form.workingEndDate}, workingStartTime=${form.workingStartTime}, workingEndTime=${form.workingEndTime})}" th:text="${i}"></a>
                         </li>
                         <li class="page-item" th:if="${pagingHandler.nextBtnActive}">
-                            <a class="page-link" th:href="@{/recruitment/list(pageIdx=${pagingHandler.endPageIdx + 1}, recruiter=${recruiter}, keywords=${form.keywords}, category=${form.category}, listCriteria=${form.listCriteria}, regionSidoCode=${form.regionSidoCode}, regionSigunguCode=${form.regionSigunguCode}, workingStartDate=${form.workingStartDate}, workingEndDate=${form.workingEndDate}, workingStartTime=${form.workingStartTime}, workingEndTime=${form.workingEndTime})}">다음</a>
+                            <a class="page-link" th:href="@{/recruitment/list(pageIdx=${pagingHandler.pageIdx + 1}, recruiter=${recruiter}, keywords=${form.keywords}, category=${form.category}, listCriteria=${form.listCriteria}, regionSidoCode=${form.regionSidoCode}, regionSigunguCode=${form.regionSigunguCode}, workingStartDate=${form.workingStartDate}, workingEndDate=${form.workingEndDate}, workingStartTime=${form.workingStartTime}, workingEndTime=${form.workingEndTime})}">다음</a>
                         </li>
                     </ul>
                 </nav>
