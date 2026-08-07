@@ -34,7 +34,7 @@ public class PagingHandler<Element, Form> {
 
     this.endPageIdx = (int) Math.ceil(this.pageIdx / (double) PAGE_GROUP_SIZE) * PAGE_GROUP_SIZE;
     this.startPageIdx = endPageIdx - PAGE_GROUP_SIZE + 1;
-    this.endPageIdx = Math.min(this.endPageIdx, this.totalPageCount);
+    this.endPageIdx = Math.max(Math.min(this.endPageIdx, this.totalPageCount), startPageIdx);
 
     this.prevBtnActive = (this.startPageIdx != 1);
     this.nextBtnActive = (this.endPageIdx < this.totalPageCount);
