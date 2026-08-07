@@ -1,6 +1,7 @@
 package com.example.chook.member.repository;
 
 import com.example.chook.member.entity.Member;
+import com.example.chook.member.entity.enums.MemberRole;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -27,4 +28,9 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     // 소셜 로그인 이메일 중복 체크
     boolean existsByEmailAndDeletedAtIsNull(String email);
 
+    // member 강제 삭제용 메서드
+    void deleteByUsername(String username);
+
+    // 역할 별 member 조회
+    List<Member> findByRole(MemberRole role);
 }
