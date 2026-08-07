@@ -64,7 +64,7 @@
                     </a>
                 </div>
                 <div class="fes-date">
-                    <span th:text="${fes.startDate + ' ~ ' + fes.endDate}"></span>
+                    <span th:text="${(fes.startDate ?: '날짜 미정') + ' ~ ' + (fes.endDate ?: '날짜 미정')}"></span>
                 </div>
             </div>
         </div>
