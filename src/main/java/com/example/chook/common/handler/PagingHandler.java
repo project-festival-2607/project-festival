@@ -1,4 +1,4 @@
-package com.example.chook.recruitment.handler;
+package com.example.chook.common.handler;
 
 import lombok.Getter;
 import lombok.ToString;
