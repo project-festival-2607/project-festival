@@ -9,6 +9,15 @@
 <div class="container" style="max-width: 400px;">
     <h1 class="mb-4 text-center mt-5">로그인</h1>
 
+    <ul class="nav nav-tabs mb-4">
+        <li class="nav-item">
+            <button type="button" class="nav-link active" id="tab-personal">개인회원</button>
+        </li>
+        <li class="nav-item">
+            <button type="button" class="nav-link" id="tab-business">기업회원</button>
+        </li>
+    </ul>
+
     <div th:if="${FailureMsg != null}" class="alert alert-danger" role="alert">
         [[${FailureMsg}]]
     </div>
@@ -24,7 +33,15 @@
         </div>
         <button type="submit" class="btn btn-primary w-100">로그인</button>
     </form>
+
+    <div id="socialLoginArea" class="mt-3 d-grid gap-2">
+        <a href="/oauth2/authorization/google" class="btn btn-outline-dark">구글로 로그인</a>
+        <a href="/oauth2/authorization/naver" class="btn btn-outline-success">네이버로 로그인</a>
+        <a href="/oauth2/authorization/kakao" class="btn btn-outline-warning">카카오로 로그인</a>
+    </div>
+
     <a th:href="@{/member/signup}" class="btn btn-outline-primary w-100 mt-2">회원가입</a>
 </div>
+<script th:src="@{/js/member/loginTabs.js}"></script>
 </body>
 </html>
