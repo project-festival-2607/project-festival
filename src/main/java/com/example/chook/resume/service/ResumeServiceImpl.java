@@ -30,9 +30,9 @@ public class ResumeServiceImpl implements ResumeService{
 
     // 이력서 등록하기 기능
     @Override
-    public void register(ResumeRequestDTO resumeRequestDTO, Long memberId) {
+    public void register(ResumeRequestDTO resumeRequestDTO, Long resumeId) {
         // 회원 정보 조회
-        Member member = memberRepository.findById(memberId)
+        Member member = memberRepository.findById(resumeId)
                 .orElseThrow();
 
         Resume resume = resumeDtoToEntity(resumeRequestDTO, member);
