@@ -103,17 +103,75 @@
 
 .recruit-sidebar-row {
     display: flex;
-    align-items: center;
-    gap: 6px;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.recruit-sidebar-row > *:first-child {
+    align-self: flex-start;
+}
+
+.recruit-sidebar-row > *:nth-child(2) {
+    align-self: center;
+}
+
+.recruit-sidebar-row > *:last-child {
+    align-self: flex-end;
 }
 
 .recruit-sidebar-row input {
-    width: 0;
-    flex: 1;
+    width: 140px;
 }
 
 .recruit-sidebar-row span {
     color: #928c76;
+    font-size: 20px;
+    text-align: center;
+}
+
+.recruit-time-field {
+    position: relative;
+}
+
+.recruit-time-trigger {
+    width: 140px;
+    height: 38px;
+    padding: 0 10px;
+    border: 1px solid #ccc2a4;
+    border-radius: 6px;
+    background-color: #fff;
+    text-align: left;
+    font-size: 14px;
+    color: #2c2c2c;
+    cursor: pointer;
+}
+
+.recruit-time-popover {
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0;
+    z-index: 10;
+    background: #fff;
+    border: 1px solid #ccc2a4;
+    border-radius: 6px;
+    padding: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
+}
+
+.recruit-time-selects {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.recruit-time-selects select {
+    width: auto;
+    height: auto;
+    padding: 4px 6px;
 }
 
 .recruit-sidebar-specific[data-category="INDIVIDUAL"] > label {
