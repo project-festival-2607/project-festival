@@ -6,6 +6,8 @@ import com.example.chook.recruitment.entity.enums.RecruitmentStatus;
 import com.example.chook.region.entity.RegionSigungu;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -18,6 +20,7 @@ import java.time.LocalTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@EntityListeners(value = {AuditingEntityListener.class})
 public class Recruitment {
 
   @Id
@@ -62,10 +65,11 @@ public class Recruitment {
   @Column(name = "recruitment_count", nullable = false)
   private int recruitmentCount;
 
-  @Enumerated(EnumType.STRING)
-  @Column(name = "status", nullable = false, length = 10)
-  @Builder.Default
-  private RecruitmentStatus status = RecruitmentStatus.OPEN;
+  @Column(name = "working_start_date", nullable = false)
+  private LocalDate workingStartDate;
+
+  @Column(name = "working_end_date", nullable = false)
+  private LocalDate workingEndDate;
 
   @Column(name = "working_start_time", nullable = false)
   private LocalTime workingStartTime;
@@ -73,17 +77,17 @@ public class Recruitment {
   @Column(name = "working_end_time", nullable = false)
   private LocalTime workingEndTime;
 
-  @Column(name = "working_start_date", nullable = false)
-  private LocalDate workingStartDate;
-
-  @Column(name = "working_end_date", nullable = false)
-  private LocalDate workingEndDate;
-
+  @Enumerated(EnumType.STRING)
+  @Column(name = "status", nullable = false, length = 10)
   @Builder.Default
-  private boolean published = false;
+  private RecruitmentStatus status = RecruitmentStatus.DRAFT;
 
   @Column(name = "published_at")
   private LocalDateTime publishedAt;
+
+  @LastModifiedDate
+  @Column(name = "updated_at")
+  private LocalDateTime updatedAt;
 
   @Column(name = "deleted_at")
   private LocalDateTime deletedAt;
