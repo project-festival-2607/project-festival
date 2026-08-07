@@ -44,8 +44,6 @@ public class FestivalController {
                        @RequestParam(name = "keyword", required = false) String keyword,
                        @RequestParam(name = "month", required = false) String month
                        ){
-        // 프론트에서 API 요청하기 위해 심는 키 (백에서 요청하면 필요 X) 우선은 TEST로 놔둠
-        model.addAttribute("apikey", APIKEY);
 
         Page<FestivalDTO> list = festivalService.getList(pageNo, type, keyword, month);
         PagingHandler fes = new PagingHandler(list, pageNo, type, keyword, month);
