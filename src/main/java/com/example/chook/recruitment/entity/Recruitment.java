@@ -1,5 +1,6 @@
 package com.example.chook.recruitment.entity;
 
+import com.example.chook.common.entity.TimeBase;
 import com.example.chook.festival.Festival;
 import com.example.chook.recruitment.entity.enums.RecruitmentCategory;
 import com.example.chook.recruitment.entity.enums.RecruitmentStatus;
@@ -20,8 +21,7 @@ import java.time.LocalTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@EntityListeners(value = {AuditingEntityListener.class})
-public class Recruitment {
+public class Recruitment extends TimeBase {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -85,18 +85,14 @@ public class Recruitment {
   @Column(name = "published_at")
   private LocalDateTime publishedAt;
 
-  @LastModifiedDate
-  @Column(name = "updated_at")
-  private LocalDateTime updatedAt;
-
   @Column(name = "deleted_at")
   private LocalDateTime deletedAt;
 
-  @OneToOne(mappedBy = "recruit", cascade = CascadeType.REMOVE, orphanRemoval = true)
-  @ToString.Exclude
-  private RecruitmentFoodTruck recruitmentFoodTruck;
-
-  @OneToOne(mappedBy = "recruit", cascade = CascadeType.REMOVE, orphanRemoval = true)
+  @OneToOne(mappedBy = "recruitment", cascade = CascadeType.REMOVE, orphanRemoval = true)
   @ToString.Exclude
   private RecruitmentIndividual recruitmentIndividual;
+
+  @OneToOne(mappedBy = "recruitment", cascade = CascadeType.REMOVE, orphanRemoval = true)
+  @ToString.Exclude
+  private RecruitmentFoodTruck recruitmentFoodTruck;
 }
