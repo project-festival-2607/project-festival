@@ -25,7 +25,7 @@ public class Recruitment extends TimeBase {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "recruit_id")
+  @Column(name = "recruitment_id")
   private Long id;
 
   @ManyToOne(fetch = FetchType.LAZY)
