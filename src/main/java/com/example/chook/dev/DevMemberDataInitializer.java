@@ -46,6 +46,8 @@ public class DevMemberDataInitializer {
     long jobEquipCount
   ) {
 
+    log.info("테스트용 사용자 데이터 삽입 시작");
+
     if (memberRepository.count() == 0) {
 
       Set<Integer> generatedNumbers = new HashSet<>();
@@ -97,6 +99,8 @@ public class DevMemberDataInitializer {
         .point(1_000_000L)
         .build()
     );
+
+    log.info("테스트용 사용자 데이터 삽입 완료");
 
   }
 
