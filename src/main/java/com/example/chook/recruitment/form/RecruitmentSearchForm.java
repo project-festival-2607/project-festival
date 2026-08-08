@@ -46,6 +46,8 @@ public record RecruitmentSearchForm(
       electricityProvided = null;
       prepaid = null;
     }
+
+    listCriteria = listCriteria == null ? RecruitmentListCriteria.LATEST : listCriteria;
   }
 
   private String blankToNull(String string) {
