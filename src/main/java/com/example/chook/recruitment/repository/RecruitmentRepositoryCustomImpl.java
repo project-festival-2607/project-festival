@@ -4,7 +4,6 @@ import com.example.chook.recruitment.entity.Recruitment;
 import com.example.chook.recruitment.entity.RecruitmentFoodTruck;
 import com.example.chook.recruitment.entity.RecruitmentIndividual;
 import com.example.chook.recruitment.entity.enums.RecruitmentCategory;
-import com.example.chook.recruitment.entity.enums.RecruitmentListCriteria;
 import com.example.chook.recruitment.entity.enums.RecruitmentStatus;
 import com.example.chook.recruitment.entity.enums.RecruitmentWageType;
 import com.example.chook.recruitment.form.RecruitmentManagementForm;

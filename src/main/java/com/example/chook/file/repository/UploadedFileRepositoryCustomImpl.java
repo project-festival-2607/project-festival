@@ -44,7 +44,7 @@ public class UploadedFileRepositoryCustomImpl implements UploadedFileRepositoryC
 
   @Override
   public List<UnreferencedFile> findUnreferencedFiles() {
-    QAdminBoardFile  adminBoardFile = QAdminBoardFile.adminBoardFile;
+    QAdminBoardFile adminBoardFile = QAdminBoardFile.adminBoardFile;
     QProfileFile profileFile = QProfileFile.profileFile;
     QRecruitmentFile recruitmentFile = QRecruitmentFile.recruitmentFile;
     QResumeFile resumeFile = QResumeFile.resumeFile;

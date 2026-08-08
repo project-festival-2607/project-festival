@@ -7,8 +7,6 @@ import com.example.chook.recruitment.entity.enums.RecruitmentStatus;
 import com.example.chook.region.entity.RegionSigungu;
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
