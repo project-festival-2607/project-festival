@@ -28,6 +28,8 @@ public class DevFestivalDataInitializer {
   @Transactional
   public void generateSampleFestivals(long targetFestivalCount) {
 
+    log.info("테스트용 행사 데이터 삽입 시작");
+
     long festivalCountToAdd = Math.max(targetFestivalCount - festivalRepository.count(), 0);
     if (festivalCountToAdd == 0) return;
 
@@ -57,5 +59,8 @@ public class DevFestivalDataInitializer {
           .build()
       );
     }
+
+    log.info("테스트용 행사 데이터 삽입 완료");
+
   }
 }
