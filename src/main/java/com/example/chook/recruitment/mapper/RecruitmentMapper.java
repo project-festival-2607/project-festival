@@ -7,7 +7,9 @@ import com.example.chook.recruitment.entity.RecruitmentFoodTruck;
 import com.example.chook.recruitment.entity.RecruitmentIndividual;
 import com.example.chook.recruitment.entity.enums.RecruitmentCategory;
 import com.example.chook.recruitment.form.RecruitmentCreateForm;
+import com.example.chook.recruitment.form.RecruitmentManagementForm;
 import com.example.chook.recruitment.form.RecruitmentSearchForm;
+import com.example.chook.recruitment.record.RecruitmentManagementCondition;
 import com.example.chook.recruitment.record.RecruitmentSearchCondition;
 import com.example.chook.region.entity.RegionSigungu;
 import org.springframework.stereotype.Component;
@@ -198,6 +200,19 @@ public class RecruitmentMapper {
       .prepaid(form.prepaid())
       .build();
   }
+
+  public RecruitmentManagementCondition toCondition(RecruitmentManagementForm form, String userName) {
+    return RecruitmentManagementCondition.builder()
+      .festivalContentId(form.festivalContentId())
+      .festivalUserName(userName)
+      .category(form.category())
+      .status(form.status())
+      .isPublished(form.isPublished())
+      .isDeleted(form.isDeleted())
+      .listCriteria(form.listCriteria())
+      .build();
+  }
+
 
   // Entity → Recruitment*DTO.Recruitment*DTOBuilder
 

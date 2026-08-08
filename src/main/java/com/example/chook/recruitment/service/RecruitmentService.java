@@ -1,7 +1,7 @@
 package com.example.chook.recruitment.service;
 
 import com.example.chook.recruitment.dto.*;
-import com.example.chook.recruitment.form.RecruitmentManagementForm;
+import com.example.chook.recruitment.record.RecruitmentManagementCondition;
 import com.example.chook.recruitment.record.RecruitmentSearchCondition;
 import org.springframework.data.domain.Page;
 
@@ -19,5 +19,5 @@ public interface RecruitmentService {
 
   Page<RecruitmentListDTO> getPage(int pageIdx, RecruitmentSearchCondition condition);
 
-  Page<RecruitmentManagementListDTO> getPage(int pageIdx, RecruitmentManagementForm form);
+  Page<RecruitmentManagementListDTO> getPage(int pageIdx, RecruitmentManagementCondition condition);
 }

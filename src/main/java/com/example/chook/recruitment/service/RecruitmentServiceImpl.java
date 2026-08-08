@@ -9,8 +9,8 @@ import com.example.chook.recruitment.entity.Recruitment;
 import com.example.chook.recruitment.entity.RecruitmentFile;
 import com.example.chook.recruitment.entity.RecruitmentFoodTruck;
 import com.example.chook.recruitment.entity.RecruitmentIndividual;
-import com.example.chook.recruitment.form.RecruitmentManagementForm;
 import com.example.chook.recruitment.mapper.RecruitmentMapper;
+import com.example.chook.recruitment.record.RecruitmentManagementCondition;
 import com.example.chook.recruitment.record.RecruitmentSearchCondition;
 import com.example.chook.recruitment.repository.RecruitmentFileRepository;
 import com.example.chook.recruitment.repository.RecruitmentFoodTruckRepository;
@@ -205,10 +205,10 @@ public class RecruitmentServiceImpl implements RecruitmentService {
   }
 
   @Override
-  public Page<RecruitmentManagementListDTO> getPage(int pageIdx, RecruitmentManagementForm form) {
+  public Page<RecruitmentManagementListDTO> getPage(int pageIdx, RecruitmentManagementCondition condition) {
     Pageable pageable = PageRequest.of(pageIdx - 1, PAGE_SIZE);
     return recruitmentRepository
-      .searchRecruitments(form, pageable)
+      .searchRecruitments(condition, pageable)
       .map(this::buildManagementListDtoFromEntity);
   }
 
