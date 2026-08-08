@@ -10,6 +10,7 @@ import com.example.chook.member.dto.LoginResponseDTO;
 import com.example.chook.member.entity.enums.MemberRole;
 import com.example.chook.recruitment.dto.RecruitmentCreateDTO;
 import com.example.chook.recruitment.dto.RecruitmentListDTO;
+import com.example.chook.recruitment.dto.RecruitmentManagementListDTO;
 import com.example.chook.recruitment.dto.RecruitmentResponseDTO;
 import com.example.chook.recruitment.form.RecruitmentCreateForm;
 import com.example.chook.recruitment.form.RecruitmentManagementForm;
@@ -85,11 +86,19 @@ public class RecruitmentController {
     model.addAttribute("sidoList", regionService.getSidoList());
   }
 
-  @GetMapping("/manage/list")
+  @GetMapping("/manage")
   public void manageList(Model model,
                          @RequestParam(name = "pageIdx", required = false, defaultValue = "1") int pageIdx,
                          @Valid @ModelAttribute RecruitmentManagementForm form,
                          BindingResult bindingResult) {
+    if (bindingResult.hasErrors()) return;
+
+    Page<RecruitmentManagementListDTO> page = recruitmentService.getPage(pageIdx, form);
+    model.addAttribute("page", page);
+
+    PagingHandler<RecruitmentManagementListDTO, RecruitmentManagementForm> pagingHandler =
+      new PagingHandler<>(page, form, PAGINATION_SIZE, pageIdx);
+    model.addAttribute("pagingHandler", pagingHandler);
 
   }
 

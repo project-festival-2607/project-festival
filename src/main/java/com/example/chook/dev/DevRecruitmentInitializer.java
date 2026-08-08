@@ -6,6 +6,7 @@ import com.example.chook.recruitment.entity.Recruitment;
 import com.example.chook.recruitment.entity.RecruitmentFoodTruck;
 import com.example.chook.recruitment.entity.RecruitmentIndividual;
 import com.example.chook.recruitment.entity.enums.RecruitmentCategory;
+import com.example.chook.recruitment.entity.enums.RecruitmentStatus;
 import com.example.chook.recruitment.entity.enums.RecruitmentWageType;
 import com.example.chook.recruitment.repository.RecruitmentFoodTruckRepository;
 import com.example.chook.recruitment.repository.RecruitmentIndividualRepository;
@@ -68,7 +69,7 @@ public class DevRecruitmentInitializer {
     Recruitment savedRecruitment = addRecruitment(festival, RecruitmentCategory.ETC, recruitmentTitle);
     savedRecruitment.setTitle(String.format("기타 공고 #%d", savedRecruitment.getId()));
     // 구직자 목록 페이지 검증용
-    savedRecruitment.setPublished(true);
+    savedRecruitment.setStatus(RecruitmentStatus.RECRUITING);
     savedRecruitment.setPublishedAt(LocalDateTime.now());
   }
 
@@ -77,7 +78,7 @@ public class DevRecruitmentInitializer {
     Recruitment savedRecruitment = addRecruitment(festival, RecruitmentCategory.EQUIPMENT, recruitmentTitle);
     savedRecruitment.setTitle(String.format("장비 공고 #%d", savedRecruitment.getId()));
     // 구직자 목록 페이지 검증용
-    savedRecruitment.setPublished(true);
+    savedRecruitment.setStatus(RecruitmentStatus.RECRUITING);
     savedRecruitment.setPublishedAt(LocalDateTime.now());
   }
 
@@ -87,7 +88,7 @@ public class DevRecruitmentInitializer {
     savedRecruitment.setTitle(String.format("푸드트럭 공고 #%d", savedRecruitment.getId()));
     addRecruitmentFoodTruckSpecific(savedRecruitment);
     // 구직자 목록 페이지 검증용
-    savedRecruitment.setPublished(true);
+    savedRecruitment.setStatus(RecruitmentStatus.RECRUITING);
     savedRecruitment.setPublishedAt(LocalDateTime.now());
   }
 
@@ -97,7 +98,7 @@ public class DevRecruitmentInitializer {
     savedRecruitment.setTitle(String.format("일반 구인 공고 #%d", savedRecruitment.getId()));
     addRecruitmentIndividualSpecific(savedRecruitment);
     // 구직자 목록 페이지 검증용
-    savedRecruitment.setPublished(true);
+    savedRecruitment.setStatus(RecruitmentStatus.RECRUITING);
     savedRecruitment.setPublishedAt(LocalDateTime.now());
   }
 
@@ -131,7 +132,7 @@ public class DevRecruitmentInitializer {
     RecruitmentWageType[] wageTypes = RecruitmentWageType.values();
     recruitmentIndividualRepository.save(
       RecruitmentIndividual.builder()
-        .recruit(recruitment)
+        .recruitment(recruitment)
         .wageType(wageTypes[random.nextInt(wageTypes.length)])
         .wageValue(random.nextInt(3, 30 + 1) * 5000)
         .build()
@@ -142,7 +143,7 @@ public class DevRecruitmentInitializer {
     boolean prepaid = random.nextBoolean();
     recruitmentFoodTruckRepository.save(
       RecruitmentFoodTruck.builder()
-        .recruit(recruitment)
+        .recruitment(recruitment)
         .prepaid(prepaid)
         .boothFeeRequired(random.nextBoolean() && !prepaid)
         .electricityProvided(random.nextBoolean() && !prepaid)

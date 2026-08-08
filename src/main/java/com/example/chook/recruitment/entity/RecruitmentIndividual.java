@@ -15,17 +15,17 @@ import lombok.*;
 public class RecruitmentIndividual {
 
   @Id
-  @Column(name = "recruit_id")
+  @Column(name = "recruitment_id")
   private Long id;
 
   @OneToOne(fetch = FetchType.LAZY)
   @MapsId
   @JoinColumn(
-    name = "recruit_id",
-    foreignKey = @ForeignKey(name = "fk_recruitment_individual_recruit_id")
+    name = "recruitment_id",
+    foreignKey = @ForeignKey(name = "fk_recruitment_individual_recruitment_id")
   )
   @ToString.Exclude
-  private Recruitment recruit;
+  private Recruitment recruitment;
 
   @Enumerated(EnumType.STRING)
   @Column(name = "wage_type", nullable = false, length = 10)
