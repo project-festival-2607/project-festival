@@ -12,10 +12,11 @@ import java.util.Optional;
 
 public interface RecruitmentRepositoryCustom {
 
-    Page<Recruitment> searchRecruitments(RecruitmentSearchCondition condition, Pageable pageable);
+  Page<Recruitment> searchRecruitments(RecruitmentSearchCondition condition, Pageable pageable);
 
-    Optional<RecruitmentIndividual> getIndividualById(Long id);
-    Optional<RecruitmentFoodTruck> getFoodTruckById(Long id);
+  Optional<RecruitmentIndividual> getIndividualById(Long id);
 
-    Page<Recruitment> searchRecruitments(RecruitmentManagementForm form, Pageable pageable);
+  Optional<RecruitmentFoodTruck> getFoodTruckById(Long id);
+
+  Page<Recruitment> searchRecruitments(RecruitmentManagementForm form, Pageable pageable);
 }

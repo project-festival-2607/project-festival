@@ -22,8 +22,8 @@ public class FileDTO {
   private UploadedFileCategory category;
 
   public String getSizeStr() {
-    if (size >= 1024*1024) return String.format("%.2f MB", (double)size/1024/1024);
-    if (size >= 1024) return String.format("%.2f KB", (double)size/1024);
+    if (size >= 1024 * 1024) return String.format("%.2f MB", (double) size / 1024 / 1024);
+    if (size >= 1024) return String.format("%.2f KB", (double) size / 1024);
     return String.format("%d Bytes", size);
   }
 
