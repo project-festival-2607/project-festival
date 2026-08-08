@@ -17,18 +17,34 @@ public record RecruitmentCreateForm(
   @NotNull
   @Pattern(regexp = "^[0-9]{5}$")
   String regionSigunguCode,
+  @Size(max = 255)
+  String workingLocation,
+
+  @NotNull
+  String festivalContentId,
+  @NotNull
+  RecruitmentCategory category,
 
   @Size(max = 100)
   @NotBlank
   String recruitmentTitle,
-
-  @NotNull
-  String festivalContentId,
-
   String content,
 
+  @FutureOrPresent
   @NotNull
-  RecruitmentCategory category,
+  LocalDate applicationDeadline,
+  @PositiveOrZero
+  Integer recruitmentCount,
+
+
+  @NotNull
+  @FutureOrPresent
+  LocalDate workingStartDate,
+  @NotNull
+  @FutureOrPresent
+  LocalDate workingEndDate,
+  LocalTime workingStartTime,
+  LocalTime workingEndTime,
 
   // RecruitmentIndividual
   RecruitmentWageType wageType,
@@ -38,24 +54,7 @@ public record RecruitmentCreateForm(
   // RecruitmentFoodTruck
   boolean prepaid,
   boolean boothFeeRequired,
-  boolean electricityProvided,
-
-  @FutureOrPresent
-  @NotNull
-  LocalDate applicationDeadline,
-  @PositiveOrZero
-  Integer recruitmentCount,
-
-  @Size(max = 255)
-  String workingLocation,
-  @NotNull
-  @FutureOrPresent
-  LocalDate workingStartDate,
-  @NotNull
-  @FutureOrPresent
-  LocalDate workingEndDate,
-  LocalTime workingStartTime,
-  LocalTime workingEndTime
+  boolean electricityProvided
 
 ) {
 }

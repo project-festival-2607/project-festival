@@ -2,7 +2,6 @@ package com.example.chook.recruitment.form;
 
 import com.example.chook.recruitment.entity.enums.RecruitmentCategory;
 import com.example.chook.recruitment.entity.enums.RecruitmentListCriteria;
-import com.example.chook.recruitment.entity.enums.RecruitmentStatus;
 import com.example.chook.recruitment.entity.enums.RecruitmentWageType;
 
 import java.time.LocalDate;
@@ -16,7 +15,6 @@ public record RecruitmentSearchForm(
   String regionSigunguCode,
 
   RecruitmentCategory category,
-  RecruitmentStatus status,
 
   LocalTime workingStartTime,
   LocalTime workingEndTime,
@@ -34,7 +32,11 @@ public record RecruitmentSearchForm(
   Boolean prepaid
 
 ) {
-  public RecruitmentSearchForm{
+
+  public RecruitmentSearchForm {
+
+    regionSidoCode = blankToNull(regionSidoCode);
+    regionSigunguCode = blankToNull(regionSigunguCode);
 
     if (category != RecruitmentCategory.INDIVIDUAL) {
       wageType = null;
@@ -44,5 +46,9 @@ public record RecruitmentSearchForm(
       electricityProvided = null;
       prepaid = null;
     }
+  }
+
+  private String blankToNull(String string) {
+    return (string == null || string.isBlank()) ? null : string;
   }
 }
