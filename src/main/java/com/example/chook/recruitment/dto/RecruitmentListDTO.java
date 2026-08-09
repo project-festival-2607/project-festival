@@ -14,16 +14,18 @@ import java.time.LocalTime;
 @Builder
 public class RecruitmentListDTO {
 
+  private Long recruitmentId;
+
   private String regionSidoName;
   private String regionSigunguName;
 
-  private Long recruitmentId;
-  private String recruitmentTitle;
   private String festivalContentId;
   private String festivalTitle;
 
   private RecruitmentCategory category;
   private RecruitmentSpecificDTO specific;
+
+  private String recruitmentTitle;
 
   private LocalDate applicationDeadline;
 

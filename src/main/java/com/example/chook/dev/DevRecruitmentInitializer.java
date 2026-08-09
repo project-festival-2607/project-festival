@@ -6,6 +6,7 @@ import com.example.chook.recruitment.entity.Recruitment;
 import com.example.chook.recruitment.entity.RecruitmentFoodTruck;
 import com.example.chook.recruitment.entity.RecruitmentIndividual;
 import com.example.chook.recruitment.entity.enums.RecruitmentCategory;
+import com.example.chook.recruitment.entity.enums.RecruitmentStatus;
 import com.example.chook.recruitment.entity.enums.RecruitmentWageType;
 import com.example.chook.recruitment.repository.RecruitmentFoodTruckRepository;
 import com.example.chook.recruitment.repository.RecruitmentIndividualRepository;
@@ -41,6 +42,8 @@ public class DevRecruitmentInitializer {
   @Transactional
   public void generateSampleRecruitments() {
 
+    log.info("테스트용 구인공고 데이터 삽입 시작");
+
     sigunguList = regionSigunguRepository.findAll();
 
     for (Festival festival : festivalRepository.findAll()) {
@@ -61,6 +64,8 @@ public class DevRecruitmentInitializer {
 
     }
 
+    log.info("테스트용 구인공고 데이터 삽입 완료");
+
   }
 
   private void addRecruitmentEtc(Festival festival) {
@@ -68,7 +73,7 @@ public class DevRecruitmentInitializer {
     Recruitment savedRecruitment = addRecruitment(festival, RecruitmentCategory.ETC, recruitmentTitle);
     savedRecruitment.setTitle(String.format("기타 공고 #%d", savedRecruitment.getId()));
     // 구직자 목록 페이지 검증용
-    savedRecruitment.setPublished(true);
+    savedRecruitment.setStatus(RecruitmentStatus.RECRUITING);
     savedRecruitment.setPublishedAt(LocalDateTime.now());
   }
 
@@ -77,7 +82,7 @@ public class DevRecruitmentInitializer {
     Recruitment savedRecruitment = addRecruitment(festival, RecruitmentCategory.EQUIPMENT, recruitmentTitle);
     savedRecruitment.setTitle(String.format("장비 공고 #%d", savedRecruitment.getId()));
     // 구직자 목록 페이지 검증용
-    savedRecruitment.setPublished(true);
+    savedRecruitment.setStatus(RecruitmentStatus.RECRUITING);
     savedRecruitment.setPublishedAt(LocalDateTime.now());
   }
 
@@ -87,7 +92,7 @@ public class DevRecruitmentInitializer {
     savedRecruitment.setTitle(String.format("푸드트럭 공고 #%d", savedRecruitment.getId()));
     addRecruitmentFoodTruckSpecific(savedRecruitment);
     // 구직자 목록 페이지 검증용
-    savedRecruitment.setPublished(true);
+    savedRecruitment.setStatus(RecruitmentStatus.RECRUITING);
     savedRecruitment.setPublishedAt(LocalDateTime.now());
   }
 
@@ -97,7 +102,7 @@ public class DevRecruitmentInitializer {
     savedRecruitment.setTitle(String.format("일반 구인 공고 #%d", savedRecruitment.getId()));
     addRecruitmentIndividualSpecific(savedRecruitment);
     // 구직자 목록 페이지 검증용
-    savedRecruitment.setPublished(true);
+    savedRecruitment.setStatus(RecruitmentStatus.RECRUITING);
     savedRecruitment.setPublishedAt(LocalDateTime.now());
   }
 
@@ -119,10 +124,10 @@ public class DevRecruitmentInitializer {
         .recruitmentCount(category == RecruitmentCategory.INDIVIDUAL ? random.nextInt(5 + 1) : 1)
         .workingStartTime(LocalTime.of(startTime / 2, 30 * (startTime % 2)))
         .workingEndTime(LocalTime.of(endTime / 2, 30 * (endTime % 2)))
-              .workingStartDate((festival.getStartDate() != null ? festival.getStartDate() : LocalDate.now())
-                      .minusDays(random.nextInt(-3, 0 + 1)))
-              .workingEndDate((festival.getEndDate() != null ? festival.getEndDate() : LocalDate.now())
-                      .plusDays(random.nextInt(0, 1 + 1)))
+        .workingStartDate((festival.getStartDate() != null ? festival.getStartDate() : LocalDate.now())
+          .minusDays(random.nextInt(-3, 1)))
+        .workingEndDate((festival.getEndDate() != null ? festival.getEndDate() : LocalDate.now())
+          .plusDays(random.nextInt(0, 1 + 1)))
         .build()
     );
   }
@@ -131,7 +136,7 @@ public class DevRecruitmentInitializer {
     RecruitmentWageType[] wageTypes = RecruitmentWageType.values();
     recruitmentIndividualRepository.save(
       RecruitmentIndividual.builder()
-        .recruit(recruitment)
+        .recruitment(recruitment)
         .wageType(wageTypes[random.nextInt(wageTypes.length)])
         .wageValue(random.nextInt(3, 30 + 1) * 5000)
         .build()
@@ -142,7 +147,7 @@ public class DevRecruitmentInitializer {
     boolean prepaid = random.nextBoolean();
     recruitmentFoodTruckRepository.save(
       RecruitmentFoodTruck.builder()
-        .recruit(recruitment)
+        .recruitment(recruitment)
         .prepaid(prepaid)
         .boothFeeRequired(random.nextBoolean() && !prepaid)
         .electricityProvided(random.nextBoolean() && !prepaid)

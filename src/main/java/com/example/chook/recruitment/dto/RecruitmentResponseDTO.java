@@ -16,30 +16,32 @@ import java.time.LocalTime;
 @Builder
 public class RecruitmentResponseDTO {
 
+  private Long recruitmentId;
+
   private String regionSidoName;
   private String regionSigunguName;
+  private String workingLocation;
 
-  private Long recruitmentId;
-  private String recruitmentTitle;
   private String festivalContentId;
   private String festivalTitle;
-
-  private String content;
 
   private RecruitmentCategory category;
   private RecruitmentSpecificDTO specific;
 
+  private String recruitmentTitle;
+  private String content;
+
   private LocalDate applicationDeadline;
   private Integer recruitmentCount;
-  private RecruitmentStatus status;
 
-  private String workingLocation;
   private LocalDate workingStartDate;
   private LocalDate workingEndDate;
   private LocalTime workingStartTime;
   private LocalTime workingEndTime;
 
-  private boolean published;
+  private RecruitmentStatus status;
   private LocalDateTime publishedAt;
+  private LocalDateTime updatedAt;
+  private LocalDateTime deletedAt;
 
 }
