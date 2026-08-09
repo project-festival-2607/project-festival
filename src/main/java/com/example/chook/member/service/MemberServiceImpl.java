@@ -2,18 +2,13 @@ package com.example.chook.member.service;
 
 import com.example.chook.member.BusinessNumberTokenProvider;
 import com.example.chook.member.dto.*;
-import com.example.chook.member.entity.BusinessRegistration;
-import com.example.chook.member.entity.EmployerProfile;
-import com.example.chook.member.entity.JobSeekerProfile;
-import com.example.chook.member.entity.Member;
+import com.example.chook.member.entity.*;
 import com.example.chook.member.entity.enums.MemberRole;
 import com.example.chook.member.entity.enums.MemberStatus;
+import com.example.chook.member.entity.enums.Provider;
 import com.example.chook.member.exception.MemberDormantException;
 import com.example.chook.member.exception.MemberSuspendedException;
-import com.example.chook.member.repository.BusinessRegistrationRepository;
-import com.example.chook.member.repository.EmployerProfileRepository;
-import com.example.chook.member.repository.JobSeekerProfileRepository;
-import com.example.chook.member.repository.MemberRepository;
+import com.example.chook.member.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -21,6 +16,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.UUID;
 
 @RequiredArgsConstructor
 @Service
@@ -33,6 +30,8 @@ public class MemberServiceImpl implements MemberService {
     private final BusinessRegistrationRepository businessRegistrationRepository; // 사업자등록정보 DB 저장
     private final BusinessNumberTokenProvider businessNumberTokenProvider; // 사업자번호 인증 토큰 발급 및 검증
     private final PasswordEncoder passwordEncoder; // 비밀번호 암호화 및 입력값 해시 일치 여부 확인
+    private final SocialLoginRepository socialLoginRepository; //
+    private static final List<MemberRole> JOB_SEEKER_ROLES = List.of(MemberRole.JOB_SEEKER, MemberRole.JOB_EQUIP);
 
     @Override
     public LoginResponseDTO login(LoginRequestDTO requestDTO) {
@@ -171,6 +170,85 @@ public class MemberServiceImpl implements MemberService {
         return toLoginResponseDTO(member);
     }
 
+    @Override
+    // 소셜 로그인
+    public LoginResponseDTO loginBySocial(Provider provider, String providerId) {
+
+        // provider와 발급한 providerId를 받아 연동된 계정이 있는지 조회
+        // 없다면 예외 발생
+        SocialLogin socialLogin = socialLoginRepository.findByProviderAndProviderId(provider, providerId)
+                .orElseThrow(() -> new IllegalArgumentException("연동된 계정을 찾을 수 없습니다."));
+
+        // SocialLogin과 연결되어 있는 회원 정보 저장
+        Member member = socialLogin.getMember();
+
+        // 탈퇴 기록이 있다면 연동 정보와 무관하게 로그인 불가
+        if (member.getDeletedAt() != null) {
+            throw new IllegalArgumentException("연동된 계정을 찾을 수 없습니다.");
+        }
+
+        // 회원 상태 확인
+        switch (member.getStatus()) {
+            case DORMANT -> throw new MemberDormantException(); // 휴면 예외
+            case SUSPENDED -> throw new MemberSuspendedException(); // 정지 예외
+            default -> { } // 그 외에는 로그인 진행
+        }
+
+        // 일반 로그인 DTO와 동일한 형태로 반환
+        return toLoginResponseDTO(member);
+    }
+
+    @Override
+    // 이메일이 중복된 계정 여부 확인
+    public boolean hasJobSeekerAccountWithEmail(String email) {
+        return memberRepository.existsByEmailAndDeletedAtIsNullAndRoleIn(email, JOB_SEEKER_ROLES);
+    }
+
+    @Transactional
+    @Override
+    public LoginResponseDTO signUpSocial(SocialAuthSessionDTO authInfo, SocialSignUpRequestDTO requestDTO) {
+
+        boolean isJobEquip = hasVerifiedBusinessNumber(
+                requestDTO.getBusinessNumber(),
+                requestDTO.getVerificationToken()
+        );
+
+        Member member = memberRepository.save(buildMember(
+                generateSocialUsername(authInfo.getProvider()),
+                null,
+                requestDTO.getName(),
+                requestDTO.getPhone(),
+                requestDTO.getEmail(),
+                isJobEquip ? MemberRole.JOB_EQUIP : MemberRole.JOB_SEEKER
+        ));
+
+        jobSeekerProfileRepository.save(JobSeekerProfile.builder()
+                .member(member)
+                .gender(requestDTO.getGender())
+                .birthDate(requestDTO.getBirthDate())
+                .streetAddress(requestDTO.getStreetAddress())
+                .detailAddress(requestDTO.getDetailAddress())
+                .build());
+
+        if (isJobEquip) {
+            saveBusinessRegistration(member, requestDTO.getBusinessNumber());
+        }
+
+        socialLoginRepository.save(SocialLogin.builder()
+                .member(member)
+                .provider(authInfo.getProvider())
+                .providerId(authInfo.getProviderId())
+                .linkedAt(LocalDateTime.now())
+                .build());
+
+        return toLoginResponseDTO(member);
+    }
+
+    // 소셜 회원 아이디 생성 (사용자에게 노출/입력되지 않는 내부용 값)
+    private String generateSocialUsername(Provider provider) {
+        return provider.name().charAt(0) + "-" + UUID.randomUUID();
+    }
+
     // JOB_SEEKER 회원에게 사업자번호를 등록하고 JOB_EQUIP으로 전환한다.
     private void registerBusinessNumber(Member member, String businessNumber, String verificationToken) {
         if (member.getRole() != MemberRole.JOB_SEEKER) {
@@ -210,7 +288,7 @@ public class MemberServiceImpl implements MemberService {
     ) {
         return Member.builder()
                 .username(username)
-                .passwordHash(passwordEncoder.encode(rawPassword))
+                .passwordHash(rawPassword != null ? passwordEncoder.encode(rawPassword) : null)
                 .name(name)
                 .phone(phone)
                 // TODO phoneVerified는 전화번호 인증 추가 후 삭제
@@ -218,6 +296,7 @@ public class MemberServiceImpl implements MemberService {
                 .email(email)
                 .role(role)
                 .status(MemberStatus.ACTIVE)
+                .createdAt(LocalDateTime.now())
                 .build();
     }
 
