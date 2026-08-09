@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.Map;
-//요청을 받으면 해당 부분으로 보내버림.
+
 @Slf4j
 @RequiredArgsConstructor
 @Controller
@@ -41,9 +41,7 @@ public class PaymentController {
     //       실제로 프론트에서 이 경로를 부르고 있는 건지 한 번 확인해보세요.
     @RequestMapping(value = {"/confirm/widget", "/confirm/paying"})
     public ResponseEntity<JSONObject> confirmPayment(HttpServletRequest request, @RequestBody String jsonBody) throws Exception {
-        //결제승인용 데이터 paymentkey orderid amount를 받음.
-        //세션에서 로그인한 회원 확인.  TossPaymentApiClient에게 토스쪽으로 승인 요청 해달라고 부탁.
-        //성공시 savePaymentResult()한테 db에 저장해달라고 부탁.
+
         HttpSession session = request.getSession();
         LoginResponseDTO loginMember = (LoginResponseDTO) session.getAttribute("loginMember");
 
@@ -74,14 +72,12 @@ public class PaymentController {
     // datatesting.html에서 "DB에 실제로 뭐가 저장됐는지" 보여주기 위한 조회용
     @GetMapping("/paying/order/{orderId}")
     @ResponseBody
-    //사실상 조회 요청.
     public ResponseEntity<Map<String, Object>> getOrderResult(@PathVariable String orderId) {
         return paymentService.getOrderResult(orderId)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    //이 밑에건 다른 페이지로 연결용임.
     @GetMapping("/widget")
     public String widget() {
         return "payment/widget/index";
@@ -89,14 +85,14 @@ public class PaymentController {
 
     @GetMapping("/widget/success")
     public String success() {
-        return "payment/widget/success";
+        return "payment/realactive/success";
     }
 
     @RequestMapping(value = "/fail", method = RequestMethod.GET)
     public String failPayment(HttpServletRequest request, Model model) {
         model.addAttribute("code", request.getParameter("code"));
         model.addAttribute("message", request.getParameter("message"));
-        return "payment/fail";
+        return "payment/realactive/fail";
     }
 
     @GetMapping("/payCreationTest")
@@ -104,11 +100,11 @@ public class PaymentController {
         if (session.getAttribute("loginMember") == null) {
             return "redirect:/member/login";
         }
-        return "payment/payCreationTest";
+        return "payment/realactive/payCreationTest";
     }
 
     @GetMapping("/datatesting")
     public String datatesting() {
-        return "payment/datatesting";
+        return "payment/realactive/datatesting";
     }
 }
