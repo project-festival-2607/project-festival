@@ -45,6 +45,8 @@ public class RecruitmentResponseDTO {
   private LocalDateTime updatedAt;
   private LocalDateTime deletedAt;
 
+  private String organizerPhone;
+
   public String getWorkingDurationText() {
     if (workingStartTime == null || workingEndTime == null) return null;
     long minutes = Duration.between(workingStartTime, workingEndTime).toMinutes();
