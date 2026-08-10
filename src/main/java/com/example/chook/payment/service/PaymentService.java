@@ -3,10 +3,12 @@ package com.example.chook.payment.service;
 // 직접 추가한 비즈니스 로직
 import com.example.chook.member.entity.Member;
 import com.example.chook.payment.entity.Payment;
+import com.example.chook.payment.entity.PointCalcUse;
 import com.example.chook.payment.entity.PointHistory;
 import com.example.chook.payment.entity.Product;
 import com.example.chook.payment.repository.PMemberRepository;
 import com.example.chook.payment.repository.PaymentRepository;
+import com.example.chook.payment.repository.PointCalcUseRepository;
 import com.example.chook.payment.repository.PointHistoryRepository;
 import com.example.chook.payment.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
@@ -21,8 +23,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Optional;
-//결제 결과 db에 반영 담당
-//토스가 승인했다는걸 받아서 db에 반영함.
+
 @Slf4j
 @RequiredArgsConstructor
 @Service
@@ -32,6 +33,7 @@ public class PaymentService {
     private final PaymentRepository paymentRepository;
     private final ProductRepository productRepository;
     private final PointHistoryRepository pointHistoryRepository;
+    private final PointCalcUseRepository pointCalcUseRepository;
 
     // 토스 승인 응답(response)을 그대로 받아서 payment/point_history/members.point에 반영
     @Transactional
@@ -39,7 +41,7 @@ public class PaymentService {
         if (memberId == null) {
             throw new IllegalStateException("로그인된 회원이 없어 결제 결과를 저장할 수 없습니다.");
         }
-        //response에서 필요한 값들 추출.
+
         String orderId = (String) response.get("orderId");
         String paymentKey = (String) response.get("paymentKey");
         String method = (String) response.get("method");
@@ -85,6 +87,17 @@ public class PaymentService {
                 .pointChanging(product.getPointGet())
                 .build();
         pointHistoryRepository.save(history);
+
+        // 이 결제 건의 FIFO 소비 추적용 "시작 행" - 아직 하나도 안 쓴 상태
+        PointCalcUse calcUse = PointCalcUse.builder()
+                .payment(payment)
+                .member(member)
+                .pointGet(product.getPointGet())
+                .pointWhere("charge")
+                .pointUsed(0)
+                .leftPoint(product.getPointGet())
+                .build();
+        pointCalcUseRepository.save(calcUse);
     }
 
     // datatesting.html에서 "DB에 실제로 뭐가 저장됐는지" 보여주기 위한 조회용
