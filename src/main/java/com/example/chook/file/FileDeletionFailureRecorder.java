@@ -24,11 +24,10 @@ import java.util.List;
 @Slf4j
 public class FileDeletionFailureRecorder {
 
-  private final FileProperties properties;
-
   private static final CSVFormat CSV_FORMAT = CSVFormat.DEFAULT.builder()
     .setHeader()
     .setSkipHeaderRecord(true).get();
+  private final FileProperties properties;
 
   private Path getDeletionFailureLogPath() {
     Path systemDir = Paths.get(properties.getSystemDir());
@@ -89,7 +88,7 @@ public class FileDeletionFailureRecorder {
           deletionFailureLogPath,
           StandardOpenOption.CREATE,
           StandardOpenOption.APPEND);
-        CSVPrinter printer = new CSVPrinter(writer, CSVFormat.DEFAULT);
+        CSVPrinter printer = new CSVPrinter(writer, CSVFormat.DEFAULT)
       ) {
         if (newFile)
           printer.printRecord("relative_path", "stored_name");

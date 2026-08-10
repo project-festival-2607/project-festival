@@ -2,7 +2,6 @@ package com.example.chook.recruitment.form;
 
 import com.example.chook.recruitment.entity.enums.RecruitmentCategory;
 import com.example.chook.recruitment.entity.enums.RecruitmentListCriteria;
-import com.example.chook.recruitment.entity.enums.RecruitmentStatus;
 import com.example.chook.recruitment.entity.enums.RecruitmentWageType;
 
 import java.time.LocalDate;
@@ -16,7 +15,6 @@ public record RecruitmentSearchForm(
   String regionSigunguCode,
 
   RecruitmentCategory category,
-  RecruitmentStatus status,
 
   LocalTime workingStartTime,
   LocalTime workingEndTime,
@@ -27,15 +25,32 @@ public record RecruitmentSearchForm(
 
   // 알바(INDIVIDUAL) 전용 필터
   RecruitmentWageType wageType,
-  Integer wageValue,
 
   // 푸드트럭(FOOD_TRUCK) 전용 필터
   Boolean boothFeeRequired,
   Boolean electricityProvided,
-  Boolean prepaid,
-
-  // 구인자 전용: true면 로그인한 본인이 등록한 축제의 공고만
-  Boolean mine
+  Boolean prepaid
 
 ) {
+
+  public RecruitmentSearchForm {
+
+    regionSidoCode = blankToNull(regionSidoCode);
+    regionSigunguCode = blankToNull(regionSigunguCode);
+
+    if (category != RecruitmentCategory.INDIVIDUAL) {
+      wageType = null;
+    }
+    if (category != RecruitmentCategory.FOOD_TRUCK) {
+      boothFeeRequired = null;
+      electricityProvided = null;
+      prepaid = null;
+    }
+
+    listCriteria = listCriteria == null ? RecruitmentListCriteria.LATEST : listCriteria;
+  }
+
+  private String blankToNull(String string) {
+    return (string == null || string.isBlank()) ? null : string;
+  }
 }

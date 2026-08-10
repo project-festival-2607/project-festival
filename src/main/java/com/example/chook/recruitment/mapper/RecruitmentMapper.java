@@ -6,11 +6,7 @@ import com.example.chook.recruitment.entity.Recruitment;
 import com.example.chook.recruitment.entity.RecruitmentFoodTruck;
 import com.example.chook.recruitment.entity.RecruitmentIndividual;
 import com.example.chook.recruitment.entity.enums.RecruitmentCategory;
-import com.example.chook.recruitment.entity.enums.RecruitmentListCriteria;
-import com.example.chook.recruitment.entity.enums.RecruitmentStatus;
-import com.example.chook.recruitment.entity.enums.RecruitmentWageType;
 import com.example.chook.recruitment.form.RecruitmentCreateForm;
-import com.example.chook.recruitment.form.RecruitmentManagementSearchForm;
 import com.example.chook.recruitment.form.RecruitmentSearchForm;
 import com.example.chook.recruitment.record.RecruitmentSearchCondition;
 import com.example.chook.region.entity.RegionSigungu;
@@ -21,6 +17,8 @@ import java.util.List;
 
 @Component
 public class RecruitmentMapper {
+
+  // DTO → Entity 변환
 
   public Recruitment toEntity(RecruitmentCreateDTO dto,
                               RegionSigungu sigungu,
@@ -44,7 +42,7 @@ public class RecruitmentMapper {
   public RecruitmentIndividual toIndividualEntity(Recruitment recruitment,
                                                   RecruitmentIndividualDTO dto) {
     return RecruitmentIndividual.builder()
-      .recruit(recruitment)
+      .recruitment(recruitment)
       .wageType(dto.getWageType())
       .wageValue(dto.getWageValue())
       .build();
@@ -53,7 +51,7 @@ public class RecruitmentMapper {
   public RecruitmentFoodTruck toFoodTruckEntity(Recruitment recruitment,
                                                 RecruitmentFoodTruckDTO dto) {
     return RecruitmentFoodTruck.builder()
-      .recruit(recruitment)
+      .recruitment(recruitment)
       .prepaid(dto.isPrepaid())
       .boothFeeRequired(dto.isBoothFeeRequired())
       .electricityProvided(dto.isElectricityProvided())
@@ -64,6 +62,7 @@ public class RecruitmentMapper {
                            RecruitmentUpdateDTO dto,
                            RegionSigungu sigungu) {
     recruitment.setSigungu(sigungu);
+    recruitment.setWorkingLocation(dto.getWorkingLocation());
     recruitment.setTitle(dto.getRecruitmentTitle());
     recruitment.setContent(dto.getContent());
     recruitment.setApplicationDeadline(dto.getApplicationDeadline());
@@ -72,7 +71,6 @@ public class RecruitmentMapper {
     recruitment.setWorkingEndDate(dto.getWorkingEndDate());
     recruitment.setWorkingStartTime(dto.getWorkingStartTime());
     recruitment.setWorkingEndTime(dto.getWorkingEndTime());
-    recruitment.setWorkingLocation(dto.getWorkingLocation());
   }
 
   public void updateIndividualEntity(RecruitmentIndividual individual,
@@ -87,6 +85,8 @@ public class RecruitmentMapper {
     foodTruck.setBoothFeeRequired(dto.isBoothFeeRequired());
     foodTruck.setElectricityProvided(dto.isElectricityProvided());
   }
+
+  // Entity → DTO 변환
 
   public RecruitmentUpdateDTO toUpdateDto(Recruitment entity) {
     return toUpdateDtoBuilder(entity).build();
@@ -160,18 +160,20 @@ public class RecruitmentMapper {
       .build();
   }
 
+  // Form →DTO/Condition
+
   public RecruitmentCreateDTO toCreateDto(RecruitmentCreateForm form) {
     return RecruitmentCreateDTO.builder()
       .regionSidoCode(form.regionSidoCode())
       .regionSigunguCode(form.regionSigunguCode())
-      .recruitmentTitle(form.recruitmentTitle())
+      .workingLocation(form.workingLocation())
       .festivalContentId(form.festivalContentId())
-      .content(form.content())
       .category(form.category())
+      .recruitmentTitle(form.recruitmentTitle())
+      .content(form.content())
       .specific(toSpecificDto(form))
       .applicationDeadline(form.applicationDeadline())
       .recruitmentCount(form.recruitmentCount())
-      .workingLocation(form.workingLocation())
       .workingStartDate(form.workingStartDate())
       .workingEndDate(form.workingEndDate())
       .workingStartTime(form.workingStartTime())
@@ -179,19 +181,8 @@ public class RecruitmentMapper {
       .build();
   }
 
-  public RecruitmentSearchCondition toCondition(RecruitmentManagementSearchForm form) {
+  public RecruitmentSearchCondition toCondition(RecruitmentSearchForm form) {
     return RecruitmentSearchCondition.builder()
-      .keywordList(splitByRegex(form.keywords(), "[\\s,&]+"))
-      .regionSidoCode(form.regionSidoCode())
-      .regionSigunguCode(form.regionSigunguCode())
-      .category(form.category())
-      .status(form.status())
-      .festivalContentId(form.festivalContentId())
-      .build();
-  }
-
-  public RecruitmentSearchCondition toCondition(RecruitmentSearchForm form, boolean recruiter, Long ownerMemberId) {
-    RecruitmentSearchCondition.RecruitmentSearchConditionBuilder builder = RecruitmentSearchCondition.builder()
       .keywordList(splitByRegex(form.keywords(), "[\\s,&]+"))
       .regionSidoCode(form.regionSidoCode())
       .regionSigunguCode(form.regionSigunguCode())
@@ -205,110 +196,81 @@ public class RecruitmentMapper {
       .boothFeeRequired(form.boothFeeRequired())
       .electricityProvided(form.electricityProvided())
       .prepaid(form.prepaid())
-      .ownerMemberId(ownerMemberId);
-
-    // 희망금액은 정확히 일치하는 공고가 드무니 입력값의 위아래 10% 범위로 검색
-    if (form.wageValue() != null) {
-      int delta = (int) Math.round(form.wageValue() * 0.1);
-      builder.wageValueMin(form.wageValue() - delta);
-      builder.wageValueMax(form.wageValue() + delta);
-    }
-
-    // 알바 카테고리에서 급여유형을 고르면 해당 유형의 급여 내림차순으로 정렬
-    if (form.category() == RecruitmentCategory.INDIVIDUAL && form.wageType() != null) {
-      RecruitmentListCriteria wageListCriteria = toWageListCriteria(form.wageType());
-      if (wageListCriteria != null) {
-        builder.listCriteria(wageListCriteria);
-      }
-    }
-
-    // 구직자는 게시(공개)된 모집중 공고만 보고, 구인자는 상태/게시 여부와 무관하게 전부 봄
-    if (!recruiter) {
-      builder.status(RecruitmentStatus.OPEN).publishedOnly(true);
-    }
-
-    return builder.build();
+      .build();
   }
 
-  private RecruitmentListCriteria toWageListCriteria(RecruitmentWageType wageType) {
-    return switch (wageType) {
-      case HOURLY -> RecruitmentListCriteria.WAGE_HOURLY;
-      case DAILY -> RecruitmentListCriteria.WAGE_DAILY;
-      case WEEKLY -> RecruitmentListCriteria.WAGE_WEEKLY;
-      case PER_TASK -> RecruitmentListCriteria.WAGE_PER_TASK;
-      case NEGOTIABLE -> null;
-    };
-  }
+  // Entity → Recruitment*DTO.Recruitment*DTOBuilder
 
   private RecruitmentUpdateDTO.RecruitmentUpdateDTOBuilder toUpdateDtoBuilder(Recruitment entity) {
-    return  RecruitmentUpdateDTO.builder()
+    return RecruitmentUpdateDTO.builder()
       .regionSidoCode(entity.getSigungu().getSido().getCode())
       .regionSigunguCode(entity.getSigungu().getCode())
+      .workingLocation(entity.getWorkingLocation())
       .recruitmentTitle(entity.getTitle())
       .content(entity.getContent())
       .applicationDeadline(entity.getApplicationDeadline())
       .recruitmentCount(entity.getRecruitmentCount())
-      .workingLocation(entity.getWorkingLocation())
       .workingStartDate(entity.getWorkingStartDate())
       .workingEndDate(entity.getWorkingEndDate())
       .workingStartTime(entity.getWorkingStartTime())
       .workingEndTime(entity.getWorkingEndTime())
       ;
-
   }
 
   private RecruitmentResponseDTO.RecruitmentResponseDTOBuilder toResponseDtoBuilder(Recruitment entity) {
     return RecruitmentResponseDTO.builder()
+      .recruitmentId(entity.getId())
       .regionSidoName(entity.getSigungu().getSido().getName())
       .regionSigunguName(entity.getSigungu().getName())
-      .recruitmentId(entity.getId())
-      .recruitmentTitle(entity.getTitle())
+      .workingLocation(entity.getWorkingLocation())
       .festivalContentId(entity.getFestival().getContentId())
       .festivalTitle(entity.getFestival().getTitle())
-      .content(entity.getContent())
       .category(entity.getCategory())
+      .recruitmentTitle(entity.getTitle())
+      .content(entity.getContent())
       .applicationDeadline(entity.getApplicationDeadline())
       .recruitmentCount(entity.getRecruitmentCount())
-      .status(entity.getStatus())
-      .workingLocation(entity.getWorkingLocation())
       .workingStartDate(entity.getWorkingStartDate())
       .workingEndDate(entity.getWorkingEndDate())
       .workingStartTime(entity.getWorkingStartTime())
       .workingEndTime(entity.getWorkingEndTime())
-      .published(entity.isPublished())
+      .status(entity.getStatus())
       .publishedAt(entity.getPublishedAt())
+      .updatedAt(entity.getPublishedAt())
+      .deletedAt(entity.getDeletedAt())
       ;
   }
 
   private RecruitmentManagementListDTO.RecruitmentManagementListDTOBuilder toManagementListDtoBuilder(Recruitment entity) {
     return RecruitmentManagementListDTO.builder()
+      .recruitmentId(entity.getId())
       .regionSidoName(entity.getSigungu().getSido().getShortName())
       .regionSigunguName(entity.getSigungu().getName())
-      .recruitmentId(entity.getId())
-      .recruitmentTitle(entity.getTitle())
       .festivalContentId(entity.getFestival().getContentId())
       .festivalTitle(entity.getFestival().getTitle())
       .category(entity.getCategory())
+      .recruitmentTitle(entity.getTitle())
       .applicationDeadline(entity.getApplicationDeadline())
-      .status(entity.getStatus())
-      .workingLocation(entity.getWorkingLocation())
       .workingStartDate(entity.getWorkingStartDate())
       .workingEndDate(entity.getWorkingEndDate())
       .workingStartTime(entity.getWorkingStartTime())
       .workingEndTime(entity.getWorkingEndTime())
+      .status(entity.getStatus())
       .publishedAt(entity.getPublishedAt())
+      .updatedAt(entity.getUpdatedAt())
+      .deletedAt(entity.getDeletedAt())
       ;
   }
 
   private RecruitmentListDTO.RecruitmentListDTOBuilder toListDtoBuilder(Recruitment entity) {
     return RecruitmentListDTO.builder()
+      .recruitmentId(entity.getId())
       .regionSidoName(entity.getSigungu().getSido().getShortName())
       .regionSigunguName(entity.getSigungu().getName())
-      .recruitmentId(entity.getId())
-      .recruitmentTitle(entity.getTitle())
       .festivalContentId(entity.getFestival().getContentId())
       .festivalTitle(entity.getFestival().getTitle())
       .category(entity.getCategory())
+      .recruitmentTitle(entity.getTitle())
       .applicationDeadline(entity.getApplicationDeadline())
       .workingStartDate(entity.getWorkingStartDate())
       .workingEndDate(entity.getWorkingEndDate())
@@ -317,20 +279,22 @@ public class RecruitmentMapper {
       ;
   }
 
-  private RecruitmentSpecificDTO toSpecificDto(RecruitmentIndividual entity) {
+  private RecruitmentIndividualDTO toSpecificDto(RecruitmentIndividual entity) {
     return RecruitmentIndividualDTO.builder()
       .wageType(entity.getWageType())
       .wageValue(entity.getWageValue())
       .build();
   }
 
-  private RecruitmentSpecificDTO toSpecificDto(RecruitmentFoodTruck entity) {
+  private RecruitmentFoodTruckDTO toSpecificDto(RecruitmentFoodTruck entity) {
     return RecruitmentFoodTruckDTO.builder()
       .prepaid(entity.isPrepaid())
       .boothFeeRequired(entity.isBoothFeeRequired())
       .electricityProvided(entity.isElectricityProvided())
       .build();
   }
+
+  // Form → SpecificDTO
 
   private RecruitmentSpecificDTO toSpecificDto(RecruitmentCreateForm form) {
     RecruitmentCategory category = form.category();

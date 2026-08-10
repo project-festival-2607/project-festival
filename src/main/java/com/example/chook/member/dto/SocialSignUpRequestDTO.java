@@ -14,6 +14,7 @@ import java.time.LocalDate;
 // 소셜 로그인은 JobSeeker 전용
 public class SocialSignUpRequestDTO {
 
+    private String name;
     private String email;
     private String phone;
     private Gender gender;

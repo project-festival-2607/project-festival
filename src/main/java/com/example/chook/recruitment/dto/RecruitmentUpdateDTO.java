@@ -15,17 +15,16 @@ public class RecruitmentUpdateDTO {
 
   private String regionSidoCode;
   private String regionSigunguCode;
-
-  private String recruitmentTitle;
-
-  private String content;
+  private String workingLocation;
 
   private RecruitmentSpecificDTO specific;
+
+  private String recruitmentTitle;
+  private String content;
 
   private LocalDate applicationDeadline;
   private Integer recruitmentCount;
 
-  private String workingLocation;
   private LocalDate workingStartDate;
   private LocalDate workingEndDate;
   private LocalTime workingStartTime;

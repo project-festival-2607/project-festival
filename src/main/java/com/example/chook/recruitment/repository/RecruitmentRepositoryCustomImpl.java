@@ -4,9 +4,9 @@ import com.example.chook.recruitment.entity.Recruitment;
 import com.example.chook.recruitment.entity.RecruitmentFoodTruck;
 import com.example.chook.recruitment.entity.RecruitmentIndividual;
 import com.example.chook.recruitment.entity.enums.RecruitmentCategory;
-import com.example.chook.recruitment.entity.enums.RecruitmentListCriteria;
 import com.example.chook.recruitment.entity.enums.RecruitmentStatus;
 import com.example.chook.recruitment.entity.enums.RecruitmentWageType;
+import com.example.chook.recruitment.form.RecruitmentManagementForm;
 import com.example.chook.recruitment.record.RecruitmentSearchCondition;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -40,12 +40,10 @@ public class RecruitmentRepositoryCustomImpl implements RecruitmentRepositoryCus
   public Page<Recruitment> searchRecruitments(RecruitmentSearchCondition condition, Pageable pageable) {
 
     RecruitmentCategory category = condition.category();
-    RecruitmentListCriteria listCriteria = condition.listCriteria();
-    if (listCriteria == null) listCriteria = RecruitmentListCriteria.LATEST;
 
     if (category != null &&
       category != RecruitmentCategory.INDIVIDUAL &&
-      listCriteria.getWageType() != null) {
+      condition.wageType() != null) {
       throw new IllegalArgumentException("\"개인\"이 아닌 카테고리에서는 급여순 조회를 사용할 수 없습니다.");
     }
 
@@ -53,17 +51,15 @@ public class RecruitmentRepositoryCustomImpl implements RecruitmentRepositoryCus
 
     whereCondition
       .and(recruitment.deletedAt.isNull())
-      .and(publishedOnlyCondition(condition.publishedOnly()))
       .and(containsAnyKeyword(condition.keywordList()))
       .and(regionSidoEq(condition.regionSidoCode()))
       .and(regionSigunguEq(condition.regionSigunguCode()))
       .and(categoryEq(category))
-      .and(statusEq(condition.status()))
+      .and(statusEq(RecruitmentStatus.RECRUITING))
       .and(workingStartTimeGoe(condition.workingStartTime()))
       .and(workingEndTimeLoe(condition.workingEndTime()))
       .and(workingStartDateGoe(condition.workingStartDate()))
       .and(workingEndDateLoe(condition.workingEndDate()))
-      .and(ownerMemberIdEq(condition.ownerMemberId()))
     ;
 
     JPAQuery<Recruitment> resultQuery = jpaQueryFactory
@@ -72,32 +68,25 @@ public class RecruitmentRepositoryCustomImpl implements RecruitmentRepositoryCus
       .select(recruitment.count())
       .from(recruitment);
 
-    boolean isWageCriteria = listCriteria.isWageCriteria();
-    boolean needsIndividualJoin = isWageCriteria
-      || condition.wageType() != null
-      || condition.wageValueMin() != null;
+    boolean needsIndividualJoin = condition.wageType() != null;
+
     boolean needsFoodTruckJoin = Boolean.TRUE.equals(condition.boothFeeRequired())
       || Boolean.TRUE.equals(condition.electricityProvided())
       || Boolean.TRUE.equals(condition.prepaid());
 
     if (needsIndividualJoin) {
-      resultQuery.join(recruitmentIndividual).on(recruitmentIndividual.recruit.eq(recruitment));
-      countQuery.join(recruitmentIndividual).on(recruitmentIndividual.recruit.eq(recruitment));
+      resultQuery.join(recruitmentIndividual).on(recruitmentIndividual.recruitment.eq(recruitment));
+      countQuery.join(recruitmentIndividual).on(recruitmentIndividual.recruitment.eq(recruitment));
+      whereCondition
+        .and(wageTypeEq(condition.wageType()));
     }
     if (needsFoodTruckJoin) {
-      resultQuery.join(recruitmentFoodTruck).on(recruitmentFoodTruck.recruit.eq(recruitment));
-      countQuery.join(recruitmentFoodTruck).on(recruitmentFoodTruck.recruit.eq(recruitment));
-    }
-
-    whereCondition
-      .and(wageTypeEq(condition.wageType()))
-      .and(wageValueBetween(condition.wageValueMin(), condition.wageValueMax()))
-      .and(boothFeeRequiredEq(condition.boothFeeRequired()))
-      .and(electricityProvidedEq(condition.electricityProvided()))
-      .and(prepaidEq(condition.prepaid()));
-
-    if (isWageCriteria) {
-      whereCondition.and(recruitmentIndividual.wageType.eq(listCriteria.getWageType()));
+      resultQuery.join(recruitmentFoodTruck).on(recruitmentFoodTruck.recruitment.eq(recruitment));
+      countQuery.join(recruitmentFoodTruck).on(recruitmentFoodTruck.recruitment.eq(recruitment));
+      whereCondition
+        .and(boothFeeRequiredEq(condition.boothFeeRequired()))
+        .and(electricityProvidedEq(condition.electricityProvided()))
+        .and(prepaidEq(condition.prepaid()));
     }
 
     resultQuery.where(whereCondition);
@@ -105,13 +94,13 @@ public class RecruitmentRepositoryCustomImpl implements RecruitmentRepositoryCus
 
     Long total = countQuery.fetchOne();
 
-    if (isWageCriteria)
+    // 급여순 정렬을 선택한 경우 우선 정렬
+    if (condition.wageType() != null)
       resultQuery.orderBy(recruitmentIndividual.wageValue.desc());
-    else {
-      switch (listCriteria) {
-        case LATEST -> resultQuery.orderBy(recruitment.publishedAt.desc());
-        case DEADLINE -> resultQuery.orderBy(recruitment.applicationDeadline.asc());
-      }
+
+    switch (condition.listCriteria()) {
+      case LATEST -> resultQuery.orderBy(recruitment.publishedAt.desc());
+      case DEADLINE -> resultQuery.orderBy(recruitment.applicationDeadline.asc());
     }
 
     List<Recruitment> result = resultQuery
@@ -148,15 +137,27 @@ public class RecruitmentRepositoryCustomImpl implements RecruitmentRepositoryCus
     return Optional.ofNullable(foodTruck);
   }
 
+  @Override
+  public Page<Recruitment> searchRecruitments(RecruitmentManagementForm form, Pageable pageable) {
+    return null;
+  }
+
   private BooleanBuilder containsAnyKeyword(List<String> keywords) {
 
     if (keywords == null || keywords.isEmpty()) return null;
 
     BooleanBuilder booleanBuilder = new BooleanBuilder();
     for (String keyword : keywords) {
-      booleanBuilder.or(
+      booleanBuilder.and(
         recruitment.title.contains(keyword)
           .or(recruitment.content.contains(keyword))
+          .or(recruitment.sigungu.name.contains(keyword))
+          .or(recruitment.sigungu.sido.name.contains(keyword))
+          .or(recruitment.sigungu.sido.shortName.contains(keyword))
+          .or(recruitment.festival.address.contains(keyword))
+          .or(recruitment.festival.eventPlace.contains(keyword))
+          .or(recruitment.festival.title.contains(keyword))
+          .or(recruitment.festival.overview.contains(keyword))
       );
     }
     return booleanBuilder;
@@ -179,20 +180,8 @@ public class RecruitmentRepositoryCustomImpl implements RecruitmentRepositoryCus
     return status == null ? null : recruitment.status.eq(status);
   }
 
-  private BooleanExpression ownerMemberIdEq(Long memberId) {
-    return memberId == null ? null : recruitment.festival.member.id.eq(memberId);
-  }
-
-  private BooleanExpression publishedOnlyCondition(Boolean publishedOnly) {
-    return Boolean.TRUE.equals(publishedOnly) ? recruitment.publishedAt.isNotNull() : null;
-  }
-
   private BooleanExpression wageTypeEq(RecruitmentWageType wageType) {
     return wageType == null ? null : recruitmentIndividual.wageType.eq(wageType);
-  }
-
-  private BooleanExpression wageValueBetween(Integer min, Integer max) {
-    return (min == null || max == null) ? null : recruitmentIndividual.wageValue.between(min, max);
   }
 
   private BooleanExpression boothFeeRequiredEq(Boolean value) {

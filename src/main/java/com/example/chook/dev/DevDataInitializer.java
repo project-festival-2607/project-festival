@@ -12,15 +12,15 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class DevDataInitializer implements ApplicationRunner {
 
+  private static final long RECRUITER_COUNT = 50;
+  private static final long JOB_SEEKER_COUNT = 10;
+  private static final long JOB_EQUIP_COUNT = 5;
+  private static final long TARGET_FESTIVAL_COUNT = 200;
   private final DevMemberDataInitializer memberDataInitializer;
   private final DevFestivalDataInitializer festivalDataInitializer;
   private final DevRecruitmentInitializer recruitmentInitializer;
+  private final DevProductInitializer productInitializer;
   private final RegionDataInitService regionDataInitService;
-
-  private static final long RECRUITER_COUNT = 3;
-  private static final long JOB_SEEKER_COUNT = 10;
-  private static final long JOB_EQUIP_COUNT = 5;
-  private static final long TARGET_FESTIVAL_COUNT = 6;
 
   @Profile("dev")
   @Override
@@ -30,6 +30,7 @@ public class DevDataInitializer implements ApplicationRunner {
     memberDataInitializer.generateSampleMembers(RECRUITER_COUNT, JOB_SEEKER_COUNT, JOB_EQUIP_COUNT);
     festivalDataInitializer.generateSampleFestivals(TARGET_FESTIVAL_COUNT);
     recruitmentInitializer.generateSampleRecruitments();
+    productInitializer.generateSampleProducts();
 
   }
 }

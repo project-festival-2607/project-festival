@@ -6,6 +6,7 @@ import com.example.chook.recruitment.entity.Recruitment;
 import com.example.chook.recruitment.entity.RecruitmentFoodTruck;
 import com.example.chook.recruitment.entity.RecruitmentIndividual;
 import com.example.chook.recruitment.entity.enums.RecruitmentCategory;
+import com.example.chook.recruitment.entity.enums.RecruitmentStatus;
 import com.example.chook.recruitment.entity.enums.RecruitmentWageType;
 import com.example.chook.recruitment.repository.RecruitmentFoodTruckRepository;
 import com.example.chook.recruitment.repository.RecruitmentIndividualRepository;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Random;
@@ -40,6 +42,8 @@ public class DevRecruitmentInitializer {
   @Transactional
   public void generateSampleRecruitments() {
 
+    log.info("테스트용 구인공고 데이터 삽입 시작");
+
     sigunguList = regionSigunguRepository.findAll();
 
     for (Festival festival : festivalRepository.findAll()) {
@@ -60,20 +64,26 @@ public class DevRecruitmentInitializer {
 
     }
 
+    log.info("테스트용 구인공고 데이터 삽입 완료");
+
   }
 
   private void addRecruitmentEtc(Festival festival) {
     String recruitmentTitle = "기타 공고";
     Recruitment savedRecruitment = addRecruitment(festival, RecruitmentCategory.ETC, recruitmentTitle);
     savedRecruitment.setTitle(String.format("기타 공고 #%d", savedRecruitment.getId()));
-    log.debug("\"{}\" 공고가 추가됨: {}", recruitmentTitle, savedRecruitment);
+    // 구직자 목록 페이지 검증용
+    savedRecruitment.setStatus(RecruitmentStatus.RECRUITING);
+    savedRecruitment.setPublishedAt(LocalDateTime.now());
   }
 
   private void addRecruitmentEquipment(Festival festival) {
     String recruitmentTitle = "장비 공고";
     Recruitment savedRecruitment = addRecruitment(festival, RecruitmentCategory.EQUIPMENT, recruitmentTitle);
     savedRecruitment.setTitle(String.format("장비 공고 #%d", savedRecruitment.getId()));
-    log.debug("\"{}\" 공고가 추가됨: {}", recruitmentTitle, savedRecruitment);
+    // 구직자 목록 페이지 검증용
+    savedRecruitment.setStatus(RecruitmentStatus.RECRUITING);
+    savedRecruitment.setPublishedAt(LocalDateTime.now());
   }
 
   private void addRecruitmentFoodTruck(Festival festival) {
@@ -81,7 +91,9 @@ public class DevRecruitmentInitializer {
     Recruitment savedRecruitment = addRecruitment(festival, RecruitmentCategory.FOOD_TRUCK, recruitmentTitle);
     savedRecruitment.setTitle(String.format("푸드트럭 공고 #%d", savedRecruitment.getId()));
     addRecruitmentFoodTruckSpecific(savedRecruitment);
-    log.debug("\"{}\" 공고가 추가됨: {}", recruitmentTitle, savedRecruitment);
+    // 구직자 목록 페이지 검증용
+    savedRecruitment.setStatus(RecruitmentStatus.RECRUITING);
+    savedRecruitment.setPublishedAt(LocalDateTime.now());
   }
 
   private void addRecruitmentIndividual(Festival festival) {
@@ -89,7 +101,9 @@ public class DevRecruitmentInitializer {
     Recruitment savedRecruitment = addRecruitment(festival, RecruitmentCategory.INDIVIDUAL, recruitmentTitle);
     savedRecruitment.setTitle(String.format("일반 구인 공고 #%d", savedRecruitment.getId()));
     addRecruitmentIndividualSpecific(savedRecruitment);
-    log.debug("\"{}\" 공고가 추가됨: {}", recruitmentTitle, savedRecruitment);
+    // 구직자 목록 페이지 검증용
+    savedRecruitment.setStatus(RecruitmentStatus.RECRUITING);
+    savedRecruitment.setPublishedAt(LocalDateTime.now());
   }
 
   private Recruitment addRecruitment(Festival festival, RecruitmentCategory category, String recruitmentTitle) {
@@ -110,20 +124,21 @@ public class DevRecruitmentInitializer {
         .recruitmentCount(category == RecruitmentCategory.INDIVIDUAL ? random.nextInt(5 + 1) : 1)
         .workingStartTime(LocalTime.of(startTime / 2, 30 * (startTime % 2)))
         .workingEndTime(LocalTime.of(endTime / 2, 30 * (endTime % 2)))
-              .workingStartDate((festival.getStartDate() != null ? festival.getStartDate() : LocalDate.now())
-                      .minusDays(random.nextInt(-3, 0 + 1)))
-              .workingEndDate((festival.getEndDate() != null ? festival.getEndDate() : LocalDate.now())
-                      .plusDays(random.nextInt(0, 1 + 1)))
+        .workingStartDate((festival.getStartDate() != null ? festival.getStartDate() : LocalDate.now())
+          .minusDays(random.nextInt(-3, 1)))
+        .workingEndDate((festival.getEndDate() != null ? festival.getEndDate() : LocalDate.now())
+          .plusDays(random.nextInt(0, 1 + 1)))
         .build()
     );
   }
 
   private void addRecruitmentIndividualSpecific(Recruitment recruitment) {
+    RecruitmentWageType[] wageTypes = RecruitmentWageType.values();
     recruitmentIndividualRepository.save(
       RecruitmentIndividual.builder()
-        .recruit(recruitment)
-        .wageType(RecruitmentWageType.HOURLY)
-        .wageValue(random.nextInt(3, 10 + 1) * 5000)
+        .recruitment(recruitment)
+        .wageType(wageTypes[random.nextInt(wageTypes.length)])
+        .wageValue(random.nextInt(3, 30 + 1) * 5000)
         .build()
     );
   }
@@ -132,7 +147,7 @@ public class DevRecruitmentInitializer {
     boolean prepaid = random.nextBoolean();
     recruitmentFoodTruckRepository.save(
       RecruitmentFoodTruck.builder()
-        .recruit(recruitment)
+        .recruitment(recruitment)
         .prepaid(prepaid)
         .boothFeeRequired(random.nextBoolean() && !prepaid)
         .electricityProvided(random.nextBoolean() && !prepaid)
