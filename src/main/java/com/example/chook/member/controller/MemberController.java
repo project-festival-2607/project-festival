@@ -135,4 +135,27 @@ public class MemberController {
         return "member/signup-job";
     }
 
+    // 소셜 회원가입
+    @PostMapping("/signup/social")
+    public String signupSocial(
+            @ModelAttribute SocialSignUpRequestDTO requestDTO,
+            HttpSession session,
+            RedirectAttributes redirectAttributes
+    ) {
+        SocialAuthSessionDTO authInfo = (SocialAuthSessionDTO) session.getAttribute("socialAuthInfo");
+        if (authInfo == null) {
+            return "redirect:/member/login";
+        }
+
+        try {
+            LoginResponseDTO responseDTO = memberService.signUpSocial(authInfo, requestDTO);
+            session.removeAttribute("socialAuthInfo");
+            session.setAttribute("loginMember", responseDTO);
+            return "redirect:/";
+        } catch (IllegalArgumentException e) {
+            redirectAttributes.addFlashAttribute("FailureMsg", e.getMessage());
+            return "redirect:/member/signup/social";
+        }
+    }
+
 }
