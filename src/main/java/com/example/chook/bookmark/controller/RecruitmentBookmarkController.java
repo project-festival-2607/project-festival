@@ -25,18 +25,18 @@ public class RecruitmentBookmarkController {
 
   // 구직자만 찜하기 가능 (버튼도 구직자에게만 노출되지만, 여기서도 한번 더 확인)
   @PostMapping("/{id}")
-  public ResponseEntity<Boolean> toggle(@PathVariable Long id, @AuthenticationPrincipal UserDetails user) {
-    if (!(user instanceof CustomUserDetails cud)) {
+  public ResponseEntity<Boolean> toggle(@PathVariable Long id,
+                                        @AuthenticationPrincipal CustomUserDetails user) {
+    if (user == null) {
       return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 
-    Member member = cud.getMember();
-    if (member.getRole() != MemberRole.JOB_SEEKER) {
+    if (user.getRole() != MemberRole.JOB_SEEKER) {
       return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
     }
 
-    boolean bookmarked = recruitmentBookmarkService.toggle(id, member.getId());
-    log.info("recruitment bookmark toggled: recruitmentId={}, memberId={}, bookmarked={}", id, member.getId(), bookmarked);
+    boolean bookmarked = recruitmentBookmarkService.toggle(id, user.getId());
+    log.info("recruitment bookmark toggled: recruitmentId={}, memberId={}, bookmarked={}", id, user.getId(), bookmarked);
     return ResponseEntity.ok(bookmarked);
   }
 
