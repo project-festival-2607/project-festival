@@ -113,15 +113,16 @@ public class RecruitmentController {
     model.addAttribute("fes", festivalDto);
     model.addAttribute("mapApiKey", mapApiKey);
 
-    boolean recruiter = user.isRecruiter();
-    model.addAttribute("recruiter", recruiter);
+    if (user != null) {
+      boolean recruiter = user.isRecruiter();
+      model.addAttribute("recruiter", recruiter);
 
-    // 수정/삭제는 이 공고가 속한 행사를 주최한 구인자 본인만 가능
-    boolean isOwner = recruiter
-      && responseDto.getOrganizerMemberId() != null
-      && responseDto.getOrganizerMemberId().equals(user.getId());
-    model.addAttribute("isOwner", isOwner);
-
+      // 수정/삭제는 이 공고가 속한 행사를 주최한 구인자 본인만 가능
+      boolean isOwner = recruiter
+        && responseDto.getOrganizerMemberId() != null
+        && responseDto.getOrganizerMemberId().equals(user.getId());
+      model.addAttribute("isOwner", isOwner);
+    }
     log.info("recruitment view: {}", responseDto);
     return "recruitment/detail";
   }
