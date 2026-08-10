@@ -185,6 +185,24 @@ public class RecruitmentMapper {
       .build();
   }
 
+  // 수정 폼도 등록 폼과 필드가 동일해 RecruitmentCreateForm을 그대로 재사용 (festivalContentId는 무시됨: 행사는 변경 불가)
+  public RecruitmentUpdateDTO toUpdateDto(RecruitmentCreateForm form) {
+    return RecruitmentUpdateDTO.builder()
+      .regionSidoCode(form.regionSidoCode())
+      .regionSigunguCode(form.regionSigunguCode())
+      .workingLocation(form.workingLocation())
+      .recruitmentTitle(form.recruitmentTitle())
+      .content(form.content())
+      .specific(toSpecificDto(form))
+      .applicationDeadline(form.applicationDeadline())
+      .recruitmentCount(form.recruitmentCount())
+      .workingStartDate(form.workingStartDate())
+      .workingEndDate(form.workingEndDate())
+      .workingStartTime(form.workingStartTime())
+      .workingEndTime(form.workingEndTime())
+      .build();
+  }
+
   public RecruitmentSearchCondition toCondition(RecruitmentSearchForm form) {
     return RecruitmentSearchCondition.builder()
       .keywordList(splitByRegex(form.keywords(), "[\\s,&]+"))
@@ -257,6 +275,7 @@ public class RecruitmentMapper {
       .updatedAt(entity.getPublishedAt())
       .deletedAt(entity.getDeletedAt())
       .organizerPhone(organizerPhone)
+      .organizerMemberId(entity.getFestival().getMember().getId())
       ;
   }
 

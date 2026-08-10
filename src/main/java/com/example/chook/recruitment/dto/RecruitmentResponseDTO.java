@@ -46,6 +46,7 @@ public class RecruitmentResponseDTO {
   private LocalDateTime deletedAt;
 
   private String organizerPhone;
+  private Long organizerMemberId;
 
   public String getWorkingDurationText() {
     if (workingStartTime == null || workingEndTime == null) return null;

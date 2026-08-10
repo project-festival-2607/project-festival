@@ -185,7 +185,6 @@
                                     <span th:case="'DAILY'">일급</span>
                                     <span th:case="'WEEKLY'">주급</span>
                                     <span th:case="'PER_TASK'">건당</span>
-                                    <span th:case="*">협의</span>
                                 </span>
                                 <span th:if="${r.specific.wageValue != null}" th:text="${#numbers.formatInteger(r.specific.wageValue, 0, 'COMMA')} + '원'"></span>
                             </span>
