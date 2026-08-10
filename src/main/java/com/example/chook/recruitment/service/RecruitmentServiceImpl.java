@@ -180,20 +180,22 @@ public class RecruitmentServiceImpl implements RecruitmentService {
     Recruitment recruitment = recruitmentRepository.findById(id)
       .orElseThrow(() -> new EntityNotFoundException(String.format("id가 \"%d\"인 공고가 없음", id)));
 
+    String organizerPhone = recruitment.getFestival().getMember().getPhone();
+
     switch (recruitment.getCategory()) {
 
       case INDIVIDUAL -> {
         RecruitmentIndividual individual = getIndividual(id);
-        return mapper.toResponseDto(recruitment, individual);
+        return mapper.toResponseDto(recruitment, individual, organizerPhone);
       }
 
       case FOOD_TRUCK -> {
         RecruitmentFoodTruck foodTruck = getFoodTruck(id);
-        return mapper.toResponseDto(recruitment, foodTruck);
+        return mapper.toResponseDto(recruitment, foodTruck, organizerPhone);
       }
 
     }
-    return mapper.toResponseDto(recruitment);
+    return mapper.toResponseDto(recruitment, organizerPhone);
   }
 
   @Override
