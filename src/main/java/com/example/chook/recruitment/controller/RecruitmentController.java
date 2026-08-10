@@ -29,6 +29,9 @@ import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -66,9 +69,10 @@ public class RecruitmentController {
                    @RequestParam(name = "pageIdx", required = false, defaultValue = "1") int pageIdx,
                    @Valid @ModelAttribute RecruitmentSearchForm form,
                    BindingResult bindingResult,
-                   HttpSession session) {
-    LoginResponseDTO loginMember = (LoginResponseDTO) session.getAttribute("loginMember");
-    boolean recruiter = loginMember != null && loginMember.getRole() == MemberRole.RECRUITER;
+                   @AuthenticationPrincipal UserDetails user) {
+    boolean recruiter = user.getAuthorities().contains(
+      new SimpleGrantedAuthority(MemberRole.RECRUITER.getRole())
+    );
 
     if (form.workingStartDate() != null && form.workingEndDate() != null
       && form.workingStartDate().isAfter(form.workingEndDate()))

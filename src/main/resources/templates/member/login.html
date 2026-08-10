@@ -18,8 +18,8 @@
         </li>
     </ul>
 
-    <div th:if="${FailureMsg != null}" class="alert alert-danger" role="alert">
-        [[${FailureMsg}]]
+    <div th:if="${param.error != null}" class="alert alert-danger" role="alert">
+        아이디 또는 비밀번호가 일치하지 않습니다.
     </div>
 
     <form th:action="@{/member/login}" method="post">
