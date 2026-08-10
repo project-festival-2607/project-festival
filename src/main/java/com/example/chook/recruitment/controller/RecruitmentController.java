@@ -108,6 +108,7 @@ public class RecruitmentController {
     RecruitmentManagementCondition condition = mapper.toCondition(form, username);
     Page<RecruitmentManagementListDTO> page = recruitmentService.getPage(pageIdx, condition);
     model.addAttribute("page", page);
+    model.addAttribute("festivals", festivalService.getByUsername(user.getUsername()));
 
     PagingHandler<RecruitmentManagementListDTO, RecruitmentManagementForm> pagingHandler =
       new PagingHandler<>(page, form, PAGINATION_SIZE, pageIdx);

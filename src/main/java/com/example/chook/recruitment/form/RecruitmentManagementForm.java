@@ -16,4 +16,16 @@ public record RecruitmentManagementForm(
   RecruitmentListCriteria listCriteria
 
 ) {
+
+  public RecruitmentManagementForm {
+
+    listCriteria = listCriteria == null ? RecruitmentListCriteria.LATEST : listCriteria;
+    festivalContentId = blankToNull(festivalContentId);
+
+  }
+
+  private String blankToNull(String string) {
+    return (string == null || string.isBlank()) ? null : string;
+  }
+
 }
