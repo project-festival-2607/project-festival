@@ -1,7 +1,7 @@
 package com.example.chook.member.dto;
 
 import lombok.*;
-
+// TODO 삭제
 @Getter
 @Setter
 @ToString

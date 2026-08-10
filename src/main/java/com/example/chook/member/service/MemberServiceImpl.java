@@ -33,24 +33,24 @@ public class MemberServiceImpl implements MemberService {
     private final SocialLoginRepository socialLoginRepository; //
     private static final List<MemberRole> JOB_SEEKER_ROLES = List.of(MemberRole.JOB_SEEKER, MemberRole.JOB_EQUIP);
 
-    @Override
-    public LoginResponseDTO login(LoginRequestDTO requestDTO) {
-
-        // 입력받은 username으로 회원 조회
-        // 탈퇴한 회원은 로그인 불가능(DeletedAtNull)
-        Member member = memberRepository.findByUsernameAndDeletedAtIsNull(requestDTO.getUsername())
-                .filter(m -> passwordEncoder.matches(requestDTO.getPassword(), m.getPasswordHash()))
-                .orElseThrow(() -> new IllegalArgumentException("아이디 또는 비밀번호가 일치하지 않습니다."));
-
-        // 회원 status에 따라 로그인 제한
-        switch (member.getStatus()) {
-            case DORMANT -> throw new MemberDormantException(); // 휴면 예외
-            case SUSPENDED -> throw new MemberSuspendedException(); // 정지 예외
-            default -> {}
-        }
-        // Entity를 로그인응답 DTO로 변환하여 반환
-        return toLoginResponseDTO(member);
-    }
+//    @Override
+//    public LoginResponseDTO login(LoginRequestDTO requestDTO) {
+//
+//        // 입력받은 username으로 회원 조회
+//        // 탈퇴한 회원은 로그인 불가능(DeletedAtNull)
+//        Member member = memberRepository.findByUsernameAndDeletedAtIsNull(requestDTO.getUsername())
+//                .filter(m -> passwordEncoder.matches(requestDTO.getPassword(), m.getPasswordHash()))
+//                .orElseThrow(() -> new IllegalArgumentException("아이디 또는 비밀번호가 일치하지 않습니다."));
+//
+//        // 회원 status에 따라 로그인 제한
+//        switch (member.getStatus()) {
+//            case DORMANT -> throw new MemberDormantException(); // 휴면 예외
+//            case SUSPENDED -> throw new MemberSuspendedException(); // 정지 예외
+//            default -> {}
+//        }
+//        // Entity를 로그인응답 DTO로 변환하여 반환
+//        return toLoginResponseDTO(member);
+//    }
 
     @Transactional
     @Override

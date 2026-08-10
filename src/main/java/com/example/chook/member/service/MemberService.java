@@ -5,7 +5,7 @@ import com.example.chook.member.entity.enums.Provider;
 
 public interface MemberService {
 
-    LoginResponseDTO login(LoginRequestDTO requestDTO);
+//    LoginResponseDTO login(LoginRequestDTO requestDTO);
 
     LoginResponseDTO signUpJobSeeker(JobSeekerSignUpRequestDTO requestDTO);
 
