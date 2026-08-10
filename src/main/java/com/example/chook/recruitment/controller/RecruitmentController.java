@@ -6,8 +6,9 @@ import com.example.chook.festival.FestivalService;
 import com.example.chook.file.dto.FileDTO;
 import com.example.chook.file.record.FileResource;
 import com.example.chook.file.service.FileService;
-import com.example.chook.member.dto.LoginResponseDTO;
+import com.example.chook.member.entity.Member;
 import com.example.chook.member.entity.enums.MemberRole;
+import com.example.chook.member.security.CustomUserDetails;
 import com.example.chook.recruitment.dto.RecruitmentCreateDTO;
 import com.example.chook.recruitment.dto.RecruitmentListDTO;
 import com.example.chook.recruitment.dto.RecruitmentManagementListDTO;
@@ -22,7 +23,6 @@ import com.example.chook.recruitment.record.RecruitmentSearchCondition;
 import com.example.chook.recruitment.service.RecruitmentService;
 import com.example.chook.region.dto.RegionDTO;
 import com.example.chook.region.service.RegionService;
-import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,7 +32,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -112,7 +111,7 @@ public class RecruitmentController {
   }
 
   @GetMapping("/{id}")
-  public String view(@PathVariable Long id, Model model, HttpSession session) {
+  public String view(@PathVariable Long id, Model model, @AuthenticationPrincipal UserDetails user) {
     RecruitmentResponseDTO responseDto = recruitmentService.getRecruitment(id);
     model.addAttribute("recruitment", responseDto);
 
@@ -120,14 +119,14 @@ public class RecruitmentController {
     model.addAttribute("fes", festivalDto);
     model.addAttribute("mapApiKey", mapApiKey);
 
-    LoginResponseDTO loginMember = (LoginResponseDTO) session.getAttribute("loginMember");
-    boolean recruiter = loginMember != null && loginMember.getRole() == MemberRole.RECRUITER;
+    Member member = user instanceof CustomUserDetails cud ? cud.getMember() : null;
+    boolean recruiter = member != null && member.getRole() == MemberRole.RECRUITER;
     model.addAttribute("recruiter", recruiter);
 
     // 수정/삭제는 이 공고가 속한 행사를 주최한 구인자 본인만 가능
     boolean isOwner = recruiter
       && responseDto.getOrganizerMemberId() != null
-      && responseDto.getOrganizerMemberId().equals(loginMember.getId());
+      && responseDto.getOrganizerMemberId().equals(member.getId());
     model.addAttribute("isOwner", isOwner);
 
     log.info("recruitment view: {}", responseDto);
@@ -144,9 +143,9 @@ public class RecruitmentController {
   }
 
   @GetMapping("/modify/{id}")
-  public String modifyForm(@PathVariable Long id, Model model, HttpSession session,
+  public String modifyForm(@PathVariable Long id, Model model, @AuthenticationPrincipal UserDetails user,
                            RedirectAttributes redirectAttributes) {
-    RecruitmentResponseDTO current = requireOwnedRecruitment(id, session);
+    RecruitmentResponseDTO current = requireOwnedRecruitment(id, user);
     if (current == null) {
       redirectAttributes.addFlashAttribute("errorMsg", "수정 권한이 없습니다.");
       return "redirect:/recruitment/" + id;
@@ -205,13 +204,14 @@ public class RecruitmentController {
   }
 
   // 로그인한 구인자가 이 공고가 속한 행사를 주최한 본인일 때만 응답 DTO를 돌려주고, 아니면 null (수정/삭제 공통 권한 체크)
-  private RecruitmentResponseDTO requireOwnedRecruitment(Long id, HttpSession session) {
-    LoginResponseDTO loginMember = (LoginResponseDTO) session.getAttribute("loginMember");
-    if (loginMember == null || loginMember.getRole() != MemberRole.RECRUITER) return null;
+  private RecruitmentResponseDTO requireOwnedRecruitment(Long id, UserDetails user) {
+    if (!(user instanceof CustomUserDetails cud)) return null;
+    Member member = cud.getMember();
+    if (member.getRole() != MemberRole.RECRUITER) return null;
 
     RecruitmentResponseDTO current = recruitmentService.getRecruitment(id);
     boolean owner = current.getOrganizerMemberId() != null
-      && current.getOrganizerMemberId().equals(loginMember.getId());
+      && current.getOrganizerMemberId().equals(member.getId());
     return owner ? current : null;
   }
 
@@ -262,10 +262,10 @@ public class RecruitmentController {
                        @Valid @ModelAttribute RecruitmentCreateForm recruitmentCreateForm,
                        BindingResult bindingResult,
                        Model model,
-                       HttpSession session,
+                       @AuthenticationPrincipal UserDetails user,
                        RedirectAttributes redirectAttributes) {
 
-    RecruitmentResponseDTO current = requireOwnedRecruitment(id, session);
+    RecruitmentResponseDTO current = requireOwnedRecruitment(id, user);
     if (current == null) {
       redirectAttributes.addFlashAttribute("errorMsg", "수정 권한이 없습니다.");
       return "redirect:/recruitment/" + id;
@@ -290,8 +290,9 @@ public class RecruitmentController {
   }
 
   @PostMapping("/delete/{id}")
-  public String delete(@PathVariable Long id, HttpSession session, RedirectAttributes redirectAttributes) {
-    RecruitmentResponseDTO current = requireOwnedRecruitment(id, session);
+  public String delete(@PathVariable Long id, @AuthenticationPrincipal UserDetails user,
+                       RedirectAttributes redirectAttributes) {
+    RecruitmentResponseDTO current = requireOwnedRecruitment(id, user);
     if (current == null) {
       redirectAttributes.addFlashAttribute("errorMsg", "삭제 권한이 없습니다.");
       return "redirect:/recruitment/" + id;
