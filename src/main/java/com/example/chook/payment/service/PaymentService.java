@@ -6,7 +6,9 @@ import com.example.chook.payment.entity.Payment;
 import com.example.chook.payment.entity.PointCalcUse;
 import com.example.chook.payment.entity.PointHistory;
 import com.example.chook.payment.entity.Product;
-import com.example.chook.payment.repository.PMemberRepository;
+//import com.example.chook.payment.repository.PMemberRepository;
+import com.example.chook.member.repository.MemberRepository;
+
 import com.example.chook.payment.repository.PaymentRepository;
 import com.example.chook.payment.repository.PointCalcUseRepository;
 import com.example.chook.payment.repository.PointHistoryRepository;
@@ -29,7 +31,7 @@ import java.util.Optional;
 @Service
 public class PaymentService {
 
-    private final PMemberRepository memberRepository;
+    private final MemberRepository memberRepository;
     private final PaymentRepository paymentRepository;
     private final ProductRepository productRepository;
     private final PointHistoryRepository pointHistoryRepository;

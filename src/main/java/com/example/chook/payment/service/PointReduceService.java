@@ -3,7 +3,8 @@ package com.example.chook.payment.service;
 import com.example.chook.member.entity.Member;
 import com.example.chook.payment.entity.PointCalcUse;
 import com.example.chook.payment.entity.PointHistory;
-import com.example.chook.payment.repository.PMemberRepository;
+//import com.example.chook.payment.repository.PMemberRepository;
+import com.example.chook.member.repository.MemberRepository;
 import com.example.chook.payment.repository.PointCalcUseRepository;
 import com.example.chook.payment.repository.PointHistoryRepository;
 import com.example.chook.recruitment.entity.Recruitment;
@@ -21,15 +22,13 @@ import java.util.NoSuchElementException;
 @Service
 public class PointReduceService {
 
-    private final PMemberRepository memberRepository;
+    private final MemberRepository memberRepository;
     private final PointCalcUseRepository pointCalcUseRepository;
     private final PointHistoryRepository pointHistoryRepository;
     private final RecruitmentRepository recruitmentRepository;
 
 
     /**
-     * 테스트용
-     *
      * 로그인한 회원이 특정 모집공고에
      * 하드코딩된 5000포인트를 사용한다.
      */
