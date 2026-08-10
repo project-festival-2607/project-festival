@@ -1,12 +1,16 @@
 package com.example.chook.recruitment.controller;
 
 import com.example.chook.festival.Festival;
+import com.example.chook.festival.FestivalDTO;
 import com.example.chook.festival.FestivalRepository;
+import com.example.chook.festival.FestivalService;
 import com.example.chook.file.dto.FileDTO;
 import com.example.chook.file.record.FileResource;
 import com.example.chook.file.service.FileService;
 import com.example.chook.member.dto.LoginResponseDTO;
+import com.example.chook.member.entity.Member;
 import com.example.chook.member.entity.enums.MemberRole;
+import com.example.chook.member.repository.MemberRepository;
 import com.example.chook.recruitment.dto.RecruitmentCreateDTO;
 import com.example.chook.recruitment.dto.RecruitmentListDTO;
 import com.example.chook.recruitment.dto.RecruitmentManagementListDTO;
@@ -24,6 +28,7 @@ import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
@@ -52,8 +57,13 @@ public class RecruitmentController {
   private final RecruitmentService recruitmentService;
   private final RecruitmentMapper mapper;
   private final FestivalRepository festivalRepository;
+  private final FestivalService festivalService;
+  private final MemberRepository memberRepository;
   private final RegionService regionService;
   private final FileService fileService;
+
+  @Value("${apikey.map}")
+  private String mapApiKey;
 
   // 헤더 "모집공고"/"축제인력모집" 진입점. 구직자/비로그인은 검색 필터가 붙은 리스트,
   // 구인자는 검색 없이 "구인공고 등록" 버튼만 보이는 동일한 리스트를 봄 (세션의 로그인 회원 role로 구분)
@@ -105,9 +115,23 @@ public class RecruitmentController {
   }
 
   @GetMapping("/{id}")
-  public String view(@PathVariable Long id, Model model) {
+  public String view(@PathVariable Long id, Model model, HttpSession session) {
     RecruitmentResponseDTO responseDto = recruitmentService.getRecruitment(id);
     model.addAttribute("recruitment", responseDto);
+
+    FestivalDTO festivalDto = festivalService.getDetail(responseDto.getFestivalContentId());
+    model.addAttribute("fes", festivalDto);
+    model.addAttribute("mapApiKey", mapApiKey);
+
+    String organizerPhone = memberRepository.findById(festivalDto.getMember())
+      .map(Member::getPhone)
+      .orElse(null);
+    model.addAttribute("organizerPhone", organizerPhone);
+
+    LoginResponseDTO loginMember = (LoginResponseDTO) session.getAttribute("loginMember");
+    boolean recruiter = loginMember != null && loginMember.getRole() == MemberRole.RECRUITER;
+    model.addAttribute("recruiter", recruiter);
+
     log.info("recruitment view: {}", responseDto);
     return "recruitment/detail";
   }
