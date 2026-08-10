@@ -1,5 +1,35 @@
-// ===== 1. 지역 시/도 -> 시/군/구 연동 드롭다운 (register 페이지와 동일 패턴, 기존 선택값 복원 포함) =====
+// ===== 0. 찜하기 버튼: 카드 전체가 <a>라서 클릭 전파를 막아야 페이지 이동이 안 됨 =====
 const currentScript = document.currentScript;
+const isJobSeeker = currentScript.dataset.jobSeeker === "true";
+
+document.querySelectorAll(".recruit-card-bookmark").forEach(btn => {
+    btn.addEventListener("click", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        if (!isJobSeeker) {
+            alert("로그인 시 이용 가능합니다.");
+            return;
+        }
+
+        const recruitmentId = btn.dataset.id;
+        fetch("/bookmark/recruitment/" + recruitmentId, { method: "POST" })
+            .then(res => {
+                if (!res.ok) throw new Error("찜하기 요청 실패: " + res.status);
+                return res.json();
+            })
+            .then(bookmarked => {
+                btn.classList.toggle("active", bookmarked);
+                btn.textContent = bookmarked ? "★" : "☆";
+            })
+            .catch(err => {
+                console.error(err);
+                alert("찜하기 처리에 실패했습니다.");
+            });
+    });
+});
+
+// ===== 1. 지역 시/도 -> 시/군/구 연동 드롭다운 (register 페이지와 동일 패턴, 기존 선택값 복원 포함) =====
 const initialSido = currentScript.dataset.sido || "";
 const initialSigungu = currentScript.dataset.sigungu || "";
 

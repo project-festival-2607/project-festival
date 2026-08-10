@@ -1,5 +1,6 @@
 package com.example.chook.recruitment.controller;
 
+import com.example.chook.bookmark.service.RecruitmentBookmarkService;
 import com.example.chook.common.handler.PagingHandler;
 import com.example.chook.festival.FestivalDTO;
 import com.example.chook.festival.FestivalService;
@@ -41,6 +42,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
@@ -59,6 +61,7 @@ public class RecruitmentController {
   private final FestivalService festivalService;
   private final RegionService regionService;
   private final FileService fileService;
+  private final RecruitmentBookmarkService recruitmentBookmarkService;
 
   @Value("${apikey.map}")
   private String mapApiKey;
@@ -69,7 +72,8 @@ public class RecruitmentController {
   public void list(Model model,
                    @RequestParam(name = "pageIdx", required = false, defaultValue = "1") int pageIdx,
                    @Valid @ModelAttribute RecruitmentSearchForm form,
-                   BindingResult bindingResult) {
+                   BindingResult bindingResult,
+                   @AuthenticationPrincipal UserDetails user) {
 
     if (form.workingStartDate() != null && form.workingEndDate() != null
       && form.workingStartDate().isAfter(form.workingEndDate()))
@@ -79,14 +83,28 @@ public class RecruitmentController {
       );
     if (bindingResult.hasErrors()) return;
 
-    RecruitmentSearchCondition condition = mapper.toCondition(form);
+    Member member = user instanceof CustomUserDetails cud ? cud.getMember() : null;
+    boolean recruiter = member != null && member.getRole() == MemberRole.RECRUITER;
+    boolean jobSeeker = member != null && member.getRole() == MemberRole.JOB_SEEKER;
+    Long memberId = jobSeeker ? member.getId() : null;
+
+    RecruitmentSearchCondition condition = mapper.toCondition(form, memberId);
     Page<RecruitmentListDTO> page = recruitmentService.getPage(pageIdx, condition);
+
+    // 찜하기 버튼: 구직자로 로그인한 경우에만 카드별 찜 여부를 채움
+    if (memberId != null) {
+      Set<Long> bookmarkedIds = recruitmentBookmarkService.getBookmarkedRecruitmentIds(memberId);
+      page.getContent().forEach(dto -> dto.setBookmarked(bookmarkedIds.contains(dto.getRecruitmentId())));
+    }
     model.addAttribute("page", page);
 
     PagingHandler<RecruitmentListDTO, RecruitmentSearchForm> pagingHandler =
       new PagingHandler<>(page, form, PAGINATION_SIZE, pageIdx);
     model.addAttribute("pagingHandler", pagingHandler);
 
+    // 찜하기 버튼은 구인자에게는 안 보이고 구직자/비로그인에게만 보임
+    model.addAttribute("recruiter", recruiter);
+    model.addAttribute("jobSeeker", jobSeeker);
     model.addAttribute("sidoList", regionService.getSidoList());
   }
 
@@ -121,7 +139,13 @@ public class RecruitmentController {
 
     Member member = user instanceof CustomUserDetails cud ? cud.getMember() : null;
     boolean recruiter = member != null && member.getRole() == MemberRole.RECRUITER;
+    boolean jobSeeker = member != null && member.getRole() == MemberRole.JOB_SEEKER;
     model.addAttribute("recruiter", recruiter);
+    model.addAttribute("jobSeeker", jobSeeker);
+
+    // 찜하기 버튼은 구인자에게는 안 보이고 구직자/비로그인에게만 보임
+    boolean bookmarked = jobSeeker && recruitmentBookmarkService.isBookmarked(id, member.getId());
+    model.addAttribute("bookmarked", bookmarked);
 
     // 수정/삭제는 이 공고가 속한 행사를 주최한 구인자 본인만 가능
     boolean isOwner = recruiter
