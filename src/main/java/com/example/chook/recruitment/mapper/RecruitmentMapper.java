@@ -142,20 +142,22 @@ public class RecruitmentMapper {
       .build();
   }
 
-  public RecruitmentResponseDTO toResponseDto(Recruitment entity) {
-    return toResponseDtoBuilder(entity).build();
+  public RecruitmentResponseDTO toResponseDto(Recruitment entity, String organizerPhone) {
+    return toResponseDtoBuilder(entity, organizerPhone).build();
   }
 
   public RecruitmentResponseDTO toResponseDto(Recruitment entity,
-                                              RecruitmentIndividual individual) {
-    return toResponseDtoBuilder(entity)
+                                              RecruitmentIndividual individual,
+                                              String organizerPhone) {
+    return toResponseDtoBuilder(entity, organizerPhone)
       .specific(toSpecificDto(individual))
       .build();
   }
 
   public RecruitmentResponseDTO toResponseDto(Recruitment entity,
-                                              RecruitmentFoodTruck foodTruck) {
-    return toResponseDtoBuilder(entity)
+                                              RecruitmentFoodTruck foodTruck,
+                                              String organizerPhone) {
+    return toResponseDtoBuilder(entity, organizerPhone)
       .specific(toSpecificDto(foodTruck))
       .build();
   }
@@ -217,7 +219,8 @@ public class RecruitmentMapper {
       ;
   }
 
-  private RecruitmentResponseDTO.RecruitmentResponseDTOBuilder toResponseDtoBuilder(Recruitment entity) {
+  private RecruitmentResponseDTO.RecruitmentResponseDTOBuilder toResponseDtoBuilder(Recruitment entity,
+                                                                                    String organizerPhone) {
     return RecruitmentResponseDTO.builder()
       .recruitmentId(entity.getId())
       .regionSidoName(entity.getSigungu().getSido().getName())
@@ -238,6 +241,7 @@ public class RecruitmentMapper {
       .publishedAt(entity.getPublishedAt())
       .updatedAt(entity.getPublishedAt())
       .deletedAt(entity.getDeletedAt())
+      .organizerPhone(organizerPhone)
       ;
   }
 

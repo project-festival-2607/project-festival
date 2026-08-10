@@ -1,17 +1,13 @@
 package com.example.chook.recruitment.controller;
 
 import com.example.chook.common.handler.PagingHandler;
-import com.example.chook.festival.Festival;
 import com.example.chook.festival.FestivalDTO;
-import com.example.chook.festival.FestivalRepository;
 import com.example.chook.festival.FestivalService;
 import com.example.chook.file.dto.FileDTO;
 import com.example.chook.file.record.FileResource;
 import com.example.chook.file.service.FileService;
 import com.example.chook.member.dto.LoginResponseDTO;
-import com.example.chook.member.entity.Member;
 import com.example.chook.member.entity.enums.MemberRole;
-import com.example.chook.member.repository.MemberRepository;
 import com.example.chook.recruitment.dto.RecruitmentCreateDTO;
 import com.example.chook.recruitment.dto.RecruitmentListDTO;
 import com.example.chook.recruitment.dto.RecruitmentManagementListDTO;
@@ -56,9 +52,7 @@ public class RecruitmentController {
 
   private final RecruitmentService recruitmentService;
   private final RecruitmentMapper mapper;
-  private final FestivalRepository festivalRepository;
   private final FestivalService festivalService;
-  private final MemberRepository memberRepository;
   private final RegionService regionService;
   private final FileService fileService;
 
@@ -121,11 +115,6 @@ public class RecruitmentController {
     model.addAttribute("fes", festivalDto);
     model.addAttribute("mapApiKey", mapApiKey);
 
-    String organizerPhone = memberRepository.findById(festivalDto.getMember())
-      .map(Member::getPhone)
-      .orElse(null);
-    model.addAttribute("organizerPhone", organizerPhone);
-
     LoginResponseDTO loginMember = (LoginResponseDTO) session.getAttribute("loginMember");
     boolean recruiter = loginMember != null && loginMember.getRole() == MemberRole.RECRUITER;
     model.addAttribute("recruiter", recruiter);
@@ -136,7 +125,7 @@ public class RecruitmentController {
 
   @GetMapping("/register")
   public void register(Model model) {
-    List<Festival> festivals = festivalRepository.findAll();
+    List<FestivalDTO> festivals = festivalService.getAll();
     List<RegionDTO> sidoList = regionService.getSidoList();
     model.addAttribute("festivals", festivals);
     model.addAttribute("sidoList", sidoList);
@@ -173,7 +162,7 @@ public class RecruitmentController {
 
   // 검증 실패로 등록 폼을 다시 보여줄 때, GET /register에서 채우던 드롭다운 데이터를 다시 채움
   private String registerFormWithReloadedOptions(Model model, BindingResult bindingResult) {
-    model.addAttribute("festivals", festivalRepository.findAll());
+    model.addAttribute("festivals", festivalService.getAll());
     model.addAttribute("sidoList", regionService.getSidoList());
     model.addAttribute("hasError", true);
     List<String> errorMessages = bindingResult.getFieldErrors().stream()
