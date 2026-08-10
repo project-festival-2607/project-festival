@@ -32,6 +32,8 @@ public class FestivalDTO {
     private String firstImage;
     private String secondImage;
 
+    private Long member;
+
     public String getOfficialHomepage() {
         if (this.homepage == null || this.homepage.isBlank()) {
             return "";

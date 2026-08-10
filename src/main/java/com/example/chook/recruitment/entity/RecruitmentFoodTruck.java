@@ -14,17 +14,17 @@ import lombok.*;
 public class RecruitmentFoodTruck {
 
   @Id
-  @Column(name = "recruit_id")
+  @Column(name = "recruitment_id")
   private Long id;
 
   @OneToOne(fetch = FetchType.LAZY)
   @MapsId
   @JoinColumn(
-    name = "recruit_id",
-    foreignKey = @ForeignKey(name = "fk_recruitment_food_truck_recruit_id")
+    name = "recruitment_id",
+    foreignKey = @ForeignKey(name = "fk_recruitment_food_truck_recruitment_id")
   )
   @ToString.Exclude
-  private Recruitment recruit;
+  private Recruitment recruitment;
 
   @Column(nullable = false)
   private boolean prepaid;

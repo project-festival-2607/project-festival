@@ -1,5 +1,6 @@
 package com.example.chook.recruitment.entity;
 
+import com.example.chook.common.entity.TimeBase;
 import com.example.chook.festival.Festival;
 import com.example.chook.recruitment.entity.enums.RecruitmentCategory;
 import com.example.chook.recruitment.entity.enums.RecruitmentStatus;
@@ -18,11 +19,11 @@ import java.time.LocalTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Recruitment {
+public class Recruitment extends TimeBase {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "recruit_id")
+  @Column(name = "recruitment_id")
   private Long id;
 
   @ManyToOne(fetch = FetchType.LAZY)
@@ -62,10 +63,11 @@ public class Recruitment {
   @Column(name = "recruitment_count", nullable = false)
   private int recruitmentCount;
 
-  @Enumerated(EnumType.STRING)
-  @Column(name = "status", nullable = false, length = 10)
-  @Builder.Default
-  private RecruitmentStatus status = RecruitmentStatus.OPEN;
+  @Column(name = "working_start_date", nullable = false)
+  private LocalDate workingStartDate;
+
+  @Column(name = "working_end_date", nullable = false)
+  private LocalDate workingEndDate;
 
   @Column(name = "working_start_time", nullable = false)
   private LocalTime workingStartTime;
@@ -73,14 +75,10 @@ public class Recruitment {
   @Column(name = "working_end_time", nullable = false)
   private LocalTime workingEndTime;
 
-  @Column(name = "working_start_date", nullable = false)
-  private LocalDate workingStartDate;
-
-  @Column(name = "working_end_date", nullable = false)
-  private LocalDate workingEndDate;
-
+  @Enumerated(EnumType.STRING)
+  @Column(name = "status", nullable = false, length = 10)
   @Builder.Default
-  private boolean published = false;
+  private RecruitmentStatus status = RecruitmentStatus.DRAFT;
 
   @Column(name = "published_at")
   private LocalDateTime publishedAt;
@@ -88,4 +86,11 @@ public class Recruitment {
   @Column(name = "deleted_at")
   private LocalDateTime deletedAt;
 
+  @OneToOne(mappedBy = "recruitment", cascade = CascadeType.REMOVE, orphanRemoval = true)
+  @ToString.Exclude
+  private RecruitmentIndividual recruitmentIndividual;
+
+  @OneToOne(mappedBy = "recruitment", cascade = CascadeType.REMOVE, orphanRemoval = true)
+  @ToString.Exclude
+  private RecruitmentFoodTruck recruitmentFoodTruck;
 }

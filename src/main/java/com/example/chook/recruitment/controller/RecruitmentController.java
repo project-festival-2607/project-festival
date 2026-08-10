@@ -1,23 +1,26 @@
 package com.example.chook.recruitment.controller;
 
+import com.example.chook.common.handler.PagingHandler;
 import com.example.chook.festival.Festival;
 import com.example.chook.festival.FestivalRepository;
 import com.example.chook.file.dto.FileDTO;
 import com.example.chook.file.record.FileResource;
 import com.example.chook.file.service.FileService;
+import com.example.chook.member.dto.LoginResponseDTO;
+import com.example.chook.member.entity.enums.MemberRole;
 import com.example.chook.recruitment.dto.RecruitmentCreateDTO;
 import com.example.chook.recruitment.dto.RecruitmentListDTO;
 import com.example.chook.recruitment.dto.RecruitmentManagementListDTO;
 import com.example.chook.recruitment.dto.RecruitmentResponseDTO;
 import com.example.chook.recruitment.form.RecruitmentCreateForm;
-import com.example.chook.recruitment.form.RecruitmentManagementSearchForm;
+import com.example.chook.recruitment.form.RecruitmentManagementForm;
 import com.example.chook.recruitment.form.RecruitmentSearchForm;
-import com.example.chook.recruitment.handler.PagingHandler;
 import com.example.chook.recruitment.mapper.RecruitmentMapper;
 import com.example.chook.recruitment.record.RecruitmentSearchCondition;
 import com.example.chook.recruitment.service.RecruitmentService;
 import com.example.chook.region.dto.RegionDTO;
 import com.example.chook.region.service.RegionService;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -44,6 +47,7 @@ public class RecruitmentController {
 
   // ponytail: 폴더명으로 못 쓰는 문자만 제거, admin_board와 동일한 규칙
   private static final Pattern INVALID_FOLDER_CHARS = Pattern.compile("[\\\\/:*?\"<>|]");
+  private static final int PAGINATION_SIZE = 5;
 
   private final RecruitmentService recruitmentService;
   private final RecruitmentMapper mapper;
@@ -52,14 +56,16 @@ public class RecruitmentController {
   private final FileService fileService;
 
   // 헤더 "모집공고"/"축제인력모집" 진입점. 구직자/비로그인은 검색 필터가 붙은 리스트,
-  // 구인자는 검색 없이 "구인공고 등록" 버튼만 보이는 동일한 리스트를 봄 (recruiter 쿼리스트링으로 임시 구분)
+  // 구인자는 검색 없이 "구인공고 등록" 버튼만 보이는 동일한 리스트를 봄 (세션의 로그인 회원 role로 구분)
   @GetMapping("/list")
   public void list(Model model,
                    @RequestParam(name = "pageIdx", required = false, defaultValue = "1") int pageIdx,
                    @Valid @ModelAttribute RecruitmentSearchForm form,
                    BindingResult bindingResult,
-                   // ponytail: 로그인 구현 전 임시 - admin_board의 ?admin=true와 동일하게 쿼리스트링으로 구인자 여부 확인
-                   @RequestParam(name = "recruiter", required = false, defaultValue = "false") boolean recruiter) {
+                   HttpSession session) {
+    LoginResponseDTO loginMember = (LoginResponseDTO) session.getAttribute("loginMember");
+    boolean recruiter = loginMember != null && loginMember.getRole() == MemberRole.RECRUITER;
+
     if (form.workingStartDate() != null && form.workingEndDate() != null
       && form.workingStartDate().isAfter(form.workingEndDate()))
       bindingResult.rejectValue("workingEndDate",
@@ -73,25 +79,25 @@ public class RecruitmentController {
     model.addAttribute("page", page);
 
     PagingHandler<RecruitmentListDTO, RecruitmentSearchForm> pagingHandler =
-      new PagingHandler<>(page, pageIdx, form);
+      new PagingHandler<>(page, form, PAGINATION_SIZE, pageIdx);
     model.addAttribute("pagingHandler", pagingHandler);
 
     model.addAttribute("recruiter", recruiter);
     model.addAttribute("sidoList", regionService.getSidoList());
   }
 
-  @GetMapping("/manage/list")
+  @GetMapping("/manage")
   public void manageList(Model model,
                          @RequestParam(name = "pageIdx", required = false, defaultValue = "1") int pageIdx,
-                         @Valid @ModelAttribute RecruitmentManagementSearchForm form,
+                         @Valid @ModelAttribute RecruitmentManagementForm form,
                          BindingResult bindingResult) {
     if (bindingResult.hasErrors()) return;
-    RecruitmentSearchCondition condition = mapper.toCondition(form);
-    Page<RecruitmentManagementListDTO> page = recruitmentService.getManagementPage(pageIdx, condition);
+
+    Page<RecruitmentManagementListDTO> page = recruitmentService.getPage(pageIdx, form);
     model.addAttribute("page", page);
 
-    PagingHandler<RecruitmentManagementListDTO, RecruitmentManagementSearchForm> pagingHandler =
-      new PagingHandler<>(page, pageIdx, form);
+    PagingHandler<RecruitmentManagementListDTO, RecruitmentManagementForm> pagingHandler =
+      new PagingHandler<>(page, form, PAGINATION_SIZE, pageIdx);
     model.addAttribute("pagingHandler", pagingHandler);
 
   }
@@ -174,9 +180,6 @@ public class RecruitmentController {
 
     return "redirect:/recruitment/{id}";
   }
-
-
-
 
 
 }

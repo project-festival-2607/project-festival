@@ -108,7 +108,9 @@ public class FestivalServiceImpl implements FestivalService, ApplicationRunner {
 
     @Override
     public void remove(String id) {
-        festivalRepository.deleteById(id);
+        Festival festival = festivalRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 축제가 존재하지 않습니다."));
+
+        festivalRepository.delete(festival);
     }
 
 //    DB에서 API 요청 후 백그라운드에서 동기화
@@ -116,7 +118,7 @@ public class FestivalServiceImpl implements FestivalService, ApplicationRunner {
     @Override
     @Transactional
     public void run(@NonNull ApplicationArguments args) throws Exception{
-        if(festivalRepository.count() > 0){
+        if(festivalRepository.count() >= 0){
             log.info("DB 데이터 동기 완료");
             return;
             // 나중에 새로 갱신될 때를 대비하여 ID로 비교하는 로직으로 바꿀 것! ===> 지금은 TEST
@@ -125,7 +127,7 @@ public class FestivalServiceImpl implements FestivalService, ApplicationRunner {
         log.info("Festival DB 데이터 동기화 시작...");
 
         try {
-            String url = "https://apis.data.go.kr/B551011/KorService2/searchFestival2?numOfRows=100&MobileOS=WEB&MobileApp=CHUCK&_type=json&arrange=R&eventStartDate=20260101&serviceKey=" + apiKey;
+            String url = "https://apis.data.go.kr/B551011/KorService2/searchFestival2?numOfRows=20&MobileOS=WEB&MobileApp=CHUCK&_type=json&arrange=R&eventStartDate=20260101&serviceKey=" + apiKey;
 
             RestTemplate restTemplate = new RestTemplate(); // 백엔드에서 RestAPI 실행시켜주는 객체
             String listResponse = restTemplate.getForObject(url, String.class);
