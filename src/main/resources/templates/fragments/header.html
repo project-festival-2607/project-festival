@@ -65,6 +65,12 @@
                                 1단결제로보내
                             </a></li>
 
+                        <li th:if="${session.loginMember != null}">
+                            <a th:href="@{/mypage}"
+                               class="nav-link">
+                                마이페이지
+                            </a>
+                        </li>
                     </ul>
                 </div>
             </div>
