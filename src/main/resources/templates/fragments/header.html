@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="ko"
-      xmlns:th="http://www.thymeleaf.org">
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+>
 <div th:fragment="header">
 <!--    style="position: sticky; top: 0; z-index: 1000;"-->
     <nav class="navbar" data-bs-theme="dark">
@@ -26,6 +28,7 @@
                             <div class="dropdown-menu-box">
                                 <ul class="submenu">
                                     <li><a href="/recruitment/list">축제인력모집</a></li>
+                                    <li sec:authorize="hasRole('RECRUITER')"><a href="/recruitment/manage">구인공고 관리</a></li>
                                 </ul>
                             </div>
                         </li>
@@ -54,12 +57,12 @@
                 </div>
                 <div class="user-box">
                     <ul class="user-sub">
-                        <li th:if="${session.loginMember == null}"><a th:href="@{/member/signup}" class="nav-link">회원가입</a></li>
-                        <li th:if="${session.loginMember == null}"><a th:href="@{/member/login}" class="nav-link">로그인</a></li>
-                        <li th:if="${session.loginMember != null}"><a href="/" class="nav-link" th:text="${session.loginMember.name}"></a></li>
-                        <li th:if="${session.loginMember != null}"><a th:href="@{/member/logout}" class="nav-link">로그아웃</a></li>
+                        <li sec:authorize="isAnonymous()"><a th:href="@{/member/signup}" class="nav-link">회원가입</a></li>
+                        <li sec:authorize="isAnonymous()"><a th:href="@{/member/login}" class="nav-link">로그인</a></li>
+                        <li sec:authorize="isAuthenticated()"><a href="/" class="nav-link" th:text="${session.loginMember.name}"></a></li>
+                        <li sec:authorize="isAuthenticated()"><a th:href="@{/member/logout}" class="nav-link">로그아웃</a></li>
 
-                        <li th:if="${session.loginMember != null}">
+                        <li sec:authorize="hasRole('RECRUITER')">
                             <a th:href="@{/payCreationTest}"
                                class="nav-link">
                                 1단결제로보내
