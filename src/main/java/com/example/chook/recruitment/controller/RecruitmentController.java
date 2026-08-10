@@ -1,17 +1,15 @@
 package com.example.chook.recruitment.controller;
 
+import com.example.chook.bookmark.service.RecruitmentBookmarkService;
 import com.example.chook.common.handler.PagingHandler;
 import com.example.chook.festival.FestivalDTO;
 import com.example.chook.festival.FestivalService;
 import com.example.chook.file.dto.FileDTO;
 import com.example.chook.file.record.FileResource;
 import com.example.chook.file.service.FileService;
-import com.example.chook.member.dto.LoginResponseDTO;
 import com.example.chook.member.entity.enums.MemberRole;
-import com.example.chook.recruitment.dto.RecruitmentCreateDTO;
-import com.example.chook.recruitment.dto.RecruitmentListDTO;
-import com.example.chook.recruitment.dto.RecruitmentManagementListDTO;
-import com.example.chook.recruitment.dto.RecruitmentResponseDTO;
+import com.example.chook.member.security.CustomUserDetails;
+import com.example.chook.recruitment.dto.*;
 import com.example.chook.recruitment.form.RecruitmentCreateForm;
 import com.example.chook.recruitment.form.RecruitmentManagementForm;
 import com.example.chook.recruitment.form.RecruitmentSearchForm;
@@ -21,7 +19,6 @@ import com.example.chook.recruitment.record.RecruitmentSearchCondition;
 import com.example.chook.recruitment.service.RecruitmentService;
 import com.example.chook.region.dto.RegionDTO;
 import com.example.chook.region.service.RegionService;
-import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,7 +28,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -41,6 +37,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
@@ -59,6 +56,7 @@ public class RecruitmentController {
   private final FestivalService festivalService;
   private final RegionService regionService;
   private final FileService fileService;
+  private final RecruitmentBookmarkService recruitmentBookmarkService;
 
   @Value("${apikey.map}")
   private String mapApiKey;
@@ -69,7 +67,8 @@ public class RecruitmentController {
   public void list(Model model,
                    @RequestParam(name = "pageIdx", required = false, defaultValue = "1") int pageIdx,
                    @Valid @ModelAttribute RecruitmentSearchForm form,
-                   BindingResult bindingResult) {
+                   BindingResult bindingResult,
+                   @AuthenticationPrincipal CustomUserDetails user) {
 
     if (form.workingStartDate() != null && form.workingEndDate() != null
       && form.workingStartDate().isAfter(form.workingEndDate()))
@@ -79,14 +78,27 @@ public class RecruitmentController {
       );
     if (bindingResult.hasErrors()) return;
 
-    RecruitmentSearchCondition condition = mapper.toCondition(form);
+    boolean recruiter = user != null && user.getRole() == MemberRole.RECRUITER;
+    boolean jobSeeker = user != null && user.getRole() == MemberRole.JOB_SEEKER;
+    Long memberId = jobSeeker ? user.getId() : null;
+
+    RecruitmentSearchCondition condition = mapper.toCondition(form, memberId);
     Page<RecruitmentListDTO> page = recruitmentService.getPage(pageIdx, condition);
+
+    // 찜하기 버튼: 구직자로 로그인한 경우에만 카드별 찜 여부를 채움
+    if (memberId != null) {
+      Set<Long> bookmarkedIds = recruitmentBookmarkService.getBookmarkedRecruitmentIds(memberId);
+      page.getContent().forEach(dto -> dto.setBookmarked(bookmarkedIds.contains(dto.getRecruitmentId())));
+    }
     model.addAttribute("page", page);
 
     PagingHandler<RecruitmentListDTO, RecruitmentSearchForm> pagingHandler =
       new PagingHandler<>(page, form, PAGINATION_SIZE, pageIdx);
     model.addAttribute("pagingHandler", pagingHandler);
 
+    // 찜하기 버튼은 구인자에게는 안 보이고 구직자/비로그인에게만 보임
+    model.addAttribute("recruiter", recruiter);
+    model.addAttribute("jobSeeker", jobSeeker);
     model.addAttribute("sidoList", regionService.getSidoList());
   }
 
@@ -111,7 +123,9 @@ public class RecruitmentController {
   }
 
   @GetMapping("/{id}")
-  public String view(@PathVariable Long id, Model model, HttpSession session) {
+  public String view(@PathVariable Long id,
+                     Model model,
+                     @AuthenticationPrincipal CustomUserDetails user) {
     RecruitmentResponseDTO responseDto = recruitmentService.getRecruitment(id);
     model.addAttribute("recruitment", responseDto);
 
@@ -119,9 +133,20 @@ public class RecruitmentController {
     model.addAttribute("fes", festivalDto);
     model.addAttribute("mapApiKey", mapApiKey);
 
-    LoginResponseDTO loginMember = (LoginResponseDTO) session.getAttribute("loginMember");
-    boolean recruiter = loginMember != null && loginMember.getRole() == MemberRole.RECRUITER;
+    boolean recruiter = user != null && user.getRole() == MemberRole.RECRUITER;
+    boolean jobSeeker = user != null && user.getRole() == MemberRole.JOB_SEEKER;
     model.addAttribute("recruiter", recruiter);
+    model.addAttribute("jobSeeker", jobSeeker);
+
+    // 찜하기 버튼은 구인자에게는 안 보이고 구직자/비로그인에게만 보임
+    boolean bookmarked = jobSeeker && recruitmentBookmarkService.isBookmarked(id, user.getId());
+    model.addAttribute("bookmarked", bookmarked);
+
+    // 수정/삭제는 이 공고가 속한 행사를 주최한 구인자 본인만 가능
+    boolean isOwner = recruiter
+      && responseDto.getOrganizerMemberId() != null
+      && responseDto.getOrganizerMemberId().equals(user.getId());
+    model.addAttribute("isOwner", isOwner);
 
     log.info("recruitment view: {}", responseDto);
     return "recruitment/detail";
@@ -134,6 +159,26 @@ public class RecruitmentController {
     List<RegionDTO> sidoList = regionService.getSidoList();
     model.addAttribute("festivals", festivals);
     model.addAttribute("sidoList", sidoList);
+  }
+
+  @GetMapping("/modify/{id}")
+  public String modifyForm(@PathVariable Long id, Model model, @AuthenticationPrincipal CustomUserDetails user,
+                           RedirectAttributes redirectAttributes) {
+    RecruitmentResponseDTO current = requireOwnedRecruitment(id, user);
+    if (current == null) {
+      redirectAttributes.addFlashAttribute("errorMsg", "수정 권한이 없습니다.");
+      return "redirect:/recruitment/" + id;
+    }
+
+    RecruitmentUpdateDTO update = recruitmentService.getRecruitmentForUpdate(id);
+    model.addAttribute("recruitmentId", id);
+    model.addAttribute("update", update);
+    model.addAttribute("festivalContentId", current.getFestivalContentId());
+    model.addAttribute("category", current.getCategory());
+    model.addAttribute("festivals", festivalService.getAll());
+    model.addAttribute("sidoList", regionService.getSidoList());
+    model.addAttribute("sigunguList", regionService.getSigunguList(update.getRegionSidoCode()));
+    return "recruitment/modify";
   }
 
   // 에디터에 이미지를 삽입하는 시점에 비동기로 호출됨 (admin_board와 동일한 패턴)
@@ -177,6 +222,34 @@ public class RecruitmentController {
     return "recruitment/register";
   }
 
+  // 로그인한 구인자가 이 공고가 속한 행사를 주최한 본인일 때만 응답 DTO를 돌려주고, 아니면 null (수정/삭제 공통 권한 체크)
+  private RecruitmentResponseDTO requireOwnedRecruitment(Long id, CustomUserDetails user) {
+    if (!user.isRecruiter()) return null;
+    RecruitmentResponseDTO current = recruitmentService.getRecruitment(id);
+    boolean owner = current.getOrganizerMemberId() != null
+      && current.getOrganizerMemberId().equals(user.getId());
+    return owner ? current : null;
+  }
+
+  // 검증 실패로 수정 폼을 다시 보여줄 때, GET /modify/{id}에서 채우던 데이터를 다시 채움
+  private String modifyFormWithReloadedOptions(Long id, RecruitmentResponseDTO current,
+                                               Model model, BindingResult bindingResult) {
+    RecruitmentUpdateDTO update = recruitmentService.getRecruitmentForUpdate(id);
+    model.addAttribute("recruitmentId", id);
+    model.addAttribute("update", update);
+    model.addAttribute("festivalContentId", current.getFestivalContentId());
+    model.addAttribute("category", current.getCategory());
+    model.addAttribute("festivals", festivalService.getAll());
+    model.addAttribute("sidoList", regionService.getSidoList());
+    model.addAttribute("sigunguList", regionService.getSigunguList(update.getRegionSidoCode()));
+    model.addAttribute("hasError", true);
+    List<String> errorMessages = bindingResult.getFieldErrors().stream()
+      .map(error -> error.getField() + ": " + error.getDefaultMessage())
+      .toList();
+    model.addAttribute("errorMessages", errorMessages);
+    return "recruitment/modify";
+  }
+
   @PostMapping("/register")
   public String register(@Valid @ModelAttribute RecruitmentCreateForm recruitmentCreateForm,
                          BindingResult bindingResult,
@@ -200,5 +273,52 @@ public class RecruitmentController {
     return "redirect:/recruitment/{id}";
   }
 
+  @PostMapping("/modify/{id}")
+  public String modify(@PathVariable Long id,
+                       @Valid @ModelAttribute RecruitmentCreateForm recruitmentCreateForm,
+                       BindingResult bindingResult,
+                       Model model,
+                       @AuthenticationPrincipal CustomUserDetails user,
+                       RedirectAttributes redirectAttributes) {
+
+    RecruitmentResponseDTO current = requireOwnedRecruitment(id, user);
+    if (current == null) {
+      redirectAttributes.addFlashAttribute("errorMsg", "수정 권한이 없습니다.");
+      return "redirect:/recruitment/" + id;
+    }
+
+    if (bindingResult.hasErrors()) return modifyFormWithReloadedOptions(id, current, model, bindingResult);
+    if (recruitmentCreateForm.workingStartDate().isAfter(
+      recruitmentCreateForm.workingEndDate()))
+      bindingResult.rejectValue("workingEndDate",
+        "workingEndDate.outOfRange",
+        "업무시작날짜는 업무종료날짜보다 늦을 수 없습니다."
+      );
+    if (bindingResult.hasErrors()) return modifyFormWithReloadedOptions(id, current, model, bindingResult);
+
+    RecruitmentUpdateDTO recruitmentUpdateDTO = mapper.toUpdateDto(recruitmentCreateForm);
+    recruitmentService.updateRecruitment(id, recruitmentUpdateDTO);
+
+    redirectAttributes.addAttribute("id", id);
+    redirectAttributes.addFlashAttribute("successMsg", "공고가 수정되었습니다.");
+
+    return "redirect:/recruitment/{id}";
+  }
+
+  @PostMapping("/delete/{id}")
+  public String delete(@PathVariable Long id,
+                       @AuthenticationPrincipal CustomUserDetails user,
+                       RedirectAttributes redirectAttributes) {
+    RecruitmentResponseDTO current = requireOwnedRecruitment(id, user);
+    if (current == null) {
+      redirectAttributes.addFlashAttribute("errorMsg", "삭제 권한이 없습니다.");
+      return "redirect:/recruitment/" + id;
+    }
+
+    recruitmentService.deleteRecruitment(id);
+    redirectAttributes.addFlashAttribute("successMsg", "공고가 삭제되었습니다.");
+
+    return "redirect:/recruitment/list";
+  }
 
 }

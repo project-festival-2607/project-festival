@@ -1,14 +1,16 @@
 package com.example.chook.member.security;
 
 import com.example.chook.member.entity.Member;
+import com.example.chook.member.entity.enums.MemberRole;
+import com.example.chook.member.entity.enums.MemberStatus;
 import lombok.Getter;
+import lombok.NonNull;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.List;
 
-@Getter
 public class CustomUserDetails implements UserDetails {
 
     private final Member member;
@@ -18,8 +20,29 @@ public class CustomUserDetails implements UserDetails {
     }
 
     @Override
+    @NonNull
     public List<GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(member.getRole().getRole()));
+    }
+
+    public Long getId() {
+        return member.getId();
+    }
+
+    public String getName() {
+        return member.getName();
+    }
+
+    public MemberRole getRole() {
+        return member.getRole();
+    }
+
+    public boolean isRecruiter() {
+        return member.getRole() == MemberRole.RECRUITER;
+    }
+
+    public MemberStatus getStatus() {
+        return member.getStatus();
     }
 
     @Override
@@ -27,7 +50,9 @@ public class CustomUserDetails implements UserDetails {
         return member.getPasswordHash();
     }
 
+
     @Override
+    @NonNull
     public String getUsername() {
         return member.getUsername();
     }
