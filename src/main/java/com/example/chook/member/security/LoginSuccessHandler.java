@@ -24,24 +24,23 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
     ) throws IOException, ServletException {
 
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-        Member member = userDetails.getMember();
 
         // 비밀번호는 이미 검증 완료된 상태 → 여기서 상태를 확인해도 안전함
-        if (member.getStatus() == MemberStatus.DORMANT) {
+        if (userDetails.getStatus() == MemberStatus.DORMANT) {
             response.sendRedirect("/member/verify");
             return;
         }
-        if (member.getStatus() == MemberStatus.SUSPENDED) {
+        if (userDetails.getStatus() == MemberStatus.SUSPENDED) {
             response.sendRedirect("/member/suspended");
             return;
         }
 
         HttpSession session = request.getSession();
         session.setAttribute("loginMember", LoginResponseDTO.builder()
-                .id(member.getId())
-                .username(member.getUsername())
-                .name(member.getName())
-                .role(member.getRole())
+                .id(userDetails.getId())
+                .username(userDetails.getUsername())
+                .name(userDetails.getName())
+                .role(userDetails.getRole())
                 .build());
 
         response.sendRedirect("/");
