@@ -70,7 +70,8 @@ public class RecruitmentController {
                    @Valid @ModelAttribute RecruitmentSearchForm form,
                    BindingResult bindingResult,
                    @AuthenticationPrincipal UserDetails user) {
-    boolean recruiter = user.getAuthorities().contains(
+
+    boolean recruiter = user != null && user.getAuthorities().contains(
       new SimpleGrantedAuthority(MemberRole.RECRUITER.getRole())
     );
 
