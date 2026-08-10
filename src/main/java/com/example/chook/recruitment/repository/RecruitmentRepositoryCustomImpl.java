@@ -6,7 +6,7 @@ import com.example.chook.recruitment.entity.RecruitmentIndividual;
 import com.example.chook.recruitment.entity.enums.RecruitmentCategory;
 import com.example.chook.recruitment.entity.enums.RecruitmentStatus;
 import com.example.chook.recruitment.entity.enums.RecruitmentWageType;
-import com.example.chook.recruitment.form.RecruitmentManagementForm;
+import com.example.chook.recruitment.record.RecruitmentManagementCondition;
 import com.example.chook.recruitment.record.RecruitmentSearchCondition;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -40,12 +40,6 @@ public class RecruitmentRepositoryCustomImpl implements RecruitmentRepositoryCus
   public Page<Recruitment> searchRecruitments(RecruitmentSearchCondition condition, Pageable pageable) {
 
     RecruitmentCategory category = condition.category();
-
-    if (category != null &&
-      category != RecruitmentCategory.INDIVIDUAL &&
-      condition.wageType() != null) {
-      throw new IllegalArgumentException("\"개인\"이 아닌 카테고리에서는 급여순 조회를 사용할 수 없습니다.");
-    }
 
     BooleanBuilder whereCondition = new BooleanBuilder();
 
@@ -138,8 +132,46 @@ public class RecruitmentRepositoryCustomImpl implements RecruitmentRepositoryCus
   }
 
   @Override
-  public Page<Recruitment> searchRecruitments(RecruitmentManagementForm form, Pageable pageable) {
-    return null;
+  public Page<Recruitment> searchRecruitments(RecruitmentManagementCondition condition, Pageable pageable) {
+
+    BooleanBuilder whereCondition = new BooleanBuilder();
+
+    whereCondition
+      .and(festivalContentIdEq(condition.festivalContentId()))
+      .and(recruitment.festival.member.username.eq(condition.festivalUserName()))
+      .and(categoryEq(condition.category()))
+      .and(statusEq(condition.status()))
+      .and(isPublishedEq(condition.isPublished()))
+      .and(isDeletedEq(condition.isPublished()))
+    ;
+
+    JPAQuery<Recruitment> resultQuery = jpaQueryFactory
+      .selectFrom(recruitment);
+    JPAQuery<Long> countQuery = jpaQueryFactory
+      .select(recruitment.count())
+      .from(recruitment);
+
+    resultQuery.where(whereCondition);
+    countQuery.where(whereCondition);
+
+    Long total = countQuery.fetchOne();
+
+    switch (condition.listCriteria()) {
+      case LATEST -> resultQuery.orderBy(recruitment.publishedAt.desc());
+      case DEADLINE -> resultQuery.orderBy(recruitment.applicationDeadline.asc());
+    }
+
+    List<Recruitment> result = resultQuery
+      .offset(pageable.getOffset())
+      .limit(pageable.getPageSize())
+      .fetch();
+
+    return new PageImpl<>(
+      result,
+      pageable,
+      total == null ? 0 : total
+    );
+
   }
 
   private BooleanBuilder containsAnyKeyword(List<String> keywords) {
@@ -162,6 +194,18 @@ public class RecruitmentRepositoryCustomImpl implements RecruitmentRepositoryCus
     }
     return booleanBuilder;
 
+  }
+
+  private BooleanExpression festivalContentIdEq(String festivalContentId) {
+    return festivalContentId == null ? null : recruitment.festival.contentId.eq(festivalContentId);
+  }
+
+  private BooleanExpression isPublishedEq(Boolean isPublished) {
+    return isPublished == null ? null : recruitment.publishedAt.isNotNull().eq(isPublished);
+  }
+
+  private BooleanExpression isDeletedEq(Boolean isDeleted) {
+    return isDeleted == null ? null : recruitment.deletedAt.isNotNull().eq(isDeleted);
   }
 
   private BooleanExpression regionSidoEq(String sidoCode) {
