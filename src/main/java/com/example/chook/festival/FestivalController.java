@@ -70,7 +70,7 @@ public class FestivalController {
                        Model model){
         FestivalDTO festivalDTO = festivalService.getDetail(contentId);
         model.addAttribute("fes", festivalDTO);
-        model.addAttribute("memberId", user.getId());
+        if (user != null) model.addAttribute("memberId", user.getId());
         model.addAttribute("mapApiKey", mapApiKey);
     }
 
