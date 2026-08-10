@@ -59,7 +59,7 @@
                     <ul class="user-sub">
                         <li sec:authorize="isAnonymous()"><a th:href="@{/member/signup}" class="nav-link">회원가입</a></li>
                         <li sec:authorize="isAnonymous()"><a th:href="@{/member/login}" class="nav-link">로그인</a></li>
-                        <li sec:authorize="isAuthenticated()"><a href="/" class="nav-link" th:text="${session.loginMember.name}"></a></li>
+                        <li sec:authorize="isAuthenticated()"><a href="/" class="nav-link" th:text="${#authentication.principal.name}"></a></li>
                         <li sec:authorize="isAuthenticated()"><a th:href="@{/member/logout}" class="nav-link">로그아웃</a></li>
 
                         <li sec:authorize="hasRole('RECRUITER')">
@@ -68,7 +68,7 @@
                                 1단결제로보내
                             </a></li>
 
-                        <li th:if="${session.loginMember != null}">
+                        <li sec:authorize="isAuthenticated()">
                             <a th:href="@{/mypage}"
                                class="nav-link">
                                 마이페이지
