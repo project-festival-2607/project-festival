@@ -72,9 +72,6 @@ public class Payment {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    //날짜 통합할것.....
-
-
 
     @PrePersist
     protected void onCreate() {
