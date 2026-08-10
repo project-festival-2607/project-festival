@@ -98,4 +98,6 @@ public interface FestivalService {
     void remove(String id);
 
     List<FestivalDTO> getAll();
+
+    List<FestivalDTO> getByUsername(String username);
 }

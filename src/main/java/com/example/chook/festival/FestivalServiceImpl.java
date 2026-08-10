@@ -211,4 +211,12 @@ public class FestivalServiceImpl implements FestivalService, ApplicationRunner {
                 .map(this::convertEntityToDTO)
                 .toList();
     }
+
+    @Override
+    public List<FestivalDTO> getByUsername(String username) {
+        return festivalRepository.findByMember_Username(username)
+          .stream()
+          .map(this::convertEntityToDTO)
+          .toList();
+    }
 }

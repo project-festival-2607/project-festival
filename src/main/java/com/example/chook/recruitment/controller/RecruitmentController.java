@@ -16,6 +16,7 @@ import com.example.chook.recruitment.form.RecruitmentCreateForm;
 import com.example.chook.recruitment.form.RecruitmentManagementForm;
 import com.example.chook.recruitment.form.RecruitmentSearchForm;
 import com.example.chook.recruitment.mapper.RecruitmentMapper;
+import com.example.chook.recruitment.record.RecruitmentManagementCondition;
 import com.example.chook.recruitment.record.RecruitmentSearchCondition;
 import com.example.chook.recruitment.service.RecruitmentService;
 import com.example.chook.region.dto.RegionDTO;
@@ -99,11 +100,15 @@ public class RecruitmentController {
   public void manageList(Model model,
                          @RequestParam(name = "pageIdx", required = false, defaultValue = "1") int pageIdx,
                          @Valid @ModelAttribute RecruitmentManagementForm form,
+                         @AuthenticationPrincipal UserDetails user,
                          BindingResult bindingResult) {
     if (bindingResult.hasErrors()) return;
 
-    Page<RecruitmentManagementListDTO> page = recruitmentService.getPage(pageIdx, form);
+    String username = user.getUsername();
+    RecruitmentManagementCondition condition = mapper.toCondition(form, username);
+    Page<RecruitmentManagementListDTO> page = recruitmentService.getPage(pageIdx, condition);
     model.addAttribute("page", page);
+    model.addAttribute("festivals", festivalService.getByUsername(user.getUsername()));
 
     PagingHandler<RecruitmentManagementListDTO, RecruitmentManagementForm> pagingHandler =
       new PagingHandler<>(page, form, PAGINATION_SIZE, pageIdx);

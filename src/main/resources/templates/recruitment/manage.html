@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="ko"
+      layout:decorate="~{layout/layout}"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+  <th:block layout:fragment="css">
+    <link rel="stylesheet" th:href="@{/css/recruit/list.css}">
+  </th:block>
+</head>
+
+<div layout:fragment="content" th:with="form=${pagingHandler.form}">
+  <div class="container">
+
+    <div class="recruit-list-head">
+      <h1>모집공고</h1>
+      <p>축제에서 함께 일할 사람을 찾아보세요.</p>
+      <a class="btn recruit-write-btn" th:href="@{/recruitment/register}" th:if="${recruiter}">구인공고 등록</a>
+    </div>
+
+    <form class="recruit-layout recruit-layout-full" id="recruitFilterForm" method="get"
+          th:action="@{/recruitment/manage}"
+    >
+
+      <div class="recruit-main">
+        <div class="recruit-main-toolbar">
+          <span th:text="'총 ' + ${pagingHandler.totalElementCount} + '건'"></span>
+          <div class="d-flex">
+            <select id="festivalContentId" name="festivalContentId">
+              <option th:selected="${form.festivalContentId == null}"
+                      value="">
+                전체 행사
+              </option>
+              <option th:each="festival : ${festivals}"
+                      th:selected="${form.festivalContentId != null and form.festivalContentId == festival.contentId}"
+                      th:value="${festival.contentId}"
+                      th:text="${festival.title}">
+              </option>
+            </select>
+            <select id="listCriteria" name="listCriteria">
+              <option th:selected="${form.listCriteria == null or form.listCriteria.name() == 'LATEST'}"
+                      value="LATEST">
+                최신순
+              </option>
+              <option th:selected="${form.listCriteria != null and form.listCriteria.name() == 'DEADLINE'}"
+                      value="DEADLINE">
+                마감임박순
+              </option>
+            </select>
+          </div>
+        </div>
+
+        <div class="recruit-card-grid">
+          <a class="recruit-card" th:each="r : ${pagingHandler.elementList}"
+             th:href="@{/recruitment/{id}(id=${r.recruitmentId})}">
+            <div class="recruit-card-top">
+                            <span class="recruit-card-emoji" th:switch="${r.category != null ? r.category.name() : ''}">
+                                <span th:case="'INDIVIDUAL'">🙋</span>
+                                <span th:case="'FOOD_TRUCK'">🚚</span>
+                                <span th:case="'EQUIPMENT'">🔧</span>
+                                <span th:case="*">📦</span>
+                            </span>
+              <span class="recruit-card-title" th:text="${r.recruitmentTitle}"></span>
+              <span class="recruit-card-bookmark" title="로그인 후 이용 가능">☆</span>
+            </div>
+            <div class="recruit-card-festival" th:text="${r.festivalTitle}"></div>
+            <div class="recruit-card-location"
+                 th:text="${r.regionSidoName} + ' ' + ${r.regionSigunguName}"></div>
+            <div class="recruit-card-date">
+              <span th:text="${r.workingStartDate}"></span>
+              <span> ~ </span>
+              <span th:text="${r.workingEndDate}"></span>
+            </div>
+            <div class="recruit-card-specific" th:switch="${r.category != null ? r.category.name() : ''}">
+                            <span th:case="'INDIVIDUAL'" th:if="${r.specific != null}">
+                                <span th:switch="${r.specific.wageType != null ? r.specific.wageType.name() : ''}">
+                                    <span th:case="'HOURLY'">시급</span>
+                                    <span th:case="'DAILY'">일급</span>
+                                    <span th:case="'WEEKLY'">주급</span>
+                                    <span th:case="'PER_TASK'">건당</span>
+                                    <span th:case="*">협의</span>
+                                </span>
+                                <span th:if="${r.specific.wageValue != null}"
+                                      th:text="${#numbers.formatInteger(r.specific.wageValue, 0, 'COMMA')} + '원'"></span>
+                            </span>
+              <span th:case="'FOOD_TRUCK'" th:if="${r.specific != null}">
+                                <span class="recruit-badge" th:if="${r.specific.prepaid}">선결제</span>
+                                <span class="recruit-badge" th:if="${r.specific.boothFeeRequired}">입점료</span>
+                                <span class="recruit-badge" th:if="${r.specific.electricityProvided}">전기제공</span>
+                            </span>
+            </div>
+          </a>
+
+          <p class="recruit-card-empty" th:if="${pagingHandler.elementList.isEmpty()}">
+            조건에 맞는 모집공고가 없습니다.
+          </p>
+        </div>
+
+        <nav th:if="${pagingHandler.totalPageCount > 1}">
+          <ul class="pagination justify-content-center">
+            <li class="page-item" th:if="${pagingHandler.prevBtnActive}">
+              <button class="page-link" name="pageIdx" th:value="${pagingHandler.pageIdx - 1}" type="submit">이전</button>
+            </li>
+            <li class="page-item"
+                th:classappend="${i == pagingHandler.pageIdx} ? 'active'"
+                th:each="i : ${#numbers.sequence(pagingHandler.startPageIdx, pagingHandler.endPageIdx)}">
+              <button class="page-link" name="pageIdx" th:value="${i}" type="submit">[[${i}]]</button>
+            </li>
+            <li class="page-item" th:if="${pagingHandler.nextBtnActive}">
+              <button class="page-link" name="pageIdx" th:value="${pagingHandler.pageIdx + 1}" type="submit">다음</button>
+            </li>
+          </ul>
+        </nav>
+      </div>
+
+    </form>
+
+    <script th:src="@{/js/recruitment/recruitManage.js}">
+
+    </script>
+
+  </div>
+</div>
+</html>
