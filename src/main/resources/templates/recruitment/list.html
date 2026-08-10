@@ -15,7 +15,6 @@
         <div class="recruit-list-head">
             <h1>모집공고</h1>
             <p>축제에서 함께 일할 사람을 찾아보세요.</p>
-            <a th:if="${recruiter}" th:href="@{/recruitment/register}" class="btn recruit-write-btn">구인공고 등록</a>
         </div>
 
         <form class="recruit-layout" th:action="@{/recruitment/list}" method="get" id="recruitFilterForm"
