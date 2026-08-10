@@ -69,12 +69,7 @@ public class RecruitmentController {
   public void list(Model model,
                    @RequestParam(name = "pageIdx", required = false, defaultValue = "1") int pageIdx,
                    @Valid @ModelAttribute RecruitmentSearchForm form,
-                   BindingResult bindingResult,
-                   @AuthenticationPrincipal UserDetails user) {
-
-    boolean recruiter = user != null && user.getAuthorities().contains(
-      new SimpleGrantedAuthority(MemberRole.RECRUITER.getRole())
-    );
+                   BindingResult bindingResult) {
 
     if (form.workingStartDate() != null && form.workingEndDate() != null
       && form.workingStartDate().isAfter(form.workingEndDate()))
@@ -92,7 +87,6 @@ public class RecruitmentController {
       new PagingHandler<>(page, form, PAGINATION_SIZE, pageIdx);
     model.addAttribute("pagingHandler", pagingHandler);
 
-    model.addAttribute("recruiter", recruiter);
     model.addAttribute("sidoList", regionService.getSidoList());
   }
 
@@ -134,8 +128,9 @@ public class RecruitmentController {
   }
 
   @GetMapping("/register")
-  public void register(Model model) {
-    List<FestivalDTO> festivals = festivalService.getAll();
+  public void register(Model model,
+                       @AuthenticationPrincipal UserDetails user) {
+    List<FestivalDTO> festivals = festivalService.getByUsername(user.getUsername());
     List<RegionDTO> sidoList = regionService.getSidoList();
     model.addAttribute("festivals", festivals);
     model.addAttribute("sidoList", sidoList);
