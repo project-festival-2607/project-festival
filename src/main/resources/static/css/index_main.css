@@ -38,10 +38,12 @@
     width: 450px;
     height: 600px;
     border: 1px solid #2C2C2C;
-    background: #FEFEFE;
-    text-align: center;
     line-height: 600px;
     margin-right: 50px;
+
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
 }
 
 .index-center {
@@ -80,21 +82,52 @@
 
 .index-gallery {
     width: 100%;
-    height: auto;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-
     gap: 10px;
+    margin-bottom: 40px;
 }
 
 .gallery-items {
-    border: 1px solid #2C2C2C;
-    width: 400px;
-    height: 200px;
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
 
+    transition: flex 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.gallery-items:hover {
+    flex: 1.5;
+}
+
+.gallery-items > a {
+    display: block;
+    width: 100%;
+    height: 200px;
+    text-decoration: none;
+}
+
+.gallery-item {
+    border: 1px solid #2C2C2C;
     text-align: center;
     line-height: 200px;
+
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+
+    width: 100%;
+    height: 100%;
+}
+
+.gal-sub-title {
+    margin-top: 8px;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 /* 반응형 대응 */

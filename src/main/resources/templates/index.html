@@ -10,18 +10,19 @@
         <!--        모든 inner는 class="container" 로 맞춤        -->
                 <div class="main-bg-title">
                     <span>
-                        샘플 축제
+                        [[${topFestival.title}]]
                     </span>
                     <span>
-                        2026.00.00 ~ 2026.00.00
+                        [[${topFestival.startDate}]] ~ [[${topFestival.endDate}]]
                     </span>
                     <hr>
                     <span>
-                        주요 프로그램: 1) 샘플 2) 샘플 3) 샘플
+                        [[${topFestival.program}]]
                     </span>
                 </div>
-                <div class="main-bg-img">
-                    메인 샘플 ㉠
+                <div class="main-bg-img"
+                     th:style="'background-image: url(' + ${topFestival.firstImage} + ')'"
+                >
                 </div>
             </div>
         </div>
@@ -36,10 +37,16 @@
                     </a>
                 </div>
                 <div class="index-gallery">
-                    <div class="gallery-items">샘플 ㉠</div>
-                    <div class="gallery-items">샘플 ㉡</div>
-                    <div class="gallery-items">샘플 ㉢</div>
-                    <div class="gallery-items">샘플 ㉣</div>
+                    <div class="gallery-items" th:each="fes : ${subList}">
+                        <a th:href="@{/festival/detail(id=${fes.contentId})}">
+                            <div class="gallery-item"
+                                 th:style="'background-image: url(' + ${fes.firstImage} + ')'"
+                            ></div>
+                        </a>
+                        <div class="gal-sub-title">
+                            [[${fes.title}]]
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -54,10 +61,10 @@
                     </a>
                 </div>
                 <div class="index-gallery">
-                    <div class="gallery-items">샘플 ㉠</div>
-                    <div class="gallery-items">샘플 ㉡</div>
-                    <div class="gallery-items">샘플 ㉢</div>
-                    <div class="gallery-items">샘플 ㉣</div>
+                    <div class="gallery-item">샘플 ㉠</div>
+                    <div class="gallery-item">샘플 ㉡</div>
+                    <div class="gallery-item">샘플 ㉢</div>
+                    <div class="gallery-item">샘플 ㉣</div>
                 </div>
             </div>
         </div>
