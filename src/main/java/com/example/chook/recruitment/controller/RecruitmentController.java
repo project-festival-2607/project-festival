@@ -7,6 +7,7 @@ import com.example.chook.festival.FestivalService;
 import com.example.chook.file.dto.FileDTO;
 import com.example.chook.file.record.FileResource;
 import com.example.chook.file.service.FileService;
+import com.example.chook.member.entity.enums.MemberRole;
 import com.example.chook.member.security.CustomUserDetails;
 import com.example.chook.recruitment.dto.*;
 import com.example.chook.recruitment.form.RecruitmentCreateForm;
@@ -67,7 +68,7 @@ public class RecruitmentController {
                    @RequestParam(name = "pageIdx", required = false, defaultValue = "1") int pageIdx,
                    @Valid @ModelAttribute RecruitmentSearchForm form,
                    BindingResult bindingResult,
-                   @AuthenticationPrincipal UserDetails user) {
+                   @AuthenticationPrincipal CustomUserDetails user) {
 
     if (form.workingStartDate() != null && form.workingEndDate() != null
       && form.workingStartDate().isAfter(form.workingEndDate()))
@@ -77,10 +78,9 @@ public class RecruitmentController {
       );
     if (bindingResult.hasErrors()) return;
 
-    Member member = user instanceof CustomUserDetails cud ? cud.getMember() : null;
-    boolean recruiter = member != null && member.getRole() == MemberRole.RECRUITER;
-    boolean jobSeeker = member != null && member.getRole() == MemberRole.JOB_SEEKER;
-    Long memberId = jobSeeker ? member.getId() : null;
+    boolean recruiter = user != null && user.getRole() == MemberRole.RECRUITER;
+    boolean jobSeeker = user != null && user.getRole() == MemberRole.JOB_SEEKER;
+    Long memberId = jobSeeker ? user.getId() : null;
 
     RecruitmentSearchCondition condition = mapper.toCondition(form, memberId);
     Page<RecruitmentListDTO> page = recruitmentService.getPage(pageIdx, condition);
@@ -123,7 +123,9 @@ public class RecruitmentController {
   }
 
   @GetMapping("/{id}")
-  public String view(@PathVariable Long id, Model model, @AuthenticationPrincipal CustomUserDetails user) {
+  public String view(@PathVariable Long id,
+                     Model model,
+                     @AuthenticationPrincipal CustomUserDetails user) {
     RecruitmentResponseDTO responseDto = recruitmentService.getRecruitment(id);
     model.addAttribute("recruitment", responseDto);
 
@@ -131,20 +133,19 @@ public class RecruitmentController {
     model.addAttribute("fes", festivalDto);
     model.addAttribute("mapApiKey", mapApiKey);
 
-    Member member = user instanceof CustomUserDetails cud ? cud.getMember() : null;
-    boolean recruiter = member != null && member.getRole() == MemberRole.RECRUITER;
-    boolean jobSeeker = member != null && member.getRole() == MemberRole.JOB_SEEKER;
+    boolean recruiter = user != null && user.getRole() == MemberRole.RECRUITER;
+    boolean jobSeeker = user != null && user.getRole() == MemberRole.JOB_SEEKER;
     model.addAttribute("recruiter", recruiter);
     model.addAttribute("jobSeeker", jobSeeker);
 
     // 찜하기 버튼은 구인자에게는 안 보이고 구직자/비로그인에게만 보임
-    boolean bookmarked = jobSeeker && recruitmentBookmarkService.isBookmarked(id, member.getId());
+    boolean bookmarked = jobSeeker && recruitmentBookmarkService.isBookmarked(id, user.getId());
     model.addAttribute("bookmarked", bookmarked);
 
     // 수정/삭제는 이 공고가 속한 행사를 주최한 구인자 본인만 가능
     boolean isOwner = recruiter
       && responseDto.getOrganizerMemberId() != null
-      && responseDto.getOrganizerMemberId().equals(member.getId());
+      && responseDto.getOrganizerMemberId().equals(user.getId());
     model.addAttribute("isOwner", isOwner);
 
     log.info("recruitment view: {}", responseDto);
