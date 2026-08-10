@@ -27,27 +27,6 @@ public class MemberController {
     public void login() {
     }
 
-//    // 로그인 실행
-//    @PostMapping("/login")
-//    public String login(
-//            @ModelAttribute LoginRequestDTO requestDTO,
-//            HttpSession session,
-//            RedirectAttributes redirectAttributes
-//    ) {
-//        try {
-//            LoginResponseDTO responseDTO = memberService.login(requestDTO);
-//            session.setAttribute("loginMember", responseDTO);
-//            return "redirect:/";
-//        } catch (MemberDormantException e) {
-//            return "redirect:/member/verify";
-//        } catch (MemberSuspendedException e) {
-//            return "redirect:/member/suspended";
-//        } catch (IllegalArgumentException e) {
-//            redirectAttributes.addFlashAttribute("FailureMsg", e.getMessage());
-//            return "redirect:/member/login";
-//        }
-//    }
-
     // 로그아웃
     @GetMapping("/logout")
     public String logout(HttpSession session) {
