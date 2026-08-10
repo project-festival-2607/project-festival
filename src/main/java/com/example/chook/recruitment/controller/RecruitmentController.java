@@ -6,14 +6,8 @@ import com.example.chook.festival.FestivalService;
 import com.example.chook.file.dto.FileDTO;
 import com.example.chook.file.record.FileResource;
 import com.example.chook.file.service.FileService;
-import com.example.chook.member.entity.Member;
-import com.example.chook.member.entity.enums.MemberRole;
 import com.example.chook.member.security.CustomUserDetails;
-import com.example.chook.recruitment.dto.RecruitmentCreateDTO;
-import com.example.chook.recruitment.dto.RecruitmentListDTO;
-import com.example.chook.recruitment.dto.RecruitmentManagementListDTO;
-import com.example.chook.recruitment.dto.RecruitmentResponseDTO;
-import com.example.chook.recruitment.dto.RecruitmentUpdateDTO;
+import com.example.chook.recruitment.dto.*;
 import com.example.chook.recruitment.form.RecruitmentCreateForm;
 import com.example.chook.recruitment.form.RecruitmentManagementForm;
 import com.example.chook.recruitment.form.RecruitmentSearchForm;
@@ -111,7 +105,7 @@ public class RecruitmentController {
   }
 
   @GetMapping("/{id}")
-  public String view(@PathVariable Long id, Model model, @AuthenticationPrincipal UserDetails user) {
+  public String view(@PathVariable Long id, Model model, @AuthenticationPrincipal CustomUserDetails user) {
     RecruitmentResponseDTO responseDto = recruitmentService.getRecruitment(id);
     model.addAttribute("recruitment", responseDto);
 
@@ -119,16 +113,16 @@ public class RecruitmentController {
     model.addAttribute("fes", festivalDto);
     model.addAttribute("mapApiKey", mapApiKey);
 
-    Member member = user instanceof CustomUserDetails cud ? cud.getMember() : null;
-    boolean recruiter = member != null && member.getRole() == MemberRole.RECRUITER;
-    model.addAttribute("recruiter", recruiter);
+    if (user != null) {
+      boolean recruiter = user.isRecruiter();
+      model.addAttribute("recruiter", recruiter);
 
-    // 수정/삭제는 이 공고가 속한 행사를 주최한 구인자 본인만 가능
-    boolean isOwner = recruiter
-      && responseDto.getOrganizerMemberId() != null
-      && responseDto.getOrganizerMemberId().equals(member.getId());
-    model.addAttribute("isOwner", isOwner);
-
+      // 수정/삭제는 이 공고가 속한 행사를 주최한 구인자 본인만 가능
+      boolean isOwner = recruiter
+        && responseDto.getOrganizerMemberId() != null
+        && responseDto.getOrganizerMemberId().equals(user.getId());
+      model.addAttribute("isOwner", isOwner);
+    }
     log.info("recruitment view: {}", responseDto);
     return "recruitment/detail";
   }
@@ -143,7 +137,7 @@ public class RecruitmentController {
   }
 
   @GetMapping("/modify/{id}")
-  public String modifyForm(@PathVariable Long id, Model model, @AuthenticationPrincipal UserDetails user,
+  public String modifyForm(@PathVariable Long id, Model model, @AuthenticationPrincipal CustomUserDetails user,
                            RedirectAttributes redirectAttributes) {
     RecruitmentResponseDTO current = requireOwnedRecruitment(id, user);
     if (current == null) {
@@ -204,14 +198,11 @@ public class RecruitmentController {
   }
 
   // 로그인한 구인자가 이 공고가 속한 행사를 주최한 본인일 때만 응답 DTO를 돌려주고, 아니면 null (수정/삭제 공통 권한 체크)
-  private RecruitmentResponseDTO requireOwnedRecruitment(Long id, UserDetails user) {
-    if (!(user instanceof CustomUserDetails cud)) return null;
-    Member member = cud.getMember();
-    if (member.getRole() != MemberRole.RECRUITER) return null;
-
+  private RecruitmentResponseDTO requireOwnedRecruitment(Long id, CustomUserDetails user) {
+    if (!user.isRecruiter()) return null;
     RecruitmentResponseDTO current = recruitmentService.getRecruitment(id);
     boolean owner = current.getOrganizerMemberId() != null
-      && current.getOrganizerMemberId().equals(member.getId());
+      && current.getOrganizerMemberId().equals(user.getId());
     return owner ? current : null;
   }
 
@@ -262,7 +253,7 @@ public class RecruitmentController {
                        @Valid @ModelAttribute RecruitmentCreateForm recruitmentCreateForm,
                        BindingResult bindingResult,
                        Model model,
-                       @AuthenticationPrincipal UserDetails user,
+                       @AuthenticationPrincipal CustomUserDetails user,
                        RedirectAttributes redirectAttributes) {
 
     RecruitmentResponseDTO current = requireOwnedRecruitment(id, user);
@@ -290,7 +281,8 @@ public class RecruitmentController {
   }
 
   @PostMapping("/delete/{id}")
-  public String delete(@PathVariable Long id, @AuthenticationPrincipal UserDetails user,
+  public String delete(@PathVariable Long id,
+                       @AuthenticationPrincipal CustomUserDetails user,
                        RedirectAttributes redirectAttributes) {
     RecruitmentResponseDTO current = requireOwnedRecruitment(id, user);
     if (current == null) {
