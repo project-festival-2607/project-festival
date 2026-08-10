@@ -155,6 +155,7 @@
                     <select name="listCriteria" id="listCriteria">
                         <option value="LATEST" th:selected="${form.listCriteria == null or form.listCriteria.name() == 'LATEST'}">최신순</option>
                         <option value="DEADLINE" th:selected="${form.listCriteria != null and form.listCriteria.name() == 'DEADLINE'}">마감임박순</option>
+                        <option value="BOOKMARK" th:if="${jobSeeker}" th:selected="${form.listCriteria != null and form.listCriteria.name() == 'BOOKMARK'}">찜한순</option>
                     </select>
                 </div>
 
@@ -167,8 +168,15 @@
                                 <span th:case="'EQUIPMENT'">🔧</span>
                                 <span th:case="*">📦</span>
                             </span>
+
+
                             <span class="recruit-card-title" th:text="${r.recruitmentTitle}"></span>
-                            <span class="recruit-card-bookmark" title="로그인 후 이용 가능">☆</span>
+                            <span class="recruit-card-bookmark" th:unless="${recruiter}"
+                                  th:classappend="${r.bookmarked} ? 'active'"
+                                  th:attr="data-id=${r.recruitmentId}"
+                                  th:text="${r.bookmarked} ? '★' : '☆'"
+                                  title="찜하기">☆</span>
+
                         </div>
                         <div class="recruit-card-festival" th:text="${r.festivalTitle}"></div>
                         <div class="recruit-card-location"
@@ -220,7 +228,7 @@
         </form>
 
         <script th:src="@{/js/recruitment/recruitList.js}"
-                th:attr="data-sido=${form.regionSidoCode}, data-sigungu=${form.regionSigunguCode}"></script>
+                th:attr="data-sido=${form.regionSidoCode}, data-sigungu=${form.regionSigunguCode}, data-job-seeker=${jobSeeker}"></script>
 
     </div>
 </div>
