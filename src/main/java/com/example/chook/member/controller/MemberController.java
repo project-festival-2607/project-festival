@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -113,6 +114,48 @@ public class MemberController {
             @RequestBody BusinessNumberVerifyRequestDTO requestDTO
     ) {
         return businessNumberVerifyService.verify(requestDTO);
+    }
+
+    // 이메일 중복 계정 알림
+    @GetMapping("/signup/social/link")
+    public String socialLinkSuggestion() {
+        return "member/signup-social-connect";
+    }
+
+    // 소셜 회원가입 시 회원정보 입력 페이지 맵핑
+    @GetMapping("/signup/social")
+    public String signupSocialForm(HttpSession session, Model model) {
+        SocialAuthSessionDTO authInfo = (SocialAuthSessionDTO) session.getAttribute("socialAuthInfo");
+        if (authInfo == null) {
+            return "redirect:/member/login";
+        }
+        model.addAttribute("isSocial", true);
+        model.addAttribute("prefillName", authInfo.getName());
+        model.addAttribute("prefillEmail", authInfo.getEmail());
+        return "member/signup-job";
+    }
+
+    // 소셜 회원가입
+    @PostMapping("/signup/social")
+    public String signupSocial(
+            @ModelAttribute SocialSignUpRequestDTO requestDTO,
+            HttpSession session,
+            RedirectAttributes redirectAttributes
+    ) {
+        SocialAuthSessionDTO authInfo = (SocialAuthSessionDTO) session.getAttribute("socialAuthInfo");
+        if (authInfo == null) {
+            return "redirect:/member/login";
+        }
+
+        try {
+            LoginResponseDTO responseDTO = memberService.signUpSocial(authInfo, requestDTO);
+            session.removeAttribute("socialAuthInfo");
+            session.setAttribute("loginMember", responseDTO);
+            return "redirect:/";
+        } catch (IllegalArgumentException e) {
+            redirectAttributes.addFlashAttribute("FailureMsg", e.getMessage());
+            return "redirect:/member/signup/social";
+        }
     }
 
 }

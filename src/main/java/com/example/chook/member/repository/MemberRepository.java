@@ -26,7 +26,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     Optional<Member> findByUsernameAndEmailAndDeletedAtIsNull(String username, String email);
 
     // 소셜 로그인 이메일 중복 체크
-    boolean existsByEmailAndDeletedAtIsNull(String email);
+    boolean existsByEmailAndDeletedAtIsNullAndRoleIn(String email, List<MemberRole> roles);
 
     // member 강제 삭제용 메서드
     void deleteByUsername(String username);
