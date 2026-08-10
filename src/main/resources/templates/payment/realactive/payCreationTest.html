@@ -293,12 +293,13 @@
             await renderPaymentWidget(selectedProduct);
         } catch (e) {
             console.error("위젯 렌더링 실패:", e);
-            document.getElementById("payment-method").innerHTML =
-                "<p style='color:red;'>결제위젯 로드 실패: " + e.message + "</p>";
+            //document.getElementById("payment-method").innerHTML = "<p style='color:red;'>결제위젯 로드 실패: " + e.message + "</p>";
+            //자꾸 빨간 글씨 보여주느라 맘에 안들어서 가림.
+            //결제위젯 로드 실패: 하나의 약관 위젯만 사용 가능
         }
     });
 
-    // widget/index.html의 "주문서형 결제" 블록과 동일한 로직
+    // "주문서형 결제" 블록과 동일한 로직
     async function renderPaymentWidget(product) {
         const amount = { currency: "KRW", value: product.productPrice };
 
