@@ -8,6 +8,9 @@
   <link rel="stylesheet" th:href="@{/css/common.css}"/>
   <link rel="stylesheet" th:href="@{/css/index_main.css}"/>
   <link rel="stylesheet" th:href="@{/libs/bootstrap-5.3.8-dist/css/bootstrap.min.css}">
+
+  <link rel="stylesheet" th:href="@{/css/chatbot/chatbot.css}">
+
   <script th:src="@{/libs/bootstrap-5.3.8-dist/js/bootstrap.bundle.min.js}"></script>
 </head>
 <body class="d-flex flex-column min-vh-100">
@@ -15,6 +18,34 @@
 <div class="container-wrapper">
   <div layout:fragment="content" ></div>
 </div>
-<div th:replace="~{fragments/footer :: footer}"></div>
+
+  <input type="hidden" id="csrfToken">
+  <button id="chatBtn" class="chat-btn">
+    💬
+  </button>
+  <!-- 채팅창 -->
+  <div id="chatBox" class="chat-box">
+
+    <div class="chat-header">
+      <span>ChatBot</span>
+      <button id="closeBtn">✖</button>
+    </div>
+
+    <div class="chat-body">
+      안녕하세요!<br>
+      무엇을 도와드릴까요?
+    </div>
+
+    <!-- 입력창 -->
+    <div class="chat-input">
+      <input type="text" id="message" placeholder="메시지를 입력하세요">
+      <button id="sendBtn">전송</button>
+    </div>
+
+  </div>
+
+  <script th:src="@{/js/chatbot/chatbot.js}"></script>
+
+  <div th:replace="~{fragments/footer :: footer}"></div>
 </body>
 </html>

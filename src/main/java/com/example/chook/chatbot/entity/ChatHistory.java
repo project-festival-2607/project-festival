@@ -33,6 +33,7 @@ public class ChatHistory {
 
     private String question; // 시용자 질문
 
+    @Column(columnDefinition = "TEXT")
     private String answer; // GTP답변
 
     @Column(name = "reg_date")
