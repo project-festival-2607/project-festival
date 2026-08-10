@@ -32,7 +32,7 @@ public class PointHistory {
     @JoinColumn(name = "recruit_id")  // p_type='use'일 때만 값 존재 (nullable)
     private Recruitment recruit;
 
-    //결제번호id  인데 쓸모 있을진 모르겠음.... payment에서 받아오는거긴한데
+    //결제번호id
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "payment_id")  // p_type='charge'/'refund'일 때만 값 존재 (nullable)
     private Payment payment;
@@ -50,7 +50,7 @@ public class PointHistory {
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
 
-    //이건 뭐냐???
+    //해당데이터생성일
     @PrePersist
     protected void onCreate() {
         this.createdAt = LocalDateTime.now();
