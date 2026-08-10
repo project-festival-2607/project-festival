@@ -1,0 +1,83 @@
+/* 챗봇 버튼 */
+.chat-btn{
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: none;
+    font-size: 28px;
+    cursor: pointer;
+    background: #4CAF50;
+    color: white;
+}
+
+/* 채팅창 */
+.chat-box{
+    position: fixed;
+    bottom: 100px;
+    right: 30px;
+    width: 320px;
+    height: 420px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 0 10px gray;
+    display: none;
+}
+
+/* 보여질 때 */
+.chat-box.show{
+    display:block;
+}
+
+/* 헤더 */
+.chat-header{
+    height:50px;
+    background:#4CAF50;
+    color:white;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:10px;
+}
+
+.chat-header button{
+    background:none;
+    border:none;
+    color:white;
+    font-size:20px;
+    cursor:pointer;
+}
+
+.chat-body{
+    height: 350px;
+    padding: 10px;
+    overflow-y: auto;
+    word-break: break-word;
+}
+
+.chat-input{
+    display: flex;
+    justify-content: center;   /* 가로 가운데 */
+    align-items: center;       /* 세로 가운데 */
+
+    position: absolute;
+    bottom: 10px;              /* 채팅창 아래에서 10px */
+    left: 0;
+    width: 100%;
+}
+
+.chat-input input{
+    width: 200px;
+    height: 35px;
+    padding: 5px 10px;
+    margin-right: 8px;
+    border-radius: 10px;
+}
+
+.chat-input button{
+    height: 35px;
+    padding: 0 15px;
+    border-radius: 10px;
+}

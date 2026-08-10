@@ -59,6 +59,8 @@ dependencies {
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
     testAnnotationProcessor 'org.projectlombok:lombok'
 
+    // WebClient => spring Boot에서 Groq와 통신하는 도구
+    implementation 'org.springframework.boot:spring-boot-starter-webflux'
 
     //payment
     implementation 'com.googlecode.json-simple:json-simple:1.1.1'
