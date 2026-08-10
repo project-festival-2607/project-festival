@@ -1,12 +1,15 @@
 package com.example.chook.mypage;
 
+import lombok.AllArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.ui.Model;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
@@ -25,17 +28,47 @@ public class MyPageController {
         if (user == null) {
             return "redirect:/member/login";
         }
-
         // 현재 로그인한 회원의 아이디
         String username = user.getUsername();
 
         // DB에서 회원 정보 조회
         MyPageDTO myPageDTO =
                 myPageService.getMyPage(username);
-
         // HTML에 전달
         model.addAttribute("myPageDTO", myPageDTO);
 
         return "mypage/mypage";
+    }
+
+    // 수정 페이지
+    @GetMapping("/modify")
+    public String modify(@AuthenticationPrincipal UserDetails user, Model model){
+
+        if (user == null) {
+            return "redirect:/member/login";
+        }
+
+        String username = user.getUsername();
+
+        MyPageDTO myPageDTO =
+                myPageService.getMyPage(username);
+
+        model.addAttribute("myPageDTO", myPageDTO);
+
+        return "mypage/modify";
+    }
+
+    // 개인정보 수정
+    @PostMapping("/modify")
+    public String modify(@AuthenticationPrincipal UserDetails user,MyPageDTO myPageDTO){
+
+        String username = user.getUsername();
+
+        log.info("수정 username = {}", username);
+        log.info("수정 DTO = {}", myPageDTO);
+
+        myPageService.modify(username, myPageDTO);
+
+        return "redirect:/mypage";
     }
 }
