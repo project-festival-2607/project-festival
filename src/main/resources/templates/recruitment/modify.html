@@ -27,7 +27,7 @@
             <!-- 1. 행사 선택 (등록 폼과 동일한 필드지만 서비스에서 변경을 반영하지 않음) -->
             <div class="recruit-field">
                 <label for="festivalContentId">모집할 행사</label>
-                <select name="festivalContentId" id="festivalContentId" class="form-select" required>
+                <select name="festivalContentId" id="festivalContentId" class="form-select" required disabled>
                     <option value="">행사를 선택하세요</option>
                     <option th:each="fes : ${festivals}"
                             th:value="${fes.contentId}"
@@ -98,7 +98,6 @@
                         <option value="DAILY" th:selected="${wageType != null and wageType.name() == 'DAILY'}">일급</option>
                         <option value="WEEKLY" th:selected="${wageType != null and wageType.name() == 'WEEKLY'}">주급</option>
                         <option value="PER_TASK" th:selected="${wageType != null and wageType.name() == 'PER_TASK'}">건당</option>
-                        <option value="NEGOTIABLE" th:selected="${wageType != null and wageType.name() == 'NEGOTIABLE'}">협의</option>
                     </select>
                 </div>
                 <div>
