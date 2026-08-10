@@ -4,6 +4,7 @@ import com.example.chook.recruitment.entity.enums.RecruitmentCategory;
 import com.example.chook.recruitment.entity.enums.RecruitmentStatus;
 import lombok.*;
 
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -43,5 +44,14 @@ public class RecruitmentResponseDTO {
   private LocalDateTime publishedAt;
   private LocalDateTime updatedAt;
   private LocalDateTime deletedAt;
+
+  public String getWorkingDurationText() {
+    if (workingStartTime == null || workingEndTime == null) return null;
+    long minutes = Duration.between(workingStartTime, workingEndTime).toMinutes();
+    if (minutes < 0) minutes += 24 * 60;
+    long hours = minutes / 60;
+    long remainMinutes = minutes % 60;
+    return remainMinutes > 0 ? hours + "시간 " + remainMinutes + "분" : hours + "시간";
+  }
 
 }

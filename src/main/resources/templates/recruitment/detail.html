@@ -3,11 +3,202 @@
       layout:decorate="~{layout/layout}"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block layout:fragment="css">
+        <link rel="stylesheet" th:href="@{/css/festival/festivalDetail.css}">
+        <link rel="stylesheet" th:href="@{/css/recruit/detail.css}">
+        <link rel="stylesheet" th:href="@{/libs/toastui-editor-3.2.2/css/toastui-editor.min.css}">
+    </th:block>
+</head>
 <div layout:fragment="content">
     <div class="container">
-<!--                모든 inner는 class="container" 로 맞춤        -->
-<!--        이 안에서 작업        -->
-    <h1>Detail Page</h1>
+        <!--                모든 inner는 class="container" 로 맞춤        -->
+        <!--        이 안에서 작업        -->
 
+        <!-- 행사 정보: festival/detail.html과 동일한 detailContainer 구성 -->
+        <div class="detailContainer">
+            <div class="detail-img"
+                 th:style="'background-image: url(' + ${fes.firstImage} + ')'"
+            >
+            </div>
+            <div class="detail-text">
+                <div class="detail-h1">[[${fes.title}]]</div>
+                <div class="detail-sub detail-agenda">
+                    <div>일정</div>
+                    <span>[[${fes.startDate}]] ~ [[${fes.endDate}]]</span>
+                </div>
+                <div class="detail-sub">
+                    <div>시간</div>
+                    <span>[[${fes.playTime}]]</span>
+                </div>
+                <div class="detail-sub">
+                    <div>장소</div>
+                    <span>[[${fes.eventPlace}]]</span>
+                </div>
+                <div class="detail-sub">
+                    <div>가격</div>
+                    <span>[[${fes.useTime}]]</span>
+                </div>
+                <div class="detail-sub">
+                    <div>주최</div>
+                    <span>[[${fes.telName}]]</span>
+                </div>
+                <div class="detail-sub">
+                    <div>문의처</div>
+                    <span>[[${fes.tel}]]</span>
+                </div>
+                <div class="detail-sub detail-home" th:if="${fes.officialHomepage != null and !#strings.isEmpty(fes.officialHomepage)}">
+                    <a th:href="${fes.officialHomepage}"
+                       target="_blank"
+                       class="homepage"
+                       rel="noopener noreferrer"> 공식 홈페이지 ↗ </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="detail-sub-container">
+
+            <!-- 근무조건: 모집분류별로 다른 내용 표시 -->
+            <div class="sub-item">
+<!--                구인 제목-->
+                    [[${recruitment.recruitmentTitle}]]
+            </div>
+
+
+            <div class="sub-item">
+                <div class="detail-h2">근무조건</div>
+
+                <div th:if="${recruitment.category != null and recruitment.category.name() == 'INDIVIDUAL'}">
+                    <div class="detail-sub">
+                        <div>급여</div>
+                        <span th:if="${recruitment.specific != null}">
+                            <span th:switch="${recruitment.specific.wageType != null ? recruitment.specific.wageType.name() : ''}">
+                                <span th:case="'HOURLY'">시급</span>
+                                <span th:case="'DAILY'">일급</span>
+                                <span th:case="'WEEKLY'">주급</span>
+                                <span th:case="'PER_TASK'">건당</span>
+                                <span th:case="*">협의</span>
+                            </span>
+                            <span th:if="${recruitment.specific.wageValue != null}" th:text="' ' + ${#numbers.formatInteger(recruitment.specific.wageValue, 0, 'COMMA')} + '원'"></span>
+                        </span>
+
+                    </div>
+                    <div class="detail-sub">
+                        <div>근무기간</div>
+                        <span>[[${recruitment.workingStartDate}]] ~ [[${recruitment.workingEndDate}]]</span>
+                    </div>
+                    <div class="detail-sub">
+                        <div>근무시간</div>
+                        <span>[[${recruitment.workingStartTime}]] ~ [[${recruitment.workingEndTime}]]</span>
+                    </div>
+                </div>
+
+                <div th:if="${recruitment.category != null and recruitment.category.name() == 'FOOD_TRUCK'}">
+                    <div class="detail-sub">
+                        <div>선결제</div>
+                        <span th:text="${recruitment.specific != null and recruitment.specific.prepaid} ? '필요' : '불필요'"></span>
+                    </div>
+                    <div class="detail-sub">
+                        <div>입점료</div>
+                        <span th:text="${recruitment.specific != null and recruitment.specific.boothFeeRequired} ? '있음' : '없음'"></span>
+                    </div>
+                    <div class="detail-sub">
+                        <div>전기사용</div>
+                        <span th:text="${recruitment.specific != null and recruitment.specific.electricityProvided} ? '가능' : '불가'"></span>
+                    </div>
+                    <div class="detail-sub">
+                        <div>근무기간</div>
+                        <span>[[${recruitment.workingStartDate}]] ~ [[${recruitment.workingEndDate}]]</span>
+                    </div>
+                    <div class="detail-sub">
+                        <div>근무시간</div>
+                        <span th:text="${recruitment.workingStartTime}+'~'+${recruitment.workingEndTime}"></span>
+                    </div>
+                </div>
+
+                <div th:if="${recruitment.category == null or (recruitment.category.name() != 'INDIVIDUAL' and recruitment.category.name() != 'FOOD_TRUCK')}">
+                    <div class="detail-sub">
+                        <span>상세요강에서 확인해주세요.</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 모집조건 -->
+            <div class="sub-item">
+                <div class="detail-h2">모집조건</div>
+                <div class="detail-sub">
+                    <div>모집마감</div>
+                    <span>[[${recruitment.applicationDeadline}]]</span>
+                </div>
+                <div class="detail-sub">
+                    <div>모집인원</div>
+                    <span>[[${recruitment.recruitmentCount}]]명</span>
+                </div>
+            </div>
+
+            <div class="sub-item">
+                <div class="detail-h2">
+                    모집개요
+                </div>
+                <div class="detail-h3">
+                    [[${recruitment.content}]]
+                </div>
+            </div>
+
+
+            <!-- 근무지역: festival/detail.html과 동일한 지도 API 사용 -->
+            <div class="sub-item">
+                <div class="detail-h2">
+                    근무지역
+                </div>
+                <div class="detail-h3">[[${fes.address}]]</div>
+                <div class="mapBox"
+                     th:data-map-y="${fes.mapY}"
+                     th:data-map-x="${fes.mapX}"
+                >
+                    <!--                    지도 API 연결 + 정적지도              -->
+
+                </div>
+                <div class="goToMap">
+                    <a href="/map/map">
+                        지도보러가기 ↗
+                    </a>
+                </div>
+            </div>
+
+
+            <!-- 행사주최자 연락처 -->
+            <div class="sub-item">
+                <div class="detail-h2">행사주최자 연락처</div>
+                <div class="detail-sub">
+                    <div>연락처</div>
+                    <span th:text="${organizerPhone ?: '정보없음'}"></span>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- 지원하기(구직자) / 수정,삭제,결제(구인자) - 모양만, 링크는 추후 연결 -->
+        <div class="recruit-detail-actions">
+            <a th:unless="${recruiter}" href="#" class="btn btn-primary recruit-detail-apply">지원하기</a>
+            <div th:if="${recruiter}" class="recruit-detail-owner-actions">
+                <a href="#" class="btn btn-outline-secondary">수정</a>
+                <a href="#" class="btn btn-outline-danger">삭제</a>
+                <a href="#" class="btn btn-primary">결제</a>
+            </div>
+        </div>
+
+        <div class="goToList">
+            <a th:href="@{/recruitment/list}">
+                목록으로
+            </a>
+        </div>
     </div>
+
+    <!--    SCRIPT      -->
+    <script th:src="@{|//dapi.kakao.com/v2/maps/sdk.js?appkey=${mapApiKey}&libraries=services,clusterer|}"></script>
+    <script th:src="@{/js/festival/festivalDetail.js}"></script>
+    <script th:src="@{/libs/toastui-editor-3.2.2/js/toastui-editor-all.min.js}"></script>
+    <script th:src="@{/js/recruitment/recruitDetail.js}"></script>
 </div>
+</html>
