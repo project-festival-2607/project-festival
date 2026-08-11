@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @Table(name = "point_history")
 @Getter
 @Setter
-@ToString(exclude = {"member", "recruit", "paying"})  // 양방향 참조시 순환 참조 방지
+@ToString(exclude = {"member", "recruit", "payment"})  // 양방향 참조시 순환 참조 방지
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder

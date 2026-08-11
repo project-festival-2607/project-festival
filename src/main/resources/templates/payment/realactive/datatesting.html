@@ -139,7 +139,7 @@
         }
 
         try {
-            const res = await fetch("/paying/order/" + orderId);
+            const res = await fetch("/payment/order/" + orderId);
 
             if (!res.ok) {
                 dbResultEl.textContent = "DB에서 이 결제 건을 찾지 못했습니다. (아직 처리가 안 됐거나 실패했을 수 있어요. 서버 콘솔 로그를 확인해보세요)";
