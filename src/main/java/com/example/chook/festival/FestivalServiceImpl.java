@@ -215,7 +215,7 @@ public class FestivalServiceImpl implements FestivalService, ApplicationRunner {
 
     @Override
     public List<ChookMainDTO> getMainList() {
-        return festivalRepository.findAll()
+        return festivalRepository.findAll(Sort.by(Sort.Direction.DESC, "startDate"))
                 .stream()
                 .map((fes) -> new ChookMainDTO(
                         fes.getContentId(),

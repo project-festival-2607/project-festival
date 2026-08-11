@@ -54,8 +54,8 @@
                 </div>
                 <div class="user-box">
                     <ul class="user-sub">
-                        <li th:if="${session.loginMember == null}"><a th:href="@{/member/signup}" class="nav-link">회원가입</a></li>
-                        <li th:if="${session.loginMember == null}"><a th:href="@{/member/login}" class="nav-link">로그인</a></li>
+                        <li th:if="${session.loginMember == null}"><a th:href="@{/member/signup}" class="nav-link">회원가입 ↗</a></li>
+                        <li th:if="${session.loginMember == null}"><a th:href="@{/member/login}" class="nav-link">로그인 ↗ </a></li>
                         <li th:if="${session.loginMember != null}"><a href="/" class="nav-link" th:text="${session.loginMember.name}"></a></li>
                         <li th:if="${session.loginMember != null}"><a th:href="@{/member/logout}" class="nav-link">로그아웃</a></li>
 
