@@ -28,8 +28,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -74,7 +76,30 @@ public class RecruitmentServiceImpl implements RecruitmentService {
 
     validateSpecificDtoAndSave(recruitment, specificDto);
 
-    for (UUID uuid : extractImageUuids(dto.getContent())) {
+    syncRecruitmentFiles(recruitment, dto.getContent());
+
+    return recruitment.getId();
+
+  }
+
+  // 본문에 남아있는 이미지 UUID 기준으로 RecruitmentFile 연결을 맞춤 (등록/수정 공통)
+  // - 새로 참조된 이미지: RecruitmentFile 생성
+  // - 더 이상 본문에 없는 이미지: RecruitmentFile 삭제 (실제 파일은 sweepUnreferencedFiles가 담당)
+  private void syncRecruitmentFiles(Recruitment recruitment, String content) {
+    List<UUID> currentUuids = extractImageUuids(content);
+    List<RecruitmentFile> existingFiles = recruitmentFileRepository.findByRecruitment_Id(recruitment.getId());
+
+    List<RecruitmentFile> noLongerReferenced = existingFiles.stream()
+      .filter(file -> !currentUuids.contains(file.getUploadedFile().getUuid()))
+      .toList();
+    recruitmentFileRepository.deleteAll(noLongerReferenced);
+
+    Set<UUID> alreadyLinkedUuids = existingFiles.stream()
+      .map(file -> file.getUploadedFile().getUuid())
+      .collect(Collectors.toSet());
+
+    for (UUID uuid : currentUuids) {
+      if (alreadyLinkedUuids.contains(uuid)) continue;
       UploadedFile uploadedFile = uploadedFileRepository.findById(uuid)
         .orElseThrow(() -> new EntityNotFoundException(
           String.format("본문에 참조된 이미지(%s)를 업로드 기록에서 찾을 수 없음", uuid)
@@ -86,9 +111,6 @@ public class RecruitmentServiceImpl implements RecruitmentService {
           .build()
       );
     }
-
-    return recruitment.getId();
-
   }
 
   private List<UUID> extractImageUuids(String content) {
@@ -151,6 +173,8 @@ public class RecruitmentServiceImpl implements RecruitmentService {
     recruitment.setWorkingEndTime(dto.getWorkingEndTime());
 
     recruitmentRepository.save(recruitment);
+
+    syncRecruitmentFiles(recruitment, dto.getContent());
 
   }
 
