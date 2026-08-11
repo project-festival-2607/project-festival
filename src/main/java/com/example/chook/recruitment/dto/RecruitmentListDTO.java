@@ -33,5 +33,4 @@ public class RecruitmentListDTO {
   private LocalDate workingEndDate;
   private LocalTime workingStartTime;
   private LocalTime workingEndTime;
-
 }

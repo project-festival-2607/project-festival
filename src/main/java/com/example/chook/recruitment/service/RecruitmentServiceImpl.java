@@ -1,5 +1,6 @@
 package com.example.chook.recruitment.service;
 
+import com.example.chook.chookMain.ChookRecruitmentDTO;
 import com.example.chook.festival.Festival;
 import com.example.chook.festival.FestivalRepository;
 import com.example.chook.file.entity.UploadedFile;
@@ -30,6 +31,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.UUID;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -212,6 +214,19 @@ public class RecruitmentServiceImpl implements RecruitmentService {
     return recruitmentRepository
       .searchRecruitments(form, pageable)
       .map(this::buildManagementListDtoFromEntity);
+  }
+
+  @Override
+  public List<ChookRecruitmentDTO> getMainList() {
+    return recruitmentRepository.findAll()
+            .stream()
+            .map((rec) -> new ChookRecruitmentDTO(
+                    rec.getId(),
+                    rec.getTitle(),
+                    rec.getWorkingStartDate(),
+                    rec.getWorkingEndDate()
+            ))
+            .collect(Collectors.toList());
   }
 
   private void validateSpecificDtoAndSave(Recruitment recruitment,
