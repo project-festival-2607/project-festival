@@ -5,7 +5,9 @@ import com.example.chook.application.dto.ApplyDTO;
 import com.example.chook.application.entity.Application;
 import com.example.chook.application.entity.enums.ApplicationResult;
 import com.example.chook.member.entity.Member;
+import com.example.chook.recruitment.dto.RecruitmentResponseDTO;
 import com.example.chook.recruitment.entity.Recruitment;
+import com.example.chook.resume.dto.ResumeResponseDTO;
 import com.example.chook.resume.entity.Resume;
 
 import java.util.List;
@@ -39,6 +41,22 @@ public interface ApplicationService {
                 .resumeId(application.getResume().getId())
                 .registerDate(application.getRegisterDate())
                 .readDate(application.getReadDate())
+                .build();
+    }
+
+    // ApplyDTO 변환 (applypage Zone)
+    default ApplyDTO convertToApplyDto(
+            Member member,
+            RecruitmentResponseDTO recruitment,
+            ResumeResponseDTO resume
+    ) {
+        return ApplyDTO.builder()
+                .memberId(member.getId())
+                .name(member.getName())
+                .phone(member.getPhone())
+                .email(member.getEmail())
+                .recruitment(recruitment)
+                .resume(resume)
                 .build();
     }
 

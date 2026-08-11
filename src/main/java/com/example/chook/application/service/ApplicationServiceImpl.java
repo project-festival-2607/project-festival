@@ -122,24 +122,18 @@ public class ApplicationServiceImpl implements ApplicationService {
     // applypage Zone
     @Override
     public ApplyDTO getApplyData(Long recruitmentId, Long memberId) {
-        // 1. 공고 정보 조회 (주입받은 recruitmentService 인스턴스 사용)
+
+        // 공고 정보 조회
         RecruitmentResponseDTO recruitment = recruitmentService.getRecruitment(recruitmentId);
 
-        // 2. 이력서 정보 조회
+        // 이력서 정보 조회
         ResumeResponseDTO resume = resumeRepository.getResumeByMemberId(memberId);
 
-        // 3. 회원 정보 조회
+        // 회원 정보 조회
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
 
-        // 4. ApplyDTO로 묶어서 반환
-        return ApplyDTO.builder()
-                .memberId(member.getId())
-                .name(member.getName())
-                .phone(member.getPhone())
-                .email(member.getEmail())
-                .recruitment(recruitment)
-                .resume(resume)
-                .build();
+        // 변환 메서드 호출
+        return convertToApplyDto(member, recruitment, resume);
     }
 }
