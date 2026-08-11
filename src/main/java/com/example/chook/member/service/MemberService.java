@@ -9,11 +9,18 @@ public interface MemberService {
 
     LoginResponseDTO signUpEmployer(EmployerSignUpRequestDTO requestDTO);
 
-    LoginResponseDTO updateProfile(Long memberId, JobSeekerProfileUpdateRequestDTO requestDTO);
+    LoginResponseDTO updateJobSeekerProfile(Long memberId, JobSeekerProfileUpdateRequestDTO requestDTO);
+
+    LoginResponseDTO updateEmployerProfile(Long memberId, EmployerProfileUpdateRequestDTO requestDTO);
 
     LoginResponseDTO loginBySocial(Provider provider, String providerId);
 
     boolean hasJobSeekerAccountWithEmail(String email);
 
     LoginResponseDTO signUpSocial(SocialAuthSessionDTO authInfo, SocialSignUpRequestDTO requestDTO);
+
+    boolean verifyPassword(Long memberId, String rawPassword);
+
+    LoginResponseDTO removeBusinessNumber(Long memberId);
+
 }
