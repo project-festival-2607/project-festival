@@ -63,9 +63,9 @@
             <!-- 3. 모집마감 날짜 + 모집 인원 -->
             <div class="recruit-field recruit-field-row recruit-field-row-narrow">
                 <div>
-                    <label for="applicationDeadline">모집마감 날짜</label>
+                    <label for="applicationDeadline">모집마감 날짜 (수정 불가)</label>
                     <input type="date" name="applicationDeadline" id="applicationDeadline" class="form-control"
-                           th:value="${update.applicationDeadline}" required>
+                           th:value="${update.applicationDeadline}" readonly required>
                 </div>
                 <div>
                     <label for="recruitmentCount">모집 인원</label>

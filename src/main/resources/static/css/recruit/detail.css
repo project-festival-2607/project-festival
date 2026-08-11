@@ -30,3 +30,9 @@
     min-width: 200px;
     text-align: center;
 }
+
+.recruit-detail-expired-note {
+    color: #928c76;
+    font-size: 14px;
+    align-self: center;
+}

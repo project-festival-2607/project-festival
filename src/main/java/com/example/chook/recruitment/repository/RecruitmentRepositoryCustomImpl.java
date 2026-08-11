@@ -54,6 +54,7 @@ public class RecruitmentRepositoryCustomImpl implements RecruitmentRepositoryCus
       .and(regionSigunguEq(condition.regionSigunguCode()))
       .and(categoryEq(category))
       .and(statusEq(RecruitmentStatus.RECRUITING))
+      .and(recruitment.applicationDeadline.goe(LocalDate.now())) // 마감된 공고는 구직자용 목록에서 제외 (구인자 관리 페이지에는 계속 남김)
       .and(workingStartTimeGoe(condition.workingStartTime()))
       .and(workingEndTimeLoe(condition.workingEndTime()))
       .and(workingStartDateGoe(condition.workingStartDate()))
