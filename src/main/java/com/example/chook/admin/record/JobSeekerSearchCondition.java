@@ -47,7 +47,7 @@ public record JobSeekerSearchCondition(
     Class<T> enumClass,
     T defaultValue
   ) {
-    // blankToNull은 Form에서 처리하므로 여기서 고려하지 않음
+    if (string == null) return defaultValue;
     try {
       return Enum.valueOf(enumClass, string);
     } catch (IllegalArgumentException e) {

@@ -14,7 +14,6 @@ import jakarta.persistence.EntityManager;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
@@ -38,9 +37,6 @@ public class AdminMemberRepositoryImpl implements AdminMemberRepository {
 
   @Override
   public Page<JobSeekerTableDTO> getPage(Pageable pageable, JobSeekerSearchCondition condition) {
-
-    int pageIdx = (int) pageable.getOffset();
-    int pageSize = pageable.getPageSize();
 
     JPAQuery<JobSeekerTableDTO> resultQuery = this.jpaQueryFactory.select(Projections.fields(
 
@@ -87,8 +83,8 @@ public class AdminMemberRepositoryImpl implements AdminMemberRepository {
 
     List<JobSeekerTableDTO> content = resultQuery
       .where(whereCondition)
-      .offset(pageIdx)
-      .limit(pageSize)
+      .offset(pageable.getOffset())
+      .limit(pageable.getPageSize())
       .fetch();
 
     Long total = countQuery
@@ -97,7 +93,7 @@ public class AdminMemberRepositoryImpl implements AdminMemberRepository {
 
     return new PageImpl<>(
       content,
-      PageRequest.of(pageIdx, pageSize),
+      pageable,
       total != null ? total : 0
     );
 
