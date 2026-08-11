@@ -2,6 +2,8 @@ package com.example.chook.festival;
 
 import lombok.Builder;
 
+import static com.example.chook.common.util.CustomStringUtils.blankToNull;
+
 @Builder
 public record FestivalSearchForm(
 
@@ -14,10 +16,6 @@ public record FestivalSearchForm(
     type = blankToNull(type);
     keyword = blankToNull(keyword);
     month = blankToNull(month);
-  }
-
-  private String blankToNull(String string) {
-    return (string == null || string.isBlank()) ? null : string;
   }
 
 }
