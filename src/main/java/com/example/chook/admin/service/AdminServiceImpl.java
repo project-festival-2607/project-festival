@@ -1,14 +1,11 @@
 package com.example.chook.admin.service;
 
-import com.example.chook.festival.FestivalRepository;
-import com.example.chook.member.repository.MemberRepository;
-import com.example.chook.payment.repository.PaymentRepository;
-import com.example.chook.payment.repository.PointCalcUseRepository;
-import com.example.chook.payment.repository.PointHistoryRepository;
-import com.example.chook.payment.repository.ProductRepository;
-import com.example.chook.support.repository.InquiryRepository;
+import com.example.chook.admin.record.JobSeekerSearchCondition;
+import com.example.chook.admin.dto.JobSeekerListDTO;
+import com.example.chook.admin.repository.AdminMemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
@@ -16,13 +13,11 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class AdminServiceImpl implements AdminService {
 
-  private final MemberRepository memberRepository;
-  private final InquiryRepository inquiryRepository;
-  private final PaymentRepository paymentRepository;
-  private final PointCalcUseRepository pointCalcUseRepository;
-  private final PointHistoryRepository pointHistoryRepository;
-  private final ProductRepository productRepository;
-  private final FestivalRepository festivalRepository;
+  private final AdminMemberRepository adminMemberRepository;
 
 
+  @Override
+  public Page<JobSeekerListDTO> getPage(int pageIdx, JobSeekerSearchCondition condition) {
+    return adminMemberRepository.getPage(pageIdx, condition);
+  }
 }

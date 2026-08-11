@@ -1,0 +1,54 @@
+package com.example.chook.admin.record;
+
+import com.example.chook.admin.entity.enums.DateRangeCriteria;
+import com.example.chook.admin.entity.enums.JobSeekerKeywordType;
+import com.example.chook.admin.form.JobSeekerSearchForm;
+import com.example.chook.common.util.CustomStringUtils;
+import com.example.chook.member.entity.enums.MemberStatus;
+import com.example.chook.member.entity.enums.Provider;
+
+import java.time.LocalDateTime;
+import java.util.List;
+
+public record JobSeekerSearchCondition(
+
+  JobSeekerKeywordType keywordType,
+  List<String> keywordList,
+
+  MemberStatus status,
+
+  DateRangeCriteria dateRangeCriteria,
+  LocalDateTime startDate,
+  LocalDateTime endDate,
+
+  Provider provider
+
+) {
+
+  public JobSeekerSearchCondition(JobSeekerSearchForm form) {
+
+    this(
+      convertStringToEnum(form.keywordType(), JobSeekerKeywordType.class, JobSeekerKeywordType.USERNAME),
+      CustomStringUtils.splitByRegex(form.keywords(), "[\\s,&]+"),
+      convertStringToEnum(form.status(), MemberStatus.class, null),
+      convertStringToEnum(form.dateRangeCriteria(), DateRangeCriteria.class, DateRangeCriteria.LAST_LOGIN_AT),
+      form.startDate(),
+      form.endDate(),
+      convertStringToEnum(form.provider(), Provider.class, null)
+    );
+  }
+
+  private static <T extends Enum<T>> T convertStringToEnum(
+    String string,
+    Class<T> enumClass,
+    T defaultValue
+  ) {
+    // blankToNull은 Form에서 처리하므로 여기서 고려하지 않음
+    try {
+      return Enum.valueOf(enumClass, string);
+    } catch (IllegalArgumentException e) {
+      return defaultValue;
+    }
+  }
+
+}
