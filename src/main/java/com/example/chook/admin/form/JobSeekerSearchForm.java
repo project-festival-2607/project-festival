@@ -13,8 +13,8 @@ public record JobSeekerSearchForm(
 
   String JobSeekerDateRangeCriteria, // JobSeekerDateRangeCriteria
   String gender,            // Gender
-  LocalDateTime startDate,
-  LocalDateTime endDate,
+  LocalDateTime startDateTime,
+  LocalDateTime endDateTime,
 
   String provider           // Provider
 

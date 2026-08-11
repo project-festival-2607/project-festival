@@ -19,10 +19,10 @@ public record JobSeekerSearchCondition(
 
   MemberStatus status,
 
-  JobSeekerDateRangeCriteria dateRangeCriteria,
   Gender gender,
-  LocalDateTime startDate,
-  LocalDateTime endDate,
+  JobSeekerDateRangeCriteria dateRangeCriteria,
+  LocalDateTime startDateTime,
+  LocalDateTime endDateTime,
 
   Provider provider
 
@@ -34,10 +34,10 @@ public record JobSeekerSearchCondition(
       convertStringToEnum(form.keywordType(), JobSeekerKeywordType.class, JobSeekerKeywordType.USERNAME),
       splitByRegex(form.keywords(), "[\\s,&]+"),
       convertStringToEnum(form.status(), MemberStatus.class, null),
-      convertStringToEnum(form.JobSeekerDateRangeCriteria(), JobSeekerDateRangeCriteria.class, JobSeekerDateRangeCriteria.LAST_LOGIN_AT),
       convertStringToEnum(form.gender(), Gender.class, null),
-      form.startDate(),
-      form.endDate(),
+      convertStringToEnum(form.JobSeekerDateRangeCriteria(), JobSeekerDateRangeCriteria.class, JobSeekerDateRangeCriteria.LAST_LOGIN_AT),
+      form.startDateTime(),
+      form.endDateTime(),
       convertStringToEnum(form.provider(), Provider.class, null)
     );
   }
