@@ -52,7 +52,7 @@
 
         <div class="recruit-card-grid">
           <a class="recruit-card" th:each="r : ${pagingHandler.elementList}"
-             th:href="@{/recruitment/{id}(id=${r.recruitmentId})}">
+             th:href="@{/recruitment/{id}(id=${r.recruitmentId}, from='manage')}">
             <div class="recruit-card-top">
                             <span class="recruit-card-emoji" th:switch="${r.category != null ? r.category.name() : ''}">
                                 <span th:case="'INDIVIDUAL'">🙋</span>

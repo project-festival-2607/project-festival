@@ -75,7 +75,12 @@ const specificBlocks = document.querySelectorAll(".recruit-sidebar-specific");
 function updateSpecificVisibility() {
     const category = categorySelect.value;
     specificBlocks.forEach(block => {
-        block.style.display = (block.dataset.category === category) ? "" : "none";
+        const visible = block.dataset.category === category;
+        block.style.display = visible ? "" : "none";
+        // 숨겨진 블록의 입력값(예: 기본 체크된 급여유형 라디오)이 폼과 함께 제출되지 않도록 비활성화
+        block.querySelectorAll("input, select").forEach(input => {
+            input.disabled = !visible;
+        });
     });
 }
 categorySelect.addEventListener("change", updateSpecificVisibility);
