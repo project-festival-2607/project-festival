@@ -43,6 +43,18 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
                 .role(userDetails.getRole())
                 .build());
 
+
+        // 로그인 전에 접근했던 페이지가 있다면 해당 페이지로 이동 (applypage 기능 추가)
+        String redirectAfterLogin =
+                (String) session.getAttribute("applicationRedirectAfterLogin");
+
+        if (redirectAfterLogin != null) {
+            session.removeAttribute("applicationRedirectAfterLogin");
+            response.sendRedirect(redirectAfterLogin);
+            return;
+        }
+
+        // 별도 이동 경로가 없으면 메인으로 이동
         response.sendRedirect("/");
     }
 
