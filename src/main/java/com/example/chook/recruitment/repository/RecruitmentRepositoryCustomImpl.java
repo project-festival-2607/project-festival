@@ -57,8 +57,8 @@ public class RecruitmentRepositoryCustomImpl implements RecruitmentRepositoryCus
       .and(recruitment.applicationDeadline.goe(LocalDate.now())) // 마감된 공고는 구직자용 목록에서 제외 (구인자 관리 페이지에는 계속 남김)
       .and(workingStartTimeGoe(condition.workingStartTime()))
       .and(workingEndTimeLoe(condition.workingEndTime()))
-      .and(workingStartDateGoe(condition.workingStartDate()))
-      .and(workingEndDateLoe(condition.workingEndDate()))
+      .and(workingEndDateGoe(condition.workingStartDate()))
+      .and(workingStartDateLoe(condition.workingEndDate()))
     ;
 
     JPAQuery<Recruitment> resultQuery = jpaQueryFactory
@@ -92,10 +92,6 @@ public class RecruitmentRepositoryCustomImpl implements RecruitmentRepositoryCus
     countQuery.where(whereCondition);
 
     Long total = countQuery.fetchOne();
-
-    // 급여순 정렬을 선택한 경우 우선 정렬
-    if (condition.wageType() != null)
-      resultQuery.orderBy(recruitmentIndividual.wageValue.desc());
 
     switch (condition.listCriteria()) {
       case LATEST -> resultQuery.orderBy(recruitment.publishedAt.desc());
@@ -272,12 +268,14 @@ public class RecruitmentRepositoryCustomImpl implements RecruitmentRepositoryCus
     return time == null ? null : recruitment.workingEndTime.loe(time);
   }
 
-  private BooleanExpression workingStartDateGoe(LocalDate date) {
-    return date == null ? null : recruitment.workingStartDate.goe(date);
+  // 겹침(overlap) 기준: 필터 시작일이 공고의 근무종료일보다 늦으면 겹치지 않음
+  private BooleanExpression workingEndDateGoe(LocalDate filterStartDate) {
+    return filterStartDate == null ? null : recruitment.workingEndDate.goe(filterStartDate);
   }
 
-  private BooleanExpression workingEndDateLoe(LocalDate date) {
-    return date == null ? null : recruitment.workingEndDate.loe(date);
+  // 겹침(overlap) 기준: 필터 종료일이 공고의 근무시작일보다 빠르면 겹치지 않음
+  private BooleanExpression workingStartDateLoe(LocalDate filterEndDate) {
+    return filterEndDate == null ? null : recruitment.workingStartDate.loe(filterEndDate);
   }
 
 }
