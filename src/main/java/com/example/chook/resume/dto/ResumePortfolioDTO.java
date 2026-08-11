@@ -28,4 +28,7 @@ public class ResumePortfolioDTO {
     // 포트폴리오와 1:1 관계인 첨부파일 정보
     private ResumeFileDTO resumeFile;
 
+    // url
+    private String url;
+
 }

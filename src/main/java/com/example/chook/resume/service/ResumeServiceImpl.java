@@ -1,5 +1,6 @@
 package com.example.chook.resume.service;
 
+import java.time.LocalDateTime;
 import com.example.chook.file.entity.UploadedFile;
 import com.example.chook.file.repository.UploadedFileRepository;
 import com.example.chook.member.entity.Member;
@@ -7,6 +8,7 @@ import com.example.chook.member.repository.MemberRepository;
 import com.example.chook.resume.dto.*;
 import com.example.chook.resume.entity.*;
 import com.example.chook.resume.repository.*;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -36,6 +38,8 @@ public class ResumeServiceImpl implements ResumeService{
                 .orElseThrow();
 
         Resume resume = resumeDtoToEntity(resumeRequestDTO, member);
+
+        resume.setSavedAt(LocalDateTime.now());
 
         Resume savedResume = resumeRepository.save(resume);
 
@@ -73,6 +77,13 @@ public class ResumeServiceImpl implements ResumeService{
         if (resumeRequestDTO.getPortfolios() != null) {
 
             for (ResumePortfolioDTO portfolioDTO : resumeRequestDTO.getPortfolios()) {
+
+                // 포트폴리오 유형을 선택하지 않은 경우
+                if (portfolioDTO.getType() == null) {
+                    throw new IllegalArgumentException(
+                            "포트폴리오 유형을 선택해주세요."
+                    );
+                }
 
                 // DTO → Entity 변환
                 ResumePortfolio resumePortfolio =
@@ -172,11 +183,10 @@ public class ResumeServiceImpl implements ResumeService{
 
     // 이력서 수정
     @Override
-    public void modify(ResumeRequestDTO resumeRequestDTO, Long resumeId) {
+    public void modify(ResumeRequestDTO resumeRequestDTO, Long resumeId )  {
 
         // 기존 이력서 조회
-        Resume resume =
-                resumeRepository.findById(resumeId)
+        Resume resume = resumeRepository.findById(resumeId)
                         .orElseThrow();
 
         // 기존 자기소개서 수정
@@ -184,7 +194,32 @@ public class ResumeServiceImpl implements ResumeService{
                 resumeRequestDTO.getIntroduction()
         );
 
+        // 최종 수정일 변경
+        resume.setSavedAt( LocalDateTime.now() );
+
         resumeRepository.save(resume);
+
+        // 기존 프로필 수정
+        if (resumeRequestDTO.getProfileFileUuid() != null
+                && !resumeRequestDTO.getProfileFileUuid().isBlank()) {
+            // 기존 프로필 파일 조회
+            ProfileFile profileFile =
+                    profileFileRepository.
+                            findByResume_Id(resumeId)
+                            .orElseThrow();
+
+            // UUID로 새 UploadedFile 조회
+            UploadedFile uploadedFile = uploadedFileRepository.findById(UUID.fromString(
+                                    resumeRequestDTO.getProfileFileUuid()
+                            )
+                    )
+                    .orElseThrow();
+
+            // 프로필 파일 교체
+            profileFile.setUploadedFile(uploadedFile);
+
+            profileFileRepository.save(profileFile);
+        }
 
         // 기존 경력사항 수정
         if(resumeRequestDTO.getCareers() != null){
@@ -210,7 +245,8 @@ public class ResumeServiceImpl implements ResumeService{
         if(resumeRequestDTO.getPortfolios() != null){
 
             for(ResumePortfolioDTO portfolioDTO : resumeRequestDTO.getPortfolios()) {
-                ResumePortfolio  resumePortfolio =
+                // 기존 포트폴리오 조회
+                ResumePortfolio resumePortfolio =
                         resumePortfolioRepository.findById(
                                         portfolioDTO.getId()
                                 )
@@ -218,6 +254,8 @@ public class ResumeServiceImpl implements ResumeService{
                 resumePortfolio.setTitle(portfolioDTO.getTitle());
 
                 resumePortfolio.setType(portfolioDTO.getType());
+
+                resumePortfolio.setUrl(portfolioDTO.getUrl());
 
                 resumePortfolioRepository.save(resumePortfolio);
 
@@ -258,6 +296,7 @@ public class ResumeServiceImpl implements ResumeService{
     }
 
     // 이력서 삭제
+    @Transactional
     @Override
     public void delete(Long resumeId){
 
@@ -283,5 +322,19 @@ public class ResumeServiceImpl implements ResumeService{
         );
         // 이력서 삭제
         resumeRepository.delete(resume);
+    }
+
+    // 이력서 관리 페이지로 이동
+    @Override
+    public ResumeResponseDTO getResumeByMemberId(Long memberId) {
+        Resume resume = resumeRepository
+                .findByMemberId(memberId)
+                .orElse(null);
+
+        if (resume == null) {
+            return null;
+        }
+
+        return getResume(resume.getId());
     }
 }

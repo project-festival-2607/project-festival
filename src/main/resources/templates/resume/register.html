@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="ko"
+      layout:decorate="~{layout/layout}"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org">
+<div layout:fragment="content">
+    <div class="container">
+<!--                모든 inner는 class="container" 로 맞춤        -->
+<!--        이 안에서 작업        -->
+        <h1>이력서 작성</h1>
+
+        <form th:action="@{/resume/register}" method="post" enctype="multipart/form-data">
+            <section class="resume-section">
+                <h2>기본 정보</h2>
+
+                <div class="form-group">
+                    <label> 자기소개 </label>
+
+                    <textarea id="introduction" name="introduction" rows="8" placeholder="자신을 소개해주세요."></textarea>
+                </div>
+            </section>
+
+            <!-- 프로필 사진 -->
+            <section class="resume-section">
+                <h2>프로필 사진</h2>
+
+                <div class="form-group">
+                    <label> 프로필 사진 </label>
+
+                    <input type="file" id="profileImage" name="profileImage" accept="image/*">
+                </div>
+            </section>
+
+            <!-- 경력 -->
+            <section class="resume-section">
+                <h2> 경력 사항 </h2>
+
+                <div id="career-container">
+                    <div class="career-item">
+                        <div class="form-group">
+                            <label> 회사명 </label>
+
+                            <input type="text" name="careers[0].careerName" placeholder="회사명을 입력하세요">
+                        </div>
+
+                        <div class="form-group">
+                            <label> 입사일 </label>
+
+                            <input type="date" name="careers[0].startDate">
+                        </div>
+
+                        <div class="form-group">
+                            <label> 퇴사일 </label>
+
+                            <input type="date" name="careers[0].endDate">
+                        </div>
+
+                        <div class="form-group">
+                            <label> 담당 업무 </label>
+
+                            <textarea name="careers[0].duties" rows="5" placeholder="담당했던 업무를 입력하세요"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 포트폴리오 -->
+            <section class="resume-section">
+                <h2>포트폴리오</h2>
+
+                <div id="portfolio-container">
+                    <div class="portfolio-item">
+
+                        <!-- 포트폴리오 제목 -->
+                        <div class="form-group">
+                            <label> 포트폴리오 제목 </label>
+
+                            <input type="text" name="portfolios[0].title" placeholder="포트폴리오 제목">
+                        </div>
+
+                        <!-- 포트폴리오 타입 -->
+                        <div class="form-group">
+                            <label> 포트폴리오 유형 </label>
+
+                            <select name="portfolios[0].type" required>
+                                <option value="">선택하세요</option>
+
+                                <option value="URL">
+                                    URL
+                                </option>
+
+                                <option value="FILE">
+                                    파일
+                                </option>
+                            </select>
+                        </div>
+
+                        <!-- URL -->
+                        <div id="portfolioUrl" class="form-group" style="display: none;">
+                            <label> 포트폴리오 URL </label>
+
+                            <input type="text" name="portfolios[0].url" placeholder="https://example.com">
+                        </div>
+
+                        <!-- 첨부파일 -->
+                        <div id="portfolioFile" class="form-group" style="display: none;">
+                            <label> 첨부파일 </label>
+
+                            <input type="file" name="portfolioFile">
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 버튼 -->
+            <div class="resume-buttons">
+                <button type="submit" class="register-btn"> 이력서 등록 </button>
+                <a th:href="@{/resume/manage}" class="cancel-btn"> 취소 </a>
+            </div>
+        </form>
+
+        <script th:src="@{/js/resume/register.js}"></script>
+    </div>
+</div>
