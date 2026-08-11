@@ -5,9 +5,9 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
-//entity_yetdunguut/Payment
+// payment/entity/Payment
 @Entity
-@Table(name = "paying")
+@Table(name = "payment")
 @Getter
 @Setter
 @ToString(exclude = {"member", "product"})  // 양방향 참조시 순환 참조 방지
