@@ -1,10 +1,10 @@
 package com.example.chook.admin.controller;
 
+import com.example.chook.admin.dto.JobSeekerTableDTO;
 import com.example.chook.admin.form.JobSeekerSearchForm;
 import com.example.chook.admin.record.JobSeekerSearchCondition;
 import com.example.chook.admin.service.AdminService;
 import com.example.chook.common.handler.PagingHandler;
-import com.example.chook.admin.dto.JobSeekerTableDTO;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,9 +23,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Slf4j
 public class AdminController {
 
-  private final AdminService adminService;
-
   private static final int PAGINATION_SIZE = 10;
+  private final AdminService adminService;
 
   @GetMapping("/member/job-seeker")
   public void jobSeekerList(Model model,
@@ -34,7 +33,7 @@ public class AdminController {
                             BindingResult bindingResult) {
 
     if (bindingResult.hasErrors()) return;
-    JobSeekerSearchCondition condition =  new JobSeekerSearchCondition(form);
+    JobSeekerSearchCondition condition = new JobSeekerSearchCondition(form);
     Page<JobSeekerTableDTO> page = adminService.getPage(pageIdx, 30, condition);
 
     model.addAttribute("page", page);
