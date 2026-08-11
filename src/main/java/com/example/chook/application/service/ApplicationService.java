@@ -1,6 +1,7 @@
 package com.example.chook.application.service;
 
 import com.example.chook.application.dto.ApplicationDTO;
+import com.example.chook.application.dto.ApplyDTO;
 import com.example.chook.application.entity.Application;
 import com.example.chook.application.entity.enums.ApplicationResult;
 import com.example.chook.member.entity.Member;
@@ -58,4 +59,7 @@ public interface ApplicationService {
 
     // 지원서 열람 처리
     void read(Long id);
+
+    // applypage Zone
+    ApplyDTO getApplyData(Long recruitmentId, Long memberId);
 }

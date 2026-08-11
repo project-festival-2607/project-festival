@@ -1,25 +1,32 @@
 package com.example.chook.application.service;
 
 import com.example.chook.application.dto.ApplicationDTO;
+import com.example.chook.application.dto.ApplyDTO;
 import com.example.chook.application.entity.Application;
 import com.example.chook.application.entity.enums.ApplicationResult;
 import com.example.chook.application.repository.ApplicationRepository;
 import com.example.chook.member.entity.Member;
 import com.example.chook.member.repository.MemberRepository;
+import com.example.chook.recruitment.dto.RecruitmentResponseDTO;
 import com.example.chook.recruitment.entity.Recruitment;
 import com.example.chook.recruitment.repository.RecruitmentRepository;
+import com.example.chook.recruitment.service.RecruitmentService;
+import com.example.chook.resume.dto.ResumeResponseDTO;
 import com.example.chook.resume.entity.Resume;
 import com.example.chook.resume.repository.ResumeRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor
 @Service
 @Slf4j
+@Transactional
 public class ApplicationServiceImpl implements ApplicationService {
 
     // 조회용
@@ -29,6 +36,9 @@ public class ApplicationServiceImpl implements ApplicationService {
 
     // 최종 저장용
     private final ApplicationRepository applicationRepository; // 완성된 Application 저장하기
+
+    // applypage Zone
+    private final RecruitmentService recruitmentService;
 
     // 지원하기 기능
     @Override
@@ -107,5 +117,29 @@ public class ApplicationServiceImpl implements ApplicationService {
 
             applicationRepository.save(application);
         }
+    }
+
+    // applypage Zone
+    @Override
+    public ApplyDTO getApplyData(Long recruitmentId, Long memberId) {
+        // 1. 공고 정보 조회 (주입받은 recruitmentService 인스턴스 사용)
+        RecruitmentResponseDTO recruitment = recruitmentService.getRecruitment(recruitmentId);
+
+        // 2. 이력서 정보 조회
+        ResumeResponseDTO resume = resumeRepository.getResumeByMemberId(memberId);
+
+        // 3. 회원 정보 조회
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
+
+        // 4. ApplyDTO로 묶어서 반환
+        return ApplyDTO.builder()
+                .memberId(member.getId())
+                .name(member.getName())
+                .phone(member.getPhone())
+                .email(member.getEmail())
+                .recruitment(recruitment)
+                .resume(resume)
+                .build();
     }
 }
