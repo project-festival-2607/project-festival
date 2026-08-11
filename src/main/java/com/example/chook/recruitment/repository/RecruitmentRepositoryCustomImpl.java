@@ -6,10 +6,13 @@ import com.example.chook.recruitment.entity.RecruitmentIndividual;
 import com.example.chook.recruitment.entity.enums.RecruitmentCategory;
 import com.example.chook.recruitment.entity.enums.RecruitmentStatus;
 import com.example.chook.recruitment.entity.enums.RecruitmentWageType;
-import com.example.chook.recruitment.form.RecruitmentManagementForm;
+import com.example.chook.recruitment.record.RecruitmentManagementCondition;
 import com.example.chook.recruitment.record.RecruitmentSearchCondition;
 import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.CaseBuilder;
+import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
@@ -23,6 +26,7 @@ import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 
+import static com.example.chook.bookmark.entity.QRecruitmentBookmark.recruitmentBookmark;
 import static com.example.chook.recruitment.entity.QRecruitment.recruitment;
 import static com.example.chook.recruitment.entity.QRecruitmentFoodTruck.recruitmentFoodTruck;
 import static com.example.chook.recruitment.entity.QRecruitmentIndividual.recruitmentIndividual;
@@ -41,12 +45,6 @@ public class RecruitmentRepositoryCustomImpl implements RecruitmentRepositoryCus
 
     RecruitmentCategory category = condition.category();
 
-    if (category != null &&
-      category != RecruitmentCategory.INDIVIDUAL &&
-      condition.wageType() != null) {
-      throw new IllegalArgumentException("\"개인\"이 아닌 카테고리에서는 급여순 조회를 사용할 수 없습니다.");
-    }
-
     BooleanBuilder whereCondition = new BooleanBuilder();
 
     whereCondition
@@ -56,10 +54,11 @@ public class RecruitmentRepositoryCustomImpl implements RecruitmentRepositoryCus
       .and(regionSigunguEq(condition.regionSigunguCode()))
       .and(categoryEq(category))
       .and(statusEq(RecruitmentStatus.RECRUITING))
+      .and(recruitment.applicationDeadline.goe(LocalDate.now())) // 마감된 공고는 구직자용 목록에서 제외 (구인자 관리 페이지에는 계속 남김)
       .and(workingStartTimeGoe(condition.workingStartTime()))
       .and(workingEndTimeLoe(condition.workingEndTime()))
-      .and(workingStartDateGoe(condition.workingStartDate()))
-      .and(workingEndDateLoe(condition.workingEndDate()))
+      .and(workingEndDateGoe(condition.workingStartDate()))
+      .and(workingStartDateLoe(condition.workingEndDate()))
     ;
 
     JPAQuery<Recruitment> resultQuery = jpaQueryFactory
@@ -94,13 +93,14 @@ public class RecruitmentRepositoryCustomImpl implements RecruitmentRepositoryCus
 
     Long total = countQuery.fetchOne();
 
-    // 급여순 정렬을 선택한 경우 우선 정렬
-    if (condition.wageType() != null)
-      resultQuery.orderBy(recruitmentIndividual.wageValue.desc());
-
     switch (condition.listCriteria()) {
       case LATEST -> resultQuery.orderBy(recruitment.publishedAt.desc());
       case DEADLINE -> resultQuery.orderBy(recruitment.applicationDeadline.asc());
+      case BOOKMARK -> {
+        // 로그인한 구직자의 찜 목록을 기준으로 찜한 공고를 먼저, 그 안에서는 최신순
+        if (condition.memberId() != null) resultQuery.orderBy(bookmarkedFirst(condition.memberId()));
+        resultQuery.orderBy(recruitment.publishedAt.desc());
+      }
     }
 
     List<Recruitment> result = resultQuery
@@ -113,6 +113,20 @@ public class RecruitmentRepositoryCustomImpl implements RecruitmentRepositoryCus
       pageable,
       total == null ? 0 : total
     );
+  }
+
+  private OrderSpecifier<Integer> bookmarkedFirst(Long memberId) {
+    return new CaseBuilder()
+      .when(JPAExpressions.selectOne()
+        .from(recruitmentBookmark)
+        .where(
+          recruitmentBookmark.recruitment.eq(recruitment),
+          recruitmentBookmark.member.id.eq(memberId)
+        )
+        .exists())
+      .then(0)
+      .otherwise(1)
+      .asc();
   }
 
   @Override
@@ -138,8 +152,46 @@ public class RecruitmentRepositoryCustomImpl implements RecruitmentRepositoryCus
   }
 
   @Override
-  public Page<Recruitment> searchRecruitments(RecruitmentManagementForm form, Pageable pageable) {
-    return null;
+  public Page<Recruitment> searchRecruitments(RecruitmentManagementCondition condition, Pageable pageable) {
+
+    BooleanBuilder whereCondition = new BooleanBuilder();
+
+    whereCondition
+      .and(festivalContentIdEq(condition.festivalContentId()))
+      .and(recruitment.festival.member.username.eq(condition.festivalUserName()))
+      .and(categoryEq(condition.category()))
+      .and(statusEq(condition.status()))
+      .and(isPublishedEq(condition.isPublished()))
+      .and(isDeletedEq(condition.isPublished()))
+    ;
+
+    JPAQuery<Recruitment> resultQuery = jpaQueryFactory
+      .selectFrom(recruitment);
+    JPAQuery<Long> countQuery = jpaQueryFactory
+      .select(recruitment.count())
+      .from(recruitment);
+
+    resultQuery.where(whereCondition);
+    countQuery.where(whereCondition);
+
+    Long total = countQuery.fetchOne();
+
+    switch (condition.listCriteria()) {
+      case LATEST -> resultQuery.orderBy(recruitment.publishedAt.desc());
+      case DEADLINE -> resultQuery.orderBy(recruitment.applicationDeadline.asc());
+    }
+
+    List<Recruitment> result = resultQuery
+      .offset(pageable.getOffset())
+      .limit(pageable.getPageSize())
+      .fetch();
+
+    return new PageImpl<>(
+      result,
+      pageable,
+      total == null ? 0 : total
+    );
+
   }
 
   private BooleanBuilder containsAnyKeyword(List<String> keywords) {
@@ -162,6 +214,18 @@ public class RecruitmentRepositoryCustomImpl implements RecruitmentRepositoryCus
     }
     return booleanBuilder;
 
+  }
+
+  private BooleanExpression festivalContentIdEq(String festivalContentId) {
+    return festivalContentId == null ? null : recruitment.festival.contentId.eq(festivalContentId);
+  }
+
+  private BooleanExpression isPublishedEq(Boolean isPublished) {
+    return isPublished == null ? null : recruitment.publishedAt.isNotNull().eq(isPublished);
+  }
+
+  private BooleanExpression isDeletedEq(Boolean isDeleted) {
+    return isDeleted == null ? null : recruitment.deletedAt.isNotNull().eq(isDeleted);
   }
 
   private BooleanExpression regionSidoEq(String sidoCode) {
@@ -204,12 +268,14 @@ public class RecruitmentRepositoryCustomImpl implements RecruitmentRepositoryCus
     return time == null ? null : recruitment.workingEndTime.loe(time);
   }
 
-  private BooleanExpression workingStartDateGoe(LocalDate date) {
-    return date == null ? null : recruitment.workingStartDate.goe(date);
+  // 겹침(overlap) 기준: 필터 시작일이 공고의 근무종료일보다 늦으면 겹치지 않음
+  private BooleanExpression workingEndDateGoe(LocalDate filterStartDate) {
+    return filterStartDate == null ? null : recruitment.workingEndDate.goe(filterStartDate);
   }
 
-  private BooleanExpression workingEndDateLoe(LocalDate date) {
-    return date == null ? null : recruitment.workingEndDate.loe(date);
+  // 겹침(overlap) 기준: 필터 종료일이 공고의 근무시작일보다 빠르면 겹치지 않음
+  private BooleanExpression workingStartDateLoe(LocalDate filterEndDate) {
+    return filterEndDate == null ? null : recruitment.workingStartDate.loe(filterEndDate);
   }
 
 }

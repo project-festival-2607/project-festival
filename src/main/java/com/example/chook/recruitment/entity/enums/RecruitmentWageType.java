@@ -4,6 +4,5 @@ public enum RecruitmentWageType {
   HOURLY,
   DAILY,
   WEEKLY,
-  PER_TASK,
-  NEGOTIABLE
+  PER_TASK
 }

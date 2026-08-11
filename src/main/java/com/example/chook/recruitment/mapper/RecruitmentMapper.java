@@ -7,7 +7,9 @@ import com.example.chook.recruitment.entity.RecruitmentFoodTruck;
 import com.example.chook.recruitment.entity.RecruitmentIndividual;
 import com.example.chook.recruitment.entity.enums.RecruitmentCategory;
 import com.example.chook.recruitment.form.RecruitmentCreateForm;
+import com.example.chook.recruitment.form.RecruitmentManagementForm;
 import com.example.chook.recruitment.form.RecruitmentSearchForm;
+import com.example.chook.recruitment.record.RecruitmentManagementCondition;
 import com.example.chook.recruitment.record.RecruitmentSearchCondition;
 import com.example.chook.region.entity.RegionSigungu;
 import org.springframework.stereotype.Component;
@@ -183,7 +185,25 @@ public class RecruitmentMapper {
       .build();
   }
 
-  public RecruitmentSearchCondition toCondition(RecruitmentSearchForm form) {
+  // 수정 폼도 등록 폼과 필드가 동일해 RecruitmentCreateForm을 그대로 재사용 (festivalContentId는 무시됨: 행사는 변경 불가)
+  public RecruitmentUpdateDTO toUpdateDto(RecruitmentCreateForm form) {
+    return RecruitmentUpdateDTO.builder()
+      .regionSidoCode(form.regionSidoCode())
+      .regionSigunguCode(form.regionSigunguCode())
+      .workingLocation(form.workingLocation())
+      .recruitmentTitle(form.recruitmentTitle())
+      .content(form.content())
+      .specific(toSpecificDto(form))
+      .applicationDeadline(form.applicationDeadline())
+      .recruitmentCount(form.recruitmentCount())
+      .workingStartDate(form.workingStartDate())
+      .workingEndDate(form.workingEndDate())
+      .workingStartTime(form.workingStartTime())
+      .workingEndTime(form.workingEndTime())
+      .build();
+  }
+
+  public RecruitmentSearchCondition toCondition(RecruitmentSearchForm form, Long memberId) {
     return RecruitmentSearchCondition.builder()
       .keywordList(splitByRegex(form.keywords(), "[\\s,&]+"))
       .regionSidoCode(form.regionSidoCode())
@@ -194,12 +214,26 @@ public class RecruitmentMapper {
       .workingStartDate(form.workingStartDate())
       .workingEndDate(form.workingEndDate())
       .listCriteria(form.listCriteria())
+      .memberId(memberId)
       .wageType(form.wageType())
       .boothFeeRequired(form.boothFeeRequired())
       .electricityProvided(form.electricityProvided())
       .prepaid(form.prepaid())
       .build();
   }
+
+  public RecruitmentManagementCondition toCondition(RecruitmentManagementForm form, String userName) {
+    return RecruitmentManagementCondition.builder()
+      .festivalContentId(form.festivalContentId())
+      .festivalUserName(userName)
+      .category(form.category())
+      .status(form.status())
+      .isPublished(form.isPublished())
+      .isDeleted(form.isDeleted())
+      .listCriteria(form.listCriteria())
+      .build();
+  }
+
 
   // Entity → Recruitment*DTO.Recruitment*DTOBuilder
 
@@ -242,6 +276,7 @@ public class RecruitmentMapper {
       .updatedAt(entity.getPublishedAt())
       .deletedAt(entity.getDeletedAt())
       .organizerPhone(organizerPhone)
+      .organizerMemberId(entity.getFestival().getMember().getId())
       ;
   }
 

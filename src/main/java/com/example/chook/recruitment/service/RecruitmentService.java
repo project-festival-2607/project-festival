@@ -22,7 +22,7 @@ public interface RecruitmentService {
 
   Page<RecruitmentListDTO> getPage(int pageIdx, RecruitmentSearchCondition condition);
 
-  Page<RecruitmentManagementListDTO> getPage(int pageIdx, RecruitmentManagementForm form);
+  Page<RecruitmentManagementListDTO> getPage(int pageIdx, RecruitmentManagementCondition condition);
 
     List<ChookRecruitmentDTO> getMainList();
 }

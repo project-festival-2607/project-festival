@@ -26,6 +26,9 @@ public record RecruitmentSearchCondition(
 
   RecruitmentListCriteria listCriteria,
 
+  // listCriteria == BOOKMARK일 때 누구의 찜 목록을 기준으로 정렬할지 (비로그인/구인자는 null)
+  Long memberId,
+
   // 알바(INDIVIDUAL) 전용 필터
   RecruitmentWageType wageType,
 

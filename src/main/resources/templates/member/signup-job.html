@@ -54,7 +54,10 @@
         </div>
         <div class="mb-3">
             <label for="streetAddress" class="form-label">주소</label>
-            <input type="text" class="form-control" id="streetAddress" name="streetAddress">
+            <div class="input-group">
+                <input type="text" class="form-control" id="streetAddress" name="streetAddress" readonly>
+                <button type="button" class="btn btn-outline-secondary" onclick="execDaumPostcode()">주소 검색</button>
+            </div>
         </div>
         <div class="mb-3">
             <label for="detailAddress" class="form-label">상세주소</label>
@@ -76,6 +79,8 @@
         <button type="submit" class="btn btn-primary w-100 mt-3">가입하기</button>
     </form>
 </div>
+<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+<script th:src="@{/js/member/addressSearch.js}"></script>
 <script th:src="@{/js/member/businessNumberVerify.js}"></script>
 </body>
 </html>

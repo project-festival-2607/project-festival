@@ -60,9 +60,17 @@
 
             <!-- 근무조건: 모집분류별로 다른 내용 표시 -->
             <div class="sub-item">
-<!--                구인 제목-->
-                    [[${recruitment.recruitmentTitle}]]
+                <div class="recruit-detail-title-row">
+                    <span>[[${recruitment.recruitmentTitle}]]</span>
+                    <span class="recruit-detail-bookmark" th:unless="${recruiter}"
+                          th:classappend="${bookmarked} ? 'active'"
+                          th:attr="data-id=${recruitment.recruitmentId}"
+                          th:text="${bookmarked} ? '★' : '☆'"
+                          title="찜하기">☆</span>
+                </div>
             </div>
+
+
 
 
             <div class="sub-item">
@@ -140,9 +148,9 @@
                 <div class="detail-h2">
                     모집개요
                 </div>
-                <div class="detail-h3">
-                    [[${recruitment.content}]]
-                </div>
+                <!-- 서버가 내려준 마크다운 원본 (Toast UI 뷰어 초기화용, 화면에는 안 보임) -->
+                <textarea id="contentInit" style="display:none" th:text="${recruitment.content}"></textarea>
+                <div id="viewer"></div>
             </div>
 
 
@@ -181,15 +189,19 @@
         <!-- 지원하기(구직자) / 수정,삭제,결제(구인자) - 모양만, 링크는 추후 연결 -->
         <div class="recruit-detail-actions">
             <a th:unless="${recruiter}" href="#" class="btn btn-primary recruit-detail-apply">지원하기</a>
-            <div th:if="${recruiter}" class="recruit-detail-owner-actions">
-                <a href="#" class="btn btn-outline-secondary">수정</a>
-                <a href="#" class="btn btn-outline-danger">삭제</a>
+            <div th:if="${isOwner}" class="recruit-detail-owner-actions">
+                <a th:unless="${expired}" th:href="@{/recruitment/modify/{id}(id=${recruitment.recruitmentId}, from=${from})}" class="btn btn-outline-secondary">수정</a>
+                <span th:if="${expired}" class="recruit-detail-expired-note">모집마감일이 지나 수정할 수 없습니다.</span>
+                <form th:action="@{/recruitment/delete/{id}(id=${recruitment.recruitmentId}, from=${from})}" method="post"
+                      onsubmit="return confirm('정말 삭제하시겠습니까?');">
+                    <button type="submit" class="btn btn-outline-danger">삭제</button>
+                </form>
                 <a href="#" class="btn btn-primary">결제</a>
             </div>
         </div>
 
         <div class="goToList">
-            <a th:href="@{/recruitment/list}">
+            <a th:href="${from == 'manage'} ? @{/recruitment/manage} : @{/recruitment/list}">
                 목록으로
             </a>
         </div>
@@ -199,6 +211,6 @@
     <script th:src="@{|//dapi.kakao.com/v2/maps/sdk.js?appkey=${mapApiKey}&libraries=services,clusterer|}"></script>
     <script th:src="@{/js/festival/festivalDetail.js}"></script>
     <script th:src="@{/libs/toastui-editor-3.2.2/js/toastui-editor-all.min.js}"></script>
-    <script th:src="@{/js/recruitment/recruitDetail.js}"></script>
+    <script th:src="@{/js/recruitment/recruitDetail.js}" th:attr="data-job-seeker=${jobSeeker}"></script>
 </div>
 </html>

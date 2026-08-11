@@ -100,5 +100,7 @@ public interface FestivalService {
 
     List<FestivalDTO> getAll();
 
+    List<FestivalDTO> getByUsername(String username);
+
     List<ChookMainDTO> getMainList();
 }

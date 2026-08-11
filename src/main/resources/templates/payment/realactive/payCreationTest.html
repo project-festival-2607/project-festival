@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>결제 생성 테스트</title>
-    <link rel="stylesheet" href="/payment/style.css">
+    <link rel="stylesheet" href="/css/payment/style.css">
     <!-- 토스페이먼츠 SDK -->
     <script src="https://js.tosspayments.com/v2/standard"></script>
 
@@ -127,9 +127,41 @@
             📄 결제 내역 조회
         </a>
 
-        <a href="#" class="button2" style="display:block; width:100%; height:60px; margin-top:20px; border-radius:8px; text-align:center; line-height:60px; box-sizing:border-box; text-decoration:none;">
-            ✏️ 글쓰기 (포인트 사용)
-        </a>
+        <div style="margin-top:20px;">
+
+            <input
+                    type="number"
+                    id="recruitIdInput"
+                    placeholder="모집공고 ID 입력"
+                    style="
+            width:100%;
+            height:50px;
+            padding:0 15px;
+            box-sizing:border-box;
+            border:1px solid #ddd;
+            border-radius:8px;
+            margin-bottom:10px;
+            font-size:16px;
+        "
+            >
+
+            <a href="#"
+               id="writeWithPointBtn"
+               class="button2"
+               style="
+            display:block;
+            width:100%;
+            height:60px;
+            border-radius:8px;
+            text-align:center;
+            line-height:60px;
+            box-sizing:border-box;
+            text-decoration:none;
+       ">
+                ✏️ 글쓰기 (포인트 사용)
+            </a>
+
+        </div>
 
         <a href="#" class="button2" style="display:block; width:100%; height:60px; margin-top:20px; border-radius:8px; text-align:center; line-height:60px; box-sizing:border-box; text-decoration:none;">
             ⭐ 포인트 사용 내역
@@ -261,12 +293,13 @@
             await renderPaymentWidget(selectedProduct);
         } catch (e) {
             console.error("위젯 렌더링 실패:", e);
-            document.getElementById("payment-method").innerHTML =
-                "<p style='color:red;'>결제위젯 로드 실패: " + e.message + "</p>";
+            //document.getElementById("payment-method").innerHTML = "<p style='color:red;'>결제위젯 로드 실패: " + e.message + "</p>";
+            //자꾸 빨간 글씨 보여주느라 맘에 안들어서 가림.
+            //결제위젯 로드 실패: 하나의 약관 위젯만 사용 가능
         }
     });
 
-    // widget/index.html의 "주문서형 결제" 블록과 동일한 로직
+    // "주문서형 결제" 블록과 동일한 로직
     async function renderPaymentWidget(product) {
         const amount = { currency: "KRW", value: product.productPrice };
 
@@ -294,6 +327,56 @@
         });
     });
 </script>
+
+
+<!--글쓰기로 포인트 차감-->
+<script>
+    document.getElementById("writeWithPointBtn").addEventListener("click", async function (e) {
+
+        e.preventDefault();
+
+        const recruitId =
+            document.getElementById("recruitIdInput").value;
+
+        if (!recruitId) {
+            alert("모집공고 ID를 입력해주세요.");
+            return;
+        }
+
+        try {
+
+            const response = await fetch(
+                `/point/reduce?recruitId=${recruitId}`,
+                {
+                    method: "POST"
+                }
+            );
+
+            const result = await response.json();
+
+            if (result.success) {
+
+                alert(result.message);
+
+                // 실제 글쓰기 페이지로 이동하려면 여기에 작성
+                // location.href = `/recruitment/write?recruitId=${recruitId}`;
+
+            } else {
+
+                alert(result.message);
+            }
+
+        } catch (error) {
+
+            console.error(error);
+            alert("포인트 차감 요청 중 오류가 발생했습니다.");
+
+        }
+
+    });
+</script>
+
+
 
 </body>
 </html>

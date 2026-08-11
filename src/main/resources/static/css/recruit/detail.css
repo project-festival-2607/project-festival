@@ -1,3 +1,19 @@
+.recruit-detail-title-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.recruit-detail-bookmark {
+    color: #ccc2a4;
+    font-size: 22px;
+    cursor: pointer;
+}
+
+.recruit-detail-bookmark.active {
+    color: #e8a33d;
+}
+
 .recruit-detail-actions {
     display: flex;
     justify-content: center;
@@ -13,4 +29,10 @@
 .recruit-detail-apply {
     min-width: 200px;
     text-align: center;
+}
+
+.recruit-detail-expired-note {
+    color: #928c76;
+    font-size: 14px;
+    align-self: center;
 }

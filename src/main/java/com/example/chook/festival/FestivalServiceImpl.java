@@ -128,7 +128,7 @@ public class FestivalServiceImpl implements FestivalService, ApplicationRunner {
         log.info("Festival DB 데이터 동기화 시작...");
 
         try {
-            String url = "https://apis.data.go.kr/B551011/KorService2/searchFestival2?numOfRows=30&MobileOS=WEB&MobileApp=CHUCK&_type=json&arrange=R&eventStartDate=20260101&serviceKey=" + apiKey;
+            String url = "https://apis.data.go.kr/B551011/KorService2/searchFestival2?numOfRows=20&MobileOS=WEB&MobileApp=CHUCK&_type=json&arrange=R&eventStartDate=20260101&serviceKey=" + apiKey;
 
             RestTemplate restTemplate = new RestTemplate(); // 백엔드에서 RestAPI 실행시켜주는 객체
             String listResponse = restTemplate.getForObject(url, String.class);
@@ -213,6 +213,15 @@ public class FestivalServiceImpl implements FestivalService, ApplicationRunner {
                 .toList();
     }
 
+
+    @Override
+    public List<FestivalDTO> getByUsername(String username) {
+        return festivalRepository.findByMember_Username(username)
+                .stream()
+                .map(this::convertEntityToDTO)
+                .toList();
+    }
+
     @Override
     public List<ChookMainDTO> getMainList() {
         return festivalRepository.findAll(Sort.by(Sort.Direction.DESC, "startDate"))
@@ -224,7 +233,8 @@ public class FestivalServiceImpl implements FestivalService, ApplicationRunner {
                         String.valueOf(fes.getEndDate()),
                         fes.getFirstImage(),
                         fes.getProgram()
-                        ))
+                ))
                 .collect(Collectors.toList());
     }
+
 }
