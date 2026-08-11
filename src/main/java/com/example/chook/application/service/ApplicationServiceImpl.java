@@ -130,7 +130,12 @@ public class ApplicationServiceImpl implements ApplicationService {
 
         // 이력서 정보 조회
         Resume resume = resumeRepository.getResumeByMemberId(memberId);
-        ResumeResponseDTO resumeResponseDTO = resumeService.resumeEntityToDto(resume);
+
+        ResumeResponseDTO resumeResponseDTO = null;
+
+        if (resume != null) {
+            resumeResponseDTO = resumeService.resumeEntityToDto(resume);
+        }
 
         // 회원 정보 조회
         Member member = memberRepository.findById(memberId)
