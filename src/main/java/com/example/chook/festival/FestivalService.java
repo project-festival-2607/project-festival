@@ -1,5 +1,6 @@
 package com.example.chook.festival;
 
+import com.example.chook.chookMain.ChookMainDTO;
 import com.example.chook.member.entity.Member;
 import org.springframework.data.domain.Page;
 import org.springframework.web.multipart.MultipartFile;
@@ -13,7 +14,7 @@ public interface FestivalService {
     default FestivalDTO convertEntityToDTO(Festival festival){
         return FestivalDTO.builder()
                 .contentId(festival.getContentId())
-                .member(festival.getMember().getId())
+                .member(festival.getMember() != null ? festival.getMember().getId() : null)
                 .title(festival.getTitle())
                 .homepage(festival.getHomepage())
                 .mapX(festival.getMapX())
@@ -100,4 +101,6 @@ public interface FestivalService {
     List<FestivalDTO> getAll();
 
     List<FestivalDTO> getByUsername(String username);
+
+    List<ChookMainDTO> getMainList();
 }

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ko"
+      layout:decorate="~{layout/layout}"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org">
+<div layout:fragment="content">
+  <div class="container">
+    <th:block>
+      <div th:each="jobSeeker : ${page}">
+        [[${jobSeeker}]]
+      </div>
+    </th:block>
+    <form method="get" th:action="@{/admin/member/job-seeker}">
+      <div class="input-group input-group-sm mb-3">
+        <label>검색 키워드</label>
+        <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">전체</button>
+        <ul class="dropdown-menu">
+          <li><button class="dropdown-item" data-value="">전체</button></li>
+          <li><button class="dropdown-item" data-value="USERNAME">아이디</button></li>
+          <li><button class="dropdown-item" data-value="NAME">이름</button></li>
+          <li><button class="dropdown-item" data-value="PHONE">전화번호</button></li>
+          <li><button class="dropdown-item" data-value="EMAIL">이메일</button></li>
+          <li><button class="dropdown-item" data-value="ADDRESS">주소</button></li>
+        </ul>
+        <input type="text" class="form-control" aria-label="Text input with dropdown button">
+      </div>
+      <div>
+        <nav th:if="${pagingHandler.totalPageCount > 1}">
+          <ul class="pagination justify-content-center">
+            <li class="page-item" th:classappend="${pagingHandler.prevBtnActive eq false ? 'disabled' : '' }">
+              <button class="page-link" name="pageIdx" th:value="${pagingHandler.pageIdx - 1}" type="submit">←</button>
+            </li>
+            <li class="page-item"
+                th:classappend="${i == pagingHandler.pageIdx} ? 'active'"
+                th:each="i : ${#numbers.sequence(pagingHandler.startPageIdx, pagingHandler.endPageIdx)}">
+              <button class="page-link" name="pageIdx" th:value="${i}" type="submit">[[${i}]]</button>
+            </li>
+            <li class="page-item" th:classappend="${pagingHandler.nextBtnActive eq false ? 'disabled' : '' }">
+              <button class="page-link" name="pageIdx" th:value="${pagingHandler.pageIdx + 1}" type="submit">→</button>
+            </li>
+          </ul>
+        </nav>
+      </div>
+
+    </form>
+  </div>
+</div>

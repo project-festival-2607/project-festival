@@ -1,5 +1,6 @@
 package com.example.chook.recruitment.mapper;
 
+import com.example.chook.common.util.CustomStringUtils;
 import com.example.chook.festival.Festival;
 import com.example.chook.recruitment.dto.*;
 import com.example.chook.recruitment.entity.Recruitment;
@@ -14,8 +15,7 @@ import com.example.chook.recruitment.record.RecruitmentSearchCondition;
 import com.example.chook.region.entity.RegionSigungu;
 import org.springframework.stereotype.Component;
 
-import java.util.Arrays;
-import java.util.List;
+import static com.example.chook.common.util.CustomStringUtils.splitByRegex;
 
 @Component
 public class RecruitmentMapper {
@@ -354,11 +354,6 @@ public class RecruitmentMapper {
       }
     }
     return null;
-  }
-
-  private List<String> splitByRegex(String keywords, String regex) {
-    if (keywords == null || keywords.isBlank()) return List.of();
-    return Arrays.stream(keywords.trim().split(regex)).toList();
   }
 
 }

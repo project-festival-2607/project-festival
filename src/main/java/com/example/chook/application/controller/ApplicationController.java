@@ -1,8 +1,11 @@
 package com.example.chook.application.controller;
 
 import com.example.chook.application.dto.ApplicationDTO;
+import com.example.chook.application.dto.ApplyDTO;
 import com.example.chook.application.entity.enums.ApplicationResult;
 import com.example.chook.application.service.ApplicationService;
+import com.example.chook.member.dto.LoginResponseDTO;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -11,9 +14,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
-@RequestMapping("/application")
+@RequestMapping("/application/*")
 @RequiredArgsConstructor
 @Slf4j
 public class ApplicationController {
@@ -78,4 +82,55 @@ public class ApplicationController {
 
         return "redirect:/application/detail?id=" + id;
     }
+
+
+    // applypage Zone
+    @GetMapping("/apply")
+    public String applyPage(
+            @RequestParam Long recruitmentId,
+            HttpSession session,
+            Model model,
+            RedirectAttributes redirectAttributes
+    ) {
+
+        // 로그인 여부 확인
+        LoginResponseDTO loginMember =
+                (LoginResponseDTO) session.getAttribute("loginMember");
+
+        // 로그인하지 않은 경우
+        if (loginMember == null) {
+
+            // 로그인 후 돌아갈 주소 저장
+            session.setAttribute(
+                    "applicationRedirectAfterLogin",
+                    "/application/apply?recruitmentId=" + recruitmentId
+            );
+
+            return "redirect:/member/login";
+        }
+
+        // 로그인한 회원의 지원 정보 조회
+        ApplyDTO applyDTO =
+                applicationService.getApplyData(
+                        recruitmentId,
+                        loginMember.getId()
+                );
+
+        // 이력서가 없는 경우
+        if (applyDTO.getResume() == null) {
+
+            redirectAttributes.addFlashAttribute(
+                    "resumeMessage",
+                    "지원하려면 먼저 이력서를 작성해주세요."
+            );
+
+            return "redirect:/recruitment/" + recruitmentId;
+        }
+
+        // 이력서가 있는 경우
+        model.addAttribute("apply", applyDTO);
+
+        return "application/apply";
+    }
+
 }

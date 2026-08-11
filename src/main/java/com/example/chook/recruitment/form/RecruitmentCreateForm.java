@@ -34,6 +34,7 @@ public record RecruitmentCreateForm(
   @NotNull
   LocalDate applicationDeadline,
   @PositiveOrZero
+  @Max(value = 9999, message = "모집 인원은 9999명 이하로 입력해주세요.")
   Integer recruitmentCount,
 
 
@@ -49,6 +50,7 @@ public record RecruitmentCreateForm(
   // RecruitmentIndividual
   RecruitmentWageType wageType,
   @PositiveOrZero
+  @Max(value = 99999999, message = "급여는 99999999원 이하로 입력해주세요.")
   Integer wageValue,
 
   // RecruitmentFoodTruck

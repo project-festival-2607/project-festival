@@ -65,6 +65,9 @@ public class Member {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
+    @Column(name = "last_login_at")
+    private LocalDateTime lastLoginAt;
+
     @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
 
