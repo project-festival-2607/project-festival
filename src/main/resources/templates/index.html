@@ -6,60 +6,171 @@
 <div layout:fragment="content">
     <div class="index-box">
         <div class="main-bg">
-            <div class="container i-main">
+            <div class="container i-main section">
         <!--        모든 inner는 class="container" 로 맞춤        -->
                 <div class="main-bg-title">
                     <span>
-                        샘플 축제
+                        [[${topFestival.title}]]
                     </span>
                     <span>
-                        2026.00.00 ~ 2026.00.00
+<!--                        [[${topFestival.program}]]-->
+                        프로그램 1) 예시 프로그램 2) 예시 프로그램 3) 예시 프로그램
                     </span>
-                    <hr>
-                    <span>
-                        주요 프로그램: 1) 샘플 2) 샘플 3) 샘플
-                    </span>
+                    <div class="main-bg-lastSpan">
+                        <span>
+                            [[${topFestival.startDate}]] ~ [[${topFestival.endDate}]]
+                        </span>
+                        <div>
+                            <a href="">
+                                ↗
+                            </a>
+                        </div>
+                    </div>
                 </div>
-                <div class="main-bg-img">
-                    메인 샘플 ㉠
+                <div class="main-bg-img"
+                     th:style="'background-image: url(' + ${topFestival.firstImage} + ')'"
+                >
                 </div>
             </div>
         </div>
+
+        <div class="info-menu-box">
+            <div class="container section menuContainer">
+                <div>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-map" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M15.817.113A.5.5 0 0 1 16 .5v14a.5.5 0 0 1-.402.49l-5 1a.5.5 0 0 1-.196 0L5.5 15.01l-4.902.98A.5.5 0 0 1 0 15.5v-14a.5.5 0 0 1 .402-.49l5-1a.5.5 0 0 1 .196 0L10.5.99l4.902-.98a.5.5 0 0 1 .415.103M10 1.91l-4-.8v12.98l4 .8zm1 12.98 4-.8V1.11l-4 .8zm-6-.8V1.11l-4 .8v12.98z"/>
+                    </svg>
+                    <a href="/map/map">
+                        전국축제지도
+                    </a>
+                </div>
+                <div>
+                    <span>
+                        GUIDE
+                    </span>
+                    <div>
+                        <span>
+                            축!에 대해 <br> 소개해드립니다.
+                        </span>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-arrow-bar-right" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M6 8a.5.5 0 0 0 .5.5h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L12.293 7.5H6.5A.5.5 0 0 0 6 8m-2.5 7a.5.5 0 0 1-.5-.5v-13a.5.5 0 0 1 1 0v13a.5.5 0 0 1-.5.5"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="info-menu-items">
+                    <div>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-globe-central-south-asia" viewBox="0 0 16 16">
+                            <path d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0M4.882 1.731a.48.48 0 0 0 .14.291.487.487 0 0 1-.126.78l-.291.146a.7.7 0 0 0-.188.135l-.48.48a1 1 0 0 1-1.023.242l-.02-.007a1 1 0 0 0-.462-.04 7 7 0 0 1 2.45-2.027m-3 9.674.86-.216a1 1 0 0 0 .758-.97v-.184a1 1 0 0 1 .445-.832l.04-.026a1 1 0 0 0 .152-1.54L3.121 6.621a.414.414 0 0 1 .542-.624l1.09.818a.5.5 0 0 0 .523.047.5.5 0 0 1 .724.447v.455a.8.8 0 0 0 .131.433l.795 1.192a1 1 0 0 1 .116.238l.73 2.19a1 1 0 0 0 .949.683h.058a1 1 0 0 0 .949-.684l.73-2.189a1 1 0 0 1 .116-.238l.791-1.187A.45.45 0 0 1 11.743 8c.16 0 .306.084.392.218.557.875 1.63 2.282 2.365 2.282l.04-.001a7.003 7.003 0 0 1-12.658.905Z"/>
+                        </svg>
+                        <span>
+                            축! 소개
+                        </span>
+                    </div>
+                </div>
+                <div class="info-menu-items">
+                    <div>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-layers-half" viewBox="0 0 16 16">
+                            <path d="M8.235 1.559a.5.5 0 0 0-.47 0l-7.5 4a.5.5 0 0 0 0 .882L3.188 8 .264 9.559a.5.5 0 0 0 0 .882l7.5 4a.5.5 0 0 0 .47 0l7.5-4a.5.5 0 0 0 0-.882L12.813 8l2.922-1.559a.5.5 0 0 0 0-.882zM8 9.433 1.562 6 8 2.567 14.438 6z"/>
+                        </svg>
+                        <span>
+                            운영방침
+                        </span>
+                    </div>
+                </div>
+                <div class="info-menu-items">
+                    <div>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-patch-question" viewBox="0 0 16 16">
+                            <path d="M8.05 9.6c.336 0 .504-.24.554-.627.04-.534.198-.815.847-1.26.673-.475 1.049-1.09 1.049-1.986 0-1.325-.92-2.227-2.262-2.227-1.02 0-1.792.492-2.1 1.29A1.7 1.7 0 0 0 6 5.48c0 .393.203.64.545.64.272 0 .455-.147.564-.51.158-.592.525-.915 1.074-.915.61 0 1.03.446 1.03 1.084 0 .563-.208.885-.822 1.325-.619.433-.926.914-.926 1.64v.111c0 .428.208.745.585.745"/>
+                            <path d="m10.273 2.513-.921-.944.715-.698.622.637.89-.011a2.89 2.89 0 0 1 2.924 2.924l-.01.89.636.622a2.89 2.89 0 0 1 0 4.134l-.637.622.011.89a2.89 2.89 0 0 1-2.924 2.924l-.89-.01-.622.636a2.89 2.89 0 0 1-4.134 0l-.622-.637-.89.011a2.89 2.89 0 0 1-2.924-2.924l.01-.89-.636-.622a2.89 2.89 0 0 1 0-4.134l.637-.622-.011-.89a2.89 2.89 0 0 1 2.924-2.924l.89.01.622-.636a2.89 2.89 0 0 1 4.134 0l-.715.698a1.89 1.89 0 0 0-2.704 0l-.92.944-1.32-.016a1.89 1.89 0 0 0-1.911 1.912l.016 1.318-.944.921a1.89 1.89 0 0 0 0 2.704l.944.92-.016 1.32a1.89 1.89 0 0 0 1.912 1.911l1.318-.016.921.944a1.89 1.89 0 0 0 2.704 0l.92-.944 1.32.016a1.89 1.89 0 0 0 1.911-1.912l-.016-1.318.944-.921a1.89 1.89 0 0 0 0-2.704l-.944-.92.016-1.32a1.89 1.89 0 0 0-1.912-1.911z"/>
+                            <path d="M7.001 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0"/>
+                        </svg>
+                        <span>
+                            자주묻는질문(FAQ)
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="index-center">
-            <div class="container">
+            <div class="container section">
                 <div class="index-title">
-                    축제 둘러보기
-                </div>
-                <div class="index-more-btn">
+                    <span>
+                        축제둘러보기
+                    </span>
                     <a href="/festival/list">
-                        더보기 +
+                        <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-arrow-right" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8"/>
+                        </svg>
                     </a>
                 </div>
+
                 <div class="index-gallery">
-                    <div class="gallery-items">샘플 ㉠</div>
-                    <div class="gallery-items">샘플 ㉡</div>
-                    <div class="gallery-items">샘플 ㉢</div>
-                    <div class="gallery-items">샘플 ㉣</div>
+                    <div class="gallery-items" th:each="fes : ${subList}">
+                        <a th:href="@{/festival/detail(id=${fes.contentId})}">
+                            <div class="gallery-item"
+                                 th:style="'background-image: url(' + ${fes.firstImage} + ')'"
+                            ></div>
+                        </a>
+                        <div class="gal-sub-title">
+                            <div th:switch="${fes.status}">
+                                <div th:case="'진행예정'" class="fes-pro upComing">진행예정</div>
+                                <div th:case="'진행중'" class="fes-pro onGoing">진행중</div>
+                                <div th:case="'종료된행사'" class="fes-pro past">종료</div>
+                            </div>
+                            <span>
+                                [[${fes.title}]]
+                            </span>
+                            <span>
+                                [[${fes.startDate}]]
+                                <br>
+                                [[${fes.endDate}]]
+                            </span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
+
         <div class="index-last">
-            <div class="container">
+            <div class="container section index-last-box">
                 <div class="index-title">
-                    모집중인 공고 보기
-                </div>
-                <div class="index-more-btn">
+                    <div>
+                        <span>
+                            축제모집공고보기
+                        </span>
+                        <span>
+                            현재 모집 중인 공고를 살펴보세요!
+                        </span>
+                    </div>
                     <a href="/">
-                        더보기 +
+                        <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="#FEFEFE" class="bi bi-arrow-right" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8"/>
+                        </svg>
                     </a>
                 </div>
-                <div class="index-gallery">
-                    <div class="gallery-items">샘플 ㉠</div>
-                    <div class="gallery-items">샘플 ㉡</div>
-                    <div class="gallery-items">샘플 ㉢</div>
-                    <div class="gallery-items">샘플 ㉣</div>
+                <div class="rec-gallery">
+                    <div class="rec-items" th:each="rec : ${recList}">
+                        <a th:href="@{/recruitment/{id}(id=${rec.recruitmentId})}">
+                            <div class="rec-item">
+                                <div>
+                                    <span>
+                                    [[${rec.recruitmentTitle}]]
+                                    </span>
+                                    <span>
+                                    [[${rec.workingStartDate}]] ~ [[${rec.workingEndDate}]]
+                                    </span>
+                                </div>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="#2C2C2C" class="bi bi-arrow-up-right-circle-fill" viewBox="0 0 16 16">
+                                    <path d="M0 8a8 8 0 1 0 16 0A8 8 0 0 0 0 8m5.904 2.803a.5.5 0 1 1-.707-.707L9.293 6H6.525a.5.5 0 1 1 0-1H10.5a.5.5 0 0 1 .5.5v3.975a.5.5 0 0 1-1 0V6.707z"/>
+                                </svg>
+                            </div>
+                        </a>
                 </div>
             </div>
         </div>
     </div>
+
+    <script th:src="@{/js/mainJs/mainIndex.js}"></script>
+
 </div>

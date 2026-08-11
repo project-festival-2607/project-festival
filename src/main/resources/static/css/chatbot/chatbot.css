@@ -9,8 +9,7 @@
     border: none;
     font-size: 28px;
     cursor: pointer;
-    background: #4CAF50;
-    color: white;
+    background: #FEFEFE;
 }
 
 /* 채팅창 */
@@ -34,12 +33,14 @@
 /* 헤더 */
 .chat-header{
     height:50px;
-    background:#4CAF50;
+    background: #4769e4;
     color:white;
     display:flex;
     justify-content:space-between;
     align-items:center;
     padding:10px;
+
+    border-radius: 10px 10px 0 0;
 }
 
 .chat-header button{
