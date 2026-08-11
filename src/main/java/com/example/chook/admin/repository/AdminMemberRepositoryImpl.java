@@ -53,6 +53,7 @@ public class AdminMemberRepositoryImpl implements AdminMemberRepository {
         member.updatedAt,
         member.lastLoginAt,
         member.deletedAt,
+        member.point,
 
         jobSeekerProfile.gender,
         jobSeekerProfile.birthDate,

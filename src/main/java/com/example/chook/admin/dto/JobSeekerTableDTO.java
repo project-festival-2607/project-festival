@@ -1,9 +1,11 @@
 package com.example.chook.admin.dto;
 
+import com.example.chook.member.entity.enums.Gender;
 import com.example.chook.member.entity.enums.MemberRole;
 import com.example.chook.member.entity.enums.MemberStatus;
 import com.example.chook.member.entity.enums.Provider;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -23,5 +25,10 @@ public class JobSeekerTableDTO {
   LocalDateTime deletedAt;
   Long point;
   List<Provider> providers;
+
+  Gender gender;
+  LocalDate birthDate;
+  String streetAddress;
+  String detailAddress;
 
 }
