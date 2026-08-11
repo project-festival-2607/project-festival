@@ -9,7 +9,8 @@ public record JobSeekerSearchForm(
 
   String status,            // MemberStatus
 
-  String dateRangeCriteria, // DateRangeCriteria
+  String JobSeekerDateRangeCriteria, // JobSeekerDateRangeCriteria
+  String gender,            // Gender
   LocalDateTime startDate,
   LocalDateTime endDate,
 
@@ -22,7 +23,8 @@ public record JobSeekerSearchForm(
     keywordType = blankToNull(keywordType);
     keywords = blankToNull(keywords);
     status = blankToNull(status);
-    dateRangeCriteria = blankToNull(dateRangeCriteria);
+    JobSeekerDateRangeCriteria = blankToNull(JobSeekerDateRangeCriteria);
+    gender = blankToNull(gender);
     provider = blankToNull(provider);
 
   }

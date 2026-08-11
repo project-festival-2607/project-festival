@@ -1,9 +1,10 @@
 package com.example.chook.admin.record;
 
-import com.example.chook.admin.entity.enums.DateRangeCriteria;
+import com.example.chook.admin.entity.enums.JobSeekerDateRangeCriteria;
 import com.example.chook.admin.entity.enums.JobSeekerKeywordType;
 import com.example.chook.admin.form.JobSeekerSearchForm;
 import com.example.chook.common.util.CustomStringUtils;
+import com.example.chook.member.entity.enums.Gender;
 import com.example.chook.member.entity.enums.MemberStatus;
 import com.example.chook.member.entity.enums.Provider;
 
@@ -17,7 +18,8 @@ public record JobSeekerSearchCondition(
 
   MemberStatus status,
 
-  DateRangeCriteria dateRangeCriteria,
+  JobSeekerDateRangeCriteria dateRangeCriteria,
+  Gender gender,
   LocalDateTime startDate,
   LocalDateTime endDate,
 
@@ -31,7 +33,8 @@ public record JobSeekerSearchCondition(
       convertStringToEnum(form.keywordType(), JobSeekerKeywordType.class, JobSeekerKeywordType.USERNAME),
       CustomStringUtils.splitByRegex(form.keywords(), "[\\s,&]+"),
       convertStringToEnum(form.status(), MemberStatus.class, null),
-      convertStringToEnum(form.dateRangeCriteria(), DateRangeCriteria.class, DateRangeCriteria.LAST_LOGIN_AT),
+      convertStringToEnum(form.JobSeekerDateRangeCriteria(), JobSeekerDateRangeCriteria.class, JobSeekerDateRangeCriteria.LAST_LOGIN_AT),
+      convertStringToEnum(form.gender(), Gender.class, null),
       form.startDate(),
       form.endDate(),
       convertStringToEnum(form.provider(), Provider.class, null)

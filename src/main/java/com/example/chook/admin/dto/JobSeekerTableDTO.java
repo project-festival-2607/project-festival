@@ -1,0 +1,27 @@
+package com.example.chook.admin.dto;
+
+import com.example.chook.member.entity.enums.MemberRole;
+import com.example.chook.member.entity.enums.MemberStatus;
+import com.example.chook.member.entity.enums.Provider;
+
+import java.time.LocalDateTime;
+import java.util.List;
+
+public class JobSeekerTableDTO {
+
+  Long id;
+  String username;
+  String name;
+  String phone;
+  Boolean phoneVerified;
+  String email;
+  MemberRole role;
+  MemberStatus status;
+  LocalDateTime createdAt;
+  LocalDateTime updatedAt;
+  LocalDateTime lastLoginAt;
+  LocalDateTime deletedAt;
+  Long point;
+  List<Provider> providers;
+
+}

@@ -4,7 +4,7 @@ import com.example.chook.admin.form.JobSeekerSearchForm;
 import com.example.chook.admin.record.JobSeekerSearchCondition;
 import com.example.chook.admin.service.AdminService;
 import com.example.chook.common.handler.PagingHandler;
-import com.example.chook.admin.dto.JobSeekerListDTO;
+import com.example.chook.admin.dto.JobSeekerTableDTO;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -35,10 +35,10 @@ public class AdminController {
 
     if (bindingResult.hasErrors()) return;
     JobSeekerSearchCondition condition =  new JobSeekerSearchCondition(form);
-    Page<JobSeekerListDTO> page = adminService.getPage(pageIdx, condition);
+    Page<JobSeekerTableDTO> page = adminService.getPage(pageIdx, condition);
 
     model.addAttribute("page", page);
-    PagingHandler<JobSeekerListDTO, JobSeekerSearchForm> pagingHandler =
+    PagingHandler<JobSeekerTableDTO, JobSeekerSearchForm> pagingHandler =
       new PagingHandler<>(page, form, PAGINATION_SIZE, pageIdx);
     model.addAttribute("pagingHandler", pagingHandler);
 

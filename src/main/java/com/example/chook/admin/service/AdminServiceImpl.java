@@ -1,7 +1,7 @@
 package com.example.chook.admin.service;
 
 import com.example.chook.admin.record.JobSeekerSearchCondition;
-import com.example.chook.admin.dto.JobSeekerListDTO;
+import com.example.chook.admin.dto.JobSeekerTableDTO;
 import com.example.chook.admin.repository.AdminMemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,7 +17,7 @@ public class AdminServiceImpl implements AdminService {
 
 
   @Override
-  public Page<JobSeekerListDTO> getPage(int pageIdx, JobSeekerSearchCondition condition) {
+  public Page<JobSeekerTableDTO> getPage(int pageIdx, JobSeekerSearchCondition condition) {
     return adminMemberRepository.getPage(pageIdx, condition);
   }
 }
