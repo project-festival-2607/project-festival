@@ -6,7 +6,6 @@ public enum JobSeekerKeywordType {
   NAME,
   PHONE,
   EMAIL,
-  STREET_ADDRESS,
-  DETAILED_ADDRESS
+  ADDRESS
 
 }

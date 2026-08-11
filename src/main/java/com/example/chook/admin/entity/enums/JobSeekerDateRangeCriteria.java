@@ -5,5 +5,6 @@ public enum JobSeekerDateRangeCriteria {
   CREATED_AT,
   UPDATED_AT,
   LAST_LOGIN_AT,
+  BIRTH_DATE
 
 }
