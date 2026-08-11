@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org">
+
+<th:block th:fragment="mouseCursor">
+    <style>
+        body {
+            cursor: default;
+        }
+
+        .orbit-cursor-dot {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 6px;
+            height: 6px;
+            background-color: #FEFEFE;
+            border: 1px solid #2C2C2C;
+            border-radius: 50%;
+            pointer-events: none;
+            transform: translate(-50%, -50%);
+            z-index: 99999;
+        }
+
+        .orbit-cursor-ring {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 40px;
+            height: 40px;
+            border: 1px dashed rgb(0 0 0 / 0.6);
+            border-radius: 50%;
+            pointer-events: none;
+            transform: translate(-50%, -50%);
+            z-index: 99998;
+
+            animation: spinOrbit 3s linear infinite;
+            transition: width 0.3s ease, height 0.3s ease, border-color 0.3s ease;
+        }
+
+        @keyframes spinOrbit {
+            from {
+                transform: translate(-50%, -50%) rotate(0deg);
+            }
+            to {
+                transform: translate(-50%, -50%) rotate(360deg);
+            }
+        }
+
+        .orbit-cursor-ring.active {
+            width: 65px;
+            height: 65px;
+            border-style: dashed;
+            border-color: rgb(0 0 0 / 0.8);
+        }
+    </style>
+
+    <div class="orbit-cursor-dot" id="cursorDot"></div>
+    <div class="orbit-cursor-ring" id="cursorRing"></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const dot = document.getElementById('cursorDot');
+            const ring = document.getElementById('cursorRing');
+            if (!dot || !ring) return;
+
+            let mouseX = 0;
+            let mouseY = 0;
+
+            let ringX = 0;
+            let ringY = 0;
+
+            document.addEventListener('mousemove', (e) => {
+                mouseX = e.clientX;
+                mouseY = e.clientY;
+
+                dot.style.left = `${mouseX}px`;
+                dot.style.top = `${mouseY}px`;
+            });
+
+            function render() {
+                ringX += (mouseX - ringX) * 0.15;
+                ringY += (mouseY - ringY) * 0.15;
+
+                ring.style.left = `${ringX}px`;
+                ring.style.top = `${ringY}px`;
+
+                requestAnimationFrame(render);
+            }
+            render();
+
+            document.addEventListener('mouseover', (e) => {
+                if (e.target.closest('a, button, input, .hover-target')) {
+                    ring.classList.add('active');
+                }
+            });
+
+            document.addEventListener('mouseout', (e) => {
+                if (e.target.closest('a, button, input, .hover-target')) {
+                    ring.classList.remove('active');
+                }
+            });
+        });
+    </script>
+</th:block>

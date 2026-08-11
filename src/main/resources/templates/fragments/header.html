@@ -3,6 +3,7 @@
       xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
 >
+<div th:fragment="header" style="z-index: 999">
 <div th:fragment="header">
 <!--    style="position: sticky; top: 0; z-index: 1000;"-->
     <nav class="navbar" data-bs-theme="dark">
@@ -57,8 +58,8 @@
                 </div>
                 <div class="user-box">
                     <ul class="user-sub">
-                        <li sec:authorize="isAnonymous()"><a th:href="@{/member/signup}" class="nav-link">회원가입</a></li>
-                        <li sec:authorize="isAnonymous()"><a th:href="@{/member/login}" class="nav-link">로그인</a></li>
+                        <li sec:authorize="isAnonymous()"><a th:href="@{/member/signup}" class="nav-link">회원가입 ↗ </a></li>
+                        <li sec:authorize="isAnonymous()"><a th:href="@{/member/login}" class="nav-link">로그인 ↗ </a></li>
                         <li sec:authorize="isAuthenticated()"><a href="/" class="nav-link" th:text="${session.loginMember.name}"></a></li>
                         <li sec:authorize="isAuthenticated()"><a th:href="@{/member/logout}" class="nav-link">로그아웃</a></li>
 
