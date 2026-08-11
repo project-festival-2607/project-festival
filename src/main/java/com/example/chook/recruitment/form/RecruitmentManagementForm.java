@@ -4,6 +4,8 @@ import com.example.chook.recruitment.entity.enums.RecruitmentCategory;
 import com.example.chook.recruitment.entity.enums.RecruitmentListCriteria;
 import com.example.chook.recruitment.entity.enums.RecruitmentStatus;
 
+import static com.example.chook.common.util.CustomStringUtils.blankToNull;
+
 public record RecruitmentManagementForm(
 
   String festivalContentId,
@@ -22,10 +24,6 @@ public record RecruitmentManagementForm(
     listCriteria = listCriteria == null ? RecruitmentListCriteria.LATEST : listCriteria;
     festivalContentId = blankToNull(festivalContentId);
 
-  }
-
-  private String blankToNull(String string) {
-    return (string == null || string.isBlank()) ? null : string;
   }
 
 }

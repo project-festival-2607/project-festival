@@ -2,6 +2,8 @@ package com.example.chook.admin.form;
 
 import java.time.LocalDateTime;
 
+import static com.example.chook.common.util.CustomStringUtils.blankToNull;
+
 public record JobSeekerSearchForm(
 
   String keywordType,       // JobSeekerKeywordType
@@ -27,10 +29,6 @@ public record JobSeekerSearchForm(
     gender = blankToNull(gender);
     provider = blankToNull(provider);
 
-  }
-
-  private String blankToNull(String string) {
-    return (string == null || string.isBlank()) ? null : string;
   }
 
 }

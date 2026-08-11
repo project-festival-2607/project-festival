@@ -15,6 +15,8 @@ import com.example.chook.recruitment.record.RecruitmentSearchCondition;
 import com.example.chook.region.entity.RegionSigungu;
 import org.springframework.stereotype.Component;
 
+import static com.example.chook.common.util.CustomStringUtils.splitByRegex;
+
 @Component
 public class RecruitmentMapper {
 
@@ -203,7 +205,7 @@ public class RecruitmentMapper {
 
   public RecruitmentSearchCondition toCondition(RecruitmentSearchForm form) {
     return RecruitmentSearchCondition.builder()
-      .keywordList(CustomStringUtils.splitByRegex(form.keywords(), "[\\s,&]+"))
+      .keywordList(splitByRegex(form.keywords(), "[\\s,&]+"))
       .regionSidoCode(form.regionSidoCode())
       .regionSigunguCode(form.regionSigunguCode())
       .category(form.category())
