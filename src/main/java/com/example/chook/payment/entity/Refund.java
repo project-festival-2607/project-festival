@@ -5,12 +5,12 @@ import jakarta.persistence.*;
         import lombok.*;
 
         import java.time.LocalDateTime;
-//chook/paying/entity/Refund
+//chook/payment/entity/Refund
 @Entity
 @Table(name = "refund")
 @Getter
 @Setter
-@ToString(exclude = "member")  // 순환 참조 방지 대상도 paying→member로 바뀜
+@ToString(exclude = "member")  // 순환 참조 방지 대상도 payment→member로 바뀜
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
