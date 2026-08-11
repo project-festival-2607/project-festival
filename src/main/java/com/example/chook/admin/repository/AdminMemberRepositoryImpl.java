@@ -13,10 +13,12 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.List;
 
 import static com.example.chook.common.util.QuerydslUtils.*;
@@ -35,7 +37,10 @@ public class AdminMemberRepositoryImpl implements AdminMemberRepository {
 
 
   @Override
-  public Page<JobSeekerTableDTO> getPage(int pageIdx, JobSeekerSearchCondition condition) {
+  public Page<JobSeekerTableDTO> getPage(Pageable pageable, JobSeekerSearchCondition condition) {
+
+    int pageIdx = (int) pageable.getOffset();
+    int pageSize = pageable.getPageSize();
 
     JPAQuery<JobSeekerTableDTO> resultQuery = this.jpaQueryFactory.select(Projections.fields(
 
@@ -67,7 +72,9 @@ public class AdminMemberRepositoryImpl implements AdminMemberRepository {
 
     JPAQuery<Long> countQuery = jpaQueryFactory
       .select(member.count())
-      .from(member);
+      .from(member)
+      .join(jobSeekerProfile)
+      .on(jobSeekerProfile.memberId.eq(member.id));
 
     BooleanBuilder whereCondition = new BooleanBuilder();
 
@@ -78,18 +85,33 @@ public class AdminMemberRepositoryImpl implements AdminMemberRepository {
       .and(checkDataRangeCriteria(condition.dateRangeCriteria(), condition.startDateTime(), condition.endDateTime()))
       .and(containsProvider(condition.provider()));
 
+    List<JobSeekerTableDTO> content = resultQuery
+      .where(whereCondition)
+      .offset(pageIdx)
+      .limit(pageSize)
+      .fetch();
 
-    return null;
+    Long total = countQuery
+      .where(whereCondition)
+      .fetchOne();
+
+    return new PageImpl<>(
+      content,
+      PageRequest.of(pageIdx, pageSize),
+      total != null ? total : 0
+    );
 
   }
 
   private BooleanExpression containsProvider(Provider provider) {
-    return member.socialLogins.any().provider.eq(provider);
+    return eq(member.socialLogins.any().provider, provider);
   }
 
   private BooleanBuilder checkDataRangeCriteria(JobSeekerDateRangeCriteria criteria,
                                                 LocalDateTime startDateTime,
                                                 LocalDateTime endDateTime) {
+
+    if (criteria == null) return null;
 
     BooleanBuilder result = new BooleanBuilder();
 
@@ -121,7 +143,7 @@ public class AdminMemberRepositoryImpl implements AdminMemberRepository {
     if (keywordList == null || keywordList.isEmpty()) return null;
     List<JobSeekerKeywordType> types =
       keywordType == null
-        ? Arrays.asList(JobSeekerKeywordType.values())
+        ? List.of(JobSeekerKeywordType.values())
         : List.of(keywordType);
 
     BooleanBuilder result = new BooleanBuilder();

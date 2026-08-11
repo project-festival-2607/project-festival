@@ -6,6 +6,6 @@ import org.springframework.data.domain.Page;
 
 public interface AdminService {
 
-  Page<JobSeekerTableDTO> getPage(int pageIdx, JobSeekerSearchCondition condition);
+  Page<JobSeekerTableDTO> getPage(int pageIdx, int pageSize, JobSeekerSearchCondition condition);
 
 }

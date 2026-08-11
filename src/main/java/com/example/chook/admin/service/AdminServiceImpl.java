@@ -6,6 +6,8 @@ import com.example.chook.admin.repository.AdminMemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
@@ -17,7 +19,8 @@ public class AdminServiceImpl implements AdminService {
 
 
   @Override
-  public Page<JobSeekerTableDTO> getPage(int pageIdx, JobSeekerSearchCondition condition) {
-    return adminMemberRepository.getPage(pageIdx, condition);
+  public Page<JobSeekerTableDTO> getPage(int pageIdx, int pageSize, JobSeekerSearchCondition condition) {
+    Pageable pageable = PageRequest.of(pageIdx - 1, pageSize);
+    return adminMemberRepository.getPage(pageable, condition);
   }
 }

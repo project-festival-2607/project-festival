@@ -3,9 +3,10 @@ package com.example.chook.admin.repository;
 import com.example.chook.admin.dto.JobSeekerTableDTO;
 import com.example.chook.admin.record.JobSeekerSearchCondition;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface AdminMemberRepository {
 
-  Page<JobSeekerTableDTO> getPage(int pageIdx, JobSeekerSearchCondition condition);
+  Page<JobSeekerTableDTO> getPage(Pageable pageable, JobSeekerSearchCondition condition);
 
 }

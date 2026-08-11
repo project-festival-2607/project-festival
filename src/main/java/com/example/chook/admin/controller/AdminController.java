@@ -35,7 +35,7 @@ public class AdminController {
 
     if (bindingResult.hasErrors()) return;
     JobSeekerSearchCondition condition =  new JobSeekerSearchCondition(form);
-    Page<JobSeekerTableDTO> page = adminService.getPage(pageIdx, condition);
+    Page<JobSeekerTableDTO> page = adminService.getPage(pageIdx, 30, condition);
 
     model.addAttribute("page", page);
     PagingHandler<JobSeekerTableDTO, JobSeekerSearchForm> pagingHandler =
