@@ -3,11 +3,21 @@ package com.example.chook.member.controller;
 import com.example.chook.member.dto.*;
 import com.example.chook.member.exception.MemberDormantException;
 import com.example.chook.member.exception.MemberSuspendedException;
+import com.example.chook.member.security.CustomUserDetails;
+import com.example.chook.member.security.CustomUserDetailsService;
 import com.example.chook.member.service.BusinessNumberVerifyService;
 import com.example.chook.member.service.MemberService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
+import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -21,6 +31,8 @@ public class MemberController {
 
     private final MemberService memberService;
     private final BusinessNumberVerifyService businessNumberVerifyService;
+    private final CustomUserDetailsService customUserDetailsService;
+    private final SecurityContextRepository securityContextRepository = new HttpSessionSecurityContextRepository();
 
     // 로그인 페이지
     @GetMapping("/login")
@@ -50,12 +62,13 @@ public class MemberController {
     @PostMapping("/signup/job-seeker")
     public String signUpJobSeeker(
             @ModelAttribute JobSeekerSignUpRequestDTO requestDTO,
-            HttpSession session,
+            HttpServletRequest request,
+            HttpServletResponse response,
             RedirectAttributes redirectAttributes
     ) {
         try {
             LoginResponseDTO responseDTO = memberService.signUpJobSeeker(requestDTO);
-            session.setAttribute("loginMember", responseDTO);
+            loginAfterSignup(responseDTO.getUsername(), request, response);
             return "redirect:/";
         } catch (IllegalArgumentException e) {
             redirectAttributes.addFlashAttribute("FailureMsg", e.getMessage());
@@ -73,12 +86,13 @@ public class MemberController {
     @PostMapping("/signup/employer")
     public String signUpEmployer(
             @ModelAttribute EmployerSignUpRequestDTO requestDTO,
-            HttpSession session,
+            HttpServletRequest request,
+            HttpServletResponse response,
             RedirectAttributes redirectAttributes
     ) {
         try {
             LoginResponseDTO responseDTO = memberService.signUpEmployer(requestDTO);
-            session.setAttribute("loginMember", responseDTO);
+            loginAfterSignup(responseDTO.getUsername(), request, response);
             return "redirect:/";
         } catch (IllegalArgumentException e) {
             redirectAttributes.addFlashAttribute("FailureMsg", e.getMessage());
@@ -119,6 +133,8 @@ public class MemberController {
     public String signupSocial(
             @ModelAttribute SocialSignUpRequestDTO requestDTO,
             HttpSession session,
+            HttpServletRequest request,
+            HttpServletResponse response,
             RedirectAttributes redirectAttributes
     ) {
         SocialAuthSessionDTO authInfo = (SocialAuthSessionDTO) session.getAttribute("socialAuthInfo");
@@ -129,12 +145,29 @@ public class MemberController {
         try {
             LoginResponseDTO responseDTO = memberService.signUpSocial(authInfo, requestDTO);
             session.removeAttribute("socialAuthInfo");
-            session.setAttribute("loginMember", responseDTO);
+            loginAfterSignup(responseDTO.getUsername(), request, response);
             return "redirect:/";
         } catch (IllegalArgumentException e) {
             redirectAttributes.addFlashAttribute("FailureMsg", e.getMessage());
             return "redirect:/member/signup/social";
         }
+    }
+
+    // 회원가입 성공 직후 프로그래밍 방식으로 로그인 처리
+    // (SecurityContext에 인증 정보를 직접 설정하고 세션에 저장해야
+    //  헤더의 sec:authorize, @AuthenticationPrincipal이 정상적으로 로그인 상태를 인식한다)
+    private void loginAfterSignup(String username, HttpServletRequest request, HttpServletResponse response) {
+        CustomUserDetails userDetails = (CustomUserDetails) customUserDetailsService.loadUserByUsername(username);
+
+        Authentication authentication = new UsernamePasswordAuthenticationToken(
+                userDetails, null, userDetails.getAuthorities()
+        );
+
+        SecurityContext context = SecurityContextHolder.createEmptyContext();
+        context.setAuthentication(authentication);
+        SecurityContextHolder.setContext(context);
+
+        securityContextRepository.saveContext(context, request, response);
     }
 
 }

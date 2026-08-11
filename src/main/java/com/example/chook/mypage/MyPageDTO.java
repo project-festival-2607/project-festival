@@ -1,9 +1,10 @@
 package com.example.chook.mypage;
 
+import com.example.chook.member.entity.enums.Gender;
 import com.example.chook.member.entity.enums.MemberRole;
 import lombok.*;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -13,18 +14,25 @@ import java.time.LocalDateTime;
 @Builder
 public class MyPageDTO {
 
-    // 아이디
+    // 공통
     private String username;
-
-    // 이름
     private String name;
-
-    // 전화번호
     private String phone;
-
-    // 포인트
+    private String email;
     private Long point;
-
-    // 계정유형
     private MemberRole role;
+    private boolean socialSignUp;
+    private String businessNumber;
+
+    // JobSeeker 전용 (JOB_SEEKER/JOB_EQUIP만 값 있음)
+    private Gender gender;
+    private LocalDate birthDate;
+    private String streetAddress;
+    private String detailAddress;
+
+    // Employer 전용 (RECRUITER만 값 있음)
+    private String companyName;
+    private String ceoName;
+    private LocalDate foundedAt;
+
 }

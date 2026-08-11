@@ -127,7 +127,7 @@ public class MemberServiceImpl implements MemberService {
     @Transactional
     @Override
     // 프로필 수정
-    public LoginResponseDTO updateProfile(Long memberId, JobSeekerProfileUpdateRequestDTO requestDTO) {
+    public LoginResponseDTO updateJobSeekerProfile(Long memberId, JobSeekerProfileUpdateRequestDTO requestDTO) {
 
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new IllegalArgumentException("회원을 찾을 수 없습니다."));
@@ -142,8 +142,32 @@ public class MemberServiceImpl implements MemberService {
         profile.setDetailAddress(requestDTO.getDetailAddress());
 
         if (requestDTO.getBusinessNumber() != null && !requestDTO.getBusinessNumber().isBlank()) {
-            registerBusinessNumber(member, requestDTO.getBusinessNumber(), requestDTO.getVerificationToken());
+            registerOrUpdateBusinessNumber(member, requestDTO.getBusinessNumber(), requestDTO.getVerificationToken());
         }
+
+        member.setUpdatedAt(LocalDateTime.now());
+        memberRepository.save(member);
+
+        return toLoginResponseDTO(member);
+    }
+
+    @Transactional
+    @Override
+// 구인자 프로필 수정
+    public LoginResponseDTO updateEmployerProfile(Long memberId, EmployerProfileUpdateRequestDTO requestDTO) {
+
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new IllegalArgumentException("회원을 찾을 수 없습니다."));
+
+        EmployerProfile profile = employerProfileRepository.findById(memberId)
+                .orElseThrow(() -> new IllegalArgumentException("프로필을 찾을 수 없습니다."));
+
+        member.setEmail(requestDTO.getEmail());
+
+        profile.setCompanyName(requestDTO.getCompanyName());
+        profile.setCeoName(requestDTO.getCeoName());
+        profile.setStreetAddress(requestDTO.getStreetAddress());
+        profile.setDetailAddress(requestDTO.getDetailAddress());
 
         member.setUpdatedAt(LocalDateTime.now());
         memberRepository.save(member);
@@ -194,14 +218,16 @@ public class MemberServiceImpl implements MemberService {
                 requestDTO.getVerificationToken()
         );
 
-        Member member = memberRepository.save(buildMember(
+        Member member = buildMember(
                 generateSocialUsername(authInfo.getProvider()),
                 null,
                 requestDTO.getName(),
                 requestDTO.getPhone(),
                 requestDTO.getEmail(),
                 isJobEquip ? MemberRole.JOB_EQUIP : MemberRole.JOB_SEEKER
-        ));
+        );
+        member.setSocialSignUp(true);
+        member = memberRepository.save(member);
 
         jobSeekerProfileRepository.save(JobSeekerProfile.builder()
                 .member(member)
@@ -225,23 +251,58 @@ public class MemberServiceImpl implements MemberService {
         return toLoginResponseDTO(member);
     }
 
+    @Override
+    public boolean verifyPassword(Long memberId, String rawPassword) {
+        String passwordHash = memberRepository.findPasswordHashById(memberId)
+                .orElseThrow(() -> new IllegalArgumentException("회원을 찾을 수 없습니다."));
+        return passwordEncoder.matches(rawPassword, passwordHash);
+    }
+
+    @Transactional
+    @Override
+// JOB_EQUIP → JOB_SEEKER 전환 (사업자번호 삭제)
+    public LoginResponseDTO removeBusinessNumber(Long memberId) {
+
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new IllegalArgumentException("회원을 찾을 수 없습니다."));
+
+        if (member.getRole() != MemberRole.JOB_EQUIP) {
+            throw new IllegalStateException("JOB_EQUIP만 사업자번호를 삭제할 수 있습니다.");
+        }
+
+        businessRegistrationRepository.deleteById(member.getId());
+        member.setRole(MemberRole.JOB_SEEKER);
+        member.setUpdatedAt(LocalDateTime.now());
+        memberRepository.save(member);
+
+        return toLoginResponseDTO(member);
+    }
+
     // 소셜 회원 아이디 생성 (사용자에게 노출/입력되지 않는 내부용 값)
     private String generateSocialUsername(Provider provider) {
         return provider.name().charAt(0) + "-" + UUID.randomUUID();
     }
 
-    // JOB_SEEKER 회원에게 사업자번호를 등록하고 JOB_EQUIP으로 전환한다.
-    private void registerBusinessNumber(Member member, String businessNumber, String verificationToken) {
-        if (member.getRole() != MemberRole.JOB_SEEKER) {
-            throw new IllegalStateException("JOB_SEEKER만 사업자번호를 추가할 수 있습니다.");
+    // JOB_SEEKER는 신규 등록+전환, JOB_EQUIP은 기존 등록정보 갱신
+    private void registerOrUpdateBusinessNumber(Member member, String businessNumber, String verificationToken) {
+        if (member.getRole() != MemberRole.JOB_SEEKER && member.getRole() != MemberRole.JOB_EQUIP) {
+            throw new IllegalStateException("JOB_SEEKER/JOB_EQUIP만 사업자번호를 등록할 수 있습니다.");
         }
 
         if (!businessNumberTokenProvider.verify(businessNumber, verificationToken)) {
             throw new IllegalArgumentException("사업자번호 인증이 유효하지 않습니다.");
         }
 
-        saveBusinessRegistration(member, businessNumber);
-        member.setRole(MemberRole.JOB_EQUIP);
+        if (member.getRole() == MemberRole.JOB_SEEKER) {
+            saveBusinessRegistration(member, businessNumber);
+            member.setRole(MemberRole.JOB_EQUIP);
+        } else {
+            BusinessRegistration registration = businessRegistrationRepository.findById(member.getId())
+                    .orElseThrow(() -> new IllegalArgumentException("사업자등록 정보를 찾을 수 없습니다."));
+            registration.setBusinessNumber(businessNumber);
+            registration.setVerifiedAt(LocalDateTime.now());
+            businessRegistrationRepository.save(registration);
+        }
     }
 
     // 아이디 중복 체크 메서드

@@ -69,7 +69,7 @@
                                 1단결제로보내
                             </a></li>
 
-                        <li th:if="${session.loginMember != null}">
+                        <li sec:authorize="isAuthenticated()">
                             <a th:href="@{/mypage}"
                                class="nav-link">
                                 마이페이지
