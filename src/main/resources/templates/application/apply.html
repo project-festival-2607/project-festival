@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="ko"
+      layout:decorate="~{layout/layout}"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block layout:fragment="css">
+        <link rel="stylesheet" th:href="@{/css/application/apply.css}">
+    </th:block>
+</head>
+
+<div layout:fragment="content">
+    <div class="container">
+<!--                모든 inner는 class="container" 로 맞춤        -->
+<!--        이 안에서 작업        -->
+
+        <!-- 페이지 제목 -->
+        <div class="apply-header mb-5">
+            <span class="apply-badge">
+                Application
+            </span>
+            <h2>지원하기</h2>
+        </div>
+
+        <!-- 지원 공고 -->
+        <div class="card shadow-sm mb-4">
+
+            <div class="card-header">
+                <strong>지원 공고</strong>
+            </div>
+
+            <div class="card-body">
+
+                <h3 class="recruitment-title"
+                    th:text="${apply.recruitment.recruitmentTitle}">
+                </h3>
+
+                <input type="hidden"
+                       name="recruitmentId"
+                       th:value="${apply.recruitment.recruitmentId}">
+
+            </div>
+
+        </div>
+
+        <!-- 지원자 정보 -->
+        <div class="card shadow-sm mb-4">
+            <div class="card-header">
+                <strong>지원자 정보</strong>
+            </div>
+
+            <div class="card-body">
+
+                <div class="applicant-info">
+
+                    <div class="applicant-profile">
+
+                        <img th:if="${apply.resume.profileFile != null}"
+                             th:src="@{/file/profile/{uuid}(uuid=${apply.resume.profileFile.fileUuid})}"
+                             class="profile-image">
+
+                        <div th:unless="${apply.resume.profileFile != null}"
+                             class="profile-empty">
+                            프로필 사진 없음
+                        </div>
+
+                    </div>
+
+                    <div class="applicant-detail">
+
+                        <div class="info-row">
+                            <span class="info-label">이름</span>
+                            <span class="info-value"
+                                  th:text="${apply.name}">
+                    </span>
+                        </div>
+
+                        <div class="info-row">
+                            <span class="info-label">연락처</span>
+                            <span class="info-value"
+                                  th:text="${apply.phone}">
+                    </span>
+                        </div>
+
+                        <div class="info-row">
+                            <span class="info-label">이메일</span>
+                            <span class="info-value"
+                                  th:text="${apply.email}">
+                    </span>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+        <!-- 이력서 -->
+        <div class="card shadow-sm">
+            <div class="card-header">
+                <strong>제출할 이력서</strong>
+            </div>
+
+            <div class="card-body">
+
+                <!-- 자기소개 -->
+                <div class="resume-section">
+                    <h5>자기소개</h5>
+
+                    <div class="resume-content"
+                         th:text="${apply.resume.introduction}">
+                    </div>
+                </div>
+
+                <!-- 경력 -->
+                <div class="resume-section mt-5">
+
+                    <h5>경력사항</h5>
+
+                    <div th:if="${#lists.isEmpty(apply.resume.careers)}"
+                         class="empty-box">
+                        등록된 경력이 없습니다.
+                    </div>
+
+                    <table class="table table-bordered"
+                           th:unless="${#lists.isEmpty(apply.resume.careers)}">
+
+                        <thead>
+                        <tr>
+                            <th width="220">회사명 / 행사명</th>
+                            <th width="250">근무기간</th>
+                            <th>담당업무</th>
+                        </tr>
+                        </thead>
+
+                        <tbody>
+
+                        <tr th:each="career : ${apply.resume.careers}">
+
+                            <td th:text="${career.careerName}"></td>
+
+                            <td>
+                                <span th:text="${career.startDate}"></span>
+                                ~
+                                <span th:text="${career.endDate}"></span>
+                            </td>
+
+                            <td th:text="${career.duties}"></td>
+
+                        </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+                <!-- 포트폴리오 -->
+                <div class="resume-section mt-5">
+
+                    <h5>포트폴리오</h5>
+
+                    <div th:if="${#lists.isEmpty(apply.resume.portfolios)}"
+                         class="empty-box">
+                        등록된 포트폴리오가 없습니다.
+                    </div>
+
+                    <table class="table table-bordered"
+                           th:unless="${#lists.isEmpty(apply.resume.portfolios)}">
+
+                        <thead>
+                        <tr>
+                            <th>제목</th>
+                            <th width="150">종류</th>
+                            <th width="220">등록일</th>
+                        </tr>
+                        </thead>
+
+                        <tbody>
+
+                        <tr th:each="portfolio : ${apply.resume.portfolios}">
+
+                            <td>
+                                <span th:text="${portfolio.title}"></span>
+                            </td>
+
+                            <td th:text="${portfolio.type}"></td>
+
+                            <td th:text="${#temporals.format(portfolio.registeredAt,'yyyy-MM-dd HH:mm')}"></td>
+
+                        </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+        </div>
+
+        <!-- 버튼 -->
+        <form id="applyForm"
+              th:action="@{/application/apply}"
+              method="post">
+
+            <input type="hidden"
+                   name="memberId"
+                   th:value="${apply.memberId}">
+
+            <input type="hidden"
+                   name="recruitmentId"
+                   th:value="${apply.recruitment.recruitmentId}">
+
+            <input type="hidden"
+                   name="resumeId"
+                   th:value="${apply.resume.id}">
+
+            <div class="d-flex justify-content-end mt-4 gap-2">
+
+                <a th:href="@{/recruitment/{id}(id=${apply.recruitment.recruitmentId})}"
+                   class="btn btn-outline-secondary">
+                    취소
+                </a>
+
+                <button type="button"
+                        class="btn btn-danger"
+                        id="applyBtn">
+                    지원하기
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+    <script th:src="@{/js/application/apply.js}"></script>
+
+</div>
