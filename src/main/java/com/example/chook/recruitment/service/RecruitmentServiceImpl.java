@@ -137,10 +137,7 @@ public class RecruitmentServiceImpl implements RecruitmentService {
     Recruitment recruitment = recruitmentRepository.findById(id)
       .orElseThrow(() -> new EntityNotFoundException(String.format("id가 \"%d\"인 행사가 없음", id)));
 
-    recruitmentFoodTruckRepository.deleteById(id);
-    recruitmentIndividualRepository.deleteById(id);
-
-    validateSpecificDtoAndSave(recruitment, specificDto);
+    updateSpecificEntity(recruitment, specificDto);
 
     recruitment.setSigungu(sigungu);
     recruitment.setTitle(dto.getRecruitmentTitle());
@@ -161,15 +158,13 @@ public class RecruitmentServiceImpl implements RecruitmentService {
   @Override
   public void deleteRecruitment(Long id) {
 
-    // Specific Entity 삭제
-    recruitmentFoodTruckRepository.findById(id).ifPresent(recruitmentFoodTruckRepository::delete);
-    recruitmentIndividualRepository.findById(id).ifPresent(recruitmentIndividualRepository::delete);
-
     // RecruitmentFile 연결 삭제, 실제 파일은 sweepUnreferencedFiles가 담당
     List<RecruitmentFile> fileList = recruitmentFileRepository.findByRecruitment_Id(id);
     recruitmentFileRepository.deleteAll(fileList);
 
-    // 본 엔티티 삭제
+    // 본 엔티티 삭제. Individual/FoodTruck은 Recruitment의 cascade=REMOVE, orphanRemoval로 함께 삭제됨
+    // (별도 리포지토리로 미리 지우면, OSIV로 같은 세션에 남아있는 Recruitment의 in-memory 참조와 어긋나
+    //  TransientPropertyValueException이 발생함)
     recruitmentRepository.findById(id).ifPresent(recruitmentRepository::delete);
 
   }
@@ -228,6 +223,23 @@ public class RecruitmentServiceImpl implements RecruitmentService {
           throw new IllegalArgumentException("specific이 FoodTruck이 아님");
         recruitmentFoodTruckRepository.save(
           mapper.toFoodTruckEntity(recruitment, foodTruckDto));
+      }
+    }
+  }
+
+  // 수정 시에는 카테고리가 바뀌지 않으므로 specific row는 항상 이미 존재함 -> 삭제 후 재생성하지 않고 그대로 값만 갱신
+  // (삭제 후 같은 id로 재생성하면 @MapsId 때문에 같은 트랜잭션 안에서 TransientPropertyValueException 발생)
+  private void updateSpecificEntity(Recruitment recruitment, RecruitmentSpecificDTO specificDto) {
+    switch (recruitment.getCategory()) {
+      case INDIVIDUAL -> {
+        if (!(specificDto instanceof RecruitmentIndividualDTO individualDto))
+          throw new IllegalArgumentException("specific이 Individual이 아님");
+        mapper.updateIndividualEntity(getIndividual(recruitment.getId()), individualDto);
+      }
+      case FOOD_TRUCK -> {
+        if (!(specificDto instanceof RecruitmentFoodTruckDTO foodTruckDto))
+          throw new IllegalArgumentException("specific이 FoodTruck이 아님");
+        mapper.updateFoodTruckEntity(getFoodTruck(recruitment.getId()), foodTruckDto);
       }
     }
   }

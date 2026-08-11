@@ -34,6 +34,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 import java.util.regex.Pattern;
@@ -122,6 +123,9 @@ public class RecruitmentController {
         && responseDto.getOrganizerMemberId() != null
         && responseDto.getOrganizerMemberId().equals(user.getId());
       model.addAttribute("isOwner", isOwner);
+
+      // 모집마감일이 지난 공고는 수정 불가 (삭제는 계속 가능)
+      model.addAttribute("expired", responseDto.getApplicationDeadline().isBefore(LocalDate.now()));
     }
     log.info("recruitment view: {}", responseDto);
     return "recruitment/detail";
@@ -142,6 +146,10 @@ public class RecruitmentController {
     RecruitmentResponseDTO current = requireOwnedRecruitment(id, user);
     if (current == null) {
       redirectAttributes.addFlashAttribute("errorMsg", "수정 권한이 없습니다.");
+      return "redirect:/recruitment/" + id;
+    }
+    if (current.getApplicationDeadline().isBefore(LocalDate.now())) {
+      redirectAttributes.addFlashAttribute("errorMsg", "모집마감일이 지난 공고는 수정할 수 없습니다.");
       return "redirect:/recruitment/" + id;
     }
 
@@ -186,9 +194,14 @@ public class RecruitmentController {
   }
 
   // 검증 실패로 등록 폼을 다시 보여줄 때, GET /register에서 채우던 드롭다운 데이터를 다시 채움
-  private String registerFormWithReloadedOptions(Model model, BindingResult bindingResult) {
+  // (입력했던 값도 recruitmentCreateForm으로 함께 다시 채워짐, 시/도가 없으면 시/군/구 목록은 비워둠)
+  private String registerFormWithReloadedOptions(RecruitmentCreateForm recruitmentCreateForm,
+                                                  Model model, BindingResult bindingResult) {
     model.addAttribute("festivals", festivalService.getAll());
     model.addAttribute("sidoList", regionService.getSidoList());
+    if (recruitmentCreateForm.regionSidoCode() != null) {
+      model.addAttribute("sigunguList", regionService.getSigunguList(recruitmentCreateForm.regionSidoCode()));
+    }
     model.addAttribute("hasError", true);
     List<String> errorMessages = bindingResult.getFieldErrors().stream()
       .map(error -> error.getField() + ": " + error.getDefaultMessage())
@@ -231,14 +244,14 @@ public class RecruitmentController {
                          Model model,
                          RedirectAttributes redirectAttributes) {
 
-    if (bindingResult.hasErrors()) return registerFormWithReloadedOptions(model, bindingResult);
+    if (bindingResult.hasErrors()) return registerFormWithReloadedOptions(recruitmentCreateForm, model, bindingResult);
     if (recruitmentCreateForm.workingStartDate().isAfter(
       recruitmentCreateForm.workingEndDate()))
       bindingResult.rejectValue("workingEndDate",
         "workingEndDate.outOfRange",
         "업무시작날짜는 업무종료날짜보다 늦을 수 없습니다."
       );
-    if (bindingResult.hasErrors()) return registerFormWithReloadedOptions(model, bindingResult);
+    if (bindingResult.hasErrors()) return registerFormWithReloadedOptions(recruitmentCreateForm, model, bindingResult);
     RecruitmentCreateDTO recruitmentCreateDTO = mapper.toCreateDto(recruitmentCreateForm);
     Long recruitmentId = recruitmentService.createRecruitment(recruitmentCreateDTO);
 
@@ -259,6 +272,10 @@ public class RecruitmentController {
     RecruitmentResponseDTO current = requireOwnedRecruitment(id, user);
     if (current == null) {
       redirectAttributes.addFlashAttribute("errorMsg", "수정 권한이 없습니다.");
+      return "redirect:/recruitment/" + id;
+    }
+    if (current.getApplicationDeadline().isBefore(LocalDate.now())) {
+      redirectAttributes.addFlashAttribute("errorMsg", "모집마감일이 지난 공고는 수정할 수 없습니다.");
       return "redirect:/recruitment/" + id;
     }
 

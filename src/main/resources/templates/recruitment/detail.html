@@ -144,9 +144,9 @@
                 <div class="detail-h2">
                     모집개요
                 </div>
-                <div class="detail-h3">
-                    [[${recruitment.content}]]
-                </div>
+                <!-- 서버가 내려준 마크다운 원본 (Toast UI 뷰어 초기화용, 화면에는 안 보임) -->
+                <textarea id="contentInit" style="display:none" th:text="${recruitment.content}"></textarea>
+                <div id="viewer"></div>
             </div>
 
 
@@ -186,7 +186,8 @@
         <div class="recruit-detail-actions">
             <a th:unless="${recruiter}" href="#" class="btn btn-primary recruit-detail-apply">지원하기</a>
             <div th:if="${isOwner}" class="recruit-detail-owner-actions">
-                <a th:href="@{/recruitment/modify/{id}(id=${recruitment.recruitmentId})}" class="btn btn-outline-secondary">수정</a>
+                <a th:unless="${expired}" th:href="@{/recruitment/modify/{id}(id=${recruitment.recruitmentId})}" class="btn btn-outline-secondary">수정</a>
+                <span th:if="${expired}" class="recruit-detail-expired-note">모집마감일이 지나 수정할 수 없습니다.</span>
                 <form th:action="@{/recruitment/delete/{id}(id=${recruitment.recruitmentId})}" method="post"
                       onsubmit="return confirm('정말 삭제하시겠습니까?');">
                     <button type="submit" class="btn btn-outline-danger">삭제</button>
