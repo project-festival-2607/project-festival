@@ -8,5 +8,5 @@ import java.util.Optional;
 
 public interface ResumeRepository extends JpaRepository<Resume, Long> {
     // applypage Zone
-    ResumeResponseDTO getResumeByMemberId(Long memberId);
+    Resume getResumeByMemberId(Long memberId);
 }

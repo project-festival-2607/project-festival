@@ -14,6 +14,7 @@ import com.example.chook.recruitment.service.RecruitmentService;
 import com.example.chook.resume.dto.ResumeResponseDTO;
 import com.example.chook.resume.entity.Resume;
 import com.example.chook.resume.repository.ResumeRepository;
+import com.example.chook.resume.service.ResumeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -39,6 +40,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 
     // applypage Zone
     private final RecruitmentService recruitmentService;
+    private final ResumeService resumeService;
 
     // 지원하기 기능
     @Override
@@ -127,13 +129,14 @@ public class ApplicationServiceImpl implements ApplicationService {
         RecruitmentResponseDTO recruitment = recruitmentService.getRecruitment(recruitmentId);
 
         // 이력서 정보 조회
-        ResumeResponseDTO resume = resumeRepository.getResumeByMemberId(memberId);
+        Resume resume = resumeRepository.getResumeByMemberId(memberId);
+        ResumeResponseDTO resumeResponseDTO = resumeService.resumeEntityToDto(resume);
 
         // 회원 정보 조회
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
 
         // 변환 메서드 호출
-        return convertToApplyDto(member, recruitment, resume);
+        return convertToApplyDto(member, recruitment, resumeResponseDTO);
     }
 }
