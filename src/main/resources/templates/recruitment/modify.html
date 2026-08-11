@@ -22,7 +22,7 @@
             </ul>
         </div>
 
-        <form th:action="@{/recruitment/modify/{id}(id=${recruitmentId})}" method="post" id="modifyForm">
+        <form th:action="@{/recruitment/modify/{id}(id=${recruitmentId}, from=${from})}" method="post" id="modifyForm">
 
             <!-- 1. 행사 선택 (등록 폼과 동일한 필드지만 서비스에서 변경을 반영하지 않음) -->
             <div class="recruit-field">
@@ -63,9 +63,9 @@
             <!-- 3. 모집마감 날짜 + 모집 인원 -->
             <div class="recruit-field recruit-field-row recruit-field-row-narrow">
                 <div>
-                    <label for="applicationDeadline">모집마감 날짜</label>
+                    <label for="applicationDeadline">모집마감 날짜 (수정 불가)</label>
                     <input type="date" name="applicationDeadline" id="applicationDeadline" class="form-control"
-                           th:value="${update.applicationDeadline}" required>
+                           th:value="${update.applicationDeadline}" readonly required>
                 </div>
                 <div>
                     <label for="recruitmentCount">모집 인원</label>
@@ -205,7 +205,7 @@
             </div>
 
             <div class="d-flex justify-content-end gap-2 mt-3">
-                <a th:href="@{/recruitment/{id}(id=${recruitmentId})}" class="btn btn-outline-secondary">취소</a>
+                <a th:href="@{/recruitment/{id}(id=${recruitmentId}, from=${from})}" class="btn btn-outline-secondary">취소</a>
                 <button type="submit" id="btn" class="btn btn-primary">수정</button>
             </div>
 

@@ -9,7 +9,10 @@ import com.example.chook.recruitment.entity.enums.RecruitmentWageType;
 import com.example.chook.recruitment.record.RecruitmentManagementCondition;
 import com.example.chook.recruitment.record.RecruitmentSearchCondition;
 import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.CaseBuilder;
+import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
@@ -23,6 +26,7 @@ import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 
+import static com.example.chook.bookmark.entity.QRecruitmentBookmark.recruitmentBookmark;
 import static com.example.chook.common.util.QuerydslUtils.*;
 import static com.example.chook.recruitment.entity.QRecruitment.recruitment;
 import static com.example.chook.recruitment.entity.QRecruitmentFoodTruck.recruitmentFoodTruck;
@@ -51,6 +55,7 @@ public class RecruitmentRepositoryCustomImpl implements RecruitmentRepositoryCus
       .and(eq(recruitment.sigungu.code, condition.regionSigunguCode()))
       .and(eq(recruitment.category, category))
       .and(eq(recruitment.status, RecruitmentStatus.RECRUITING))
+      .and(goe(recruitment.applicationDeadline, LocalDate.now()))
       .and(loe(recruitment.workingStartDate, condition.workingStartDate()))
       .and(goe(recruitment.workingEndDate, condition.workingEndDate()))
       .and(goe(recruitment.workingStartTime, condition.workingStartTime()))
@@ -89,13 +94,14 @@ public class RecruitmentRepositoryCustomImpl implements RecruitmentRepositoryCus
 
     Long total = countQuery.fetchOne();
 
-    // 급여순 정렬을 선택한 경우 우선 정렬
-    if (condition.wageType() != null)
-      resultQuery.orderBy(recruitmentIndividual.wageValue.desc());
-
     switch (condition.listCriteria()) {
       case LATEST -> resultQuery.orderBy(recruitment.publishedAt.desc());
       case DEADLINE -> resultQuery.orderBy(recruitment.applicationDeadline.asc());
+      case BOOKMARK -> {
+        // 로그인한 구직자의 찜 목록을 기준으로 찜한 공고를 먼저, 그 안에서는 최신순
+        if (condition.memberId() != null) resultQuery.orderBy(bookmarkedFirst(condition.memberId()));
+        resultQuery.orderBy(recruitment.publishedAt.desc());
+      }
     }
 
     List<Recruitment> result = resultQuery
@@ -108,6 +114,20 @@ public class RecruitmentRepositoryCustomImpl implements RecruitmentRepositoryCus
       pageable,
       total == null ? 0 : total
     );
+  }
+
+  private OrderSpecifier<Integer> bookmarkedFirst(Long memberId) {
+    return new CaseBuilder()
+      .when(JPAExpressions.selectOne()
+        .from(recruitmentBookmark)
+        .where(
+          recruitmentBookmark.recruitment.eq(recruitment),
+          recruitmentBookmark.member.id.eq(memberId)
+        )
+        .exists())
+      .then(0)
+      .otherwise(1)
+      .asc();
   }
 
   @Override

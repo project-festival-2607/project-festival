@@ -21,6 +21,12 @@ const editor = new toastui.Editor({
     }
 });
 
+// 검증 실패로 폼이 다시 렌더링된 경우, 직전에 입력했던 업무내용을 복원
+const contentSource = document.getElementById("contentSource");
+if (contentSource && contentSource.value.trim()) {
+    editor.setMarkdown(contentSource.value);
+}
+
 async function uploadPendingImages(markdown) {
     let result = markdown;
     for (const [previewUrl, blob] of pendingImages) {
@@ -149,6 +155,13 @@ function buildTimePicker(prefix, direction, getBoundValue) {
         minuteSelect.appendChild(new Option(mm, mm));
     });
 
+    // 검증 실패로 폼이 다시 렌더링된 경우, 직전에 확정했던 시간을 select에도 맞춰둠
+    if (hiddenInput.value) {
+        const [h, m] = hiddenInput.value.split(":");
+        hourSelect.value = h;
+        minuteSelect.value = String(Math.floor(Number(m) / 10) * 10).padStart(2, "0");
+    }
+
     hourSelect.addEventListener("change", () => applyTimeBound(hourSelect, minuteSelect, getBoundValue(), direction));
 
     trigger.addEventListener("click", (e) => {
@@ -202,6 +215,7 @@ function updateTotalHours() {
     const remainMinutes = minutes % 60;
     totalHoursEl.textContent = `총 근무시간: ${hours}시간` + (remainMinutes > 0 ? ` ${remainMinutes}분` : "");
 }
+updateTotalHours(); // 검증 실패로 다시 렌더링됐고 기존 값이 있으면 페이지 로드 시점에 바로 총 시간 표시
 
 // ===== 5. 날짜 입력칸 최소값을 오늘로 설정 (@FutureOrPresent 검증과 맞춤) =====
 const today = new Date().toISOString().split("T")[0];

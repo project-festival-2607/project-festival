@@ -34,4 +34,7 @@ public class RecruitmentListDTO {
   private LocalTime workingStartTime;
   private LocalTime workingEndTime;
 
+  // 목록 조회 후 컨트롤러에서 로그인한 구직자의 찜 여부를 채워넣음 (기본 false)
+  private boolean bookmarked;
+
 }

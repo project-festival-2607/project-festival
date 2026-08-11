@@ -203,7 +203,7 @@ public class RecruitmentMapper {
       .build();
   }
 
-  public RecruitmentSearchCondition toCondition(RecruitmentSearchForm form) {
+  public RecruitmentSearchCondition toCondition(RecruitmentSearchForm form, Long memberId) {
     return RecruitmentSearchCondition.builder()
       .keywordList(splitByRegex(form.keywords(), "[\\s,&]+"))
       .regionSidoCode(form.regionSidoCode())
@@ -214,6 +214,7 @@ public class RecruitmentMapper {
       .workingStartDate(form.workingStartDate())
       .workingEndDate(form.workingEndDate())
       .listCriteria(form.listCriteria())
+      .memberId(memberId)
       .wageType(form.wageType())
       .boothFeeRequired(form.boothFeeRequired())
       .electricityProvided(form.electricityProvided())
