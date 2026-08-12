@@ -1,4 +1,4 @@
-package com.example.chook.mypage;
+package com.example.chook.mypage.controller;
 
 import com.example.chook.member.dto.EmployerProfileUpdateRequestDTO;
 import com.example.chook.member.dto.JobSeekerProfileUpdateRequestDTO;
@@ -6,6 +6,8 @@ import com.example.chook.member.dto.LoginResponseDTO;
 import com.example.chook.member.security.AuthenticationHelper;
 import com.example.chook.member.security.CustomUserDetails;
 import com.example.chook.member.service.MemberService;
+import com.example.chook.mypage.dto.MyPageDTO;
+import com.example.chook.mypage.service.MyPageService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -143,8 +145,7 @@ public class MyPageController {
             return "redirect:/mypage/password-check";
         }
         try {
-            LoginResponseDTO responseDTO = memberService.updateEmployerProfile(userDetails.getId(), requestDTO);
-            session.setAttribute("loginMember", responseDTO);
+            memberService.updateEmployerProfile(userDetails.getId(), requestDTO);
             return "redirect:/mypage";
         } catch (IllegalArgumentException | IllegalStateException e) {
             redirectAttributes.addFlashAttribute("FailureMsg", e.getMessage());
