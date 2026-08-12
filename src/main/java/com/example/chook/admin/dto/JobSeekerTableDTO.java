@@ -3,11 +3,11 @@ package com.example.chook.admin.dto;
 import com.example.chook.member.entity.enums.Gender;
 import com.example.chook.member.entity.enums.MemberRole;
 import com.example.chook.member.entity.enums.MemberStatus;
-import com.example.chook.member.entity.enums.Provider;
 import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -42,7 +42,9 @@ public class JobSeekerTableDTO {
   String suspendedReason;
 
   public String getFormattedPhone() {
-    return String.format("%s-%s-%s", phone.substring(0, 3), phone.substring(3, 7), phone.substring(7));
+    return phone.length() == 11
+      ? String.format("%s-%s-%s", phone.substring(0, 3), phone.substring(3, 7), phone.substring(7))
+      : phone;
   }
 
   public String getStatusString() {
