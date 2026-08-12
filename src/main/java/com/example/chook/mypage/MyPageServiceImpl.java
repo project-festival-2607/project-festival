@@ -1,8 +1,7 @@
-package com.example.chook.mypage.service;
+package com.example.chook.mypage;
 
 import com.example.chook.member.entity.Member;
 import com.example.chook.member.repository.MemberRepository;
-import com.example.chook.mypage.DTO.MyPageDTO;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

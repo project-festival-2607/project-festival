@@ -1,8 +1,6 @@
-package com.example.chook.mypage.controller;
+package com.example.chook.mypage;
 
 import com.example.chook.member.entity.enums.MemberRole;
-import com.example.chook.mypage.DTO.MyPageDTO;
-import com.example.chook.mypage.service.MyPageService;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.ui.Model;

@@ -1,4 +1,4 @@
-package com.example.chook.mypage.DTO;
+package com.example.chook.mypage;
 
 import com.example.chook.member.entity.enums.MemberRole;
 import lombok.*;
