@@ -93,20 +93,19 @@
 }
 
 .fes-box {
+    box-sizing: border-box;
     width: 100%;
     padding: 40px 20px;
 
-    transition: 0.3s ease;
+    transition: 0.5s ease;
 
     perspective: 1000px;
 }
 
 .fes-box:hover {
     /*background-color: #fbfbfb;*/
-    transform: translateY(-30px);
+    transform: translateY(-20px);
     cursor: pointer;
-
-    border-bottom: 1px solid #dc3545;
 }
 
 .fes-img {
