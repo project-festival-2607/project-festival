@@ -4,6 +4,12 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       xmlns:th="http://www.thymeleaf.org">
 
+<head>
+    <th:block layout:fragment="css">
+        <link rel="stylesheet" th:href="@{/css/inquiry/common.css}">
+    </th:block>
+</head>
+
 <body>
 <div layout:fragment="content">
     <div class="container">

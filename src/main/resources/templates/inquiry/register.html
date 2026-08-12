@@ -3,11 +3,18 @@
       layout:decorate="~{layout/layout}"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block layout:fragment="css">
+        <link rel="stylesheet" th:href="@{/css/inquiry/common.css}">
+    </th:block>
+</head>
 
 <body>
+
 <div layout:fragment="content">
     <div class="container">
         <h1 class="mb-3">1:1 문의</h1>
+
 
         <ul class="nav nav-tabs mb-4">
             <li class="nav-item">
