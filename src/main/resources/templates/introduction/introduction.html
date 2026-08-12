@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="ko"
+      layout:decorate="~{layout/layout}"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <th:block layout:fragment="css">
+        <link rel="stylesheet" th:href="@{/css/introdution/introdution.css}">
+    </th:block>
+</head>
+
+<div layout:fragment="content">
+    <div class="container intro-container">
+        <!--                모든 inner는 class="container" 로 맞춤        -->
+        <!--        이 안에서 작업        -->
+
+        <!-- 메인 소개 -->
+        <section class="intro-hero">
+            <h1>축제를 더 쉽고, 더 가깝게.</h1>
+
+            <p>
+                축!은 전국의 다양한 축제 정보를 제공하고,<br>
+                기업과 구직자를 연결하는 축제 종합 플랫폼입니다.
+            </p>
+
+            <p>
+                축제를 즐기고 싶은 사람부터<br>
+                행사를 함께 만들어갈 사람까지,<br>
+                모두를 위한 서비스를 제공합니다.
+            </p>
+
+            <a th:href="@{/festival/list}" class="intro-btn">
+                축제정보 보러가기
+            </a>
+            <a th:href="@{/recruitment/list}" class="intro-btn">
+                모집공고 보러가기
+            </a>
+        </section>
+
+        <!-- 소개 -->
+        <section class="intro-section">
+
+            <h2>축!은 어떤 서비스인가요?</h2>
+
+            <p>
+                축!은 전국의 다양한 축제 정보를 제공하고,<br>
+                축제 운영 기업과 구직자를 연결하는<br>
+                축제 종합 플랫폼입니다.
+            </p>
+
+            <p>
+                사용자는 지역별 축제 정보를 쉽게 확인할 수 있으며,<br>
+                기업은 필요한 인력을 모집하고,<br>
+                구직자는 원하는 축제 공고에 지원할 수 있습니다.
+            </p>
+
+            <p>
+                축제를 찾는 즐거움과<br>
+                축제를 함께 만들어가는 경험을<br>
+                하나의 플랫폼에서 제공합니다.
+            </p>
+
+        </section>
+
+        <!-- 서비스 -->
+        <section class="intro-section">
+
+            <h2>주요 서비스</h2>
+
+            <div class="service-wrap">
+
+                <div class="service-card">
+                    <h3>🎪 전국 축제 정보</h3>
+                    <p>전국 축제 정보를 한눈에 확인할 수 있습니다.</p>
+                </div>
+
+                <div class="service-card">
+                    <h3>💼 모집공고</h3>
+                    <p>기업은 필요한 인력을 모집하고 구직자는 원하는 공고에 지원할 수 있습니다.</p>
+                </div>
+
+                <div class="service-card">
+                    <h3>🤝 인력 매칭</h3>
+                    <p>기업과 구직자를 효율적으로 연결하여 원활한 채용을 지원합니다.</p>
+                </div>
+
+                <div class="service-card">
+                    <h3>📍 축제 지도</h3>
+                    <p>지도 기반으로 축제 위치를 확인하고 주변 축제를 쉽게 탐색할 수 있습니다.</p>
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- 가치 -->
+        <section class="intro-section">
+
+            <h2>축!이 추구하는 가치</h2>
+
+            <div class="value-wrap">
+
+                <div class="value-card">
+                    <h3>신뢰</h3>
+                    <p>정확한 축제 정보와 채용 정보를 제공합니다.</p>
+                </div>
+
+                <div class="value-card">
+                    <h3>연결</h3>
+                    <p>기업과 구직자를 이어 더 많은 기회를 만듭니다.</p>
+                </div>
+
+                <div class="value-card">
+                    <h3>편리함</h3>
+                    <p>누구나 쉽게 이용할 수 있는 서비스를 제공합니다.</p>
+                </div>
+
+                <div class="value-card">
+                    <h3>성장</h3>
+                    <p>축제 문화와 지역 사회의 발전에 기여합니다.</p>
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- 추천 대상 -->
+        <section class="intro-section">
+
+            <h2>이런 분들에게 추천합니다</h2>
+
+            <div class="target-wrap">
+
+                <div class="target-card">
+                    <h3>기업</h3>
+                    <ul>
+                        <li>행사 운영 인력이 필요한 기업</li>
+                        <li>축제 인력을 모집하려는 기업</li>
+                        <li>빠르고 효율적인 채용이 필요한 기업</li>
+                    </ul>
+                </div>
+
+                <div class="target-card">
+                    <h3>구직자</h3>
+                    <ul>
+                        <li>축제 아르바이트를 찾는 사람</li>
+                        <li>행사 운영 경험을 쌓고 싶은 사람</li>
+                        <li>다양한 축제에서 일해보고 싶은 사람</li>
+                    </ul>
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- 마무리 -->
+        <section class="intro-ending">
+
+            <h2>축제의 성공은 사람에게서 시작됩니다.</h2>
+
+            <p>
+                축!은 기업과 구직자가 더 쉽게 만나고<br>
+                함께 성장할 수 있는 환경을 만들기 위해 노력하겠습니다.
+            </p>
+
+        </section>
+    </div>
+</div>
