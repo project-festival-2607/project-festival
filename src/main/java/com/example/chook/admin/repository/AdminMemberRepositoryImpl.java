@@ -82,10 +82,10 @@ public class AdminMemberRepositoryImpl implements AdminMemberRepository {
       .and(eq(member.status, condition.status()))
       .and(eq(jobSeekerProfile.gender, condition.gender()))
       .and(checkDataRangeCriteria(condition.dateRangeCriteria(),
-                                  condition.startDateTime(),
-                                  condition.endDateTime(),
-                                  condition.startDate(),
-                                  condition.endDate()
+        condition.startDateTime(),
+        condition.endDateTime(),
+        condition.startDate(),
+        condition.endDate()
       ))
       .and(containsProvider(condition.provider()));
 

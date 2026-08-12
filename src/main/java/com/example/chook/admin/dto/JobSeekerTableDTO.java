@@ -44,12 +44,11 @@ public class JobSeekerTableDTO {
 
   public String getStatusString() {
     if (deletedAt != null) return "탈퇴";
-    switch (status) {
-      case ACTIVE -> {return "활성";}
-      case DORMANT -> {return "휴면";}
-      case SUSPENDED -> {return "정지";}
-      default -> {return status.name();}
-    }
+    return switch (status) {
+      case ACTIVE -> "활성";
+      case DORMANT -> "휴면";
+      case SUSPENDED -> "정지";
+    };
   }
 
 }

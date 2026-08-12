@@ -2,7 +2,6 @@ package com.example.chook.admin.service;
 
 import com.example.chook.admin.dto.JobSeekerTableDTO;
 import com.example.chook.admin.record.JobSeekerSearchCondition;
-import com.example.chook.member.entity.enums.MemberStatus;
 import org.springframework.data.domain.Page;
 
 public interface AdminService {
