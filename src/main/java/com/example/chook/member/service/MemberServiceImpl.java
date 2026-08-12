@@ -187,6 +187,7 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
+    @Transactional
     // 소셜 로그인
     public LoginResponseDTO loginBySocial(Provider provider, String providerId) {
 
