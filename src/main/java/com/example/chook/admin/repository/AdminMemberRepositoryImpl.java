@@ -65,8 +65,8 @@ public class AdminMemberRepositoryImpl implements AdminMemberRepository {
         jobSeekerProfile.streetAddress,
         jobSeekerProfile.detailAddress,
 
-        memberSuspension.createdAt,
-        memberSuspension.reason
+        memberSuspension.createdAt.as("suspendedAt"),
+        memberSuspension.reason.as("suspendedReason")
 
       ))
       .from(member)
