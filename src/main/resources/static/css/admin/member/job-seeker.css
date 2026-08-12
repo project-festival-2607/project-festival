@@ -15,11 +15,6 @@ label.search-form-label {
   border-spacing: 0;
 }
 
-.result-table-wrapper table thead {
-  position: sticky;
-  top: 0;
-}
-
 .result-table-wrapper table thead th {
   border-bottom: calc(var(--bs-border-width) * 2) solid currentcolor;
 }
@@ -58,4 +53,11 @@ label.search-form-label {
 .manage-btn {
   background-color: transparent;
   border: none;
+}
+
+.btn-group-xs>.btn, .btn-xs {
+  --bs-btn-padding-y: 0.20rem;
+  --bs-btn-padding-x: 0.35rem;
+  --bs-btn-font-size: 0.70rem;
+  --bs-btn-border-radius: 0.15rem;
 }

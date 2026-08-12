@@ -51,6 +51,7 @@ const startDate = document.getElementById('startDate');
 const endDate = document.getElementById('endDate');
 const currentDateRangeCriteria = document.getElementById('currentDateRangeCriteria');
 const dateRangeCriteria = document.getElementById('dateRangeCriteria');
+const dateRangeCriteriaAutofill = document.getElementById('dateRangeCriteriaAutofill');
 
 function updateDateRangeCriteriaAndToggleInputType() {
   const selected = document.querySelector(
@@ -59,14 +60,11 @@ function updateDateRangeCriteriaAndToggleInputType() {
   currentDateRangeCriteria.textContent = selected?.textContent ?? '선택';
   const isBirthDate = dateRangeCriteria.value === 'BIRTH_DATE';
   const isNotSelected = dateRangeCriteria.value === '';
-  startDateTime.classList.toggle('d-none', isBirthDate || isNotSelected);
-  endDateTime.classList.toggle('d-none', isBirthDate || isNotSelected);
-  startDate.classList.toggle('d-none', !isBirthDate || isNotSelected);
-  endDate.classList.toggle('d-none', !isBirthDate || isNotSelected);
   startDateTime.classList.toggle('d-none', isBirthDate);
   endDateTime.classList.toggle('d-none', isBirthDate);
   startDate.classList.toggle('d-none', !isBirthDate);
   endDate.classList.toggle('d-none', !isBirthDate);
+  dateRangeCriteriaAutofill.classList.toggle('d-none', isBirthDate);
 
   [startDateTime, endDateTime, startDate, endDate].forEach(element => {
     element.disabled = isNotSelected;
@@ -91,6 +89,35 @@ startDate.addEventListener('change', () => {
 })
 endDate.addEventListener('change', () => {
   endDateTime.value =`${endDate.value}T23:59`;
+})
+
+//  ###############################################
+//  DateRangeCriteria 빠른 입력 기능
+//  ###############################################
+
+function toDateTimeLocal(date) {
+  const offset = date.getTimezoneOffset();
+  return new Date(date.getTime() - offset * 60 * 1000)
+    .toISOString()
+    .slice(0, 16);
+}
+
+document.querySelectorAll('.date-range-criteria-autofill').forEach((element) => {
+  element.addEventListener('click', (e) => {
+    const diff = e.target.dataset.value;
+    console.log(diff);
+    const hour = 60 * 60 * 1000;
+    const now = new Date();
+    endDateTime.value = toDateTimeLocal(now);
+    switch (diff) {
+      case '1h': startDateTime.value = toDateTimeLocal(new Date(now - hour)); break;
+      case '6h': startDateTime.value = toDateTimeLocal(new Date(now - 6 * hour)); break;
+      case '12h': startDateTime.value = toDateTimeLocal(new Date(now - 12 * hour)); break;
+      case '1d': startDateTime.value = toDateTimeLocal(new Date(now - 24 * hour)); break;
+      case '7d': startDateTime.value = toDateTimeLocal(new Date(now - 7 * 24 * hour)); break;
+      case '1M': startDateTime.value = toDateTimeLocal(new Date(now - 30 * 24 * hour)); break;
+    }
+  })
 })
 
 updatePageSize();
