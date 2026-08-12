@@ -5,6 +5,7 @@ import com.example.chook.admin.entity.enums.JobSeekerDateRangeCriteria;
 import com.example.chook.admin.entity.enums.JobSeekerKeywordType;
 import com.example.chook.admin.record.JobSeekerSearchCondition;
 import com.example.chook.member.entity.enums.MemberRole;
+import com.example.chook.member.entity.enums.MemberStatus;
 import com.example.chook.member.entity.enums.Provider;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Projections;
@@ -25,6 +26,7 @@ import java.util.List;
 import static com.example.chook.common.util.QuerydslUtils.*;
 import static com.example.chook.member.entity.QJobSeekerProfile.jobSeekerProfile;
 import static com.example.chook.member.entity.QMember.member;
+import static com.example.chook.member.entity.QMemberSuspension.memberSuspension;
 
 @Repository
 @Slf4j
@@ -61,12 +63,18 @@ public class AdminMemberRepositoryImpl implements AdminMemberRepository {
         jobSeekerProfile.gender,
         jobSeekerProfile.birthDate,
         jobSeekerProfile.streetAddress,
-        jobSeekerProfile.detailAddress
+        jobSeekerProfile.detailAddress,
+
+        eq(member.status, MemberStatus.SUSPENDED),
+        memberSuspension.createdAt,
+        memberSuspension.reason
 
       ))
       .from(member)
       .join(jobSeekerProfile)
-      .on(jobSeekerProfile.memberId.eq(member.id));
+      .on(jobSeekerProfile.memberId.eq(member.id))
+      .leftJoin(memberSuspension)
+      .on(memberSuspension.memberId.eq(member.id));
 
     JPAQuery<Long> countQuery = jpaQueryFactory
       .select(member.count())

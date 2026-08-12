@@ -8,7 +8,6 @@ import com.example.chook.member.entity.MemberSuspension;
 import com.example.chook.member.entity.enums.MemberStatus;
 import com.example.chook.member.repository.MemberRepository;
 import com.example.chook.member.repository.MemberSuspensionRepository;
-import com.example.chook.payment.repository.PointHistoryRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,12 +30,7 @@ public class AdminServiceImpl implements AdminService {
   @Override
   public Page<JobSeekerTableDTO> getPage(int pageIdx, int pageSize, JobSeekerSearchCondition condition) {
     Pageable pageable = PageRequest.of(pageIdx - 1, pageSize);
-    return adminMemberRepository.getPage(pageable, condition).map(
-      dto -> {
-        dto.setIsSuspended(memberSuspensionRepository.existsById(dto.getId()));
-        return dto;
-      }
-    );
+    return adminMemberRepository.getPage(pageable, condition);
   }
 
   @Transactional
@@ -52,25 +46,27 @@ public class AdminServiceImpl implements AdminService {
   @Transactional
   @Override
   public boolean suspendMember(Long memberId, String reason) {
+
+    // 입력 검증
     Member member = memberRepository.findById(memberId).orElseThrow(() ->
       new EntityNotFoundException("Member with id: " + memberId + " not found")
     );
-    MemberStatus currentStatus = member.getStatus();
-    String currentSuspendedReason = memberSuspensionRepository.findById(memberId)
-      .map(MemberSuspension::getReason)
-      .orElse(null);
-
     if (reason == null) throw new IllegalArgumentException("사유를 입력해 주시기 바랍니다.");
-    if (currentStatus == MemberStatus.SUSPENDED && reason.equals(currentSuspendedReason)) {
-      return false;
-    }
+
+    // 기존 데이터 검증
+    MemberSuspension suspension = memberSuspensionRepository.findById(memberId).orElse(null);
+    String currentSuspendedReason = (suspension == null) ? null : suspension.getReason() ;
+
+    // 입력 검증 (현재 정지되어 있으며 사유가 기존과 같으면 update하지 않음)
+    if (suspension != null && reason.equals(currentSuspendedReason)) return false;
+
+    // 개체 (생성 후) 업데이트
+    if (suspension == null) suspension = new MemberSuspension();
+    suspension.setReason(reason);
+
+    // 저장
     member.setStatus(MemberStatus.SUSPENDED);
-    memberSuspensionRepository.save(
-      MemberSuspension.builder()
-        .member(member)
-        .reason(reason)
-        .build()
-    );
+    memberSuspensionRepository.save(suspension);
     return true;
   }
 
