@@ -1,0 +1,63 @@
+label.search-form-label {
+  font-size: 80%;
+  color:var(--bs-secondary);
+  padding-bottom: 0.5rem;
+}
+
+.result-table-wrapper {
+  overflow: scroll;
+  height: 500px;
+  font-size: 90%;
+}
+
+.result-table-wrapper table {
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.result-table-wrapper table thead th {
+  border-bottom: calc(var(--bs-border-width) * 2) solid currentcolor;
+}
+
+.result-table-wrapper table tr {
+  white-space: nowrap;
+}
+
+.result-table-wrapper table td {
+  font-weight: 400;
+  white-space: nowrap;
+  letter-spacing: -0.03em;
+}
+
+.result-table-wrapper table thead th {
+  position: sticky;
+  top: 0;
+  background-color: var(--bs-body-bg);
+}
+
+.result-table-wrapper table thead th:last-child {
+  position: sticky;
+  right: 0;
+  top: 0;
+  z-index: 4;
+  background-color: var(--bs-body-bg);
+}
+
+.result-table-wrapper table tbody td:last-child {
+  position: sticky;
+  right: 0;
+  z-index: 2;
+  background-color: var(--bs-body-bg);
+}
+
+.manage-btn {
+  background-color: transparent;
+  border: none;
+}
+
+.btn-group-xs>.btn, .btn-xs {
+  --bs-btn-padding-y: 0.20rem;
+  --bs-btn-padding-x: 0.35rem;
+  --bs-btn-font-size: 0.70rem;
+  --bs-btn-border-radius: 0.15rem;
+}

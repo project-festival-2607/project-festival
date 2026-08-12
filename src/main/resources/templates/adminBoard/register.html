@@ -17,8 +17,8 @@
     <h1>Register Page</h1>
 
         <form th:action="@{/adminBoard/register}" method="post" id="registerForm">
-            <input type="text" name="title" id="title" placeholder="제목">
-            <input value="작성자" readonly>
+            제목: <input type="text" name="title" id="title" placeholder="">
+<!--            <input value="작성자" readonly>-->
             <!-- 에디터는 폼 필드가 아니므로, 전송 시점에 마크다운을 채워 넣어서 함께 전송 -->
             <input type="hidden" name="content" id="content">
 

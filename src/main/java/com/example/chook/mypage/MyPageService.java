@@ -11,8 +11,10 @@ public interface MyPageService {
                 .username(member.getUsername())
                 .name(member.getName())
                 .phone(member.getPhone())
+                .email(member.getEmail())
                 .point(member.getPoint())
                 .role(member.getRole())
+                .socialSignUp(member.isSocialSignUp())
                 .build();
     }
 

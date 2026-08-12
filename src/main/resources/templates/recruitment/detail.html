@@ -188,7 +188,14 @@
 
         <!-- 지원하기(구직자) / 수정,삭제,결제(구인자) - 모양만, 링크는 추후 연결 -->
         <div class="recruit-detail-actions">
-            <a th:unless="${recruiter}" href="#" class="btn btn-primary recruit-detail-apply">지원하기</a>
+
+            <!-- applypage Zone -->
+            <a th:unless="${recruiter}"
+               th:href="@{/application/apply(recruitmentId=${recruitment.recruitmentId})}"
+               class="btn btn-primary recruit-detail-apply">
+                지원하기
+            </a>
+
             <div th:if="${isOwner}" class="recruit-detail-owner-actions">
                 <a th:unless="${expired}" th:href="@{/recruitment/modify/{id}(id=${recruitment.recruitmentId}, from=${from})}" class="btn btn-outline-secondary">수정</a>
                 <span th:if="${expired}" class="recruit-detail-expired-note">모집마감일이 지나 수정할 수 없습니다.</span>
@@ -212,5 +219,8 @@
     <script th:src="@{/js/festival/festivalDetail.js}"></script>
     <script th:src="@{/libs/toastui-editor-3.2.2/js/toastui-editor-all.min.js}"></script>
     <script th:src="@{/js/recruitment/recruitDetail.js}" th:attr="data-job-seeker=${jobSeeker}"></script>
+
+    <!--  apply Zone  -->
+    <script th:if="${resumeMessage}" th:inline="javascript">alert([[${resumeMessage}]]);</script>
 </div>
 </html>

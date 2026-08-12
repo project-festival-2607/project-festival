@@ -46,11 +46,11 @@
                         </li>
 <!--                        4메뉴-->
                         <li class="nav-item">
-                            <a href="/" class="nav-link">사이트소개</a>
+                            <a href="/introduction/introduction" class="nav-link">사이트소개</a>
                             <div class="dropdown-menu-box">
                                 <ul class="submenu">
-                                    <li><a href="/">축!소개</a></li>
-                                    <li><a href="/">운영방침</a></li>
+                                    <li><a href="/introduction/introduction">축!소개</a></li>
+                                    <li><a href="/introduction/policy">운영방침</a></li>
                                 </ul>
                             </div>
                         </li>
@@ -69,7 +69,7 @@
                                 1단결제로보내
                             </a></li>
 
-                        <li th:if="${session.loginMember != null}">
+                        <li sec:authorize="isAuthenticated()">
                             <a th:href="@{/mypage}"
                                class="nav-link">
                                 마이페이지

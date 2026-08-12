@@ -65,6 +65,9 @@ public class Member {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
+    @Column(name = "last_login_at")
+    private LocalDateTime lastLoginAt;
+
     @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
 
@@ -78,4 +81,9 @@ public class Member {
     @ToString.Exclude // 순환 참조 방지
     // 소셜 연동 리스트 컬렉션 초기화
     private List<SocialLogin> socialLogins =  new ArrayList<>();
+
+    // 소셜 회원가입 여부
+    @Column(name = "social_signup", nullable = false)
+    @Builder.Default
+    private boolean socialSignUp = false;
 }

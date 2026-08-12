@@ -3,7 +3,6 @@ package com.example.chook.member.security;
 import com.example.chook.member.entity.Member;
 import com.example.chook.member.entity.enums.MemberRole;
 import com.example.chook.member.entity.enums.MemberStatus;
-import lombok.Getter;
 import lombok.NonNull;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -39,6 +38,10 @@ public class CustomUserDetails implements UserDetails {
 
     public boolean isRecruiter() {
         return member.getRole() == MemberRole.RECRUITER;
+    }
+
+    public boolean isSocialSignUp() {
+        return member.isSocialSignUp();
     }
 
     public MemberStatus getStatus() {

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>회원정보 수정</title>
+    <link rel="stylesheet" th:href="@{/libs/bootstrap-5.3.8-dist/css/bootstrap.min.css}">
+</head>
+<body>
+<div class="container" style="max-width: 500px;">
+    <h1 class="mb-4 text-center mt-5">회원정보 수정</h1>
+
+    <div th:if="${FailureMsg != null}" class="alert alert-danger" role="alert">
+        [[${FailureMsg}]]
+    </div>
+
+    <form th:action="@{/mypage/modify/job-seeker}" method="post">
+        <div class="mb-3">
+            <label for="username" class="form-label">아이디</label>
+            <input type="text" class="form-control" id="username" th:value="${myPageDTO.username}" disabled>
+        </div>
+        <div class="mb-3">
+            <label for="name" class="form-label">이름</label>
+            <input type="text" class="form-control" id="name" th:value="${myPageDTO.name}" disabled>
+        </div>
+        <div class="mb-3">
+            <label for="gender" class="form-label">성별</label>
+            <input type="text" class="form-control" id="gender" th:value="${myPageDTO.gender}" disabled>
+        </div>
+        <div class="mb-3">
+            <label for="birthDate" class="form-label">생년월일</label>
+            <input type="text" class="form-control" id="birthDate" th:value="${myPageDTO.birthDate}" disabled>
+        </div>
+
+        <div class="mb-3">
+            <label for="email" class="form-label">이메일</label>
+            <input type="email" class="form-control" id="email" name="email" th:value="${myPageDTO.email}" required>
+        </div>
+        <div class="mb-3">
+            <label for="streetAddress" class="form-label">주소</label>
+            <input type="text" class="form-control" id="streetAddress" name="streetAddress" th:value="${myPageDTO.streetAddress}">
+        </div>
+        <div class="mb-3">
+            <label for="detailAddress" class="form-label">상세주소</label>
+            <input type="text" class="form-control" id="detailAddress" name="detailAddress" th:value="${myPageDTO.detailAddress}">
+        </div>
+
+        <hr class="my-4">
+
+        <div th:if="${myPageDTO.role.name() == 'JOB_EQUIP'}" class="mb-3">
+            <label class="form-label">현재 사업자등록번호</label>
+            <input type="text" class="form-control" th:value="${myPageDTO.businessNumber}" disabled>
+        </div>
+
+        <div class="mb-3">
+            <label for="businessNumberDisplay" class="form-label">
+                사업자등록번호 <span th:if="${myPageDTO.role.name() == 'JOB_EQUIP'}">변경</span><span th:unless="${myPageDTO.role.name() == 'JOB_EQUIP'}">추가 (선택)</span>
+            </label>
+            <div class="input-group">
+                <input type="text" class="form-control" id="businessNumberDisplay" inputmode="numeric" placeholder="123-45-67890" maxlength="12">
+                <button type="button" class="btn btn-outline-secondary" id="verifyBusinessNumberBtn">인증하기</button>
+            </div>
+        </div>
+        <input type="hidden" id="businessNumber" name="businessNumber">
+        <input type="hidden" id="verificationToken" name="verificationToken">
+
+        <button type="submit" class="btn btn-primary w-100 mt-3">저장</button>
+    </form>
+
+    <form th:if="${myPageDTO.role.name() == 'JOB_EQUIP'}" th:action="@{/mypage/business-number/delete}" method="post" class="mt-2"
+          onsubmit="return confirm('사업자등록번호를 삭제하시겠습니까? JOB_SEEKER로 전환됩니다.');">
+        <button type="submit" class="btn btn-outline-danger w-100">사업자등록번호 삭제</button>
+    </form>
+</div>
+<script th:src="@{/js/member/businessNumberVerify.js}"></script>
+</body>
+</html>
