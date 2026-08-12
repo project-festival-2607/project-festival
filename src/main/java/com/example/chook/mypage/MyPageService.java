@@ -22,5 +22,4 @@ public interface MyPageService {
     // 마이페이지 조회
     MyPageDTO getMyPage(String username);
 
-    void modify(String username, MyPageDTO myPageDTO);
 }
