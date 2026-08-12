@@ -77,7 +77,7 @@
               <th scope="col">#</th>
               <th scope="col">아이디</th>
               <th scope="col">이름</th>
-              <th scope="col">전화번호</th>
+              <th scope="col" colspan="2">전화번호</th>
               <th scope="col">이메일</th>
               <th scope="col">상태</th>
               <th scope="col">생성일시</th>
@@ -98,8 +98,8 @@
               <td th:text="${jobSeeker.id}"></td>
               <td th:text="${jobSeeker.username}"></td>
               <td th:text="${jobSeeker.name}"></td>
+              <td>[[${jobSeeker.formattedPhone}]]</td>
               <td>
-                [[${jobSeeker.formattedPhone}]]
                 <span th:if="${jobSeeker.phoneVerified}">✅</span>
                 <span th:unless="${jobSeeker.phoneVerified}" title="휴대전화 번호가 인증되지 않았습니다.">⚠️</span>
               </td>
@@ -109,14 +109,12 @@
               <td th:text="${#temporals.format(jobSeeker.updatedAt, 'yyyy.MM.dd. HH:mm')}"></td>
               <td th:text="${#temporals.format(jobSeeker.lastLoginAt, 'yyyy.MM.dd. HH:mm')}"></td>
               <td th:text="${#temporals.format(jobSeeker.deletedAt, 'yyyy.MM.dd. HH:mm')}"></td>
-              <td th:text="${jobSeeker.point}"></td>
+              <td class="text-end" th:text="${jobSeeker.point}"></td>
               <td>
                 <th:block th:each="socialLoginDto: ${jobSeeker.socialLoginDtoList}">
-                  <div class="btn-group">
-                    <img th:src="@{'/images/admin/member/provider_'+${#strings.toLowerCase(socialLoginDto.provider.name())}+'.svg'}"
-                         class="provider-icon"
-                         th:alt-title="${socialLoginDto.provider.name() + ' / 연결 일시: ' + #temporals.format(socialLoginDto.linkedAt, 'yyyy.MM.dd. HH:mm:ss')}"/>
-                  </div>
+                  <img th:src="@{'/images/admin/member/provider_'+${#strings.toLowerCase(socialLoginDto.provider.name())}+'.svg'}"
+                       class="provider-icon"
+                       th:alt-title="${socialLoginDto.provider.name() + ' / 연결 일시: ' + #temporals.format(socialLoginDto.linkedAt, 'yyyy.MM.dd. HH:mm:ss')}"/>
                 </th:block>
               </td>
               <td>
@@ -133,7 +131,7 @@
       </div>
       <div>
         <nav>
-          <ul class="pagination justify-content-center">
+          <ul class="admin-pagination pagination pagination-sm justify-content-center mt-2">
             <li class="page-item" th:classappend="${pagingHandler.prevBtnActive eq false ? 'disabled' : '' }">
               <button class="page-link" name="pageIdx" th:value="${pagingHandler.pageIdx - 1}" type="submit">←</button>
             </li>
