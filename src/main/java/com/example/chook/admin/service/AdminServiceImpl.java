@@ -25,14 +25,18 @@ public class AdminServiceImpl implements AdminService {
 
   private final AdminMemberRepository adminMemberRepository;
   private final MemberRepository memberRepository;
-  private final PointHistoryRepository pointHistoryRepository;
   private final MemberSuspensionRepository memberSuspensionRepository;
 
 
   @Override
   public Page<JobSeekerTableDTO> getPage(int pageIdx, int pageSize, JobSeekerSearchCondition condition) {
     Pageable pageable = PageRequest.of(pageIdx - 1, pageSize);
-    return adminMemberRepository.getPage(pageable, condition);
+    return adminMemberRepository.getPage(pageable, condition).map(
+      dto -> {
+        dto.setIsSuspended(memberSuspensionRepository.existsById(dto.getId()));
+        return dto;
+      }
+    );
   }
 
   @Transactional
