@@ -4,6 +4,7 @@ import com.example.chook.admin.dto.JobSeekerTableDTO;
 import com.example.chook.admin.entity.enums.JobSeekerDateRangeCriteria;
 import com.example.chook.admin.entity.enums.JobSeekerKeywordType;
 import com.example.chook.admin.record.JobSeekerSearchCondition;
+import com.example.chook.member.entity.enums.MemberRole;
 import com.example.chook.member.entity.enums.Provider;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Projections;
@@ -17,6 +18,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -75,10 +77,16 @@ public class AdminMemberRepositoryImpl implements AdminMemberRepository {
     BooleanBuilder whereCondition = new BooleanBuilder();
 
     whereCondition
+      .and(member.role.eq(MemberRole.JOB_SEEKER))
       .and(containsAnyKeywordWithCriteria(condition.keywordList(), condition.keywordType()))
       .and(eq(member.status, condition.status()))
       .and(eq(jobSeekerProfile.gender, condition.gender()))
-      .and(checkDataRangeCriteria(condition.dateRangeCriteria(), condition.startDateTime(), condition.endDateTime()))
+      .and(checkDataRangeCriteria(condition.dateRangeCriteria(),
+                                  condition.startDateTime(),
+                                  condition.endDateTime(),
+                                  condition.startDate(),
+                                  condition.endDate()
+      ))
       .and(containsProvider(condition.provider()));
 
     List<JobSeekerTableDTO> content = resultQuery
@@ -105,7 +113,9 @@ public class AdminMemberRepositoryImpl implements AdminMemberRepository {
 
   private BooleanBuilder checkDataRangeCriteria(JobSeekerDateRangeCriteria criteria,
                                                 LocalDateTime startDateTime,
-                                                LocalDateTime endDateTime) {
+                                                LocalDateTime endDateTime,
+                                                LocalDate startDate,
+                                                LocalDate endDate) {
 
     if (criteria == null) return null;
 
@@ -125,9 +135,10 @@ public class AdminMemberRepositoryImpl implements AdminMemberRepository {
         result.and(loe(member.lastLoginAt, endDateTime));
       }
       case BIRTH_DATE -> {
-        result.and(goe(jobSeekerProfile.birthDate, startDateTime.toLocalDate()));
-        result.and(lt(jobSeekerProfile.birthDate, endDateTime.toLocalDate().plusDays(1)));
+        result.and(goe(jobSeekerProfile.birthDate, startDate));
+        result.and(lt(jobSeekerProfile.birthDate, endDate));
       }
+      // 이 경우에 속하지 않는 경우 날짜 기준 필터를 사용하지 않음
     }
 
     return result;

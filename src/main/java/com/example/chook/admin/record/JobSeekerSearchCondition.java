@@ -7,6 +7,7 @@ import com.example.chook.member.entity.enums.Gender;
 import com.example.chook.member.entity.enums.MemberStatus;
 import com.example.chook.member.entity.enums.Provider;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -23,6 +24,8 @@ public record JobSeekerSearchCondition(
   JobSeekerDateRangeCriteria dateRangeCriteria,
   LocalDateTime startDateTime,
   LocalDateTime endDateTime,
+  LocalDate startDate,
+  LocalDate endDate,
 
   Provider provider
 
@@ -35,9 +38,11 @@ public record JobSeekerSearchCondition(
       splitByRegex(form.keywords(), "[\\s,&]+"),
       convertStringToEnum(form.status(), MemberStatus.class, null),
       convertStringToEnum(form.gender(), Gender.class, null),
-      convertStringToEnum(form.JobSeekerDateRangeCriteria(), JobSeekerDateRangeCriteria.class, JobSeekerDateRangeCriteria.LAST_LOGIN_AT),
+      convertStringToEnum(form.dateRangeCriteria(), JobSeekerDateRangeCriteria.class, JobSeekerDateRangeCriteria.LAST_LOGIN_AT),
       form.startDateTime(),
       form.endDateTime(),
+      form.startDate(),
+      form.endDate(),
       convertStringToEnum(form.provider(), Provider.class, null)
     );
   }
