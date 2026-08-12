@@ -61,6 +61,27 @@
     font-display: swap;
 }
 
+@font-face {
+    font-family: 'Gunhamimalmunteuyeot';
+    src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/2607131613@gfcgunhamitalks/gfcgunhamitalks/GFCGunhamiTalks.woff2') format('woff2');
+    font-weight: 400;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'KblJumpExtended';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2601-5@1.0/KBLJump_EB_ExtendedTTF.woff2') format('woff2');
+    font-weight: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Cafe24ProSlim';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2511-1@1.0/Cafe24PROSlim-Regular.woff2') format('woff2');
+    font-weight: 400;
+    font-display: swap;
+}
+
 * {
     font-family: 'Pretendard';
     font-weight: 600;
@@ -77,8 +98,8 @@ ul * {
 /* ------------------ HEADER ------------------*/
 
 .logo {
+    font-family: 'Gunhamimalmunteuyeot';
     color: #FEFEFE;
-    font-weight: 900;
     font-size: 45px;
     margin-right: 50px;
     /*-webkit-text-stroke: 1px #2C2C2C;*/
