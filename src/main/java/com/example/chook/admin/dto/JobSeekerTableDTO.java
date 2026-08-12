@@ -31,7 +31,7 @@ public class JobSeekerTableDTO {
   LocalDateTime lastLoginAt;
   LocalDateTime deletedAt;
   Long point;
-  List<Provider> providers;
+  List<SocialLoginDTO> socialLoginDtoList = new ArrayList<>();
 
   Gender gender;
   LocalDate birthDate;

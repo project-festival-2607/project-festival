@@ -60,7 +60,7 @@
             <input type="date" class="form-control" name="endDate" id="endDate" th:value="${form.endDate}">
             <input type="hidden" id="dateRangeCriteria" name="dateRangeCriteria" th:value="${form.dateRangeCriteria}"/>
           </div>
-          <div class="btn-group btn-group-xs float-end" role="group" id="dateRangeCriteriaAutofill">
+          <div class="btn-group btn-group-xs float-end mt-1" role="group" id="dateRangeCriteriaAutofill">
             <button type="button" class="btn btn-outline-secondary date-range-criteria-autofill" data-value="1h">1시간</button>
             <button type="button" class="btn btn-outline-secondary date-range-criteria-autofill" data-value="6h">6시간</button>
             <button type="button" class="btn btn-outline-secondary date-range-criteria-autofill" data-value="12h">12시간</button>
@@ -110,7 +110,15 @@
               <td th:text="${#temporals.format(jobSeeker.lastLoginAt, 'yyyy.MM.dd. HH:mm')}"></td>
               <td th:text="${#temporals.format(jobSeeker.deletedAt, 'yyyy.MM.dd. HH:mm')}"></td>
               <td th:text="${jobSeeker.point}"></td>
-              <td></td>
+              <td>
+                <th:block th:each="socialLoginDto: ${jobSeeker.socialLoginDtoList}">
+                  <div class="btn-group">
+                    <img th:src="@{'/images/admin/member/provider_'+${#strings.toLowerCase(socialLoginDto.provider.name())}+'.svg'}"
+                         class="provider-icon"
+                         th:alt-title="${socialLoginDto.provider.name() + ' / 연결 일시: ' + #temporals.format(socialLoginDto.linkedAt, 'yyyy.MM.dd. HH:mm:ss')}"/>
+                  </div>
+                </th:block>
+              </td>
               <td>
                 <span th:if="${jobSeeker.gender.name() == 'MALE'}">남성</span>
                 <span th:if="${jobSeeker.gender.name() == 'FEMALE'}">여성</span>
@@ -118,7 +126,7 @@
               <td th:text="${#temporals.format(jobSeeker.birthDate, 'yyyy.MM.dd.')}"></td>
               <td th:text="${jobSeeker.streetAddress}"></td>
               <td th:text="${jobSeeker.detailAddress}"></td>
-              <td><button type="button" class="manage-btn">🛠️</button></td>
+              <td><button type="button" class="btn btn-reset">🛠️</button></td>
             </tr>
           </tbody>
         </table>

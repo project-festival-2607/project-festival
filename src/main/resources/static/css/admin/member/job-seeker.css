@@ -50,9 +50,24 @@ label.search-form-label {
   background-color: var(--bs-body-bg);
 }
 
-.manage-btn {
-  background-color: transparent;
+.btn-reset {
+  background: transparent;
   border: none;
+  padding: 0;
+  outline: none;
+  box-shadow: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.provider-icon {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.dropdown-no-caret::after {
+  display: none;
 }
 
 .btn-group-xs>.btn, .btn-xs {

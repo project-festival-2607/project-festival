@@ -24,4 +24,7 @@ public interface SocialLoginRepository extends JpaRepository<SocialLogin,Long> {
 
     // 회원 탈퇴 시 연동된 소셜 계정 전체 삭제
     void deleteByMemberId(Long memberId);
+
+    // 회원 ID 리스트가 주어졌을 때 모든 SocialLogin 조회 (Group은 포함하지 않음)
+    List<SocialLogin> findAllByMember_IdIn(List<Long> memberIdList);
 }

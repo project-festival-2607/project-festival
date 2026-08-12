@@ -1,13 +1,16 @@
 package com.example.chook.admin.service;
 
 import com.example.chook.admin.dto.JobSeekerTableDTO;
+import com.example.chook.admin.mapper.AdminMapper;
 import com.example.chook.admin.record.JobSeekerSearchCondition;
 import com.example.chook.admin.repository.AdminMemberRepository;
 import com.example.chook.member.entity.Member;
 import com.example.chook.member.entity.MemberSuspension;
+import com.example.chook.member.entity.SocialLogin;
 import com.example.chook.member.entity.enums.MemberStatus;
 import com.example.chook.member.repository.MemberRepository;
 import com.example.chook.member.repository.MemberSuspensionRepository;
+import com.example.chook.member.repository.SocialLoginRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,20 +20,48 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 @RequiredArgsConstructor
 @Service
 @Slf4j
 public class AdminServiceImpl implements AdminService {
 
   private final AdminMemberRepository adminMemberRepository;
+  private final SocialLoginRepository socialLoginRepository;
   private final MemberRepository memberRepository;
   private final MemberSuspensionRepository memberSuspensionRepository;
+  private final AdminMapper adminMapper;
 
 
   @Override
   public Page<JobSeekerTableDTO> getPage(int pageIdx, int pageSize, JobSeekerSearchCondition condition) {
     Pageable pageable = PageRequest.of(pageIdx - 1, pageSize);
-    return adminMemberRepository.getPage(pageable, condition);
+    Page<JobSeekerTableDTO> result = adminMemberRepository.getPage(pageable, condition);
+    List<Long> memberIdList = result.stream().map(JobSeekerTableDTO::getId).toList();
+    List<SocialLogin> socialLoginList = socialLoginRepository.findAllByMember_IdIn(memberIdList);
+
+    log.info("socialLoginList={}", socialLoginList);
+
+    Map<Long, List<SocialLogin>> socialLoginListGroupedByMemberId =
+      socialLoginList.stream().collect(
+        Collectors.groupingBy(SocialLogin -> SocialLogin.getMember().getId()));
+
+    log.info("socialLoginListGroupedByMemberId: {}", socialLoginListGroupedByMemberId);
+
+    result.forEach(dto -> {
+      dto.setSocialLoginDtoList(
+        socialLoginListGroupedByMemberId
+          .getOrDefault(dto.getId(), List.of())
+          .stream()
+          .map(adminMapper::toDto)
+          .toList()
+      );
+    });
+
+    return result;
   }
 
   @Transactional
