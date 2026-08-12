@@ -153,7 +153,6 @@ public class MemberServiceImpl implements MemberService {
 
     @Transactional
     @Override
-// 구인자 프로필 수정
     public LoginResponseDTO updateEmployerProfile(Long memberId, EmployerProfileUpdateRequestDTO requestDTO) {
 
         Member member = memberRepository.findById(memberId)
@@ -162,8 +161,20 @@ public class MemberServiceImpl implements MemberService {
         EmployerProfile profile = employerProfileRepository.findById(memberId)
                 .orElseThrow(() -> new IllegalArgumentException("프로필을 찾을 수 없습니다."));
 
-        member.setEmail(requestDTO.getEmail());
+        BusinessRegistration registration = businessRegistrationRepository.findById(memberId)
+                .orElseThrow(() -> new IllegalArgumentException("사업자등록 정보를 찾을 수 없습니다."));
 
+        // 제출된 사업자번호가 기존과 다르면 = 변경 시도 → 재인증 필수
+        if (!registration.getBusinessNumber().equals(requestDTO.getBusinessNumber())) {
+            if (!businessNumberTokenProvider.verify(requestDTO.getBusinessNumber(), requestDTO.getVerificationToken())) {
+                throw new IllegalArgumentException("사업자번호 인증이 유효하지 않습니다.");
+            }
+            registration.setBusinessNumber(requestDTO.getBusinessNumber());
+            registration.setVerifiedAt(LocalDateTime.now());
+            businessRegistrationRepository.save(registration);
+        }
+
+        member.setEmail(requestDTO.getEmail());
         profile.setCompanyName(requestDTO.getCompanyName());
         profile.setCeoName(requestDTO.getCeoName());
         profile.setStreetAddress(requestDTO.getStreetAddress());
