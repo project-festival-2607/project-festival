@@ -1,0 +1,29 @@
+.result-table-wrapper {
+  overflow: scroll;
+  height: 500px;
+  font-size: 90%;
+}
+
+.result-table-wrapper table {
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.result-table-wrapper table thead {
+  position: sticky;
+  top: 0;
+}
+
+.result-table-wrapper table thead th {
+  border-bottom: calc(var(--bs-border-width) * 2) solid currentcolor;
+}
+
+.result-table-wrapper table tr {
+  white-space: nowrap;
+}
+
+.result-table-wrapper table td {
+  font-weight: 400;
+  white-space: nowrap;
+  letter-spacing: -0.03em;
+}
