@@ -1,4 +1,4 @@
-package com.example.chook.mypage;
+package com.example.chook.mypage.dto;
 
 import com.example.chook.member.entity.enums.Gender;
 import com.example.chook.member.entity.enums.MemberRole;

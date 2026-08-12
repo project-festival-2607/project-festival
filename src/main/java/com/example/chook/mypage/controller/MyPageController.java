@@ -1,4 +1,4 @@
-package com.example.chook.mypage;
+package com.example.chook.mypage.controller;
 
 import com.example.chook.member.entity.enums.MemberRole;
 import com.example.chook.member.dto.EmployerProfileUpdateRequestDTO;
@@ -6,6 +6,8 @@ import com.example.chook.member.dto.JobSeekerProfileUpdateRequestDTO;
 import com.example.chook.member.dto.LoginResponseDTO;
 import com.example.chook.member.security.CustomUserDetails;
 import com.example.chook.member.service.MemberService;
+import com.example.chook.mypage.dto.MyPageDTO;
+import com.example.chook.mypage.service.MyPageService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
