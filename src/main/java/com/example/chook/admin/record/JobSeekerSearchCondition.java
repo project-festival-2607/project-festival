@@ -38,7 +38,7 @@ public record JobSeekerSearchCondition(
       splitByRegex(form.keywords(), "[\\s,&]+"),
       convertStringToEnum(form.status(), MemberStatus.class, null),
       convertStringToEnum(form.gender(), Gender.class, null),
-      convertStringToEnum(form.dateRangeCriteria(), JobSeekerDateRangeCriteria.class, JobSeekerDateRangeCriteria.LAST_LOGIN_AT),
+      convertStringToEnum(form.dateRangeCriteria(), JobSeekerDateRangeCriteria.class, null),
       form.startDateTime(),
       form.endDateTime(),
       form.startDate(),

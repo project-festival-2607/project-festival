@@ -35,12 +35,13 @@ function updateDateRangeCriteriaAndToggleInputType() {
   const selected = document.querySelector(
     `.date-range-criteria-li[data-value="${dateRangeCriteria.value}"]`
   );
-  currentDateRangeCriteria.textContent = selected?.textContent ?? '전체';
+  currentDateRangeCriteria.textContent = selected?.textContent ?? '선택';
   const isBirthDate = dateRangeCriteria.value === 'BIRTH_DATE';
-  startDateTime.classList.toggle('d-none', isBirthDate);
-  endDateTime.classList.toggle('d-none', isBirthDate);
-  startDate.classList.toggle('d-none', !isBirthDate);
-  endDate.classList.toggle('d-none', !isBirthDate);
+  const isNotSelected = dateRangeCriteria.value === '';
+  startDateTime.classList.toggle('d-none', isBirthDate || isNotSelected);
+  endDateTime.classList.toggle('d-none', isBirthDate || isNotSelected);
+  startDate.classList.toggle('d-none', !isBirthDate || isNotSelected);
+  endDate.classList.toggle('d-none', !isBirthDate || isNotSelected);
 }
 
 document.getElementById('dateRangeCriteriaDropdownList').addEventListener('click', (e) => {
