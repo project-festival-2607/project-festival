@@ -5,7 +5,6 @@ import com.example.chook.admin.entity.enums.JobSeekerDateRangeCriteria;
 import com.example.chook.admin.entity.enums.JobSeekerKeywordType;
 import com.example.chook.admin.record.JobSeekerSearchCondition;
 import com.example.chook.member.entity.enums.MemberRole;
-import com.example.chook.member.entity.enums.MemberStatus;
 import com.example.chook.member.entity.enums.Provider;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Projections;
@@ -37,7 +36,6 @@ public class AdminMemberRepositoryImpl implements AdminMemberRepository {
   public AdminMemberRepositoryImpl(EntityManager em) {
     this.jpaQueryFactory = new JPAQueryFactory(em);
   }
-
 
   @Override
   public Page<JobSeekerTableDTO> getPage(Pageable pageable, JobSeekerSearchCondition condition) {

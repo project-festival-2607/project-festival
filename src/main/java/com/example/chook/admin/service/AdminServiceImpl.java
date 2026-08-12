@@ -86,7 +86,7 @@ public class AdminServiceImpl implements AdminService {
 
     // 기존 데이터 검증
     MemberSuspension suspension = memberSuspensionRepository.findById(memberId).orElse(null);
-    String currentSuspendedReason = (suspension == null) ? null : suspension.getReason() ;
+    String currentSuspendedReason = (suspension == null) ? null : suspension.getReason();
 
     // 입력 검증 (현재 정지되어 있으며 사유가 기존과 같으면 update하지 않음)
     if (suspension != null && reason.equals(currentSuspendedReason)) return false;
