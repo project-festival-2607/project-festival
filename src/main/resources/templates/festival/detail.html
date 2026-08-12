@@ -2,8 +2,7 @@
 <html lang="ko"
       layout:decorate="~{layout/layout}"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+      xmlns:th="http://www.thymeleaf.org">
 <head>
     <th:block layout:fragment="css">
         <link rel="stylesheet" th:href="@{/css/festival/festivalDetail.css}">
@@ -12,95 +11,101 @@
 <div layout:fragment="content">
     <div class="container">
 <!--                모든 inner는 class="container" 로 맞춤        -->
+
+        <div class="goToList">
+            <a href="/festival/list">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="#dc3545" class="bi bi-arrow-left-circle-fill" viewBox="0 0 16 16">
+                    <path d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0m3.5 7.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5z"/>
+                </svg>
+            </a>
+        </div>
+
 <!--        이 안에서 작업        -->
         <div class="detailContainer">
-            <div class="detail-img"
-                 th:style="'background-image: url(' + ${fes.firstImage} + ')'"
-            >
-            </div>
-            <div class="detail-text">
-                <div class="detail-h1">[[${fes.title}]]</div>
-                <div class="detail-sub detail-agenda">
-                    <div>일정</div>
-                    <span>[[${fes.startDate}]] ~ [[${fes.endDate}]]</span>
-                </div>
-                <div class="detail-sub">
-                    <div>시간</div>
-                    <span>[[${fes.playTime}]]</span>
-                </div>
-                <div class="detail-sub">
-                    <div>장소</div>
-                    <span>[[${fes.eventPlace}]]</span>
-                </div>
-                <div class="detail-sub">
-                    <div>가격</div>
-                    <span>[[${fes.useTime}]]</span>
-                </div>
-                <div class="detail-sub">
-                    <div>주최</div>
-                    <span>[[${fes.telName}]]</span>
-                </div>
-                <div class="detail-sub">
-                    <div>문의처</div>
-                    <span>[[${fes.tel}]]</span>
+            <div class="detail-img-box">
+                <div class="detail-img"
+                     th:style="'background-image: url(' + ${fes.firstImage} + ')'"
+                >
                 </div>
                 <div class="detail-sub detail-home" th:if="${fes.officialHomepage != null and !#strings.isEmpty(fes.officialHomepage)}">
                     <a th:href="${fes.officialHomepage}"
                        target="_blank"
                        class="homepage"
-                       rel="noopener noreferrer"> 공식 홈페이지 ↗ </a>
-                </div>
-                <div class="deleteBtn">
-                    <button sec:authorize="isAuthenticated()" th:if="${fes.member != null && memberId == fes.member}"><a th:href="@{/festival/remove(id=${fes.contentId})}">삭제</a></button>
+                       rel="noopener noreferrer"> 홈페이지바로가기 ↗ </a>
                 </div>
             </div>
-        </div>
 
-        <div class="detail-sub-container">
-            <div class="sub-item">
-                <div class="detail-h2">
-                    행사개요
+            <div class="detail-text">
+
+                <div th:switch="${fes.status}">
+                    <div th:case="'진행예정'" class="fes-pro upComing">진행예정</div>
+                    <div th:case="'진행중'" class="fes-pro onGoing">진행중</div>
+                    <div th:case="'종료된행사'" class="fes-pro past">종료</div>
                 </div>
-                <div class="detail-h3">
-                    [[${fes.overview}]]
+
+                <div class="detail-h1">[[${fes.title}]]</div>
+                <div class="detail-agenda">[[${fes.startDate}]] ~ [[${fes.endDate}]]</div>
+                <div class="basic-info">
+                    <div>
+                        <div>진행시간</div>
+                        <span>[[${fes.playTime}]]</span>
+                    </div>
+                    <div>
+                        <div>장소</div>
+                        <span>[[${fes.eventPlace}]]</span>
+                    </div>
                 </div>
-            </div>
-            <div class="sub-item">
-                <div class="detail-h2">
-                    참여대상
+
+                <div class="detail-info">
+                    <div class="detail-sub">
+                        <div>가격</div>
+                        <span>[[${fes.useTime}]]</span>
+                    </div>
+                    <div class="detail-sub">
+                        <div>주최</div>
+                        <span>[[${fes.telName}]]</span>
+                    </div>
+                    <div class="detail-sub">
+                        <div>문의처</div>
+                        <span>[[${fes.tel}]]</span>
+                    </div>
+                    <div class="detail-sub">
+                        <div>행사개요</div>
+                        <span>[[${fes.overview}]]</span>
+                    </div>
+                    <div class="detail-sub">
+                        <div>참여대상</div>
+                        <span th:text="${fes.ageLimit ?: '전연령'}"></span>
+                    </div>
+                    <div class="detail-sub">
+                        <div>프로그램</div>
+                        <span>[[${fes.program}]]</span>
+                    </div>
+                    <div class="detail-sub">
+                        <div>상세주소</div>
+                        <span>[[${fes.address}]]</span>
+                    </div>
                 </div>
-                <div class="detail-h3" th:text="${fes.ageLimit ?: '전연령'}"></div>
-            </div>
-            <div class="sub-item">
-                <div class="detail-h2">
-                    프로그램
-                </div>
-                <div class="detail-h3">[[${fes.program}]]</div>
-            </div>
-            <div class="sub-item">
-                <div class="detail-h2">
-                    상세지도
-                </div>
-                <div class="detail-h3">[[${fes.address}]]</div>
+
                 <div class="mapBox"
-                    th:data-map-y="${fes.mapY}"
-                    th:data-map-x="${fes.mapX}"
+                     th:data-map-y="${fes.mapY}"
+                     th:data-map-x="${fes.mapX}"
                 >
-<!--                    지도 API 연결 + 정적지도              -->
+                    <!--                    지도 API 연결 + 정적지도              -->
 
                 </div>
+
                 <div class="goToMap">
                     <a href="/map/map">
                         지도보러가기 ↗
                     </a>
                 </div>
+
             </div>
         </div>
 
-        <div class="goToList">
-            <a href="/festival/list">
-                목록으로
-            </a>
+        <div class="deleteBtn">
+            <button th:if="${session.loginMember != null && fes.member != null && session.loginMember.getId() == fes.member}"><a th:href="@{/festival/remove(id=${fes.contentId})}">삭제</a></button>
         </div>
     </div>
 
