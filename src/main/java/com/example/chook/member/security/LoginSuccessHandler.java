@@ -1,7 +1,6 @@
 package com.example.chook.member.security;
 
 import com.example.chook.member.dto.LoginResponseDTO;
-import com.example.chook.member.entity.Member;
 import com.example.chook.member.entity.enums.MemberStatus;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

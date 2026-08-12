@@ -1,8 +1,6 @@
 package com.example.chook.member.controller;
 
 import com.example.chook.member.dto.*;
-import com.example.chook.member.exception.MemberDormantException;
-import com.example.chook.member.exception.MemberSuspendedException;
 import com.example.chook.member.security.CustomUserDetails;
 import com.example.chook.member.security.CustomUserDetailsService;
 import com.example.chook.member.service.BusinessNumberVerifyService;
