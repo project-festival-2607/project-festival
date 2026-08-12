@@ -53,6 +53,19 @@ public class AdminController {
       .build();
   }
 
+  @PostMapping("/member/job-seeker/add-phone-with-verification")
+  @ResponseBody
+  public AdminActionResponse addPhoneWithVerification(@RequestParam Long memberId,
+                                                      @RequestParam String phone) {
+    boolean isChanged = adminService.addPhoneWithVerification(memberId, phone);
+    return AdminActionResponse.builder()
+      .result(isChanged)
+      .message(isChanged
+        ? String.format("id가 %d인 사용자의 전화번호가 %s로 변경되었습니다.", memberId, phone)
+        : "해당 사용자는 이미 전화번호가 인증된 상태입니다.")
+      .build();
+  }
+
   @PostMapping("/member/job-seeker/suspend-member")
   @ResponseBody
   public AdminActionResponse suspendMember(@RequestParam Long memberId,

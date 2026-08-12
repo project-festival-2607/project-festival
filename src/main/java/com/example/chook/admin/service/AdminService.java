@@ -13,4 +13,6 @@ public interface AdminService {
   boolean suspendMember(Long memberId, String reason);
 
   boolean unsuspendMember(Long memberId);
+
+  boolean addPhoneWithVerification(Long memberId, String phone);
 }

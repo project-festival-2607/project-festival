@@ -70,6 +70,7 @@ public class AdminServiceImpl implements AdminService {
     return true;
   }
 
+  @Transactional
   @Override
   public boolean unsuspendMember(Long memberId) {
     if (memberRepository.existsById(memberId))
@@ -77,6 +78,18 @@ public class AdminServiceImpl implements AdminService {
     boolean isSuspended = memberSuspensionRepository.existsById(memberId);
     if (!isSuspended) return false;
     memberSuspensionRepository.deleteById(memberId);
+    return true;
+  }
+
+  @Transactional
+  @Override
+  public boolean addPhoneWithVerification(Long memberId, String phone) {
+    Member member = memberRepository.findById(memberId).orElseThrow(() ->
+      new EntityNotFoundException("Member with id: " + memberId + " not found")
+    );
+    if (member.isPhoneVerified()) return false;
+    member.setPhone(phone);
+    member.setPhoneVerified(true);
     return true;
   }
 
