@@ -90,7 +90,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 <!-- 첨부파일 --> 
                 <div class="form-group portfolio-file" style="display: none;">
                     <label>첨부파일</label> 
-                    <input type="file" name="portfolioFile"> 
+                    <input type="file" name="portfolios[${portfolioIndex}].file"> 
                 </div>
                 
                 <!-- 삭제 버튼 --> 

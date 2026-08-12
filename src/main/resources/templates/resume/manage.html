@@ -29,7 +29,12 @@
                 <div class="profile-area">
                     <!-- 프로필 사진이 있는 경우 -->
                     <div th:if="${resume.profileFile != null}" class="profile-image">
-                        <img th:src="@{/file/view/{uuid}(uuid=${resume.profileFile.uuid})}" alt="프로필 사진">
+                        <img th:src="@{/test/file/{uuid}(uuid=${resume.profileFile.uuid})}" alt="프로필 사진">
+                    </div>
+
+                    <!-- 프로필 사진이 없는 경우 -->
+                    <div th:unless="${resume.profileFile != null}">
+                        프로필 사진이 없습니다.
                     </div>
 
                     <div class="profile-info">
@@ -119,10 +124,11 @@
                     <!-- FILE인 경우 -->
                     <div th:if="${portfolio.type.name() == 'FILE'}" class="info-row">
                         <span class="label">첨부파일</span>
-                        <p th:if="${portfolio.resumeFile != null}"
+                        <a th:if="${portfolio.resumeFile != null}"
+                           th:href="@{/test/file/{uuid}/download(uuid=${portfolio.resumeFile.uuid})}"
                            th:text="${portfolio.resumeFile.originalName}">
                             첨부파일
-                        </p>
+                        </a>
 
                         <p th:if="${portfolio.resumeFile == null}">
                             첨부파일이 없습니다.

@@ -67,7 +67,7 @@
                         <div class="form-group">
                             <label> 담당 업무 </label>
 
-                            <textarea th:name="'careers[' + ${stat.index} + '].duties'" rows="5" th:text="${career.duties}"></textarea></textarea>
+                            <textarea th:name="'careers[' + ${stat.index} + '].duties'" rows="5" th:text="${career.duties}"></textarea>
                         </div>
 
                         <button type="button" class="remove-career">
@@ -131,7 +131,7 @@
                                 <span th:text="${portfolio.resumeFile.originalName}"></span>
                             </div>
 
-                            <input type="file" name="portfolioFile">
+                            <input type="file" th:name="'portfolios[' + ${stat.index} + '].file'">
                         </div>
 
                         <button type="button" class="remove-portfolio">

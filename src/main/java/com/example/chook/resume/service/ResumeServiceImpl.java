@@ -94,7 +94,6 @@ public class ResumeServiceImpl implements ResumeService{
                 // 포트폴리오 저장
                 resumePortfolioRepository.save(resumePortfolio);
 
-
                 // 포트폴리오 첨부파일 저장
                 if (portfolioDTO.getResumeFile() != null) {
 
@@ -162,13 +161,22 @@ public class ResumeServiceImpl implements ResumeService{
             ResumePortfolioDTO portfolioDTO =
                     resumePortfolioEntityToDto(portfolio);
 
+            log.info("포트폴리오 ID = {}", portfolio.getId());
+            log.info("포트폴리오 제목 = {}", portfolio.getTitle());
+
             // 포트폴리오 파일 조회
             ResumeFile resumeFile =
                     resumeFileRepository.findByResumePortfolio_Id(portfolio.getId())
                             .orElse(null);
+
+            log.info("조회된 ResumeFile = {}", resumeFile);
+
             if(resumeFile != null){
                 ResumeFileDTO resumeFileDTO =
                         resumeFileEntityToDto(resumeFile);
+
+                log.info("파일 UUID = {}", resumeFileDTO.getUuid());
+                log.info("파일 이름 = {}", resumeFileDTO.getOriginalName());
 
                 // 포트폴리오 DTO에 파일 추가
                 portfolioDTO.setResumeFile(resumeFileDTO);
@@ -321,6 +329,20 @@ public class ResumeServiceImpl implements ResumeService{
                     ResumePortfolio newPortfolio = resumePortfolioDtoToEntity(portfolioDTO, resume);
 
                     resumePortfolioRepository.save(newPortfolio);
+
+                    // 새 포트폴리오의 첨부파일 저장
+                    if (portfolioDTO.getResumeFile() != null){
+
+                        UploadedFile uploadedFile = uploadedFileRepository.findById(
+                                        portfolioDTO.getResumeFile().getUuid()
+                                ).orElseThrow();
+
+                        ResumeFile newResumeFile = ResumeFile.builder()
+                                        .resumePortfolio(newPortfolio)
+                                        .uploadedFile(uploadedFile)
+                                        .build();
+                        resumeFileRepository.save(newResumeFile);
+                    }
                 }
             }
         }
@@ -340,6 +362,8 @@ public class ResumeServiceImpl implements ResumeService{
     @Transactional
     @Override
     public void delete(Long resumeId){
+
+        log.info("삭제할 resumeId = {}", resumeId);
 
         // 기존 이력서 조회
         Resume resume =

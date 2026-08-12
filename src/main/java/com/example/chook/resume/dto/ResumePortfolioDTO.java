@@ -2,6 +2,7 @@ package com.example.chook.resume.dto;
 
 import com.example.chook.resume.entity.enums.ResumePortfolioType;
 import lombok.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 
@@ -30,5 +31,8 @@ public class ResumePortfolioDTO {
 
     // url
     private String url;
+
+    // 실제 업로드할 파일
+    private MultipartFile file;
 
 }

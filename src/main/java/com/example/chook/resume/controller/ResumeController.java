@@ -65,22 +65,18 @@ public class ResumeController {
             @ModelAttribute ResumeRequestDTO resumeRequestDTO,
             @RequestParam(name = "profileImage", required = false)
             MultipartFile profileImage,
-            @RequestParam(name = "portfolioFile", required = false)
-            MultipartFile portfolioFile,
             Authentication authentication
-    ){
+    ) {
+
         Member member = memberRepository.findByUsernameAndDeletedAtIsNull(
-                authentication.getName()
-        ).orElseThrow();
+                        authentication.getName()
+                )
+                .orElseThrow();
 
         // 프로필 사진이 있으면 파일 업로드
         if (profileImage != null && !profileImage.isEmpty()) {
 
-            UploadedFile uploadedFile =
-                    fileService.upload(
-                            profileImage,
-                            "resume/profile"
-                    );
+            UploadedFile uploadedFile = fileService.upload(profileImage, "resume/profile");
 
             // 업로드된 파일 UUID를 DTO에 저장
             resumeRequestDTO.setProfileFileUuid(
@@ -89,26 +85,32 @@ public class ResumeController {
         }
 
         // 포트폴리오 파일 업로드
-        if (portfolioFile != null && !portfolioFile.isEmpty()){
+        if (resumeRequestDTO.getPortfolios() != null) {
 
-            UploadedFile uploadedFile = fileService.upload(
-                            portfolioFile,
-                            "resume/portfolio"
-                    );
-            // 포트폴리오가 존재하는 경우
-            if (resumeRequestDTO.getPortfolios() != null && !resumeRequestDTO.getPortfolios().isEmpty()){
-                ResumePortfolioDTO portfolioDTO =
-                        resumeRequestDTO.getPortfolios().get(0);
+            for (ResumePortfolioDTO portfolioDTO : resumeRequestDTO.getPortfolios()) {
 
-                ResumeFileDTO resumeFileDTO =
-                        ResumeFileDTO.builder()
-                                .uuid(uploadedFile.getUuid())
-                                .originalName(uploadedFile.getOriginalName())
-                                .build();
-                portfolioDTO.setResumeFile(resumeFileDTO);
+                MultipartFile portfolioFile = portfolioDTO.getFile();
+
+                if (portfolioFile != null && !portfolioFile.isEmpty()) {
+
+                    UploadedFile uploadedFile = fileService.upload(
+                                    portfolioFile,
+                                    "resume/portfolio"
+                            );
+
+                    ResumeFileDTO resumeFileDTO = ResumeFileDTO.builder()
+                                    .uuid(uploadedFile.getUuid())
+                                    .originalName(
+                                            uploadedFile.getOriginalName()
+                                    )
+                                    .build();
+
+                    portfolioDTO.setResumeFile(resumeFileDTO);
+
+                }
             }
-
         }
+        // 이력서 저장
         resumeService.register(resumeRequestDTO, member.getId());
 
         return "redirect:/resume/manage";
@@ -133,14 +135,46 @@ public class ResumeController {
     @PostMapping("/modify")
     public String modify(
             @ModelAttribute ResumeRequestDTO resumeRequestDTO,
-            @RequestParam Long resumeId
+            @RequestParam Long resumeId,
+            @RequestParam(name = "profileImage", required = false)
+            MultipartFile profileImage
     ){
-        resumeService.modify(
-                resumeRequestDTO,
-                resumeId
-        );
+        // 프로필 사진 수정
+        if (profileImage != null && !profileImage.isEmpty()){
+
+            UploadedFile uploadedFile = fileService.upload(profileImage, "resume/profile");
+
+            resumeRequestDTO.setProfileFileUuid(uploadedFile.getUuid().toString());
+        }
+
+        // 포트폴리오 첨부파일 수정
+        if (resumeRequestDTO.getPortfolios() != null){
+
+            for (ResumePortfolioDTO portfolioDTO : resumeRequestDTO.getPortfolios()){
+
+                MultipartFile portfolioFile = portfolioDTO.getFile();
+
+                if (portfolioFile != null && !portfolioFile.isEmpty()){
+
+                    UploadedFile uploadedFile = fileService.upload(
+                                    portfolioFile,
+                                    "resume/portfolio"
+                            );
+
+                    ResumeFileDTO resumeFileDTO = ResumeFileDTO.builder()
+                                    .uuid(uploadedFile.getUuid())
+                                    .originalName(
+                                            uploadedFile.getOriginalName()
+                                    )
+                                    .build();
+                    portfolioDTO.setResumeFile(resumeFileDTO);
+                }
+            }
+        }
+        resumeService.modify(resumeRequestDTO, resumeId);
+
         return "redirect:/resume/manage";
-    }
+    };
 
     // 이력서 삭제
     @PostMapping("/delete")
