@@ -3,8 +3,11 @@ package com.example.chook.mypage;
 import com.example.chook.member.dto.EmployerProfileUpdateRequestDTO;
 import com.example.chook.member.dto.JobSeekerProfileUpdateRequestDTO;
 import com.example.chook.member.dto.LoginResponseDTO;
+import com.example.chook.member.security.AuthenticationHelper;
 import com.example.chook.member.security.CustomUserDetails;
 import com.example.chook.member.service.MemberService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -23,6 +26,7 @@ public class MyPageController {
 
     private final MyPageService myPageService;
     private final MemberService memberService;
+    private final AuthenticationHelper authenticationHelper;
     private static final String PASSWORD_VERIFIED_SESSION_KEY = "passwordVerified";
 
     // 조회기능
@@ -97,6 +101,8 @@ public class MyPageController {
             @AuthenticationPrincipal CustomUserDetails userDetails,
             @ModelAttribute JobSeekerProfileUpdateRequestDTO requestDTO,
             HttpSession session,
+            HttpServletRequest request,
+            HttpServletResponse response,
             RedirectAttributes redirectAttributes
     ) {
         if (requiresPasswordCheck(userDetails, session)) {
@@ -104,7 +110,7 @@ public class MyPageController {
         }
         try {
             LoginResponseDTO responseDTO = memberService.updateJobSeekerProfile(userDetails.getId(), requestDTO);
-            session.setAttribute("loginMember", responseDTO);
+            authenticationHelper.authenticate(responseDTO.getUsername(), request, response);
             return "redirect:/mypage";
         } catch (IllegalArgumentException | IllegalStateException e) {
             redirectAttributes.addFlashAttribute("FailureMsg", e.getMessage());
@@ -150,6 +156,8 @@ public class MyPageController {
     public String deleteBusinessNumber(
             @AuthenticationPrincipal CustomUserDetails userDetails,
             HttpSession session,
+            HttpServletRequest request,
+            HttpServletResponse response,
             RedirectAttributes redirectAttributes
     ) {
         if (requiresPasswordCheck(userDetails, session)) {
@@ -158,7 +166,7 @@ public class MyPageController {
 
         try {
             LoginResponseDTO responseDTO = memberService.removeBusinessNumber(userDetails.getId());
-            session.setAttribute("loginMember", responseDTO);
+            authenticationHelper.authenticate(responseDTO.getUsername(), request, response);
         } catch (IllegalStateException e) {
             redirectAttributes.addFlashAttribute("FailureMsg", e.getMessage());
         }

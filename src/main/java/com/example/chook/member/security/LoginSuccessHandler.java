@@ -1,7 +1,5 @@
 package com.example.chook.member.security;
 
-import com.example.chook.member.dto.LoginResponseDTO;
-import com.example.chook.member.entity.Member;
 import com.example.chook.member.entity.enums.MemberStatus;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -36,13 +34,6 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
         }
 
         HttpSession session = request.getSession();
-        session.setAttribute("loginMember", LoginResponseDTO.builder()
-                .id(userDetails.getId())
-                .username(userDetails.getUsername())
-                .name(userDetails.getName())
-                .role(userDetails.getRole())
-                .build());
-
 
         // 로그인 전에 접근했던 페이지가 있다면 해당 페이지로 이동 (applypage 기능 추가)
         String redirectAfterLogin =
