@@ -38,7 +38,6 @@ public class JobSeekerTableDTO {
   String streetAddress;
   String detailAddress;
 
-  Boolean suspended;
   LocalDateTime suspendedAt;
   String suspendedReason;
 

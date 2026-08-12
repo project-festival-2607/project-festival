@@ -65,7 +65,6 @@ public class AdminMemberRepositoryImpl implements AdminMemberRepository {
         jobSeekerProfile.streetAddress,
         jobSeekerProfile.detailAddress,
 
-        eq(member.status, MemberStatus.SUSPENDED),
         memberSuspension.createdAt,
         memberSuspension.reason
 
