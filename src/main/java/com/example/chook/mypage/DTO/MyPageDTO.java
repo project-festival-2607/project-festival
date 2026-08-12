@@ -1,9 +1,7 @@
-package com.example.chook.mypage;
+package com.example.chook.mypage.DTO;
 
 import com.example.chook.member.entity.enums.MemberRole;
 import lombok.*;
-
-import java.time.LocalDateTime;
 
 @Getter
 @Setter

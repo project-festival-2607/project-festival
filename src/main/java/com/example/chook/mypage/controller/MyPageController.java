@@ -1,8 +1,9 @@
-package com.example.chook.mypage;
+package com.example.chook.mypage.controller;
 
-import lombok.AllArgsConstructor;
+import com.example.chook.member.entity.enums.MemberRole;
+import com.example.chook.mypage.DTO.MyPageDTO;
+import com.example.chook.mypage.service.MyPageService;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.ui.Model;
 import lombok.RequiredArgsConstructor;
@@ -32,8 +33,13 @@ public class MyPageController {
         String username = user.getUsername();
 
         // DB에서 회원 정보 조회
-        MyPageDTO myPageDTO =
-                myPageService.getMyPage(username);
+        MyPageDTO myPageDTO = myPageService.getMyPage(username);
+
+        // 구직자만 구직자 마이페이지 접근 가능
+        if (myPageDTO.getRole() != MemberRole.JOB_SEEKER) {
+            return "redirect:/";
+        }
+
         // HTML에 전달
         model.addAttribute("myPageDTO", myPageDTO);
 

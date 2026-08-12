@@ -1,6 +1,7 @@
-package com.example.chook.mypage;
+package com.example.chook.mypage.service;
 
 import com.example.chook.member.entity.Member;
+import com.example.chook.mypage.DTO.MyPageDTO;
 
 public interface MyPageService {
 
