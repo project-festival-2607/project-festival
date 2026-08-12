@@ -2,6 +2,7 @@ package com.example.chook.admin.controller;
 
 import com.example.chook.admin.dto.JobSeekerTableDTO;
 import com.example.chook.admin.form.JobSeekerSearchForm;
+import com.example.chook.admin.record.AdminActionResponse;
 import com.example.chook.admin.record.JobSeekerSearchCondition;
 import com.example.chook.admin.service.AdminService;
 import com.example.chook.common.handler.PagingHandler;
@@ -12,10 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/admin")
@@ -43,6 +41,43 @@ public class AdminController {
       new PagingHandler<>(page, form, PAGINATION_SIZE, pageIdx);
     model.addAttribute("pagingHandler", pagingHandler);
 
+  }
+
+  @PostMapping("/member/job-seeker/remove-phone-verification")
+  @ResponseBody
+  public AdminActionResponse removePhoneVerification(@RequestParam Long memberId) {
+    adminService.removePhoneVerification(memberId);
+    return AdminActionResponse.builder()
+      .result(true)
+      .message(String.format("id가 %d인 사용자의 전화번호 인증 삭제 및 정지[SUSPENDED] 상태로의 전환을 완료했습니다.", memberId))
+      .build();
+  }
+
+  @PostMapping("/member/job-seeker/suspend-member")
+  @ResponseBody
+  public AdminActionResponse suspendMember(@RequestParam Long memberId,
+                                           @RequestParam String reason) {
+    boolean isChanged = adminService.suspendMember(memberId, reason);
+    return AdminActionResponse.builder()
+      .result(isChanged)
+      .message(isChanged
+        ? String.format("id가 %d인 사용자를 %s 사유로 정지했습니다.", memberId, reason)
+        : "입력한 사유가 현재 정지 사유와 같습니다.")
+      .build()
+      ;
+
+  }
+
+  @PostMapping("/member/job-seeker/unsuspend-member")
+  public AdminActionResponse unsuspendMember(@RequestParam Long memberId) {
+    boolean isChanged = adminService.unsuspendMember(memberId);
+    return AdminActionResponse.builder()
+      .result(isChanged)
+      .message(isChanged
+        ? String.format("id가 %d인 사용자의 정지를 해제했습니다.", memberId)
+        : "해당 사용자는 정지되어 있지 않습니다.")
+      .build()
+      ;
   }
 
 }
