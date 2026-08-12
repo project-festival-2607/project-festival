@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<!-- 결제하기 버튼 근처에 이 버튼 추가 -->
+<button id="openRefundBtn" class="button2">환불하기</button>
+
+<!-- 환불 모달 (기존 상품선택 모달 옆에 새로 추가) -->
+<div id="refund-modal-backdrop" class="modal-backdrop">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 style="margin:0;">포인트 환불</h3>
+            <button class="close-btn" id="closeRefundModalBtn">&times;</button>
+        </div>
+
+        <div class="selected-summary" id="refundableSummary">불러오는 중...</div>
+
+        <input type="number" id="refundAmountInput" min="1" step="1"
+               style="width:100%; padding:12px; font-size:16px; border:2px solid #e5e8eb; border-radius:8px; margin-bottom:16px;"
+               placeholder="환불할 포인트 입력" />
+
+        <div id="refundErrorMsg" style="color:#f04452; margin-bottom:12px; display:none;"></div>
+
+        <div class="modal-footer">
+            <button id="confirmRefundBtn">환불 요청</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    const refundBackdrop = document.getElementById("refund-modal-backdrop");
+    let maxRefundable = 0;//최대 환불 가능 금액
+//환불 창을 열었을 때 서버에서 "이 회원이 현재 환불할 수 있는 최대 포인트"를 가져와서 화면에 보여주고, 입력창의 최대값까지 설정
+    document.getElementById("openRefundBtn").addEventListener("click", async () => {
+        refundBackdrop.style.display = "flex"; //창 열기
+        await loadRefundablePoint();//아래쪽에 async function loadRefundablePoint 실행
+    });
+
+    document.getElementById("closeRefundModalBtn").addEventListener("click", () => {
+        refundBackdrop.style.display = "none"; //창닫기
+    });
+
+    //일단 유지.
+    refundBackdrop.addEventListener("click", (event) => {
+        if (event.target === refundBackdrop) refundBackdrop.style.display = "none";
+        //배경 클릭시 환불 창 닫기...긴한데 배경 범위 설정이 시원찮아서 없어도 될듯.
+    });
+
+    // 환불 가능한 최대치를 서버에서 받아와서 화면/입력값 제한에 반영
+    // (※ 이건 사용자 편의를 위한 화면단 제한일 뿐, 진짜 검증은 서버(RefundService)가 함)
+    async function loadRefundablePoint() {
+        const summaryEl = document.getElementById("refundableSummary");
+        const inputEl = document.getElementById("refundAmountInput");
+
+        try {
+            const res = await fetch("/point/refundable");
+            //RefundController에 requestmapping-/point    getmapping-/refundable
+            const data = await res.json();
+
+            maxRefundable = data.refundablePoint;
+            summaryEl.innerHTML = "환불 가능한 포인트: <b>" + maxRefundable.toLocaleString() + "</b>P";
+
+            inputEl.max = maxRefundable;
+            inputEl.value = "";
+        } catch (e) {
+            summaryEl.textContent = "환불 가능 포인트를 불러오지 못했습니다.";
+        }
+    }
+
+    //환불 신청
+    document.getElementById("confirmRefundBtn").addEventListener("click", async () => {
+        const errorEl = document.getElementById("refundErrorMsg");
+        errorEl.style.display = "none";
+
+        const amount = parseInt(document.getElementById("refundAmountInput").value, 10);
+
+        if (!amount || amount <= 0) {
+            errorEl.textContent = "환불할 포인트를 입력해주세요.";
+            errorEl.style.display = "block";
+            return;
+        }
+
+        // 화면단 1차 방어 (진짜 검증은 서버에서 다시 함)
+        if (amount > maxRefundable) {
+            errorEl.textContent = "환불 가능한 포인트(" + maxRefundable.toLocaleString() + "P)를 초과했습니다.";
+            errorEl.style.display = "block";
+            return;
+        }
+
+        try {
+            const res = await fetch("/point/refund", { //refundController로
+                method: "POST",
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                body: "refundAmount=" + amount,
+            });
+
+            const data = await res.json();
+
+            if (!res.ok || !data.success) {
+                errorEl.textContent = data;
+                message || "환불에 실패했습니다.";
+                errorEl.style.display = "block";
+                return;
+            }
+
+            alert(data.message + " (" + data.refundedAmount.toLocaleString() + "P)");
+            refundBackdrop.style.display = "none";
+        } catch (e) {
+            errorEl.textContent = "환불 요청 중 오류가 발생했습니다.";
+            errorEl.style.display = "block";
+        }
+    });
+</script>
+
+</body>
+</html>
