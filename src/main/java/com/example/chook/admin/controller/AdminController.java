@@ -29,14 +29,16 @@ public class AdminController {
   @GetMapping("/member/job-seeker")
   public void jobSeekerList(Model model,
                             @RequestParam(name = "pageIdx", required = false, defaultValue = "1") int pageIdx,
+                            @RequestParam(name = "pageSize", required = false, defaultValue = "30") int pageSize,
                             @Valid @ModelAttribute JobSeekerSearchForm form,
                             BindingResult bindingResult) {
 
     if (bindingResult.hasErrors()) return;
     JobSeekerSearchCondition condition = new JobSeekerSearchCondition(form);
-    Page<JobSeekerTableDTO> page = adminService.getPage(pageIdx, 30, condition);
+    Page<JobSeekerTableDTO> page = adminService.getPage(pageIdx, pageSize, condition);
 
     model.addAttribute("page", page);
+    model.addAttribute("pageSize", pageSize);
     PagingHandler<JobSeekerTableDTO, JobSeekerSearchForm> pagingHandler =
       new PagingHandler<>(page, form, PAGINATION_SIZE, pageIdx);
     model.addAttribute("pagingHandler", pagingHandler);

@@ -33,3 +33,29 @@ label.search-form-label {
   white-space: nowrap;
   letter-spacing: -0.03em;
 }
+
+.result-table-wrapper table thead th {
+  position: sticky;
+  top: 0;
+  background-color: var(--bs-body-bg);
+}
+
+.result-table-wrapper table thead th:last-child {
+  position: sticky;
+  right: 0;
+  top: 0;
+  z-index: 4;
+  background-color: var(--bs-body-bg);
+}
+
+.result-table-wrapper table tbody td:last-child {
+  position: sticky;
+  right: 0;
+  z-index: 2;
+  background-color: var(--bs-body-bg);
+}
+
+.manage-btn {
+  background-color: transparent;
+  border: none;
+}

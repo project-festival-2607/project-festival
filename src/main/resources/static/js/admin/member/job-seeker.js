@@ -1,4 +1,25 @@
 //  ###############################################
+//  pageSize 초기화 및 드롭다운 설정
+//  ###############################################
+
+const currentPageSize = document.getElementById('currentPageSize');
+const pageSize = document.getElementById('pageSize');
+
+function updatePageSize() {
+  const selected = document.querySelector(
+    `.page-size-li[data-value="${pageSize.value}"]`
+  );
+  currentPageSize.textContent = selected?.textContent ?? '30개씩';
+}
+
+document.getElementById('pageSizeDropdownList').addEventListener('click', (e) => {
+  if (e.target.classList.contains('page-size-li')) {
+    pageSize.value = e.target.dataset.value;
+    updatePageSize();
+  }
+});
+
+//  ###############################################
 //  KeywordType 초기화 및 드롭다운 설정
 //  ###############################################
 
@@ -42,6 +63,14 @@ function updateDateRangeCriteriaAndToggleInputType() {
   endDateTime.classList.toggle('d-none', isBirthDate || isNotSelected);
   startDate.classList.toggle('d-none', !isBirthDate || isNotSelected);
   endDate.classList.toggle('d-none', !isBirthDate || isNotSelected);
+  startDateTime.classList.toggle('d-none', isBirthDate);
+  endDateTime.classList.toggle('d-none', isBirthDate);
+  startDate.classList.toggle('d-none', !isBirthDate);
+  endDate.classList.toggle('d-none', !isBirthDate);
+
+  [startDateTime, endDateTime, startDate, endDate].forEach(element => {
+    element.disabled = isNotSelected;
+  })
 }
 
 document.getElementById('dateRangeCriteriaDropdownList').addEventListener('click', (e) => {
@@ -64,5 +93,6 @@ endDate.addEventListener('change', () => {
   endDateTime.value =`${endDate.value}T23:59`;
 })
 
+updatePageSize();
 updateCurrentKeywordType();
 updateDateRangeCriteriaAndToggleInputType();

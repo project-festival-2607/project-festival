@@ -13,10 +13,20 @@
   <div class="container">
     <form method="get" th:action="@{/admin/member/job-seeker}"
           th:with="form=${pagingHandler.form}">
-      <div class="row">
+      <div class="d-flex justify-content-end">
+        <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" id="currentPageSize">30개씩</button>
+        <ul class="dropdown-menu dropdown-menu-end" id="pageSizeDropdownList">
+          <li><button type="button" class="dropdown-item page-size-li" data-value="10">10개씩</button></li>
+          <li><button type="button" class="dropdown-item page-size-li" data-value="30">30개씩</button></li>
+          <li><button type="button" class="dropdown-item page-size-li" data-value="50">50개씩</button></li>
+        </ul>
+        <button type="submit" class="btn btn-sm btn-dark ms-2">검색</button>
+        <input type="hidden" id="pageSize" name="pageSize" th:value="${pageSize}"/>
+      </div>
+      <div class="row mb-3">
         <div class="col-12 col-md-6">
           <label class="search-form-label" for="keywords">검색 키워드</label>
-          <div class="input-group input-group-sm mb-3">
+          <div class="input-group input-group-sm">
             <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" id="currentKeywordType">전체</button>
             <ul class="dropdown-menu" id="keywordTypeDropdownList">
               <li><button type="button" class="dropdown-item keyword-type-li" data-value="">전체</button></li>
@@ -32,7 +42,7 @@
         </div>
         <div class="col-12 col-md-6">
           <label class="search-form-label">날짜 범위</label>
-          <div class="input-group input-group-sm mb-3">
+          <div class="input-group input-group-sm">
             <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" id="currentDateRangeCriteria">
               선택
             </button>
@@ -41,7 +51,7 @@
               <li><button type="button" class="dropdown-item date-range-criteria-li" data-value="CREATED_AT">계정 생성일</button></li>
               <li><button type="button" class="dropdown-item date-range-criteria-li" data-value="UPDATED_AT">계정 수정일</button></li>
               <li><button type="button" class="dropdown-item date-range-criteria-li" data-value="LAST_LOGIN_AT">마지막 로그인</button></li>
-              <li><button type="button" class="dropdown-item date-range-criteria-li" data-value="BIRTH_DATE">생일</button></li>
+              <li><button type="button" class="dropdown-item date-range-criteria-li" data-value="BIRTH_DATE">생년월일</button></li>
             </ul>
             <input type="datetime-local" class="form-control" name="startDateTime" id="startDateTime" th:value="${form.startDateTime}"/>
             <input type="date" class="form-control" name="startDate" id="startDate" th:value="${form.startDate}">
@@ -72,6 +82,7 @@
               <th scope="col">생일</th>
               <th scope="col">도로명주소</th>
               <th scope="col">상세주소</th>
+              <th scope="col">관리</th>
             </tr>
           </thead>
           <tbody>
@@ -79,24 +90,27 @@
               <td th:text="${jobSeeker.id}"></td>
               <td th:text="${jobSeeker.username}"></td>
               <td th:text="${jobSeeker.name}"></td>
-              <td>[[${jobSeeker.phone}]] <span th:if="${jobSeeker.phoneVerified}">✅</span></td>
+              <td>[[${jobSeeker.formattedPhone}]] <span th:if="${jobSeeker.phoneVerified}">✅</span></td>
               <td th:text="${jobSeeker.email}"></td>
               <td th:text="${jobSeeker.status}"></td>
-              <td th:text="${jobSeeker.createdAt}"></td>
-              <td th:text="${jobSeeker.updatedAt}"></td>
-              <td th:text="${jobSeeker.lastLoginAt}"></td>
-              <td th:text="${jobSeeker.deletedAt}"></td>
+              <td th:text="${#temporals.format(jobSeeker.createdAt, 'yyyy.MM.dd. HH:mm')}"></td>
+              <td th:text="${#temporals.format(jobSeeker.updatedAt, 'yyyy.MM.dd. HH:mm')}"></td>
+              <td th:text="${#temporals.format(jobSeeker.lastLoginAt, 'yyyy.MM.dd. HH:mm')}"></td>
+              <td th:text="${#temporals.format(jobSeeker.deletedAt, 'yyyy.MM.dd. HH:mm')}"></td>
               <td th:text="${jobSeeker.point}"></td>
               <td></td>
-              <td th:text="${jobSeeker.gender}"></td>
-              <td th:text="${jobSeeker.birthDate}"></td>
+              <td>
+                <span th:if="${jobSeeker.gender.name() == 'MALE'}">남성</span>
+                <span th:if="${jobSeeker.gender.name() == 'FEMALE'}">여성</span>
+              </td>
+              <td th:text="${#temporals.format(jobSeeker.birthDate, 'yyyy.MM.dd.')}"></td>
               <td th:text="${jobSeeker.streetAddress}"></td>
               <td th:text="${jobSeeker.detailAddress}"></td>
+              <td><button type="button" class="manage-btn">🛠️</button></td>
             </tr>
           </tbody>
         </table>
       </div>
-      <button type="submit" class="btn btn-dark">검색</button>
       <div>
         <nav>
           <ul class="pagination justify-content-center">
