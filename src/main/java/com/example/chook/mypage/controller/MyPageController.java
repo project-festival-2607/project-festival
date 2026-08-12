@@ -36,14 +36,14 @@ public class MyPageController {
         MyPageDTO myPageDTO = myPageService.getMyPage(username);
 
         // 구직자만 구직자 마이페이지 접근 가능
-        if (myPageDTO.getRole() != MemberRole.JOB_SEEKER) {
+        if (myPageDTO.getRole() != MemberRole.JOB_SEEKER && myPageDTO.getRole() != MemberRole.JOB_EQUIP) {
             return "redirect:/";
         }
 
         // HTML에 전달
         model.addAttribute("myPageDTO", myPageDTO);
 
-        return "mypage/mypage";
+        return "mypage/jobseeker/mypage";
     }
 
     // 수정 페이지
