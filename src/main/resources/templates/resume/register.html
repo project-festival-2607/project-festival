@@ -4,6 +4,7 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       xmlns:th="http://www.thymeleaf.org">
 <div layout:fragment="content">
+    <link rel="stylesheet" th:href="@{/css/resume/register.css}">
     <div class="container">
 <!--                모든 inner는 class="container" 로 맞춤        -->
 <!--        이 안에서 작업        -->
@@ -62,6 +63,9 @@
                         </div>
                     </div>
                 </div>
+                <button type="button" id="add-career" class="add-btn" >
+                    경력 추가
+                </button>
             </section>
 
             <!-- 포트폴리오 -->
@@ -70,7 +74,6 @@
 
                 <div id="portfolio-container">
                     <div class="portfolio-item">
-
                         <!-- 포트폴리오 제목 -->
                         <div class="form-group">
                             <label> 포트폴리오 제목 </label>
@@ -82,34 +85,35 @@
                         <div class="form-group">
                             <label> 포트폴리오 유형 </label>
 
-                            <select name="portfolios[0].type" required>
+                            <select class="portfolio-type" name="portfolios[0].type">
                                 <option value="">선택하세요</option>
 
-                                <option value="URL">
-                                    URL
-                                </option>
+                                <option value="NONE">없음</option>
 
-                                <option value="FILE">
-                                    파일
-                                </option>
+                                <option value="URL">URL</option>
+
+                                <option value="FILE">파일</option>
                             </select>
                         </div>
 
                         <!-- URL -->
-                        <div id="portfolioUrl" class="form-group" style="display: none;">
+                        <div class="form-group portfolio-url" style="display: none;">
                             <label> 포트폴리오 URL </label>
 
-                            <input type="text" name="portfolios[0].url" placeholder="https://example.com">
+                            <input type="text" name="portfolios[0].url" placeholder="url을 적어주세요">
                         </div>
 
                         <!-- 첨부파일 -->
-                        <div id="portfolioFile" class="form-group" style="display: none;">
+                        <div class="form-group portfolio-file" style="display: none;">
                             <label> 첨부파일 </label>
 
                             <input type="file" name="portfolioFile">
                         </div>
                     </div>
                 </div>
+
+                <!-- 포트폴리오 추가 -->
+                <button type="button" id="add-portfolio" class="add-btn"> 포트폴리오 추가 </button>
             </section>
 
             <!-- 버튼 -->

@@ -78,11 +78,10 @@ public class ResumeServiceImpl implements ResumeService{
 
             for (ResumePortfolioDTO portfolioDTO : resumeRequestDTO.getPortfolios()) {
 
-                // 포트폴리오 유형을 선택하지 않은 경우
-                if (portfolioDTO.getType() == null) {
-                    throw new IllegalArgumentException(
-                            "포트폴리오 유형을 선택해주세요."
-                    );
+                // 포트폴리오 유형이 없음이면 저장하지 않음
+                if (portfolioDTO.getType() == null
+                        || portfolioDTO.getType().equals("NONE")) {
+                    continue;
                 }
 
                 // DTO → Entity 변환
@@ -183,118 +182,160 @@ public class ResumeServiceImpl implements ResumeService{
 
     // 이력서 수정
     @Override
-    public void modify(ResumeRequestDTO resumeRequestDTO, Long resumeId )  {
-
+    public void modify(ResumeRequestDTO resumeRequestDTO, Long resumeId) {
         // 기존 이력서 조회
         Resume resume = resumeRepository.findById(resumeId)
                         .orElseThrow();
 
-        // 기존 자기소개서 수정
-        resume.setIntroduction(
-                resumeRequestDTO.getIntroduction()
-        );
+        // 자기소개 수정
+        resume.setIntroduction(resumeRequestDTO.getIntroduction());
 
-        // 최종 수정일 변경
-        resume.setSavedAt( LocalDateTime.now() );
+        resume.setSavedAt(LocalDateTime.now());
 
         resumeRepository.save(resume);
 
-        // 기존 프로필 수정
-        if (resumeRequestDTO.getProfileFileUuid() != null
-                && !resumeRequestDTO.getProfileFileUuid().isBlank()) {
-            // 기존 프로필 파일 조회
-            ProfileFile profileFile =
-                    profileFileRepository.
-                            findByResume_Id(resumeId)
+        // 프로필 파일 수정
+        if (resumeRequestDTO.getProfileFileUuid() != null && !resumeRequestDTO.getProfileFileUuid().isBlank()) {
+
+            ProfileFile profileFile = profileFileRepository
+                            .findByResume_Id(resumeId)
                             .orElseThrow();
 
-            // UUID로 새 UploadedFile 조회
-            UploadedFile uploadedFile = uploadedFileRepository.findById(UUID.fromString(
-                                    resumeRequestDTO.getProfileFileUuid()
+            UploadedFile uploadedFile = uploadedFileRepository.findById(
+                            UUID.fromString(
+                                    resumeRequestDTO
+                                            .getProfileFileUuid()
                             )
-                    )
-                    .orElseThrow();
+                    ).orElseThrow();
 
-            // 프로필 파일 교체
             profileFile.setUploadedFile(uploadedFile);
 
             profileFileRepository.save(profileFile);
         }
+        // 기존 경력 조회
+        List<ResumeCareer> existingCareers = resumeCareerRepository
+                        .findByResume_Id(resumeId);
 
-        // 기존 경력사항 수정
-        if(resumeRequestDTO.getCareers() != null){
-            for(ResumeCareerDTO careerDTO : resumeRequestDTO.getCareers()) {
-                ResumeCareer resumeCareer =
-                        resumeCareerRepository.findById(
-                                        careerDTO.getId()
-                                )
-                                .orElseThrow();
-                resumeCareer.setCareerName(careerDTO.getCareerName());
+        // 수정 페이지에서 살아있는 기존 경력 ID
+        List<Long> careerIds = new ArrayList<>();
 
-                resumeCareer.setStartDate(careerDTO.getStartDate());
+        if (resumeRequestDTO.getCareers() != null) {
 
-                resumeCareer.setEndDate(careerDTO.getEndDate());
+            for (ResumeCareerDTO careerDTO : resumeRequestDTO.getCareers()) {
 
-                resumeCareer.setDuties(careerDTO.getDuties());
+                // 기존 경력
+                if (careerDTO.getId() != null) {
 
-                resumeCareerRepository.save(resumeCareer);
-            }
-        }
+                    careerIds.add(careerDTO.getId());
 
-        // 포트폴리오 수정
-        if(resumeRequestDTO.getPortfolios() != null){
-
-            for(ResumePortfolioDTO portfolioDTO : resumeRequestDTO.getPortfolios()) {
-                // 기존 포트폴리오 조회
-                ResumePortfolio resumePortfolio =
-                        resumePortfolioRepository.findById(
-                                        portfolioDTO.getId()
-                                )
-                                .orElseThrow();
-                resumePortfolio.setTitle(portfolioDTO.getTitle());
-
-                resumePortfolio.setType(portfolioDTO.getType());
-
-                resumePortfolio.setUrl(portfolioDTO.getUrl());
-
-                resumePortfolioRepository.save(resumePortfolio);
-
-                // 포트폴리오 첨부파일 수정
-                if (portfolioDTO.getResumeFile() != null){
-
-                    // 새 파일 조회
-                    UploadedFile uploadedFile =
-                            uploadedFileRepository.findById(
-                                    portfolioDTO.getResumeFile().getUuid()
-                                    )
+                    ResumeCareer resumeCareer = resumeCareerRepository
+                                    .findById(careerDTO.getId())
                                     .orElseThrow();
-                    // 기존 첨부파일 조회
-                    ResumeFile resumeFile =
-                            resumeFileRepository
-                                    .findByResumePortfolio_Id(resumePortfolio.getId()
-                                    )
-                                    .orElse(null);
-                    // 기존 파일이 있으면 변경
-                    if(resumeFile != null){
 
-                        resumeFile.setUploadedFile(uploadedFile);
+                    resumeCareer.setCareerName(careerDTO.getCareerName());
 
-                        resumeFileRepository.save(resumeFile);
+                    resumeCareer.setStartDate(careerDTO.getStartDate());
 
-                    }else {
-                        // 파일이 없었다면 새로 생성
-                        ResumeFile newResumeFile =
-                                ResumeFile.builder()
-                                        .resumePortfolio(resumePortfolio)
-                                        .uploadedFile(uploadedFile)
-                                        .build();
-                        resumeFileRepository.save(newResumeFile);
-                    }
+                    resumeCareer.setEndDate(careerDTO.getEndDate());
+
+                    resumeCareer.setDuties(careerDTO.getDuties());
+
+                    resumeCareerRepository.save(resumeCareer);
+
+                } else {
+                    // 새 경력
+                    ResumeCareer newCareer = resumeCareerDtoToEntity(careerDTO, resume);
+
+                    resumeCareerRepository.save(newCareer);
                 }
             }
         }
-    }
+        // 화면에서 삭제한 기존 경력 DB 삭제
+        for (ResumeCareer existingCareer : existingCareers) {
 
+            if (!careerIds.contains(existingCareer.getId())) {
+
+                resumeCareerRepository.delete(existingCareer);
+            }
+        }
+        // 기존 포트폴리오 조회
+        List<ResumePortfolio> existingPortfolios = resumePortfolioRepository
+                        .findByResume_Id(resumeId);
+
+        // 수정 페이지에서 살아있는 기존 포트폴리오 ID
+        List<Long> portfolioIds = new ArrayList<>();
+
+        if (resumeRequestDTO.getPortfolios() != null) {
+
+            for (ResumePortfolioDTO portfolioDTO : resumeRequestDTO.getPortfolios()) {
+
+                // 기존 포트폴리오
+                if (portfolioDTO.getId() != null) {
+
+                    portfolioIds.add(portfolioDTO.getId());
+
+                    ResumePortfolio resumePortfolio = resumePortfolioRepository
+                                    .findById(portfolioDTO.getId())
+                                    .orElseThrow();
+
+                    resumePortfolio.setTitle(portfolioDTO.getTitle());
+
+                    resumePortfolio.setType(portfolioDTO.getType());
+
+                    resumePortfolio.setUrl(portfolioDTO.getUrl());
+
+                    resumePortfolioRepository.save(resumePortfolio);
+
+                    // 기존 포트폴리오 파일 수정
+                    if (portfolioDTO.getResumeFile() != null) {
+
+                        UploadedFile uploadedFile = uploadedFileRepository
+                                .findById(portfolioDTO
+                                                .getResumeFile()
+                                                .getUuid()
+                                ).orElseThrow();
+
+                        ResumeFile resumeFile = resumeFileRepository
+                                        .findByResumePortfolio_Id(
+                                                resumePortfolio.getId()
+                                        )
+                                        .orElse(null);
+
+                        if (resumeFile != null) {
+                            // 기존 파일 교체
+                            resumeFile.setUploadedFile(uploadedFile);
+
+                            resumeFileRepository.save(resumeFile);
+
+                        } else {
+                            // 기존 파일이 없으면 새로 생성
+                            ResumeFile newResumeFile = ResumeFile.builder()
+                                            .resumePortfolio(resumePortfolio)
+                                            .uploadedFile(uploadedFile)
+                                            .build();
+                            resumeFileRepository.save(newResumeFile);
+                        }
+                    }
+                } else {
+                    // 새 포트폴리오
+                    ResumePortfolio newPortfolio = resumePortfolioDtoToEntity(portfolioDTO, resume);
+
+                    resumePortfolioRepository.save(newPortfolio);
+                }
+            }
+        }
+        // 삭제된 포트폴리오 DB 삭제
+        for (ResumePortfolio existingPortfolio : existingPortfolios) {
+
+            if (!portfolioIds.contains(existingPortfolio.getId())) {
+                // 연결된 첨부파일 먼저 삭제
+                resumeFileRepository.deleteAllByResumePortfolio_Id(existingPortfolio.getId());
+
+                // 포트폴리오 삭제
+                resumePortfolioRepository.delete(existingPortfolio);
+            }
+        }
+    }
     // 이력서 삭제
     @Transactional
     @Override

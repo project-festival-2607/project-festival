@@ -1,27 +1,163 @@
 document.addEventListener("DOMContentLoaded", function () {
+    // 결력사항 추가
+    const careerContainer = document.getElementById("career-container");
 
-    const portfolioType =
-        document.querySelector('select[name="portfolios[0].type"]');
+    const addCareerButton = document.getElementById("add-career");
 
-    const portfolioUrl =
-        document.getElementById("portfolioUrl");
+    let careerIndex = 1;
 
-    const portfolioFile =
-        document.getElementById("portfolioFile");
+    addCareerButton.addEventListener("click", function (){
+        const careerItem = document.createElement("div");
 
-    portfolioType.addEventListener("change", function () {
-        // 일단 둘 다 숨김
-        portfolioUrl.style.display = "none";
-        portfolioFile.style.display = "none";
+        careerItem.classList.add("career-item");
 
-        // URL 선택
-        if (this.value === "URL") {
-            portfolioUrl.style.display = "block";
-        }
+        careerItem.innerHTML = `
+            <div class="form-group"> 
+                <label>회사명</label> 
+                <input type="text" name="careers[${careerIndex}].careerName" placeholder="회사명을 입력하세요"> 
+            </div>
+            
+            <div class="form-group"> 
+                <label>입사일</label> 
+                <input type="date" name="careers[${careerIndex}].startDate"> 
+            </div>
+            
+            <div class="form-group"> 
+                <label>퇴사일</label> 
+                <input type="date" name="careers[${careerIndex}].endDate"> 
+            </div>
+            
+            <div class="form-group"> 
+                <label>담당 업무</label> 
+                <textarea name="careers[${careerIndex}].duties" rows="5" placeholder="담당했던 업무를 입력하세요"></textarea> 
+            </div>
+            
+            <button type="button" class="remove-career"> 경력 삭제 </button>
+        `;
 
-        // FILE 선택
-        else if (this.value === "FILE") {
-            portfolioFile.style.display = "block";
+        careerContainer.appendChild(careerItem);
+
+        careerIndex++;
+    });
+
+    // 경력 사항 삭제
+    careerContainer.addEventListener("click", function(event){
+
+        if (event.target.classList.contains("remove-career")){
+
+            const careerItem = event.target.closest(".career-item");
+
+            careerItem.remove();
         }
     });
-});
+
+    // 포트폴리오
+    const portfolioContainer = document.getElementById("portfolio-container");
+
+    const addPortfolioButton = document.getElementById("add-portfolio");
+
+    let portfolioIndex = 1;
+
+    // 포트폴리오 추가
+    if (portfolioContainer && addPortfolioButton) {
+        addPortfolioButton.addEventListener("click", function (){
+
+            const portfolioItem = document.createElement("div");
+
+            portfolioItem.classList.add("portfolio-item");
+
+            portfolioItem.innerHTML = `
+                <div class="form-group"> 
+                    <label>포트폴리오 제목</label> 
+                    <input type="text" name="portfolios[${portfolioIndex}].title" placeholder="포트폴리오 제목"> 
+                </div>
+                
+                <div class="form-group"> 
+                    <label>포트폴리오 유형</label> 
+                    <select class="portfolio-type" name="portfolios[${portfolioIndex}].type" required> 
+                        <option value="">선택하세요</option> 
+                        <option value="URL"> URL </option> 
+                        <option value="FILE"> 파일 </option> 
+                    </select> 
+                </div>
+                
+                <!-- URL --> 
+                <div class="form-group portfolio-url" style="display: none;"> 
+                    <label>포트폴리오 URL</label> 
+                    <input type="text" name="portfolios[${portfolioIndex}].url" placeholder="url을 적어주세요"> 
+                </div>
+                
+                <!-- 첨부파일 --> 
+                <div class="form-group portfolio-file" style="display: none;">
+                    <label>첨부파일</label> 
+                    <input type="file" name="portfolioFile"> 
+                </div>
+                
+                <!-- 삭제 버튼 --> 
+                <button type="button" class="remove-portfolio"> 포트폴리오 삭제 </button>
+            `;
+            portfolioContainer.appendChild(portfolioItem);
+            portfolioIndex++;
+        });
+
+        portfolioContainer.addEventListener("change",function (event){
+
+            if (event.target.classList.contains("portfolio-type")) {
+                const select = event.target;
+
+                const portfolioItem = select.closest(".portfolio-item");
+
+                const urlArea = portfolioItem.querySelector( ".portfolio-url" );
+
+                const fileArea = portfolioItem.querySelector( ".portfolio-file" );
+
+                // 둘 다 숨김
+                urlArea.style.display = "none";
+                fileArea.style.display = "none";
+
+                // URL
+                if (select.value === "URL") {
+                    urlArea.style.display = "block";
+                }
+
+                // FILE
+                else if (select.value === "FILE") {
+                    fileArea.style.display = "block";
+                }
+            }
+        });
+
+        // 포트폴리오 삭제
+        portfolioContainer.addEventListener("click", function (event){
+
+            if (event.target.classList.contains( "remove-portfolio" )){
+
+                const portfolioItem = event.target.closest( ".portfolio-item" );
+
+                if (portfolioItem){
+                    portfolioItem.remove();
+                    reindexPortfolios();
+                }
+            }
+        });
+    }
+
+    // 포트폴리오 인덱스 다시 정리
+    function reindexPortfolios() {
+
+        const portfolioItems = document.querySelectorAll( "#portfolio-container .portfolio-item" );
+
+        portfolioItems.forEach( function (item, index) {
+            const fields = item.querySelectorAll( "input, select" );
+
+            fields.forEach( function (field) {
+                const name = field.getAttribute( "name" );
+
+                if (name) {
+                    field.setAttribute( "name", name.replace( /portfolios\[\d+\]/, `portfolios[${index}]` )
+                    );
+                }
+            });
+        }); portfolioIndex = portfolioItems.length;
+    }
+})

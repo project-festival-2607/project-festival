@@ -4,6 +4,7 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       xmlns:th="http://www.thymeleaf.org">
 <div layout:fragment="content">
+    <link rel="stylesheet" th:href="@{/css/resume/register.css}">
     <div class="container">
         <!--                모든 inner는 class="container" 로 맞춤        -->
         <!--        이 안에서 작업        -->
@@ -54,22 +55,29 @@
                         <div class="form-group">
                             <label> 입사일 </label>
 
-                            <input type="date" th:name="'careers[' + ${stat.index} + '].startDate'" th:value="${career.startDate}">>
+                            <input type="date" th:name="'careers[' + ${stat.index} + '].startDate'" th:value="${career.startDate}">
                         </div>
 
                         <div class="form-group">
                             <label> 퇴사일 </label>
 
-                            <input type="date" th:name="'careers[' + ${stat.index} + '].endDate'" th:value="${career.endDate}">>
+                            <input type="date" th:name="'careers[' + ${stat.index} + '].endDate'" th:value="${career.endDate}">
                         </div>
 
                         <div class="form-group">
                             <label> 담당 업무 </label>
 
-                            <textarea th:name="'careers[' + ${stat.index} + '].duties'" rows="5" th:text="${career.duties}"></textarea>></textarea>
+                            <textarea th:name="'careers[' + ${stat.index} + '].duties'" rows="5" th:text="${career.duties}"></textarea></textarea>
                         </div>
+
+                        <button type="button" class="remove-career">
+                            경력 삭제
+                        </button>
                     </div>
                 </div>
+                <button type="button" id="add-career">
+                    경력 추가
+                </button>
             </section>
 
             <!-- 포트폴리오 -->
@@ -125,8 +133,16 @@
 
                             <input type="file" name="portfolioFile">
                         </div>
+
+                        <button type="button" class="remove-portfolio">
+                            포트폴리오 삭제
+                        </button>
                     </div>
                 </div>
+
+                <button type="button" id="add-portfolio">
+                    포트폴리오 추가
+                </button>
             </section>
 
             <!-- 버튼 -->
