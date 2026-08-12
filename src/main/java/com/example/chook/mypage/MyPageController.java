@@ -166,6 +166,36 @@ public class MyPageController {
         return "redirect:/mypage/modify/job-seeker";
     }
 
+    // 비밀번호 수정
+    @GetMapping("/password-change")
+    public String passwordChangeForm(@AuthenticationPrincipal CustomUserDetails userDetails) {
+        if (userDetails == null) {
+            return "redirect:/member/login";
+        }
+        if (userDetails.isSocialSignUp()) {
+            return "redirect:/mypage";
+        }
+        return "mypage/password-change";
+    }
+
+    @PostMapping("/password-change")
+    public String passwordChange(
+            @AuthenticationPrincipal CustomUserDetails userDetails,
+            @RequestParam String currentPassword,
+            @RequestParam String newPassword,
+            @RequestParam String newPasswordConfirm,
+            RedirectAttributes redirectAttributes
+    ) {
+        try {
+            memberService.changePassword(userDetails.getId(), currentPassword, newPassword, newPasswordConfirm);
+            redirectAttributes.addFlashAttribute("SuccessMsg", "비밀번호가 변경되었습니다.");
+            return "redirect:/mypage";
+        } catch (IllegalArgumentException e) {
+            redirectAttributes.addFlashAttribute("FailureMsg", e.getMessage());
+            return "redirect:/mypage/password-change";
+        }
+    }
+
     // 비밀번호 확인이 필요한 상태인지 (소셜 회원이면 불필요, 아니면 세션 플래그로 판단)
     private boolean requiresPasswordCheck(CustomUserDetails userDetails, HttpSession session) {
         if (userDetails.isSocialSignUp()) {
