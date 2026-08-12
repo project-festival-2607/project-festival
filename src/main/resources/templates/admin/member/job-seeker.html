@@ -98,9 +98,13 @@
               <td th:text="${jobSeeker.id}"></td>
               <td th:text="${jobSeeker.username}"></td>
               <td th:text="${jobSeeker.name}"></td>
-              <td>[[${jobSeeker.formattedPhone}]] <span th:if="${jobSeeker.phoneVerified}">✅</span></td>
+              <td>
+                [[${jobSeeker.formattedPhone}]]
+                <span th:if="${jobSeeker.phoneVerified}">✅</span>
+                <span th:unless="${jobSeeker.phoneVerified}" title="휴대전화 번호가 인증되지 않았습니다.">⚠️</span>
+              </td>
               <td th:text="${jobSeeker.email}"></td>
-              <td th:text="${jobSeeker.status}"></td>
+              <td th:text="${jobSeeker.statusString}"></td>
               <td th:text="${#temporals.format(jobSeeker.createdAt, 'yyyy.MM.dd. HH:mm')}"></td>
               <td th:text="${#temporals.format(jobSeeker.updatedAt, 'yyyy.MM.dd. HH:mm')}"></td>
               <td th:text="${#temporals.format(jobSeeker.lastLoginAt, 'yyyy.MM.dd. HH:mm')}"></td>
