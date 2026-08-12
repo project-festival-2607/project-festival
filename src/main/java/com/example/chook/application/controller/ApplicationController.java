@@ -4,10 +4,11 @@ import com.example.chook.application.dto.ApplicationDTO;
 import com.example.chook.application.dto.ApplyDTO;
 import com.example.chook.application.entity.enums.ApplicationResult;
 import com.example.chook.application.service.ApplicationService;
-import com.example.chook.member.dto.LoginResponseDTO;
+import com.example.chook.member.security.CustomUserDetails;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -88,17 +89,14 @@ public class ApplicationController {
     @GetMapping("/apply")
     public String applyPage(
             @RequestParam Long recruitmentId,
+            @AuthenticationPrincipal CustomUserDetails userDetails,
             HttpSession session,
             Model model,
             RedirectAttributes redirectAttributes
     ) {
 
-        // 로그인 여부 확인
-        LoginResponseDTO loginMember =
-                (LoginResponseDTO) session.getAttribute("loginMember");
-
         // 로그인하지 않은 경우
-        if (loginMember == null) {
+        if (userDetails == null) {
 
             // 로그인 후 돌아갈 주소 저장
             session.setAttribute(
@@ -113,7 +111,7 @@ public class ApplicationController {
         ApplyDTO applyDTO =
                 applicationService.getApplyData(
                         recruitmentId,
-                        loginMember.getId()
+                        userDetails.getId()
                 );
 
         // 이력서가 없는 경우

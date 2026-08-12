@@ -1,10 +1,15 @@
-package com.example.chook.mypage;
+package com.example.chook.mypage.controller;
 
 import com.example.chook.member.dto.EmployerProfileUpdateRequestDTO;
 import com.example.chook.member.dto.JobSeekerProfileUpdateRequestDTO;
 import com.example.chook.member.dto.LoginResponseDTO;
+import com.example.chook.member.security.AuthenticationHelper;
 import com.example.chook.member.security.CustomUserDetails;
 import com.example.chook.member.service.MemberService;
+import com.example.chook.mypage.dto.MyPageDTO;
+import com.example.chook.mypage.service.MyPageService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -23,6 +28,7 @@ public class MyPageController {
 
     private final MyPageService myPageService;
     private final MemberService memberService;
+    private final AuthenticationHelper authenticationHelper;
     private static final String PASSWORD_VERIFIED_SESSION_KEY = "passwordVerified";
 
     // 조회기능
@@ -97,6 +103,8 @@ public class MyPageController {
             @AuthenticationPrincipal CustomUserDetails userDetails,
             @ModelAttribute JobSeekerProfileUpdateRequestDTO requestDTO,
             HttpSession session,
+            HttpServletRequest request,
+            HttpServletResponse response,
             RedirectAttributes redirectAttributes
     ) {
         if (requiresPasswordCheck(userDetails, session)) {
@@ -104,7 +112,7 @@ public class MyPageController {
         }
         try {
             LoginResponseDTO responseDTO = memberService.updateJobSeekerProfile(userDetails.getId(), requestDTO);
-            session.setAttribute("loginMember", responseDTO);
+            authenticationHelper.authenticate(responseDTO.getUsername(), request, response);
             return "redirect:/mypage";
         } catch (IllegalArgumentException | IllegalStateException e) {
             redirectAttributes.addFlashAttribute("FailureMsg", e.getMessage());
@@ -137,8 +145,7 @@ public class MyPageController {
             return "redirect:/mypage/password-check";
         }
         try {
-            LoginResponseDTO responseDTO = memberService.updateEmployerProfile(userDetails.getId(), requestDTO);
-            session.setAttribute("loginMember", responseDTO);
+            memberService.updateEmployerProfile(userDetails.getId(), requestDTO);
             return "redirect:/mypage";
         } catch (IllegalArgumentException | IllegalStateException e) {
             redirectAttributes.addFlashAttribute("FailureMsg", e.getMessage());
@@ -150,6 +157,8 @@ public class MyPageController {
     public String deleteBusinessNumber(
             @AuthenticationPrincipal CustomUserDetails userDetails,
             HttpSession session,
+            HttpServletRequest request,
+            HttpServletResponse response,
             RedirectAttributes redirectAttributes
     ) {
         if (requiresPasswordCheck(userDetails, session)) {
@@ -158,12 +167,42 @@ public class MyPageController {
 
         try {
             LoginResponseDTO responseDTO = memberService.removeBusinessNumber(userDetails.getId());
-            session.setAttribute("loginMember", responseDTO);
+            authenticationHelper.authenticate(responseDTO.getUsername(), request, response);
         } catch (IllegalStateException e) {
             redirectAttributes.addFlashAttribute("FailureMsg", e.getMessage());
         }
 
         return "redirect:/mypage/modify/job-seeker";
+    }
+
+    // 비밀번호 수정
+    @GetMapping("/password-change")
+    public String passwordChangeForm(@AuthenticationPrincipal CustomUserDetails userDetails) {
+        if (userDetails == null) {
+            return "redirect:/member/login";
+        }
+        if (userDetails.isSocialSignUp()) {
+            return "redirect:/mypage";
+        }
+        return "mypage/password-change";
+    }
+
+    @PostMapping("/password-change")
+    public String passwordChange(
+            @AuthenticationPrincipal CustomUserDetails userDetails,
+            @RequestParam String currentPassword,
+            @RequestParam String newPassword,
+            @RequestParam String newPasswordConfirm,
+            RedirectAttributes redirectAttributes
+    ) {
+        try {
+            memberService.changePassword(userDetails.getId(), currentPassword, newPassword, newPasswordConfirm);
+            redirectAttributes.addFlashAttribute("SuccessMsg", "비밀번호가 변경되었습니다.");
+            return "redirect:/mypage";
+        } catch (IllegalArgumentException e) {
+            redirectAttributes.addFlashAttribute("FailureMsg", e.getMessage());
+            return "redirect:/mypage/password-change";
+        }
     }
 
     // 비밀번호 확인이 필요한 상태인지 (소셜 회원이면 불필요, 아니면 세션 플래그로 판단)

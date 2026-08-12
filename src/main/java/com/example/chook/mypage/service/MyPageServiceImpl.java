@@ -1,4 +1,4 @@
-package com.example.chook.mypage;
+package com.example.chook.mypage.service;
 
 import com.example.chook.member.entity.Member;
 import com.example.chook.member.entity.enums.MemberRole;
@@ -6,6 +6,7 @@ import com.example.chook.member.repository.BusinessRegistrationRepository;
 import com.example.chook.member.repository.EmployerProfileRepository;
 import com.example.chook.member.repository.JobSeekerProfileRepository;
 import com.example.chook.member.repository.MemberRepository;
+import com.example.chook.mypage.dto.MyPageDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

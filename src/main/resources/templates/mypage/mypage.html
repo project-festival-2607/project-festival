@@ -42,10 +42,9 @@
         </div>
 
         <div class="mypage-menu">
-            <div class="menu-item">
-                비밀번호 변경
+            <div class="menu-item" th:if="${!myPageDTO.socialSignUp}">
+                <a th:href="@{/mypage/password-change}">비밀번호 변경</a>
             </div>
-
             <div class="menu-item">
                 <a>
                     나의 이력서 관리
