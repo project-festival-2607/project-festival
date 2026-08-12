@@ -1,10 +1,12 @@
 package com.example.chook.payment.controller;
 
 import com.example.chook.member.dto.LoginResponseDTO;
+import com.example.chook.member.security.CustomUserDetails;
 import com.example.chook.payment.service.PointReduceService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -18,15 +20,13 @@ public class PointReduceController {
 
     @PostMapping("/reduce")
     public ResponseEntity<?> reducePoint(
-            HttpSession session,
-            @RequestParam Long recruitId
+      @AuthenticationPrincipal CustomUserDetails user,
+      @RequestParam Long recruitId
     ) {
 
         // 로그인 회원 확인
-        LoginResponseDTO loginMember =
-                (LoginResponseDTO) session.getAttribute("loginMember");
 
-        if (loginMember == null) {
+        if (user == null) {
             return ResponseEntity.status(401)
                     .body(Map.of(
                             "success", false,
@@ -34,7 +34,7 @@ public class PointReduceController {
                     ));
         }
 
-        Long memberId = loginMember.getId();
+        Long memberId = user.getId();
 
         try {
 

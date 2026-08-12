@@ -7,6 +7,8 @@ import com.example.chook.recruitment.entity.enums.RecruitmentWageType;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+import static com.example.chook.common.util.CustomStringUtils.blankToNull;
+
 public record RecruitmentSearchForm(
 
   String keywords,
@@ -50,7 +52,4 @@ public record RecruitmentSearchForm(
     listCriteria = listCriteria == null ? RecruitmentListCriteria.LATEST : listCriteria;
   }
 
-  private String blankToNull(String string) {
-    return (string == null || string.isBlank()) ? null : string;
-  }
 }

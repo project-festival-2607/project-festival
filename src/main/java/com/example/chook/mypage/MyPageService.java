@@ -15,6 +15,7 @@ public interface MyPageService {
                 .email(member.getEmail())
                 .point(member.getPoint())
                 .role(member.getRole())
+                .socialSignUp(member.isSocialSignUp())
                 .build();
     }
 

@@ -1,6 +1,7 @@
 package com.example.chook.payment.controller;
 // payment/controller/PaymentController - 실제로 사용하는 라우팅만 남긴 버전
 import com.example.chook.member.dto.LoginResponseDTO;
+import com.example.chook.member.security.CustomUserDetails;
 import com.example.chook.payment.service.PaymentService;
 import com.example.chook.payment.service.TossPaymentApiClient;
 import jakarta.servlet.http.HttpServletRequest;
@@ -10,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,24 +37,24 @@ public class PaymentController {
     @Value("${toss.api-secret-key}")
     private String apiSecretKey;
 
-    // 결제 승인 - 토스와 통신하는 부분(tossPaymentApiClient)과
     // DB에 반영하는 부분(paymentService)을 분리해서 순서대로 호출
     // 주의: 원본에 있던 경로를 그대로 뒀어요 - "/confirm/paying"이 오타인지
     //       실제로 프론트에서 이 경로를 부르고 있는 건지 한 번 확인해보세요.
-    @RequestMapping(value = {"/confirm/widget", "/confirm/paying"})
-    public ResponseEntity<JSONObject> confirmPayment(HttpServletRequest request, @RequestBody String jsonBody) throws Exception {
+    @RequestMapping(value = {"/confirm/widget", "/confirm/payment"})
+    public ResponseEntity<JSONObject> confirmPayment(HttpServletRequest request,
+                                                     @RequestBody String jsonBody,
+                                                     @AuthenticationPrincipal CustomUserDetails user
+                                                     ) throws Exception {
 
-        HttpSession session = request.getSession();
-        LoginResponseDTO loginMember = (LoginResponseDTO) session.getAttribute("loginMember");
 
-        if (loginMember == null) {
+        if (user == null) {
             throw new IllegalStateException("로그인이 필요합니다.");
         }
 
-        Long memberId = loginMember.getId();
+        Long memberId = user.getId();
         log.info("현재 로그인 회원 : {}", memberId);
 
-        String secretKey = request.getRequestURI().contains("/confirm/paying") ? apiSecretKey : widgetSecretKey;
+        String secretKey = request.getRequestURI().contains("/confirm/payment") ? apiSecretKey : widgetSecretKey;
         JSONObject requestData = tossPaymentApiClient.parseRequestData(jsonBody);
         JSONObject response = tossPaymentApiClient.sendRequest(requestData, secretKey, "https://api.tosspayments.com/v1/payments/confirm");
 
@@ -70,7 +72,7 @@ public class PaymentController {
     }
 
     // datatesting.html에서 "DB에 실제로 뭐가 저장됐는지" 보여주기 위한 조회용
-    @GetMapping("/paying/order/{orderId}")
+    @GetMapping("/payment/order/{orderId}")
     @ResponseBody
     public ResponseEntity<Map<String, Object>> getOrderResult(@PathVariable String orderId) {
         return paymentService.getOrderResult(orderId)
@@ -96,8 +98,9 @@ public class PaymentController {
     }
 
     @GetMapping("/payCreationTest")
-    public String payCreationTest(HttpSession session) {
-        if (session.getAttribute("loginMember") == null) {
+    public String payCreationTest(@AuthenticationPrincipal CustomUserDetails user
+                                                         ) {
+        if (user == null) {
             return "redirect:/member/login";
         }
         return "payment/realactive/payCreationTest";
@@ -106,5 +109,17 @@ public class PaymentController {
     @GetMapping("/datatesting")
     public String datatesting() {
         return "payment/realactive/datatesting";
+    }
+
+    @GetMapping("/refund")
+    public String refund(@AuthenticationPrincipal CustomUserDetails user) {
+
+        // 로그인 여부 확인
+        if (user == null) {
+            return "redirect:/member/login";
+        }
+
+        // templates/payment/realactive/refund_widget_snippet.html
+        return "payment/realactive/refund_widget_snippet";
     }
 }

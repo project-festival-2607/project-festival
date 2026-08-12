@@ -1,22 +1,25 @@
 package com.example.chook.mypage;
 
 import com.example.chook.member.entity.Member;
+import com.example.chook.member.entity.enums.MemberRole;
+import com.example.chook.member.repository.BusinessRegistrationRepository;
+import com.example.chook.member.repository.EmployerProfileRepository;
+import com.example.chook.member.repository.JobSeekerProfileRepository;
 import com.example.chook.member.repository.MemberRepository;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
 @Service
 @Slf4j
-public class MyPageServiceImpl implements MyPageService{
+public class MyPageServiceImpl implements MyPageService {
 
     private final MemberRepository memberRepository;
-    private final PasswordEncoder passwordEncoder;
+    private final JobSeekerProfileRepository jobSeekerProfileRepository;
+    private final EmployerProfileRepository employerProfileRepository;
+    private final BusinessRegistrationRepository businessRegistrationRepository;
 
-    // 마이페이지 조회
     @Override
     public MyPageDTO getMyPage(String username) {
 
@@ -24,35 +27,31 @@ public class MyPageServiceImpl implements MyPageService{
                 .findByUsernameAndDeletedAtIsNull(username)
                 .orElseThrow();
 
-        return memberEntityToDTO(member);
-    }
+        MyPageDTO myPageDTO = memberEntityToDTO(member);
 
-    // 개인정보 수정
-    @Transactional
-    @Override
-    public void modify(String username, MyPageDTO myPageDTO) {
-        // 현재 로그인한 회원 조회
-        Member member = memberRepository
-                .findByUsernameAndDeletedAtIsNull(username)
-                .orElseThrow();
-
-        log.info("수정 전 Member = {}", member);
-
-        // 이름 수정
-        member.setName(myPageDTO.getName());
-
-        // 전화번호 수정
-        member.setPhone(myPageDTO.getPhone());
-
-        // 이메일 수정
-        member.setEmail(myPageDTO.getEmail());
-
-        // 비밀번호 수정
-        if (myPageDTO.getPassword() != null
-                && !myPageDTO.getPassword().isBlank()){
-            member.setPasswordHash(passwordEncoder.encode(myPageDTO.getPassword()));
-
-            log.info("수정 후 Member = {}", member);
+        if (member.getRole() == MemberRole.RECRUITER) {
+            employerProfileRepository.findById(member.getId()).ifPresent(profile -> {
+                myPageDTO.setCompanyName(profile.getCompanyName());
+                myPageDTO.setCeoName(profile.getCeoName());
+                myPageDTO.setStreetAddress(profile.getStreetAddress());
+                myPageDTO.setDetailAddress(profile.getDetailAddress());
+                myPageDTO.setFoundedAt(profile.getFoundedAt());
+            });
+            businessRegistrationRepository.findById(member.getId())
+                    .ifPresent(reg -> myPageDTO.setBusinessNumber(reg.getBusinessNumber()));
+        } else {
+            jobSeekerProfileRepository.findById(member.getId()).ifPresent(profile -> {
+                myPageDTO.setGender(profile.getGender());
+                myPageDTO.setBirthDate(profile.getBirthDate());
+                myPageDTO.setStreetAddress(profile.getStreetAddress());
+                myPageDTO.setDetailAddress(profile.getDetailAddress());
+            });
+            if (member.getRole() == MemberRole.JOB_EQUIP) {
+                businessRegistrationRepository.findById(member.getId())
+                        .ifPresent(reg -> myPageDTO.setBusinessNumber(reg.getBusinessNumber()));
+            }
         }
+
+        return myPageDTO;
     }
 }

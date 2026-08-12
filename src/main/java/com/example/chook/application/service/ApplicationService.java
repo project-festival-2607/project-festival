@@ -1,10 +1,13 @@
 package com.example.chook.application.service;
 
 import com.example.chook.application.dto.ApplicationDTO;
+import com.example.chook.application.dto.ApplyDTO;
 import com.example.chook.application.entity.Application;
 import com.example.chook.application.entity.enums.ApplicationResult;
 import com.example.chook.member.entity.Member;
+import com.example.chook.recruitment.dto.RecruitmentResponseDTO;
 import com.example.chook.recruitment.entity.Recruitment;
+import com.example.chook.resume.dto.ResumeResponseDTO;
 import com.example.chook.resume.entity.Resume;
 
 import java.util.List;
@@ -41,6 +44,22 @@ public interface ApplicationService {
                 .build();
     }
 
+    // ApplyDTO 변환 (applypage Zone)
+    default ApplyDTO convertToApplyDto(
+            Member member,
+            RecruitmentResponseDTO recruitment,
+            ResumeResponseDTO resume
+    ) {
+        return ApplyDTO.builder()
+                .memberId(member.getId())
+                .name(member.getName())
+                .phone(member.getPhone())
+                .email(member.getEmail())
+                .recruitment(recruitment)
+                .resume(resume)
+                .build();
+    }
+
     // 지원하기 기능
     Long apply(ApplicationDTO applicationDTO);
 
@@ -58,4 +77,7 @@ public interface ApplicationService {
 
     // 지원서 열람 처리
     void read(Long id);
+
+    // applypage Zone
+    ApplyDTO getApplyData(Long recruitmentId, Long memberId);
 }

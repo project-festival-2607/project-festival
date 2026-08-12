@@ -36,6 +36,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -67,16 +68,17 @@ public class RecruitmentController {
   public void list(Model model,
                    @RequestParam(name = "pageIdx", required = false, defaultValue = "1") int pageIdx,
                    @Valid @ModelAttribute RecruitmentSearchForm form,
-                   BindingResult bindingResult,
+//                   BindingResult bindingResult,
                    @AuthenticationPrincipal CustomUserDetails user) {
 
-    if (form.workingStartDate() != null && form.workingEndDate() != null
-      && form.workingStartDate().isAfter(form.workingEndDate()))
-      bindingResult.rejectValue("workingEndDate",
-        "workingEndDate.outOfRange",
-        "근무시작날짜는 근무종료날짜보다 늦을 수 없습니다."
-      );
-    if (bindingResult.hasErrors()) return;
+//    if (form.workingStartDate() != null && form.workingEndDate() != null
+//      && form.workingStartDate().isAfter(form.workingEndDate()))
+//      bindingResult.rejectValue("workingEndDate",
+//        "workingEndDate.outOfRange",
+//        "근무시작날짜는 근무종료날짜보다 늦을 수 없습니다."
+//      );
+//
+//    if (bindingResult.hasErrors()) return;
 
     boolean recruiter = user != null && user.getRole() == MemberRole.RECRUITER;
     boolean jobSeeker = user != null && user.getRole() == MemberRole.JOB_SEEKER;
@@ -124,10 +126,12 @@ public class RecruitmentController {
 
   @GetMapping("/{id}")
   public String view(@PathVariable Long id,
+                     @RequestParam(required = false) String from,
                      Model model,
                      @AuthenticationPrincipal CustomUserDetails user) {
     RecruitmentResponseDTO responseDto = recruitmentService.getRecruitment(id);
     model.addAttribute("recruitment", responseDto);
+    model.addAttribute("from", validateFrom(from));
 
     FestivalDTO festivalDto = festivalService.getDetail(responseDto.getFestivalContentId());
     model.addAttribute("fes", festivalDto);
@@ -148,6 +152,8 @@ public class RecruitmentController {
       && responseDto.getOrganizerMemberId().equals(user.getId());
     model.addAttribute("isOwner", isOwner);
 
+    model.addAttribute("expired", user != null && responseDto.getApplicationDeadline().isBefore(LocalDate.now()));
+
     log.info("recruitment view: {}", responseDto);
     return "recruitment/detail";
   }
@@ -162,12 +168,19 @@ public class RecruitmentController {
   }
 
   @GetMapping("/modify/{id}")
-  public String modifyForm(@PathVariable Long id, Model model, @AuthenticationPrincipal CustomUserDetails user,
+  public String modifyForm(@PathVariable Long id,
+                           @RequestParam(required = false) String from,
+                           Model model, @AuthenticationPrincipal CustomUserDetails user,
                            RedirectAttributes redirectAttributes) {
+    from = validateFrom(from);
     RecruitmentResponseDTO current = requireOwnedRecruitment(id, user);
     if (current == null) {
       redirectAttributes.addFlashAttribute("errorMsg", "수정 권한이 없습니다.");
-      return "redirect:/recruitment/" + id;
+      return redirectToRecruitment(id, from, redirectAttributes);
+    }
+    if (current.getApplicationDeadline().isBefore(LocalDate.now())) {
+      redirectAttributes.addFlashAttribute("errorMsg", "모집마감일이 지난 공고는 수정할 수 없습니다.");
+      return redirectToRecruitment(id, from, redirectAttributes);
     }
 
     RecruitmentUpdateDTO update = recruitmentService.getRecruitmentForUpdate(id);
@@ -178,6 +191,7 @@ public class RecruitmentController {
     model.addAttribute("festivals", festivalService.getAll());
     model.addAttribute("sidoList", regionService.getSidoList());
     model.addAttribute("sigunguList", regionService.getSigunguList(update.getRegionSidoCode()));
+    model.addAttribute("from", from);
     return "recruitment/modify";
   }
 
@@ -211,9 +225,14 @@ public class RecruitmentController {
   }
 
   // 검증 실패로 등록 폼을 다시 보여줄 때, GET /register에서 채우던 드롭다운 데이터를 다시 채움
-  private String registerFormWithReloadedOptions(Model model, BindingResult bindingResult) {
+  // (입력했던 값도 recruitmentCreateForm으로 함께 다시 채워짐, 시/도가 없으면 시/군/구 목록은 비워둠)
+  private String registerFormWithReloadedOptions(RecruitmentCreateForm recruitmentCreateForm,
+                                                  Model model, BindingResult bindingResult) {
     model.addAttribute("festivals", festivalService.getAll());
     model.addAttribute("sidoList", regionService.getSidoList());
+    if (recruitmentCreateForm.regionSidoCode() != null) {
+      model.addAttribute("sigunguList", regionService.getSigunguList(recruitmentCreateForm.regionSidoCode()));
+    }
     model.addAttribute("hasError", true);
     List<String> errorMessages = bindingResult.getFieldErrors().stream()
       .map(error -> error.getField() + ": " + error.getDefaultMessage())
@@ -231,8 +250,21 @@ public class RecruitmentController {
     return owner ? current : null;
   }
 
+  // 상세/목록 복귀 경로 힌트("어디서 왔는지")로 허용하는 값만 통과시킴 (그 외엔 공개 리스트로 취급)
+  private String validateFrom(String from) {
+    return "manage".equals(from) ? "manage" : null;
+  }
+
+  // 권한/마감 체크 실패로 상세 페이지로 되돌아갈 때, 어디서 왔는지(from)를 잃지 않고 그대로 실어서 리다이렉트
+  // (다른 곳의 성공 리다이렉트와 동일하게 RedirectAttributes + {id} 템플릿 방식을 사용)
+  private String redirectToRecruitment(Long id, String from, RedirectAttributes redirectAttributes) {
+    redirectAttributes.addAttribute("id", id);
+    if (from != null) redirectAttributes.addAttribute("from", from);
+    return "redirect:/recruitment/{id}";
+  }
+
   // 검증 실패로 수정 폼을 다시 보여줄 때, GET /modify/{id}에서 채우던 데이터를 다시 채움
-  private String modifyFormWithReloadedOptions(Long id, RecruitmentResponseDTO current,
+  private String modifyFormWithReloadedOptions(Long id, RecruitmentResponseDTO current, String from,
                                                Model model, BindingResult bindingResult) {
     RecruitmentUpdateDTO update = recruitmentService.getRecruitmentForUpdate(id);
     model.addAttribute("recruitmentId", id);
@@ -242,6 +274,7 @@ public class RecruitmentController {
     model.addAttribute("festivals", festivalService.getAll());
     model.addAttribute("sidoList", regionService.getSidoList());
     model.addAttribute("sigunguList", regionService.getSigunguList(update.getRegionSidoCode()));
+    model.addAttribute("from", from);
     model.addAttribute("hasError", true);
     List<String> errorMessages = bindingResult.getFieldErrors().stream()
       .map(error -> error.getField() + ": " + error.getDefaultMessage())
@@ -256,18 +289,20 @@ public class RecruitmentController {
                          Model model,
                          RedirectAttributes redirectAttributes) {
 
-    if (bindingResult.hasErrors()) return registerFormWithReloadedOptions(model, bindingResult);
+    if (bindingResult.hasErrors()) return registerFormWithReloadedOptions(recruitmentCreateForm, model, bindingResult);
     if (recruitmentCreateForm.workingStartDate().isAfter(
       recruitmentCreateForm.workingEndDate()))
       bindingResult.rejectValue("workingEndDate",
         "workingEndDate.outOfRange",
         "업무시작날짜는 업무종료날짜보다 늦을 수 없습니다."
       );
-    if (bindingResult.hasErrors()) return registerFormWithReloadedOptions(model, bindingResult);
+    if (bindingResult.hasErrors()) return registerFormWithReloadedOptions(recruitmentCreateForm, model, bindingResult);
     RecruitmentCreateDTO recruitmentCreateDTO = mapper.toCreateDto(recruitmentCreateForm);
     Long recruitmentId = recruitmentService.createRecruitment(recruitmentCreateDTO);
 
+    // /recruitment/register는 manage.html의 "구인공고 등록" 버튼으로만 진입하므로 항상 관리 목록에서 온 것으로 취급
     redirectAttributes.addAttribute("id", recruitmentId);
+    redirectAttributes.addAttribute("from", "manage");
     redirectAttributes.addFlashAttribute("successMsg", "공고 초안이 등록되었습니다.");
 
     return "redirect:/recruitment/{id}";
@@ -275,31 +310,38 @@ public class RecruitmentController {
 
   @PostMapping("/modify/{id}")
   public String modify(@PathVariable Long id,
+                       @RequestParam(required = false) String from,
                        @Valid @ModelAttribute RecruitmentCreateForm recruitmentCreateForm,
                        BindingResult bindingResult,
                        Model model,
                        @AuthenticationPrincipal CustomUserDetails user,
                        RedirectAttributes redirectAttributes) {
 
+    from = validateFrom(from);
     RecruitmentResponseDTO current = requireOwnedRecruitment(id, user);
     if (current == null) {
       redirectAttributes.addFlashAttribute("errorMsg", "수정 권한이 없습니다.");
-      return "redirect:/recruitment/" + id;
+      return redirectToRecruitment(id, from, redirectAttributes);
+    }
+    if (current.getApplicationDeadline().isBefore(LocalDate.now())) {
+      redirectAttributes.addFlashAttribute("errorMsg", "모집마감일이 지난 공고는 수정할 수 없습니다.");
+      return redirectToRecruitment(id, from, redirectAttributes);
     }
 
-    if (bindingResult.hasErrors()) return modifyFormWithReloadedOptions(id, current, model, bindingResult);
+    if (bindingResult.hasErrors()) return modifyFormWithReloadedOptions(id, current, from, model, bindingResult);
     if (recruitmentCreateForm.workingStartDate().isAfter(
       recruitmentCreateForm.workingEndDate()))
       bindingResult.rejectValue("workingEndDate",
         "workingEndDate.outOfRange",
         "업무시작날짜는 업무종료날짜보다 늦을 수 없습니다."
       );
-    if (bindingResult.hasErrors()) return modifyFormWithReloadedOptions(id, current, model, bindingResult);
+    if (bindingResult.hasErrors()) return modifyFormWithReloadedOptions(id, current, from, model, bindingResult);
 
     RecruitmentUpdateDTO recruitmentUpdateDTO = mapper.toUpdateDto(recruitmentCreateForm);
     recruitmentService.updateRecruitment(id, recruitmentUpdateDTO);
 
     redirectAttributes.addAttribute("id", id);
+    if (from != null) redirectAttributes.addAttribute("from", from);
     redirectAttributes.addFlashAttribute("successMsg", "공고가 수정되었습니다.");
 
     return "redirect:/recruitment/{id}";
@@ -307,18 +349,20 @@ public class RecruitmentController {
 
   @PostMapping("/delete/{id}")
   public String delete(@PathVariable Long id,
+                       @RequestParam(required = false) String from,
                        @AuthenticationPrincipal CustomUserDetails user,
                        RedirectAttributes redirectAttributes) {
+    from = validateFrom(from);
     RecruitmentResponseDTO current = requireOwnedRecruitment(id, user);
     if (current == null) {
       redirectAttributes.addFlashAttribute("errorMsg", "삭제 권한이 없습니다.");
-      return "redirect:/recruitment/" + id;
+      return redirectToRecruitment(id, from, redirectAttributes);
     }
 
     recruitmentService.deleteRecruitment(id);
     redirectAttributes.addFlashAttribute("successMsg", "공고가 삭제되었습니다.");
 
-    return "redirect:/recruitment/list";
+    return "manage".equals(from) ? "redirect:/recruitment/manage" : "redirect:/recruitment/list";
   }
 
 }

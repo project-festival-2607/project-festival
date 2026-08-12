@@ -43,17 +43,22 @@
                     <span th:text="${myPageDTO.role}"></span>
                 </div>
             </div>
-            <a href="/mypage/modify" class="btn btn-primary">수정</a>
+            <a th:if="${!myPageDTO.socialSignUp}" th:href="@{/mypage/password-check}" class="btn btn-primary">수정</a>
+            <a th:if="${myPageDTO.socialSignUp}" th:href="@{/mypage/modify/job-seeker}" class="btn btn-primary">수정</a>
         </div>
 
         <div class="mypage-menu">
+            <div class="menu-item">
+                비밀번호 변경
+            </div>
+
             <div class="menu-item">
                 <a th:href="@{/resume/manage}">
                     나의 이력서 관리
                 </a>
             </div>
 
-            <div class="menu-item">
+            <div class="menu-item" th:if="${!myPageDTO.socialSignUp}">
                 <a>간편 로그인 관리</a>
             </div>
 

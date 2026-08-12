@@ -3,8 +3,7 @@ package com.example.chook.festival;
 import com.example.chook.common.handler.PagingHandler;
 import com.example.chook.file.record.FileResource;
 import com.example.chook.file.service.FileService;
-import com.example.chook.member.dto.LoginResponseDTO;
-import com.example.chook.member.entity.Member;
+import com.example.chook.member.security.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,6 +13,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -65,9 +65,12 @@ public class FestivalController {
     }
 
     @GetMapping("/detail")
-    public void detail(@RequestParam("id") String contentId, Model model){
+    public void detail(@RequestParam("id") String contentId,
+                       @AuthenticationPrincipal CustomUserDetails user,
+                       Model model){
         FestivalDTO festivalDTO = festivalService.getDetail(contentId);
         model.addAttribute("fes", festivalDTO);
+        if (user != null) model.addAttribute("memberId", user.getId());
         model.addAttribute("mapApiKey", mapApiKey);
     }
 
@@ -77,9 +80,11 @@ public class FestivalController {
     }
 
     @PostMapping("/register")
-    public String register(FestivalDTO festivalDTO, @RequestParam(name = "imageFile", required = false)MultipartFile file, @SessionAttribute("loginMember") LoginResponseDTO member){
+    public String register(FestivalDTO festivalDTO,
+                           @RequestParam(name = "imageFile", required = false)MultipartFile file,
+                           @AuthenticationPrincipal CustomUserDetails user){
         log.info(">>> register >>> {}", festivalDTO);
-        festivalDTO.setMember(member.getId());
+        festivalDTO.setMember(user.getId());
 
         festivalService.registerFes(festivalDTO, file);
         return "redirect:/festival/list";
