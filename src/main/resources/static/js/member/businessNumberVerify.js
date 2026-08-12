@@ -4,7 +4,8 @@ const verifyBtn = document.getElementById("verifyBusinessNumberBtn");
 const verificationTokenInput = document.getElementById("verificationToken");
 const form = businessNumberInput.closest("form");
 
-let verifiedBusinessNumber = null;
+// 이미 등록된 값이 있으면(수정 페이지) 그 값을 "인증된 상태"로 간주, 없으면(가입 폼) null
+let verifiedBusinessNumber = businessNumberInput.value || null;
 
 function formatBusinessNumber(digits) {
     if (digits.length > 5) {
@@ -14,6 +15,11 @@ function formatBusinessNumber(digits) {
         return digits.slice(0, 3) + "-" + digits.slice(3);
     }
     return digits;
+}
+
+// 페이지 로드 시 초기값이 있으면 하이픈 포맷으로 즉시 표시
+if (businessNumberDisplay.value) {
+    businessNumberDisplay.value = formatBusinessNumber(businessNumberDisplay.value.replace(/\D/g, ""));
 }
 
 // 화면에는 3-2-5 하이픈 포맷으로 보여주고, 실제 전송용 hidden 필드엔 숫자만 저장
