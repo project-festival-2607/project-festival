@@ -17,6 +17,8 @@ public class DevProductInitializer {
 
   public void generateSampleProducts() {
 
+    if (productRepository.count() > 0) return;
+
     log.info("테스트용 상품 데이터 삽입 시작");
 
     List<Integer> values = List.of(5000, 10000, 20000);

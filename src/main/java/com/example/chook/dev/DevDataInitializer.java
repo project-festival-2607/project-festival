@@ -13,8 +13,8 @@ import org.springframework.stereotype.Component;
 public class DevDataInitializer implements ApplicationRunner {
 
   private static final long RECRUITER_COUNT = 50;
-  private static final long JOB_SEEKER_COUNT = 10;
-  private static final long JOB_EQUIP_COUNT = 5;
+  private static final long JOB_SEEKER_COUNT = 100;
+  private static final long JOB_EQUIP_COUNT = 30;
   private static final long TARGET_FESTIVAL_COUNT = 200;
   private final DevMemberDataInitializer memberDataInitializer;
   private final DevFestivalDataInitializer festivalDataInitializer;

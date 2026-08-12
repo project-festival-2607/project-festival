@@ -38,4 +38,18 @@ public class JobSeekerTableDTO {
   String streetAddress;
   String detailAddress;
 
+  public String getFormattedPhone() {
+    return String.format("%s-%s-%s", phone.substring(0, 3), phone.substring(3, 7), phone.substring(7));
+  }
+
+  public String getStatusString() {
+    if (deletedAt != null) return "탈퇴";
+    switch (status) {
+      case ACTIVE -> {return "활성";}
+      case DORMANT -> {return "휴면";}
+      case SUSPENDED -> {return "정지";}
+      default -> {return status.name();}
+    }
+  }
+
 }
