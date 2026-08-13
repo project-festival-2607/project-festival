@@ -66,10 +66,11 @@ public class AdminController {
       .build();
   }
 
-  @PostMapping("/member/job-seeker/suspend-member")
+  @PostMapping("/member/job-seeker/{memberId}/suspend")
   @ResponseBody
-  public AdminActionResponse suspendMember(@RequestParam Long memberId,
-                                           @RequestParam String reason) {
+  public AdminActionResponse suspendMember(@PathVariable Long memberId,
+                                           @RequestBody String reason) {
+    log.info("target memberId: {}", memberId);
     boolean isChanged = adminService.suspendMember(memberId, reason);
     return AdminActionResponse.builder()
       .result(isChanged)

@@ -94,7 +94,10 @@ public class AdminServiceImpl implements AdminService {
     if (suspension != null && reason.equals(currentSuspendedReason)) return false;
 
     // 개체 (생성 후) 업데이트
-    if (suspension == null) suspension = new MemberSuspension();
+    if (suspension == null) {
+      suspension = new MemberSuspension();
+      suspension.setMember(member);
+    }
     suspension.setReason(reason);
 
     // 저장
