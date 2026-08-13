@@ -31,7 +31,7 @@ public class PointCalcUse {
     // 회원 식별자
     // Member의 id를 참조
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id", nullable = false)
+    @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
     // 해당 결제로 얻은 포인트
