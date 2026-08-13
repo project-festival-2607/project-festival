@@ -3,11 +3,11 @@ package com.example.chook.admin.dto;
 import com.example.chook.member.entity.enums.Gender;
 import com.example.chook.member.entity.enums.MemberRole;
 import com.example.chook.member.entity.enums.MemberStatus;
-import com.example.chook.member.entity.enums.Provider;
 import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -31,25 +31,29 @@ public class JobSeekerTableDTO {
   LocalDateTime lastLoginAt;
   LocalDateTime deletedAt;
   Long point;
-  List<Provider> providers;
+  List<SocialLoginDTO> socialLoginDtoList = new ArrayList<>();
 
   Gender gender;
   LocalDate birthDate;
   String streetAddress;
   String detailAddress;
 
+  LocalDateTime suspendedAt;
+  String suspendedReason;
+
   public String getFormattedPhone() {
-    return String.format("%s-%s-%s", phone.substring(0, 3), phone.substring(3, 7), phone.substring(7));
+    return phone.length() == 11
+      ? String.format("%s-%s-%s", phone.substring(0, 3), phone.substring(3, 7), phone.substring(7))
+      : phone;
   }
 
   public String getStatusString() {
     if (deletedAt != null) return "탈퇴";
-    switch (status) {
-      case ACTIVE -> {return "활성";}
-      case DORMANT -> {return "휴면";}
-      case SUSPENDED -> {return "정지";}
-      default -> {return status.name();}
-    }
+    return switch (status) {
+      case ACTIVE -> "활성";
+      case DORMANT -> "휴면";
+      case SUSPENDED -> "정지";
+    };
   }
 
 }

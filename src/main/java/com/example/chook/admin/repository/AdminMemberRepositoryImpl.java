@@ -25,6 +25,7 @@ import java.util.List;
 import static com.example.chook.common.util.QuerydslUtils.*;
 import static com.example.chook.member.entity.QJobSeekerProfile.jobSeekerProfile;
 import static com.example.chook.member.entity.QMember.member;
+import static com.example.chook.member.entity.QMemberSuspension.memberSuspension;
 
 @Repository
 @Slf4j
@@ -35,7 +36,6 @@ public class AdminMemberRepositoryImpl implements AdminMemberRepository {
   public AdminMemberRepositoryImpl(EntityManager em) {
     this.jpaQueryFactory = new JPAQueryFactory(em);
   }
-
 
   @Override
   public Page<JobSeekerTableDTO> getPage(Pageable pageable, JobSeekerSearchCondition condition) {
@@ -61,12 +61,17 @@ public class AdminMemberRepositoryImpl implements AdminMemberRepository {
         jobSeekerProfile.gender,
         jobSeekerProfile.birthDate,
         jobSeekerProfile.streetAddress,
-        jobSeekerProfile.detailAddress
+        jobSeekerProfile.detailAddress,
+
+        memberSuspension.createdAt.as("suspendedAt"),
+        memberSuspension.reason.as("suspendedReason")
 
       ))
       .from(member)
       .join(jobSeekerProfile)
-      .on(jobSeekerProfile.memberId.eq(member.id));
+      .on(jobSeekerProfile.memberId.eq(member.id))
+      .leftJoin(memberSuspension)
+      .on(memberSuspension.memberId.eq(member.id));
 
     JPAQuery<Long> countQuery = jpaQueryFactory
       .select(member.count())
@@ -82,10 +87,10 @@ public class AdminMemberRepositoryImpl implements AdminMemberRepository {
       .and(eq(member.status, condition.status()))
       .and(eq(jobSeekerProfile.gender, condition.gender()))
       .and(checkDataRangeCriteria(condition.dateRangeCriteria(),
-                                  condition.startDateTime(),
-                                  condition.endDateTime(),
-                                  condition.startDate(),
-                                  condition.endDate()
+        condition.startDateTime(),
+        condition.endDateTime(),
+        condition.startDate(),
+        condition.endDate()
       ))
       .and(containsProvider(condition.provider()));
 
