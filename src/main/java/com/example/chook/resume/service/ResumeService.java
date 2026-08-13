@@ -117,6 +117,7 @@ public interface ResumeService {
                 .type(resumePortfolio.getType())
                 .title(resumePortfolio.getTitle())
                 .registeredAt(resumePortfolio.getRegisteredAt())
+                .url(resumePortfolio.getUrl())
                 .build();
     }
 
@@ -131,6 +132,7 @@ public interface ResumeService {
                 .type(resumePortfolioDTO.getType())
                 .title(resumePortfolioDTO.getTitle())
                 .registeredAt(resumePortfolioDTO.getRegisteredAt())
+                .url(resumePortfolioDTO.getUrl())
                 .build();
     }
 
@@ -145,4 +147,7 @@ public interface ResumeService {
 
     // 이력서 삭제
     void delete(Long resumeId);
+
+    // 이력서 관리 페이지로 이동
+    ResumeResponseDTO getResumeByMemberId(Long memberId);
 }

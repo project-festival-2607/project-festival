@@ -44,12 +44,35 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
         // 로그인 상태나 가입에 필요한 정보를 저장하기 위한 Http 세션
         HttpSession session = request.getSession();
 
+        // 소셜 계정 연동 시도인지 먼저 확인
+        Long linkingMemberId = (Long) session.getAttribute("linkingMemberId");
+        if (linkingMemberId != null) {
+            session.removeAttribute("linkingMemberId");
+
+            String errorParam = "";
+            try {
+                memberService.linkSocialAccount(linkingMemberId,
+                        userInfo.getProvider(),
+                        userInfo.getProviderId());
+            } catch (IllegalArgumentException | IllegalStateException e) {
+                errorParam = "?linkError=true";
+            }
+
+            String username = memberService.getUsernameById(linkingMemberId);
+            authenticationHelper.authenticate(username, request, response);
+
+            response.sendRedirect("/mypage/social-login" + errorParam);
+            return;
+        }
+
         try {
             // 기존 회원인지 확인하고 로그인 처리
             LoginResponseDTO responseDTO = memberService.loginBySocial(
                     userInfo.getProvider(),
                     userInfo.getProviderId()
             );
+            // 로그인 날짜 업데이트
+            memberService.updateLastLoginAt(responseDTO.getId());
             // 기존 회원 → SecurityContext에 인증 정보 설정 후 홈으로 리다이렉트
             authenticationHelper.authenticate(responseDTO.getUsername(), request, response);
             response.sendRedirect("/");

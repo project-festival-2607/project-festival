@@ -1,10 +1,12 @@
 package com.example.chook.member.security;
 
 import com.example.chook.member.entity.enums.MemberStatus;
+import com.example.chook.member.service.MemberService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
@@ -12,7 +14,10 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 
 @Component
+@RequiredArgsConstructor
 public class LoginSuccessHandler implements AuthenticationSuccessHandler {
+
+    private final MemberService memberService;
 
     @Override
     public void onAuthenticationSuccess(
@@ -23,7 +28,6 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
 
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
 
-        // 비밀번호는 이미 검증 완료된 상태 → 여기서 상태를 확인해도 안전함
         if (userDetails.getStatus() == MemberStatus.DORMANT) {
             response.sendRedirect("/member/verify");
             return;
@@ -33,9 +37,11 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
             return;
         }
 
+        // 로그인 날짜 업데이트
+        memberService.updateLastLoginAt(userDetails.getId());
+
         HttpSession session = request.getSession();
 
-        // 로그인 전에 접근했던 페이지가 있다면 해당 페이지로 이동 (applypage 기능 추가)
         String redirectAfterLogin =
                 (String) session.getAttribute("applicationRedirectAfterLogin");
 
@@ -45,7 +51,6 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
             return;
         }
 
-        // 별도 이동 경로가 없으면 메인으로 이동
         response.sendRedirect("/");
     }
 

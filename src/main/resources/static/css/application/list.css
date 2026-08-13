@@ -1,0 +1,82 @@
+/* 지원현황 전체 */
+.application-list {
+    width: 100%;
+    padding: 40px 0;
+}
+
+/* 제목 */
+.application-list h1 {
+    margin-bottom: 30px;
+    font-size: 28px;
+    font-weight: 700;
+}
+
+/* 지원 내역이 없을 때 */
+.empty-message {
+    padding: 60px 20px;
+    text-align: center;
+    border: 1px solid #e5e5e5;
+    border-radius: 10px;
+    color: #777;
+}
+
+/* 테이블 */
+.application-table {
+    width: 100%;
+    border-collapse: collapse;
+    border-top: 2px solid #333;
+}
+
+/* 테이블 헤더 */
+.application-table th {
+    padding: 16px 12px;
+    background-color: #f7f7f7;
+    border-bottom: 1px solid #ddd;
+    font-weight: 600;
+    text-align: center;
+}
+
+/* 테이블 내용 */
+.application-table td {
+    padding: 16px 12px;
+    border-bottom: 1px solid #eee;
+    text-align: center;
+}
+
+/* 마우스를 올렸을 때 */
+.application-table tbody tr:hover {
+    background-color: #fafafa;
+}
+
+/* 상세보기 버튼 */
+.application-detail-btn {
+    display: inline-block;
+    padding: 7px 14px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #fff;
+    color: #333;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.application-detail-btn:hover {
+    background-color: #f3f3f3;
+}
+
+/* 지원 상태 */
+.application-status {
+    font-weight: 600;
+}
+
+.application-status.applied {
+    color: #777;
+}
+
+.application-status.accepted {
+    color: #2e7d32;
+}
+
+.application-status.rejected {
+    color: #d32f2f;
+}

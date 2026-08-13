@@ -2,6 +2,7 @@ package com.example.chook.member.controller;
 
 import com.example.chook.member.dto.*;
 import com.example.chook.member.security.AuthenticationHelper;
+import com.example.chook.member.security.CustomUserDetails;
 import com.example.chook.member.service.BusinessNumberVerifyService;
 import com.example.chook.member.service.MemberService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -9,6 +10,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -58,6 +60,7 @@ public class MemberController {
     ) {
         try {
             LoginResponseDTO responseDTO = memberService.signUpJobSeeker(requestDTO);
+            memberService.updateLastLoginAt(responseDTO.getId());
             authenticationHelper.authenticate(responseDTO.getUsername(), request, response);
             return "redirect:/";
         } catch (IllegalArgumentException e) {
@@ -82,6 +85,7 @@ public class MemberController {
     ) {
         try {
             LoginResponseDTO responseDTO = memberService.signUpEmployer(requestDTO);
+            memberService.updateLastLoginAt(responseDTO.getId());
             authenticationHelper.authenticate(responseDTO.getUsername(), request, response);
             return "redirect:/";
         } catch (IllegalArgumentException e) {
@@ -135,6 +139,7 @@ public class MemberController {
         try {
             LoginResponseDTO responseDTO = memberService.signUpSocial(authInfo, requestDTO);
             session.removeAttribute("socialAuthInfo");
+            memberService.updateLastLoginAt(responseDTO.getId());
             authenticationHelper.authenticate(responseDTO.getUsername(), request, response);
             return "redirect:/";
         } catch (IllegalArgumentException e) {

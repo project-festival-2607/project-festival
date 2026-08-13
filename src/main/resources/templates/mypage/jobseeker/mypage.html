@@ -4,6 +4,7 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       xmlns:th="http://www.thymeleaf.org">
 <div layout:fragment="content">
+    <link rel="stylesheet" th:href="@{/css/mypage/jobseeker/mypage.css}">
     <div class="container">
         <!--                모든 inner는 class="container" 로 맞춤        -->
         <!--        이 안에서 작업        -->
@@ -28,6 +29,11 @@
                 </div>
 
                 <div>
+                    <p>이메일</p>
+                    <span th:text="${myPageDTO.email}"></span>
+                </div>
+
+                <div>
                     <p>포인트</p>
                     <span th:text="${myPageDTO.point}"></span>
                 </div>
@@ -46,21 +52,21 @@
                 <a th:href="@{/mypage/password-change}">비밀번호 변경</a>
             </div>
             <div class="menu-item">
-                <a>
+                <a th:href="@{/resume/manage}">
                     나의 이력서 관리
                 </a>
             </div>
 
-            <div class="menu-item" th:if="${!myPageDTO.socialSignUp}">
-                <a>간편 로그인 관리</a>
+            <div class="menu-item" th:if="${!myPageDTO.socialSignUp and myPageDTO.role.name() != 'RECRUITER'}">
+                <a th:href="@{/mypage/social-login}">간편 로그인 관리</a>
             </div>
 
             <div class="menu-item">
-                <a>지원현황</a>
+                <a th:href="@{/application/list}">지원현황</a>
             </div>
 
             <div class="menu-item">
-                <a>회원탈퇴</a>
+                <a th:href="@{/mypage/account-leave}">회원탈퇴</a>
             </div>
         </div>
     </div>

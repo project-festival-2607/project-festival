@@ -1,38 +1,166 @@
-.recruit-detail-title-row {
+/* detailContainer의 기존 flex 속성 리셋 (제목과 본문이 위아래로 쌓이도록) */
+.detailContainer {
+    display: block !important;
+    padding: 20px 0 !important;
+}
+
+/* 제목 카드 스타일 */
+.recruit-title-card {
     display: flex;
+    justify-content: space-between;
     align-items: center;
-    gap: 10px;
+    border-bottom: 2px solid #2c2c2c;
+    padding-bottom: 15px;
+    margin-bottom: 30px;
 }
 
-.recruit-detail-bookmark {
-    color: #ccc2a4;
-    font-size: 22px;
-    cursor: pointer;
-}
-
-.recruit-detail-bookmark.active {
-    color: #e8a33d;
-}
-
-.recruit-detail-actions {
+/* 본문 레이아웃 유지 */
+.recruit-layout {
     display: flex;
-    justify-content: center;
-    gap: 10px;
-    margin-top: 10px;
+    align-items: flex-start;
+    margin-top: 40px;
+    gap: 40px;
+    width: 100%;
 }
 
-.recruit-detail-owner-actions {
+.recruit-main {
+    flex: 1;
+    min-width: 0;
     display: flex;
-    gap: 10px;
+    flex-direction: column;
+    gap: 40px;
 }
 
+.recruit-side {
+    width: 360px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    position: sticky;
+    top: 30px;
+}
+
+/* festivalDetail.css 의 600px, 700px 고정 너비 강제 해제 */
+.detail-text {
+    width: 100% !important;
+}
+
+.detail-sub {
+    width: 100% !important;
+}
+
+.detail-sub > div {
+    width: 90px !important;
+    flex-shrink: 0;
+}
+
+.detail-sub > span {
+    width: auto !important;
+    flex: 1;
+    word-break: break-all;
+}
+
+/* detail-h2 헤더 폭 자동 조정 */
+.detail-h2 {
+    width: auto !important;
+    display: inline-block;
+}
+
+/* 버튼 스타일 정리 */
 .recruit-detail-apply {
-    min-width: 200px;
+    display: block;
     text-align: center;
+    padding: 12px 0;
+    font-size: 16px;
+    font-weight: bold;
 }
 
-.recruit-detail-expired-note {
-    color: #928c76;
-    font-size: 14px;
-    align-self: center;
+/* ========================================================
+   festivalDetail.css 강제 덮어쓰기 (Override)
+   ======================================================== */
+
+/* 1. 컨테이너 및 기본 디스플레이 정돈 */
+.detailContainer {
+    display: block !important;
+    padding: 20px 0 !important;
+    gap: 0 !important;
+    margin-bottom: 0 !important;
+}
+
+/* 2. 제목 영역 H2 고정너비 100px 해제 및 밑줄 정돈 */
+.detail-h2 {
+    width: 100% !important;
+    font-size: 22px !important;
+    font-weight: 700 !important;
+    color: #ccc2a4 !important;
+    border-bottom: 2px solid #ccc2a4 !important;
+    padding-bottom: 8px !important;
+    margin-bottom: 16px !important;
+}
+
+/* 3. detail-text, detail-sub 너비 및 줄바꿈 정상화 */
+.recruit-side .detail-text,
+.recruit-main .detail-text {
+    width: 100% !important;
+    gap: 12px !important;
+}
+
+.detail-sub {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: flex-start !important;
+    width: 100% !important;
+    margin-bottom: 10px !important;
+}
+
+/* 항목 이름 (행사 이름, 급여, 일정 등) */
+.detail-sub > div:first-child {
+    width: 85px !important;
+    min-width: 85px !important;
+    color: #dc3545 !important;
+    font-size: 14px !important;
+    font-weight: 600 !important;
+}
+
+/* 실제 값 (내용) - 600px 고정너비 해제 */
+.detail-sub > span,
+.detail-sub > div:last-child {
+    width: auto !important;
+    flex: 1 !important;
+    font-size: 14px !important;
+    color: #2c2c2c !important;
+    white-space: normal !important; /* 줄바꿈 꼬임 방지 */
+    word-break: break-all !important;
+    line-height: 1.5 !important;
+}
+
+/* 4. 급여 영역(스위치문 inline-block 정리) */
+.detail-sub span span {
+    display: inline !important;
+    width: auto !important;
+}
+
+/* 5. 근무지역 지도 박스 크기 잡기 */
+.mapBox {
+    width: 100% !important;
+    height: 350px !important;
+    margin-top: 15px !important;
+    border: 1px solid #ccc2a4 !important;
+    border-radius: 8px;
+}
+
+/* 6. 지원하기 버튼 전체 너비 채우기 */
+.recruit-detail-apply {
+    display: block !important;
+    width: 100% !important;
+    padding: 14px 0 !important;
+    font-size: 16px !important;
+    font-weight: bold !important;
+    text-align: center !important;
+}
+
+/* 7. 지도 보러가기 버튼 */
+.goToMap {
+    margin-top: 12px !important;
 }
