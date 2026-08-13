@@ -35,7 +35,7 @@ public class MyPageController {
 
     // 조회기능
     @GetMapping
-    public String mypage(@AuthenticationPrincipal UserDetails user, Model model){
+    public String mypage(@AuthenticationPrincipal UserDetails user){
 
         // 로그인하지 않은 경우
         if (user == null) {
