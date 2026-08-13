@@ -41,6 +41,9 @@ public interface ApplicationService {
                 .resumeId(application.getResume().getId())
                 .registerDate(application.getRegisterDate())
                 .readDate(application.getReadDate())
+                .result(application.getResult())
+                .title(application.getRecruitment().getFestival().getTitle())
+                .address(application.getRecruitment().getFestival().getAddress())
                 .build();
     }
 

@@ -4,11 +4,14 @@ import com.example.chook.application.dto.ApplicationDTO;
 import com.example.chook.application.dto.ApplyDTO;
 import com.example.chook.application.entity.enums.ApplicationResult;
 import com.example.chook.application.service.ApplicationService;
+import com.example.chook.member.entity.Member;
+import com.example.chook.member.repository.MemberRepository;
 import com.example.chook.member.security.CustomUserDetails;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,6 +27,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class ApplicationController {
 
     private final ApplicationService applicationService;
+    private final MemberRepository memberRepository;
 
     // 지원하기 기능
     @PostMapping("/apply")
@@ -35,11 +39,24 @@ public class ApplicationController {
 
     // 내가 지원한 목록 조회
     @GetMapping("/list")
-    public String list(@RequestParam Long memberId, Model model) {
+    public String list(@AuthenticationPrincipal UserDetails user, Model model) {
+        // 로그인하지 않은 경우
+        if (user == null) {
+            return "redirect:/member/login";
+        }
 
+        // 현재 로그인한 회원의 username
+        String username = user.getUsername();
+
+        // DB에서 회원 조회
+        Member member = memberRepository
+                .findByUsernameAndDeletedAtIsNull(username)
+                .orElseThrow();
+
+        // 현재 회원의 지원 목록 조회
         model.addAttribute(
                 "applicationList",
-                applicationService.getList(memberId)
+                applicationService.getList(member.getId())
         );
         return "application/list";
     }
