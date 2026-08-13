@@ -73,7 +73,7 @@ public class AdminServiceImpl implements AdminService {
       new EntityNotFoundException("Member with id: " + memberId + " not found")
     );
     member.setPhoneVerified(false);
-    member.setStatus(MemberStatus.SUSPENDED);
+    suspendMember(memberId, "전화번호 인증 해제");
   }
 
   @Transactional
