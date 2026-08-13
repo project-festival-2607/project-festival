@@ -383,6 +383,15 @@ public class MemberServiceImpl implements MemberService {
                 .getUsername();
     }
 
+    @Transactional
+    @Override
+    public void updateLastLoginAt(Long memberId) {
+        memberRepository.findById(memberId).ifPresent(member -> {
+            member.setLastLoginAt(LocalDateTime.now());
+            memberRepository.save(member);
+        });
+    }
+
     // 소셜 회원 아이디 생성 (사용자에게 노출/입력되지 않는 내부용 값)
     private String generateSocialUsername(Provider provider) {
         return provider.name().charAt(0) + "-" + UUID.randomUUID();

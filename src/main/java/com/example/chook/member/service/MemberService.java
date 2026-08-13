@@ -37,4 +37,6 @@ public interface MemberService {
 
     String getUsernameById(Long memberId);
 
+    void updateLastLoginAt(Long memberId);
+
 }
