@@ -6,8 +6,9 @@ import com.example.chook.mypage.dto.MyPageDTO;
 public interface MyPageService {
 
     // member (Entity) → MyPageDTO 변환
-    default MyPageDTO memberEntityToDTO(Member member) {
-
+    default MyPageDTO memberEntityToDTO(
+            Member member
+    ) {
         return MyPageDTO.builder()
                 .username(member.getUsername())
                 .name(member.getName())
@@ -21,4 +22,5 @@ public interface MyPageService {
 
     // 마이페이지 조회
     MyPageDTO getMyPage(String username);
+
 }

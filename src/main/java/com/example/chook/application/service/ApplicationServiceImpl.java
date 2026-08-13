@@ -129,7 +129,8 @@ public class ApplicationServiceImpl implements ApplicationService {
         RecruitmentResponseDTO recruitment = recruitmentService.getRecruitment(recruitmentId);
 
         // 이력서 정보 조회
-        Resume resume = resumeRepository.getResumeByMemberId(memberId);
+        Resume resume = resumeRepository.findByMemberId(memberId)
+          .orElse(null);
 
         ResumeResponseDTO resumeResponseDTO = null;
 

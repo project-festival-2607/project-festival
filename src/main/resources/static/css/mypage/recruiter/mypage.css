@@ -1,0 +1,75 @@
+/* 회원정보 박스 */
+.member-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 25px;
+    margin-bottom: 30px;
+}
+
+/* 회원정보 내용 */
+.member-detail {
+    display: flex;
+    gap: 50px;
+}
+
+/* 각각의 정보 */
+.member-detail div {
+    display: flex;
+    flex-direction: column;
+}
+
+/* 제목 */
+.member-detail p {
+    margin: 0;
+    font-size: 14px;
+    color: #888;
+    font-weight: bold;
+}
+
+/* 값 */
+.member-detail span {
+    margin-top: 8px;
+    font-size: 17px;
+    color: #222;
+    font-weight: 600;
+}
+
+/* 수정 버튼 */
+.member-info .btn {
+    padding: 8px 20px;
+    border-radius: 8px;
+}
+
+/* 마이페이지 메뉴 전체 */
+.mypage-menu {
+    display: flex;
+    flex-direction: column;  /* 세로 배치 */
+    gap: 15px;
+    margin-top: 30px;
+}
+
+/* 메뉴 하나 */
+.menu-item {
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 20px;
+    cursor: pointer;
+}
+
+/* 메뉴 글자 */
+.menu-item p {
+    margin: 0;
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+}
+
+/* 마우스 올렸을 때 */
+.menu-item:hover {
+    background: #f5f5f5;
+}

@@ -41,4 +41,8 @@ public class ResumePortfolio {
     // 등록일
     @Column(name = "registered_at")
     private LocalDateTime registeredAt;
+
+    // url
+    @Column(name = "url", length = 1000)
+    private String url;
 }

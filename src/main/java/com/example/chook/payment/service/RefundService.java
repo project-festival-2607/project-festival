@@ -25,9 +25,20 @@ public class RefundService {
 
     // payCreationTest.html이 "최대 이만큼 환불 가능"을 보여줄 때 쓰는 조회
     public int getRefundablePoint(Long memberId) {
+
+        System.out.println("===== 환불 가능 포인트 조회 시작 =====");
+        System.out.println("memberId = " + memberId);
+
+
         List<PointCalcUse> calcUses =
                 pointCalcUseRepository.findByMember_IdAndLeftPointGreaterThanOrderByCreatedAtAsc(memberId, 0);
                 //멤버 아이디를 가져오면서 그에대한 leftpoint 남은포인트가 0보다 큰거 가져올것. 단 날짜순으로.
+
+        System.out.println("조회된 개수 = " + calcUses.size());
+
+
+        System.out.println("===== 환불 가능 포인트 조회 종료 =====");
+
 
         return calcUses.stream()
                 .mapToInt(PointCalcUse::getLeftPoint)
