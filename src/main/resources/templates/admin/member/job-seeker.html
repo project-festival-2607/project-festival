@@ -165,6 +165,8 @@
               <td data-type="email" th:text="${jobSeeker.email}"></td>
               <td data-type="status" class="text-center">
                 <th:block th:replace="~{admin/fragments/badge :: member-status(${jobSeeker.status}, ${jobSeeker.deletedAt ne null}, false)}"></th:block>
+                <span data-type="suspendedAt" class="d-none" th:text="${#temporals.format(jobSeeker.suspendedAt, 'yyyy.MM.dd. HH:mm:ss')}"></span>
+                <span data-type="suspendedReason" class="d-none">[[${jobSeeker.suspendedReason}]]</span>
               </td>
               <td th:text="${#temporals.format(jobSeeker.createdAt, 'yyyy.MM.dd. HH:mm')}"></td>
               <td th:text="${#temporals.format(jobSeeker.updatedAt, 'yyyy.MM.dd. HH:mm')}"></td>
@@ -190,8 +192,8 @@
                   <th:block th:replace="~{admin/fragments/svg :: moderation('moderation-icon')}"></th:block>
                 </button>
                 <ul class="dropdown-menu moderation-menu">
-                  <li th:if="${jobSeeker.status.name() ne 'SUSPENDED'}"><button type="button" class="dropdown-item date-range-criteria-li" data-role="suspendMember" data-bs-toggle="modal" data-bs-target="#suspendMemberModal">계정 정지</button></li>
-                  <li th:if="${jobSeeker.status.name() eq 'SUSPENDED'}"><button type="button" class="dropdown-item date-range-criteria-li" data-role="unsuspendMember">계정 정지 해제</button></li>
+                  <li><button type="button" class="dropdown-item date-range-criteria-li" data-role="suspendMember" data-bs-toggle="modal" data-bs-target="#suspendMemberModal" th:text="${'계정 정지'+ ((jobSeeker.status.name() eq 'SUSPENDED') ? ' 사유 변경': '')}"></button></li>
+                  <li th:if="${jobSeeker.status.name() eq 'SUSPENDED'}"><button type="button" class="dropdown-item date-range-criteria-li" data-role="unsuspendMember" data-bs-toggle="modal" data-bs-target="#unsuspendMemberModal">계정 정지 해제</button></li>
                   <li th:if="${jobSeeker.phoneVerified}"><button type="button" class="dropdown-item date-range-criteria-li" data-value="removePhoneVerification">휴대전화 인증 삭제</button></li>
                   <li th:unless="${jobSeeker.phoneVerified}"><button type="button" class="dropdown-item date-range-criteria-li" data-value="removePhoneVerification">휴대전화 인증 추가</button></li>
                 </ul>
@@ -225,11 +227,11 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h1 class="modal-title fs-5" id="exampleModalLabel">계정 정지 확인</h1>
+          <h1 class="modal-title fs-5" id="suspendMemberModalLabel">계정 정지 확인</h1>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <label class="mb-3">회원정보</label>
+          <label class="mb-3">회원 정보</label>
           <table class="table mb-3">
             <tbody>
             <tr>
@@ -250,7 +252,7 @@
             </tr>
             <tr>
               <th scope="row">최근접속일시</th>
-              <td id="suspendMemberLastLoginAt">(여기에 최근접속일시 표시됩니다.)</td>
+              <td id="suspendMemberLastLoginAt">(여기에 최근접속일시가 표시됩니다.)</td>
             </tr>
             </tbody>
           </table>
@@ -266,6 +268,45 @@
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
           <button type="button" class="btn btn-outline-danger" id="suspendMemberSubmit">저장</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- unsuspendMemberModal -->
+  <div class="modal fade" id="unsuspendMemberModal" tabindex="-1" aria-labelledby="suspendMemberModal" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="unsuspendMemberModalLabel">계정 정지 확인</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <label class="mb-3">회원 정지 정보</label>
+          <table class="table mb-3">
+            <tbody>
+            <tr>
+              <th scope="row" class="modal-member-info-th">아이디</th>
+              <td id="unsuspendMemberUsername">(여기에 아이디가 표시됩니다.)</td>
+            </tr>
+            <tr>
+              <th scope="row">이름</th>
+              <td id="unsuspendMemberName">(여기에 이름이 표시됩니다.)</td>
+            </tr>
+            <tr>
+              <th scope="row">정지 일시</th>
+              <td id="unsuspendMemberSuspendedAt">(여기에 정지 일시가 표시됩니다.)</td>
+            </tr>
+            <tr>
+              <th scope="row">정지 사유</th>
+              <td id="unsuspendMemberSuspendedReason">(여기에 정지 사유가 표시됩니다.)</td>
+            </tr>
+            </tbody>
+          </table>
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+          <button type="button" class="btn btn-outline-danger" id="unsuspendMemberSubmit">정지 해제</button>
         </div>
       </div>
     </div>

@@ -109,11 +109,13 @@ public class AdminServiceImpl implements AdminService {
   @Transactional
   @Override
   public boolean unsuspendMember(Long memberId) {
-    if (memberRepository.existsById(memberId))
-      throw new EntityNotFoundException("Member with id: " + memberId + " not found");
+    Member member = memberRepository.findById(memberId).orElseThrow(() ->
+      new EntityNotFoundException("Member with id: " + memberId + " not found")
+    );
     boolean isSuspended = memberSuspensionRepository.existsById(memberId);
     if (!isSuspended) return false;
     memberSuspensionRepository.deleteById(memberId);
+    member.setStatus(MemberStatus.ACTIVE);
     return true;
   }
 

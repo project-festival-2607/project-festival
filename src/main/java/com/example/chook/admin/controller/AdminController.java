@@ -91,8 +91,9 @@ public class AdminController {
 
   }
 
-  @PostMapping("/member/job-seeker/unsuspend-member")
-  public AdminActionResponse unsuspendMember(@RequestParam Long memberId) {
+  @PostMapping("/member/job-seeker/{memberId}/unsuspend")
+  @ResponseBody
+  public AdminActionResponse unsuspendMember(@PathVariable Long memberId) {
     boolean isChanged = adminService.unsuspendMember(memberId);
     return AdminActionResponse.builder()
       .result(isChanged)
