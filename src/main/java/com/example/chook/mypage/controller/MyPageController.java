@@ -44,18 +44,77 @@ public class MyPageController {
         String username = user.getUsername();
 
         // DB에서 회원 정보 조회
-        MyPageDTO myPageDTO =
-                myPageService.getMyPage(username);
+        MyPageDTO myPageDTO = myPageService.getMyPage(username);
 
-      // 구직자만 구직자 마이페이지 접근 가능
-      if (myPageDTO.getRole() != MemberRole.JOB_SEEKER && myPageDTO.getRole() != MemberRole.JOB_EQUIP) {
-        return "redirect:/";
-      }
+        switch (myPageDTO.getRole()){
+            // 구직자
+            case JOB_SEEKER:
+            case JOB_EQUIP:
+                return "redirect:/mypage/jobseeker";
 
-        // HTML에 전달
+            // 구인자
+            case RECRUITER:
+                return "redirect:/mypage/recruiter";
+
+            // 그 외
+            default:
+                return "redirect:/";
+        }
+
+    }
+
+    // 구직자 마이페이지
+    @GetMapping("/jobseeker")
+    public String jobseekerMypage(@AuthenticationPrincipal UserDetails user, Model model) {
+
+        // 로그인하지 않은 경우
+        if (user == null) {
+            return "redirect:/member/login";
+        }
+
+        // 현재 로그인한 회원의 아이디
+        String username = user.getUsername();
+
+        // DB에서 회원 정보 조회
+        MyPageDTO myPageDTO = myPageService.getMyPage(username);
+
+        // 구직자만 접근 가능
+        if (myPageDTO.getRole() != MemberRole.JOB_SEEKER && myPageDTO.getRole() != MemberRole.JOB_EQUIP) {
+            return "redirect:/";
+        }
+
+        // HTML에 회원 정보 전달
         model.addAttribute("myPageDTO", myPageDTO);
 
-      return "mypage/jobseeker/mypage";
+        // 구직자 마이페이지
+        return "mypage/jobseeker/mypage";
+    }
+
+    // 구인자 마이페이지
+    @GetMapping("/recruiter")
+    public String recruiterMypage(@AuthenticationPrincipal UserDetails user, Model model) {
+
+        // 로그인하지 않은 경우
+        if (user == null) {
+            return "redirect:/member/login";
+        }
+
+        // 현재 로그인한 회원의 아이디
+        String username = user.getUsername();
+
+        // DB에서 회원 정보 조회
+        MyPageDTO myPageDTO = myPageService.getMyPage(username);
+
+        // 구인자만 접근 가능
+        if (myPageDTO.getRole() != MemberRole.RECRUITER) {
+            return "redirect:/";
+        }
+
+        // HTML에 회원 정보 전달
+        model.addAttribute("myPageDTO", myPageDTO);
+
+        // 구직자 마이페이지
+        return "mypage/recruiter/mypage";
     }
 
     // 비밀번호 확인 페이지
