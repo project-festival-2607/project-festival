@@ -8,6 +8,21 @@ label.search-form-label {
   padding-bottom: 0.5rem;
 }
 
+.form-btn-left {
+  border: var(--bs-border-width) solid var(--bs-border-color);
+  border-right: 0 none;
+}
+
+.form-btn-right {
+  border: var(--bs-border-width) solid var(--bs-border-color);
+  border-left: 0 none;
+}
+
+.form-control-end {
+  border-top-right-radius: var(--bs-border-radius-sm) !important;
+  border-bottom-right-radius: var(--bs-border-radius-sm) !important;
+}
+
 #currentKeywordType {
   width: 80px;
 }
@@ -16,9 +31,13 @@ label.search-form-label {
   width: 100px;
 }
 
+#dateRangeCriteriaAutofillWrapper {
+  height: 26px;
+}
+
 .result-table-wrapper {
   overflow: scroll;
-  height: 500px;
+  height: 440px;
   font-size: 90%;
 
   scrollbar-width: thin;
@@ -46,6 +65,12 @@ label.search-form-label {
 
 .result-table-wrapper table thead th {
   border-bottom: calc(var(--bs-border-width) * 2) solid currentcolor;
+  user-select: none;
+}
+
+.result-table-wrapper table thead th .btn-th {
+  padding-left: 0.1rem;
+  padding-right: 0.1rem;
 }
 
 .result-table-wrapper table tr {
@@ -55,20 +80,29 @@ label.search-form-label {
 .result-table-wrapper table td {
   font-weight: 400;
   white-space: nowrap;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
   letter-spacing: -0.03em;
 }
 
 .result-table-wrapper table thead th {
   position: sticky;
+  z-index: 3;
   top: 0;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
   background-color: var(--bs-body-bg);
+}
+
+.result-table-wrapper table thead th:has(.dropdown) {
+  z-index: 4;
 }
 
 .result-table-wrapper table thead th:last-child {
   position: sticky;
   right: 0;
   top: 0;
-  z-index: 4;
+  z-index: 5;
   background-color: var(--bs-body-bg);
   border-left: 0.1rem double rgba(var(--bs-dark-rgb), 0.1);
 }
@@ -98,6 +132,8 @@ label.search-form-label {
   font-size: 81%;
 }
 
+
+#statusFilterDropdownList.dropdown-menu,
 .moderation-menu {
   font-size: 90%;
 }
@@ -122,6 +158,13 @@ label.search-form-label {
   height: 100%;
 }
 
+.sort-icon,
+.filter-icon {
+  width: 0.5rem;
+  height: 0.5rem;
+}
+
+.phone-verified-icon,
 .moderation-icon {
   width: 1rem;
   height: 1rem;
@@ -156,4 +199,19 @@ label.search-form-label {
 
 .admin-pagination .active>.page-link:focus {
   box-shadow: 0 0 0 0.25rem rgba(var(--bs-dark-rgb), 0.25);
+}
+
+.modal-body table th,
+.modal-body table td {
+  font-size: 81%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+.modal-body table td {
+  font-weight: 400;
+}
+
+.modal-member-info-th {
+  width: 100px;
 }

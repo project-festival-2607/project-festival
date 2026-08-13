@@ -143,19 +143,19 @@
           </thead>
           <tbody>
             <tr th:each="jobSeeker : ${page}">
-              <td th:text="${jobSeeker.id}"></td>
-              <td th:text="${jobSeeker.username}"></td>
-              <td th:text="${jobSeeker.name}"></td>
-              <td>[[${jobSeeker.formattedPhone}]]</td>
+              <td data-type="id" th:text="${jobSeeker.id}"></td>
+              <td data-type="username" th:text="${jobSeeker.username}"></td>
+              <td data-type="name" th:text="${jobSeeker.name}"></td>
+              <td data-type="phone">[[${jobSeeker.formattedPhone}]]</td>
               <td>
-                <span th:if="${jobSeeker.phoneVerified}">✅</span>
-                <span th:unless="${jobSeeker.phoneVerified}" title="휴대전화 번호가 인증되지 않았습니다.">⚠️</span>
+                <span th:if="${jobSeeker.phoneVerified}" class="text-success"><th:block th:replace="~{fragments/svg :: verified('phone-verified-icon')}"></th:block></span>
+                <span th:unless="${jobSeeker.phoneVerified}" class="text-danger" title="휴대전화 번호가 인증되지 않았습니다."><th:block th:replace="~{fragments/svg :: not-verified('phone-verified-icon')}"></th:block></span>
               </td>
-              <td th:text="${jobSeeker.email}"></td>
+              <td data-type="email" th:text="${jobSeeker.email}"></td>
               <td th:text="${jobSeeker.statusString}"></td>
               <td th:text="${#temporals.format(jobSeeker.createdAt, 'yyyy.MM.dd. HH:mm')}"></td>
               <td th:text="${#temporals.format(jobSeeker.updatedAt, 'yyyy.MM.dd. HH:mm')}"></td>
-              <td th:text="${#temporals.format(jobSeeker.lastLoginAt, 'yyyy.MM.dd. HH:mm')}"></td>
+              <td data-type="lastLoginAt" th:text="${#temporals.format(jobSeeker.lastLoginAt, 'yyyy.MM.dd. HH:mm')}"></td>
               <td th:text="${#temporals.format(jobSeeker.deletedAt, 'yyyy.MM.dd. HH:mm')}"></td>
               <td class="text-end" th:text="${jobSeeker.point}"></td>
               <td>
@@ -177,7 +177,7 @@
                   <th:block th:replace="~{fragments/svg :: moderation('moderation-icon')}"></th:block>
                 </button>
                 <ul class="dropdown-menu moderation-menu">
-                  <li th:if="${jobSeeker.status.name() ne 'SUSPENDED'}"><button type="button" class="dropdown-item date-range-criteria-li" data-role="suspendMember">계정 정지</button></li>
+                  <li th:if="${jobSeeker.status.name() ne 'SUSPENDED'}"><button type="button" class="dropdown-item date-range-criteria-li" data-role="suspendMember" data-bs-toggle="modal" data-bs-target="#suspendMemberModal">계정 정지</button></li>
                   <li th:if="${jobSeeker.status.name() eq 'SUSPENDED'}"><button type="button" class="dropdown-item date-range-criteria-li" data-role="unsuspendMember">계정 정지 해제</button></li>
                   <li th:if="${jobSeeker.phoneVerified}"><button type="button" class="dropdown-item date-range-criteria-li" data-value="removePhoneVerification">휴대전화 인증 삭제</button></li>
                   <li th:unless="${jobSeeker.phoneVerified}"><button type="button" class="dropdown-item date-range-criteria-li" data-value="removePhoneVerification">휴대전화 인증 추가</button></li>
@@ -207,5 +207,56 @@
 
     </form>
   </div>
+  <!-- suspendMemberModal -->
+  <div class="modal fade" id="suspendMemberModal" tabindex="-1" aria-labelledby="suspendMemberModal" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">계정 정지 확인</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <label class="mb-3">회원정보</label>
+          <table class="table mb-3">
+            <tbody>
+            <tr>
+              <th scope="row" class="modal-member-info-th">아이디</th>
+              <td id="suspendMemberUsername">(여기에 아이디가 표시됩니다.)</td>
+            </tr>
+            <tr>
+              <th scope="row">이름</th>
+              <td id="suspendMemberName">(여기에 이름이 표시됩니다.)</td>
+            </tr>
+            <tr>
+              <th scope="row">전화번호</th>
+              <td id="suspendMemberPhone">(여기에 전화번호 표시됩니다.)</td>
+            </tr>
+            <tr>
+              <th scope="row">이메일</th>
+              <td id="suspendMemberEmail">(여기에 이메일이 표시됩니다.)</td>
+            </tr>
+            <tr>
+              <th scope="row">최근접속일시</th>
+              <td id="suspendMemberLastLoginAt">(여기에 최근접속일시 표시됩니다.)</td>
+            </tr>
+            </tbody>
+          </table>
+
+          <div class="mb-3">
+            <label for="suspensionReason" class="form-label">정지 사유</label>
+            <div class="input-group">
+              <input type="text" class="form-control form-control-sm" id="suspensionReason">
+            </div>
+          </div>
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+          <button type="button" class="btn btn-outline-danger">저장</button>
+        </div>
+      </div>
+    </div>
+  </div>
   <script th:src="@{/js/admin/member/job-seeker.js}"></script>
+  <script th:src="@{/js/admin/member/job-seeker-modal.js}"></script>
 </div>
