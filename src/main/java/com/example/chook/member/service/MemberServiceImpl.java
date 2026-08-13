@@ -187,6 +187,7 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
+    @Transactional
     // 소셜 로그인
     public LoginResponseDTO loginBySocial(Provider provider, String providerId) {
 
@@ -287,6 +288,55 @@ public class MemberServiceImpl implements MemberService {
         memberRepository.save(member);
 
         return toLoginResponseDTO(member);
+    }
+
+    @Transactional
+    @Override
+    public void changePassword(Long memberId, String currentPassword, String newPassword, String newPasswordConfirm) {
+
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new IllegalArgumentException("회원을 찾을 수 없습니다."));
+
+        // 1. 현재 비밀번호 입력 일치 여부
+        if (!passwordEncoder.matches(currentPassword, member.getPasswordHash())) {
+            throw new IllegalArgumentException("현재 비밀번호가 일치하지 않습니다.");
+        }
+
+        // 2. 현재 비밀번호와 새 비밀번호 중복 여부
+        if (currentPassword.equals(newPassword)) {
+            throw new IllegalArgumentException("현재 비밀번호와 다른 새 비밀번호를 입력해주세요.");
+        }
+
+        // 3. 새 비밀번호 재입력 일치 여부
+        if (!newPassword.equals(newPasswordConfirm)) {
+            throw new IllegalArgumentException("새 비밀번호가 일치하지 않습니다.");
+        }
+
+        member.setPasswordHash(passwordEncoder.encode(newPassword));
+        member.setUpdatedAt(LocalDateTime.now());
+        memberRepository.save(member);
+    }
+
+    // 회원탈퇴일 삽입
+    @Transactional
+    @Override
+    public void withdraw(Long memberId, String confirmValue) {
+
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new IllegalArgumentException("회원을 찾을 수 없습니다."));
+
+        if (member.isSocialSignUp()) {
+            if (!member.getName().equals(confirmValue)) {
+                throw new IllegalArgumentException("이름이 일치하지 않습니다.");
+            }
+        } else {
+            if (!passwordEncoder.matches(confirmValue, member.getPasswordHash())) {
+                throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+            }
+        }
+
+        member.setDeletedAt(LocalDateTime.now());
+        memberRepository.save(member);
     }
 
     // 소셜 회원 아이디 생성 (사용자에게 노출/입력되지 않는 내부용 값)

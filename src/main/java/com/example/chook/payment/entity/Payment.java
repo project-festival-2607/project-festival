@@ -23,7 +23,7 @@ public class Payment {
 
     //누가 결제했는지 분류하기위한 id...member의 private Long id;를 받아오는거임.
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id")  // members.id 참조 (회원 식별자)
+    @JoinColumn(name = "member_id")  // members.id 참조 (회원 식별자)
     private Member member;
 
     //뭘 샀는지 확인하기위한 상품번호.

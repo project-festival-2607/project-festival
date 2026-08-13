@@ -31,6 +31,8 @@ const ImageHoverAnimation = () => {
 
 ImageHoverAnimation();
 
+let currentMonth = '';
+
 // monthBtn
 for(let i = 1; i <=12; i ++){
     document.querySelector(".monthBtn").innerHTML += `<button class="month" value="${i}"
@@ -45,14 +47,20 @@ const clickMonthBtn = (e) => {
     document.querySelectorAll(".month").forEach(m => m.classList.remove("active"));
     selectedBtn.classList.add("active");
 
-    loadFestivalMonth(selectedBtn.value);
+    currentMonth = selectedBtn.value;
+    // loadFestivalMonth(selectedBtn.value);
+    loadFestivalMonth(1, currentMonth);
 }
 
-async function loadFestivalMonth(month) {
-    const response = await fetch(`/api/festival/list?page=1&month=${month}`)
+async function loadFestivalMonth(page = 1, month = "") {
+    const response = await fetch(`/api/festival/list?page=${page}&month=${month}`)
     const datas = await response.json();
 
     renderMonthFes(datas.content);
+    renderPagination(datas, page);
+
+    const newUrl = `/festival/list?page=${page}${month ? `&month=${month}` : ''}`;
+    history.pushState({ page, month }, '', newUrl);
 }
 
 const renderMonthFes = (data) => {
@@ -60,7 +68,7 @@ const renderMonthFes = (data) => {
     container.innerHTML = '';
 
     if(!data || data.length === 0){
-        container.innerHTML = '<div>해당 달에 등록된 축제가 없습니다.</div>'
+        container.innerHTML = '<div class="month-none">해당 달에 등록된 축제가 없습니다.</div>'
         return;
     }
 
@@ -100,9 +108,62 @@ const renderMonthFes = (data) => {
             </div>
         `;
 
-        container.innerHTML = html;
     });
 
+    container.innerHTML = html;
     ImageHoverAnimation();
 
 }
+
+const renderPagination = (pageData, currentPage) => {
+    const paginationContainer = document.querySelector(".fes-pagination");
+    if (!paginationContainer) return;
+
+    paginationContainer.innerHTML = '';
+
+    const totalPages = pageData.totalPages;
+    if (!totalPages || totalPages <= 1) return;
+
+    let html = '';
+
+    const isPrevDisabled = pageData.first;
+    const prevClass = isPrevDisabled ? 'disabled' : '';
+    const prevPage = currentPage - 1;
+
+    html += `
+        <div class="fes-page-item ${prevClass}">
+            <a class="fes-page-link" href="javascript:void(0)" 
+               ${!isPrevDisabled ? `onclick="loadFestivalMonth(${prevPage}, '${currentMonth}')"` : ''}>
+                ←
+            </a>
+        </div>
+    `;
+
+    for (let i = 1; i <= totalPages; i++) {
+        const isActive = i === currentPage ? 'active' : '';
+
+        html += `
+            <div class="fes-page-item ${isActive}">
+                <a class="fes-page-link" href="javascript:void(0)" 
+                   onclick="loadFestivalMonth(${i}, '${currentMonth}')">
+                    ${i}
+                </a>
+            </div>
+        `;
+    }
+
+    const isNextDisabled = pageData.last;
+    const nextClass = isNextDisabled ? 'disabled' : '';
+    const nextPage = currentPage + 1;
+
+    html += `
+        <div class="fes-page-item ${nextClass}">
+            <a class="fes-page-link" href="javascript:void(0)" 
+               ${!isNextDisabled ? `onclick="loadFestivalMonth(${nextPage}, '${currentMonth}')"` : ''}>
+                →
+            </a>
+        </div>
+    `;
+
+    paginationContainer.innerHTML = html;
+};

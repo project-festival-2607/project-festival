@@ -9,31 +9,31 @@
     </th:block>
 </head>
 <div layout:fragment="content">
-    <div class="container">
-        <div class="fes-h1">
-            <span>Festival</span>
-            <span>
-                축제 · 행사
-            </span>
-        </div>
-    </div>
+<!--    <div class="container">-->
+<!--        <div class="fes-h1">-->
+<!--            <span>Festival</span>-->
+<!--            <span>-->
+<!--                축제 · 행사-->
+<!--            </span>-->
+<!--        </div>-->
+<!--    </div>-->
 
-    <div class="fes-middle">
-        <span>
-            다양한 지역 축제 · 행사를 즐겨보세요!
-        </span>
-        <div class="hash-box">
-            <div class="hash">
-                #즐거운
-            </div>
-            <div class="hash">
-                #함께하는
-            </div>
-            <div class="hash">
-                #추억의
-            </div>
-        </div>
-    </div>
+<!--    <div class="fes-middle">-->
+<!--        <span>-->
+<!--            다양한 지역 축제 · 행사를 즐겨보세요!-->
+<!--        </span>-->
+<!--        <div class="hash-box">-->
+<!--            <div class="hash">-->
+<!--                #즐거운-->
+<!--            </div>-->
+<!--            <div class="hash">-->
+<!--                #함께하는-->
+<!--            </div>-->
+<!--            <div class="hash">-->
+<!--                #추억의-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
 
 <!--    1~12월 카테고리      -->
     <div class="container">
@@ -42,6 +42,24 @@
         <div class="monthBtn">
             <button class="month" onclick="clickMonthBtn(event)">전체</button>
         </div>
+    </div>
+
+    <!--    검색라인        -->
+
+    <div class="fes-form container">
+        <form action="/festival/list" class="festival-search">
+            <select name="type" class="search-select">
+                <option value="t">축제이름</option>
+                <option value="c">축제내용</option>
+                <option value="r">지역</option>
+            </select>
+
+            <input name="keyword" type="text" class="search-input" placeholder="검색어를 입력하세요">
+
+            <input type="hidden" name="pageNo" value="1">
+
+            <button class="search-btn" type="submit">검색</button>
+        </form>
     </div>
 
     <div class="container">
@@ -93,24 +111,6 @@
                     </a>
                 </div>
             </div>
-    </div>
-
-<!--    검색라인        -->
-
-    <div class="fes-form container">
-        <form action="/festival/list" class="festival-search">
-            <select name="type" class="search-select">
-                <option value="t">축제이름</option>
-                <option value="c">축제내용</option>
-                <option value="r">지역</option>
-            </select>
-
-            <input name="keyword" type="text" class="search-input" placeholder="검색어를 입력하세요">
-
-            <input type="hidden" name="pageNo" value="1">
-
-            <button class="search-btn" type="submit">검색</button>
-        </form>
     </div>
 
     <div class="topBtn">

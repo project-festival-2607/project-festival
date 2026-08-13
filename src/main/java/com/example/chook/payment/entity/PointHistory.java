@@ -24,7 +24,7 @@ public class PointHistory {
 
     //회원 식별자Member의 id랑 연계해서 Member의 point를 업데이트 할거임.
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id")  // members.id 참조 (회원 식별자)
+    @JoinColumn(name = "member_id")  // members.id 참조 (회원 식별자)
     private Member member;
 
     //모집공고 id
@@ -39,7 +39,8 @@ public class PointHistory {
 
     //타입.  환불 사용 충전 3종류로 분류.
     @Column(name = "p_type", nullable = false, length = 50)
-    private String pType;  // charge / use / refund
+    private String pType;  // charge / use / refund / charge_admin(관리자 계정이 포인트를 이용자 계정에 넣어주는 경우. - payment를 null로.
+
 
     //포인트의 변화... +10000   -3000 이런식으로 표기...
     //Member의 point에 업데이트해줄용도임.

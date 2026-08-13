@@ -24,7 +24,7 @@ public class Refund {
 
     //환불 당사자 id
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id")  // members.id 참조 (회원 식별자)
+    @JoinColumn(name = "member_id")  // members.id 참조 (회원 식별자)
     private Member member;
 
     //환불상태
@@ -57,6 +57,8 @@ public class Refund {
         this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
     }
+
+
 
     @PreUpdate
     protected void onUpdate() {

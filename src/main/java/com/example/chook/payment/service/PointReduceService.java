@@ -35,7 +35,7 @@ public class PointReduceService {
     @Transactional
     public void reduceHardCodedPoints(Long memberId, Long recruitId) {
 
-        int reducePoint = 14000;
+        int reducePoint = 4000;
 
         reducePoints(memberId, recruitId, reducePoint);
     }

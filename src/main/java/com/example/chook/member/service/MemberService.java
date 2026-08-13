@@ -23,4 +23,8 @@ public interface MemberService {
 
     LoginResponseDTO removeBusinessNumber(Long memberId);
 
+    void changePassword(Long memberId, String currentPassword, String newPassword, String newPasswordConfirm);
+
+    void withdraw(Long memberId, String confirmValue);
+
 }

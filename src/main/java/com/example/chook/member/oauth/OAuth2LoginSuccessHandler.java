@@ -4,6 +4,7 @@ import com.example.chook.member.dto.LoginResponseDTO;
 import com.example.chook.member.dto.SocialAuthSessionDTO;
 import com.example.chook.member.exception.MemberDormantException;
 import com.example.chook.member.exception.MemberSuspendedException;
+import com.example.chook.member.security.AuthenticationHelper;
 import com.example.chook.member.service.MemberService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -25,6 +26,7 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
 
     // 기존 회원 조회 및 소셜 로그인 처리 담당 서비스
     private final MemberService memberService;
+    private final AuthenticationHelper authenticationHelper; // 추가
 
     @Override
     public void onAuthenticationSuccess(
@@ -48,8 +50,8 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
                     userInfo.getProvider(),
                     userInfo.getProviderId()
             );
-            // 기존 회원 → 로그인 정보를 세션에 저장하고 홈으로 리다이렉트
-            session.setAttribute("loginMember", responseDTO);
+            // 기존 회원 → SecurityContext에 인증 정보 설정 후 홈으로 리다이렉트
+            authenticationHelper.authenticate(responseDTO.getUsername(), request, response);
             response.sendRedirect("/");
         } catch (MemberDormantException e) {
             // 휴면 회원 → 휴면 해제 페이지

@@ -5,6 +5,12 @@
       xmlns:th="http://www.thymeleaf.org">
 <div layout:fragment="content">
     <div class="index-box">
+        <div class="container">
+            <div class="upcoming">
+                UPCOMING
+            </div>
+        </div>
+
         <div class="main-bg">
             <div class="container i-main section">
         <!--        모든 inner는 class="container" 로 맞춤        -->
@@ -13,8 +19,7 @@
                         [[${topFestival.title}]]
                     </span>
                     <span>
-<!--                        [[${topFestival.program}]]-->
-                        프로그램 1) 예시 프로그램 2) 예시 프로그램 3) 예시 프로그램
+                        [[${topFestival.program}]]
                     </span>
                     <div class="main-bg-lastSpan">
                         <span>
@@ -27,9 +32,13 @@
                         </div>
                     </div>
                 </div>
-                <div class="main-bg-img"
-                     th:style="'background-image: url(' + ${topFestival.firstImage} + ')'"
-                >
+                <div class="poster-wrapper">
+                    <div class="bg-circle"></div>
+                    <div class="bg-circle-sub"></div>
+                    <div class="main-bg-img"
+                         th:style="'background-image: url(' + ${topFestival.firstImage} + ')'"
+                    >
+                    </div>
                 </div>
             </div>
         </div>
