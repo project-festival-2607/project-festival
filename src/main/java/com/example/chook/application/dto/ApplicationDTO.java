@@ -33,4 +33,10 @@ public class ApplicationDTO {
 
     // 결과
     private ApplicationResult result;
+
+    // 행사 제목
+    private String title;
+
+    // 행사 주소
+    private String address;
 }
