@@ -1,80 +1,92 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<html lang="ko"
+      layout:decorate="~{layout/layout}"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>구인자 회원가입</title>
-    <link rel="stylesheet" th:href="@{/libs/bootstrap-5.3.8-dist/css/bootstrap.min.css}">
+    <th:block layout:fragment="css">
+        <link rel="stylesheet" th:href="@{/css/member/signup-in.css}">
+    </th:block>
 </head>
-<body>
-<div class="container" style="max-width: 500px;">
-    <h1 class="mb-4 text-center mt-5">구인자 회원가입</h1>
 
-    <div th:if="${FailureMsg != null}" class="alert alert-danger" role="alert">
-        [[${FailureMsg}]]
+<div layout:fragment="content">
+
+    <div class="container up-in-container">
+        <h1 class="up-in-h1 recruit">
+            구인자 회원가입
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-people-fill" viewBox="0 0 16 16">
+                <path d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6m-5.784 6A2.24 2.24 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.3 6.3 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1zM4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5"/>
+            </svg>
+        </h1>
+
+        <div th:if="${FailureMsg != null}" class="alert alert-danger" role="alert">
+            [[${FailureMsg}]]
+        </div>
+
+        <form th:action="@{/member/signup/employer}" method="post">
+
+            <div class="basic-info-box">
+                <input type="text" class="input id-input" id="userName" name="userName" placeholder="(*) 아이디를입력하세요." required>
+                <input type="password" class="input ps-input" id="password" name="password" placeholder="(*) 비밀번호를입력하세요." required>
+                <input type="password" class="input ps-input" id="password-check" name="password-check" placeholder="(*) 비밀번호를확인하세요." required>
+            </div>
+
+            <div class="detail-profile-box">
+                <label for="name" class="label">이름 *</label>
+                <input type="text" class="input" id="name" name="name" required>
+            </div>
+            <div class="detail-profile-box">
+                <label for="phone" class="label">전화번호 *</label>
+                <input type="text" class="input" id="phone" name="phone" required>
+            </div>
+            <div class="detail-profile-box">
+                <label for="email" class="label">이메일 *</label>
+                <input type="email" class="input" id="email" name="email" required>
+            </div>
+            <div class="detail-profile-box">
+                <label for="companyName" class="label">회사명 *</label>
+                <input type="text" class="input" id="companyName" name="companyName" required>
+            </div>
+            <div class="detail-profile-box">
+                <label for="ceoName" class="label">대표자명 *</label>
+                <input type="text" class="input" id="ceoName" name="ceoName" required>
+            </div>
+            <div class="detail-profile-box">
+                <label for="streetAddress" class="label">주소 *</label>
+                <div class="input-btn-box">
+                    <input type="text" class="input" id="streetAddress" name="streetAddress" readonly required>
+                    <button type="button" class="join-btn search-join-btn" onclick="execDaumPostcode()">주소 검색</button>
+                </div>
+            </div>
+            <div class="detail-profile-box">
+                <label for="detailAddress" class="label">상세주소</label>
+                <input type="text" class="input" id="detailAddress" name="detailAddress">
+            </div>
+            <div class="detail-profile-box">
+                <label for="foundedAt" class="label">개업일자 *</label>
+                <input type="date" class="input" id="foundedAt" name="foundedAt" required>
+            </div>
+
+            <hr class="my-4">
+
+            <div class="detail-profile-box">
+                <label for="businessNumberDisplay" class="label">사업자등록번호 *</label>
+                <div class="input-btn-box">
+                    <input type="text" class="input" id="businessNumberDisplay" inputmode="numeric" placeholder="123-45-67890" maxlength="12" required>
+                    <button type="button" class="join-btn search-bn-btn" id="verifyBusinessNumberBtn">인증하기</button>
+                </div>
+            </div>
+            <input type="hidden" id="businessNumber" name="businessNumber">
+            <input type="hidden" id="verificationToken" name="verificationToken">
+
+            <div class="signup-btn-box">
+                <button type="submit" class="join-btn signup-btn">가입하기</button>
+            </div>
+
+        </form>
     </div>
+    <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+    <script th:src="@{/js/member/addressSearch.js}"></script>
+    <script th:src="@{/js/member/businessNumberVerify.js}"></script>
 
-    <form th:action="@{/member/signup/employer}" method="post">
-        <div class="mb-3">
-            <label for="username" class="form-label">아이디</label>
-            <input type="text" class="form-control" id="username" name="username" required>
-        </div>
-        <div class="mb-3">
-            <label for="password" class="form-label">비밀번호</label>
-            <input type="password" class="form-control" id="password" name="password" required>
-        </div>
-        <div class="mb-3">
-            <label for="name" class="form-label">이름</label>
-            <input type="text" class="form-control" id="name" name="name" required>
-        </div>
-        <div class="mb-3">
-            <label for="phone" class="form-label">전화번호</label>
-            <input type="text" class="form-control" id="phone" name="phone" required>
-        </div>
-        <div class="mb-3">
-            <label for="email" class="form-label">이메일</label>
-            <input type="email" class="form-control" id="email" name="email" required>
-        </div>
-        <div class="mb-3">
-            <label for="companyName" class="form-label">회사명</label>
-            <input type="text" class="form-control" id="companyName" name="companyName" required>
-        </div>
-        <div class="mb-3">
-            <label for="ceoName" class="form-label">대표자명</label>
-            <input type="text" class="form-control" id="ceoName" name="ceoName" required>
-        </div>
-        <div class="mb-3">
-            <label for="streetAddress" class="form-label">주소</label>
-            <div class="input-group">
-                <input type="text" class="form-control" id="streetAddress" name="streetAddress" readonly required>
-                <button type="button" class="btn btn-outline-secondary" onclick="execDaumPostcode()">주소 검색</button>
-            </div>
-        </div>
-        <div class="mb-3">
-            <label for="detailAddress" class="form-label">상세주소</label>
-            <input type="text" class="form-control" id="detailAddress" name="detailAddress">
-        </div>
-        <div class="mb-3">
-            <label for="foundedAt" class="form-label">개업일자</label>
-            <input type="date" class="form-control" id="foundedAt" name="foundedAt" required>
-        </div>
-
-        <hr class="my-4">
-
-        <div class="mb-3">
-            <label for="businessNumberDisplay" class="form-label">사업자등록번호</label>
-            <div class="input-group">
-                <input type="text" class="form-control" id="businessNumberDisplay" inputmode="numeric" placeholder="123-45-67890" maxlength="12" required>
-                <button type="button" class="btn btn-outline-secondary" id="verifyBusinessNumberBtn">인증하기</button>
-            </div>
-        </div>
-        <input type="hidden" id="businessNumber" name="businessNumber">
-        <input type="hidden" id="verificationToken" name="verificationToken">
-
-        <button type="submit" class="btn btn-primary w-100 mt-3">가입하기</button>
-    </form>
 </div>
-<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
-<script th:src="@{/js/member/addressSearch.js}"></script>
-<script th:src="@{/js/member/businessNumberVerify.js}"></script>
-</body>
-</html>

@@ -2,7 +2,9 @@
 <html lang="ko"
       layout:decorate="~{layout/layout}"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      xmlns:th="http://www.thymeleaf.org">
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+>
 <head>
     <th:block layout:fragment="css">
         <link rel="stylesheet" th:href="@{/css/festival/festivalList.css}">
@@ -118,7 +120,7 @@
     </div>
 
 <!--    구인자 로그인 시      -->
-    <div class="addBtn">
+    <div class="addBtn" sec:authorize="hasRole('RECRUITER')">
         <a href="/festival/register">
             축제등록하기
         </a>

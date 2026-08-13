@@ -1,47 +1,57 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<html lang="ko"
+      layout:decorate="~{layout/layout}"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>로그인</title>
-    <link rel="stylesheet" th:href="@{/libs/bootstrap-5.3.8-dist/css/bootstrap.min.css}">
+    <th:block layout:fragment="css">
+        <link rel="stylesheet" th:href="@{/css/member/login.css}">
+    </th:block>
 </head>
-<body>
-<div class="container" style="max-width: 400px;">
-    <h1 class="mb-4 text-center mt-5">로그인</h1>
+<div layout:fragment="content">
+    <div class="container login-container">
+        <h1 class="login-h1">로그인</h1>
 
-    <ul class="nav nav-tabs mb-4">
-        <li class="nav-item">
-            <button type="button" class="nav-link active" id="tab-personal">개인회원</button>
-        </li>
-        <li class="nav-item">
-            <button type="button" class="nav-link" id="tab-business">기업회원</button>
-        </li>
-    </ul>
+        <ul class="login-select-box">
+            <li class="select-item">
+                <button type="button" class="select-btn active" id="tab-personal">개인회원</button>
+            </li>
+            <li class="select-item">
+                <button type="button" class="select-btn" id="tab-business">기업회원</button>
+            </li>
+        </ul>
 
-    <div th:if="${param.error != null}" class="alert alert-danger" role="alert">
-        아이디 또는 비밀번호가 일치하지 않습니다.
+        <div th:if="${param.error != null}" class="login-alert" role="alert">
+            <div>
+                아이디 또는 비밀번호가 일치하지 않습니다.
+            </div>
+        </div>
+
+        <form th:action="@{/member/login}" method="post">
+            <div class="mb-3">
+                <input type="text" class="login-input" id="username" name="username" placeholder="아이디를입력하세요." required>
+            </div>
+            <div class="mb-3">
+                <input type="password" class="login-input" id="password" placeholder="비밀번호를입력하세요." name="password" required>
+            </div>
+            <button type="submit" class="login-btn">로그인</button>
+        </form>
+
+            <div class="login-auth" id="socialLoginArea">
+                <div class="auth-span">
+                    소셜로그인 등록자는? ⤵
+                </div>
+
+                <div class="auth-box">
+                    <a href="/oauth2/authorization/google" class="join-google auth">구글</a>
+                    <a href="/oauth2/authorization/naver" class="join-naver auth">네이버</a>
+                    <a href="/oauth2/authorization/kakao" class="join-kakao auth">카카오</a>
+                </div>
+            </div>
+
+        <div class="goToJoin-box">
+            <a th:href="@{/member/signup}" class="goToJoin">회원가입하기 →</a>
+        </div>
     </div>
-
-    <form th:action="@{/member/login}" method="post">
-        <div class="mb-3">
-            <label for="username" class="form-label">아이디</label>
-            <input type="text" class="form-control" id="username" name="username" required>
-        </div>
-        <div class="mb-3">
-            <label for="password" class="form-label">비밀번호</label>
-            <input type="password" class="form-control" id="password" name="password" required>
-        </div>
-        <button type="submit" class="btn btn-primary w-100">로그인</button>
-    </form>
-
-        <div class="d-flex gap-1 mt-3" id="socialLoginArea">
-            <a href="/oauth2/authorization/google" class="btn btn-outline-dark flex-fill">G</a>
-            <a href="/oauth2/authorization/naver" class="btn btn-outline-success flex-fill">N</a>
-            <a href="/oauth2/authorization/kakao" class="btn btn-outline-warning flex-fill">K</a>
-        </div>
-
-    <a th:href="@{/member/signup}" class="btn btn-outline-primary w-100 mt-2">회원가입</a>
+    <script th:src="@{/js/member/loginTabs.js}"></script>
 </div>
-<script th:src="@{/js/member/loginTabs.js}"></script>
-</body>
-</html>

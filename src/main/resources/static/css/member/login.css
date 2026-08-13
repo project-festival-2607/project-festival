@@ -1,0 +1,183 @@
+.login-container {
+    width: 20%;
+}
+
+.login-h1 {
+    letter-spacing: -1.3px;
+    color: #dc3545;
+    font-size: 22px;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+.login-select-box {
+    display: flex;
+    flex-direction: row;
+    gap: 15px;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    margin: 0;
+
+    margin-bottom: 80px;
+}
+
+.select-btn {
+    padding: 5px 25px;
+    border: 1px solid #dc3545;
+    border-radius: 10px;
+    background: #FEFEFE;
+    font-size: 13px;
+
+    transition: 0.3s ease;
+}
+
+.select-btn:hover {
+    background-color: #dc3545;
+    color: #FEFEFE;
+}
+
+.select-btn.active {
+    background-color: #dc3545;
+    color: #FEFEFE;
+}
+
+.login-alert {
+    text-align: center;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.login-alert > div {
+    padding: 5px 15px;
+    font-size: 13px;
+    color: #dc3545;
+    border: 1px solid #dc3545;
+    background-color: #f4dfe1;
+}
+
+.login-label {
+    font-size: 14px;
+    color: #333333;
+}
+
+.login-input {
+    width: 100%;
+    font-size: 12px;
+    padding: 10px 20px;
+    border: 1px solid #5e5e5e;
+}
+
+.login-input::placeholder {
+    color: #CCCCCC;
+}
+
+.login-input:focus {
+    outline: none;
+    border: 1px solid #dc3545;
+}
+
+.login-btn {
+    padding: 5px 25px;
+    font-size: 14px;
+    border: 1px solid #4769e4;
+    color: #2C2C2C;
+    border-radius: 10px;
+    width: 100%;
+    background: #FEFEFE;
+
+    transition: 0.3s ease;
+}
+
+.login-btn:hover {
+    background-color: #4769e4;
+    color: #FEFEFE;
+}
+
+.auth-span {
+    font-size: 13px;
+    color: #999999;
+    margin-top: 15px;
+    margin-bottom: 5px;
+}
+
+.login-auth {
+    display: flex;
+    flex-direction: column;
+}
+
+.auth-box {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.auth-box > a {
+    padding: 5px 0px;
+    width: 100px;
+    border-radius: 10px;
+}
+
+.auth {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 13px;
+
+    transition: 0.3s ease;
+}
+
+.join-google {
+    background: #e2e2e2;
+    color: #2c2c2c;
+}
+
+.join-google:hover {
+    background: #c3c3c3;
+}
+
+.join-naver {
+    background: #0DC75C;
+    color: #FEFEFE;
+}
+
+.join-naver:hover {
+    background: #08aa4c;
+}
+
+.join-kakao {
+    background: #ffd656;
+    color: #2c2c2c;
+}
+
+.join-kakao:hover {
+    background: #d5a835;
+}
+
+.goToJoin-box {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+
+    margin: 30px 0;
+}
+
+.goToJoin {
+    font-size: 14px;
+    color: #0d6efd;
+    border-bottom: 1px solid #0d6efd;
+
+    transition: 0.3s ease;
+}
+
+.goToJoin:hover {
+    text-shadow: 0px 0px 1px #0d6efd;
+}
