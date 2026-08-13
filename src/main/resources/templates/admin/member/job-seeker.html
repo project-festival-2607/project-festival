@@ -13,21 +13,23 @@
   <div class="container admin-container">
     <form method="get" th:action="@{/admin/member/job-seeker}"
           th:with="form=${pagingHandler.form}">
-      <div class="d-flex justify-content-end">
-        <button class="btn btn-sm btn-outline-dark dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" id="currentPageSize">30개씩</button>
+      <div class="d-flex justify-content-end input-group input-group-sm">
+        <button class="btn btn-light form-btn-left" type="button" id="currentPageSize">30개씩</button>
+        <button class="btn btn-light form-btn-right dropdown-toggle dropdown-toggle-split" type="button" data-bs-toggle="dropdown" aria-expanded="false"></button>
         <ul class="dropdown-menu dropdown-menu-end" id="pageSizeDropdownList">
           <li><button type="button" class="dropdown-item page-size-li" data-value="10">10개씩</button></li>
           <li><button type="button" class="dropdown-item page-size-li" data-value="30">30개씩</button></li>
           <li><button type="button" class="dropdown-item page-size-li" data-value="50">50개씩</button></li>
         </ul>
-        <button type="submit" class="btn btn-sm btn-dark ms-2">검색</button>
         <input type="hidden" id="pageSize" name="pageSize" th:value="${pageSize}"/>
+        <button type="submit" class="btn btn-dark">검색</button>
       </div>
       <div class="row mb-3">
         <div class="col-12 col-md-6">
           <label class="search-form-label" for="keywords">검색 키워드</label>
           <div class="input-group input-group-sm">
-            <button class="btn btn-outline-dark dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" id="currentKeywordType">전체</button>
+            <button class="btn btn-light form-btn-left" type="button" id="currentKeywordType">전체</button>
+            <button class="btn btn-light form-btn-right dropdown-toggle dropdown-toggle-split" type="button" data-bs-toggle="dropdown" aria-expanded="false"></button>
             <ul class="dropdown-menu" id="keywordTypeDropdownList">
               <li><button type="button" class="dropdown-item keyword-type-li" data-value="">전체</button></li>
               <li><button type="button" class="dropdown-item keyword-type-li" data-value="USERNAME">아이디</button></li>
@@ -36,16 +38,15 @@
               <li><button type="button" class="dropdown-item keyword-type-li" data-value="EMAIL">이메일</button></li>
               <li><button type="button" class="dropdown-item keyword-type-li" data-value="ADDRESS">주소</button></li>
             </ul>
-            <input type="text" id="keywords" name="keywords" class="form-control" th:value="${form.keywords}"/>
             <input type="hidden" id="keywordType" name="keywordType" th:value="${form.keywordType}"/>
+            <input type="text" id="keywords" name="keywords" class="form-control" th:value="${form.keywords}"/>
           </div>
         </div>
         <div class="col-12 col-md-6">
           <label class="search-form-label">날짜 범위</label>
           <div class="input-group input-group-sm">
-            <button class="btn btn-outline-dark dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" id="currentDateRangeCriteria">
-              선택
-            </button>
+            <button class="btn btn-light form-btn-left" type="button" id="currentDateRangeCriteria">선택</button>
+            <button class="btn btn-light form-btn-right dropdown-toggle dropdown-toggle-split" type="button" data-bs-toggle="dropdown" aria-expanded="false"></button>
             <ul class="dropdown-menu" id="dateRangeCriteriaDropdownList">
               <li><button type="button" class="dropdown-item date-range-criteria-li" data-value="">선택</button></li>
               <li><button type="button" class="dropdown-item date-range-criteria-li" data-value="CREATED_AT">생성일시</button></li>
@@ -56,17 +57,20 @@
             <input type="datetime-local" class="form-control" name="startDateTime" id="startDateTime" th:value="${form.startDateTime}"/>
             <input type="date" class="form-control" name="startDate" id="startDate" th:value="${form.startDate}">
             <span class="input-group-text">~</span>
-            <input type="datetime-local" class="form-control" name="endDateTime" id="endDateTime" th:value="${form.endDateTime}">
-            <input type="date" class="form-control" name="endDate" id="endDate" th:value="${form.endDate}">
+            <input type="datetime-local" class="form-control form-control-end" name="endDateTime" id="endDateTime" th:value="${form.endDateTime}">
+            <input type="date" class="form-control form-control-end" name="endDate" id="endDate" th:value="${form.endDate}">
             <input type="hidden" id="dateRangeCriteria" name="dateRangeCriteria" th:value="${form.dateRangeCriteria}"/>
           </div>
-          <div class="btn-group btn-group-xs float-end mt-2" role="group" id="dateRangeCriteriaAutofill">
-            <button type="button" class="btn btn-outline-dark date-range-criteria-autofill" data-value="1h">1시간</button>
-            <button type="button" class="btn btn-outline-dark date-range-criteria-autofill" data-value="6h">6시간</button>
-            <button type="button" class="btn btn-outline-dark date-range-criteria-autofill" data-value="12h">12시간</button>
-            <button type="button" class="btn btn-outline-dark date-range-criteria-autofill" data-value="1d">1일</button>
-            <button type="button" class="btn btn-outline-dark date-range-criteria-autofill" data-value="7d">1주</button>
-            <button type="button" class="btn btn-outline-dark date-range-criteria-autofill" data-value="1M">1개월</button>
+          <div class="float-end mt-2" id="dateRangeCriteriaAutofillWrapper">
+            <div class="btn-group btn-group-xs" role="group" id="dateRangeCriteriaAutofill">
+              <span class="btn btn-secondary">빠른 설정</span>
+              <button type="button" class="btn btn-outline-secondary date-range-criteria-autofill" data-value="1h">1시간</button>
+              <button type="button" class="btn btn-outline-secondary date-range-criteria-autofill" data-value="6h">6시간</button>
+              <button type="button" class="btn btn-outline-secondary date-range-criteria-autofill" data-value="12h">12시간</button>
+              <button type="button" class="btn btn-outline-secondary date-range-criteria-autofill" data-value="1d">1일</button>
+              <button type="button" class="btn btn-outline-secondary date-range-criteria-autofill" data-value="7d">1주</button>
+              <button type="button" class="btn btn-outline-secondary date-range-criteria-autofill" data-value="1M">1개월</button>
+            </div>
           </div>
         </div>
       </div>
@@ -79,11 +83,55 @@
               <th scope="col">이름</th>
               <th scope="col" colspan="2">전화번호</th>
               <th scope="col">이메일</th>
-              <th scope="col">상태</th>
-              <th scope="col">생성일시</th>
-              <th scope="col">수정일시</th>
-              <th scope="col">최근접속일시</th>
-              <th scope="col">삭제일시</th>
+              <th scope="col">
+                <div class="d-flex gap-3 justify-content-between">
+                  <span>상태</span>
+                  <div class="dropdown d-flex justify-content-center align-items-center">
+                    <button type="button" class="btn btn-reset btn-th dropdown-toggle dropdown-no-caret" data-bs-toggle="dropdown">
+                      <th:block th:replace="~{fragments/svg :: filter('filter-icon')}"></th:block>
+                    </button>
+                    <ul class="dropdown-menu filter-menu" id="statusFilterDropdownList">
+                      <li><button type="button" class="dropdown-item status-filter-li" data-value="">전체</button></li>
+                      <li><button type="button" class="dropdown-item status-filter-li" data-value="ACTIVE">활동</button></li>
+                      <li><button type="button" class="dropdown-item status-filter-li" data-value="DORMANT">휴면</button></li>
+                      <li><button type="button" class="dropdown-item status-filter-li" data-value="SUSPEND">정지</button></li>
+                      <li><button type="button" class="dropdown-item status-filter-li" data-value="DELETED">탈퇴</button></li>
+                    </ul>
+                  </div>
+                </div>
+              </th>
+              <th scope="col">
+                <span class="d-flex gap-3 justify-content-between">
+                  <span>생성일시</span>
+                  <button type="button" class="btn btn-reset btn-th dropdown-toggle dropdown-no-caret" data-bs-toggle="dropdown">
+                    <th:block th:replace="~{fragments/svg :: sort('sort-icon')}"></th:block>
+                  </button>
+                </span>
+              </th>
+              <th scope="col">
+                <span class="d-flex gap-3 justify-content-between">
+                  <span>수정일시</span>
+                  <button type="button" class="btn btn-reset btn-th" data-bs-toggle="dropdown">
+                    <th:block th:replace="~{fragments/svg :: sort('sort-icon')}"></th:block>
+                  </button>
+                </span>
+              </th>
+              <th scope="col">
+                <span class="d-flex gap-3 justify-content-between">
+                  <span>최근접속일시</span>
+                  <button type="button" class="btn btn-reset btn-th" data-bs-toggle="dropdown">
+                    <th:block th:replace="~{fragments/svg :: sort('sort-icon')}"></th:block>
+                  </button>
+                </span>
+              </th>
+              <th scope="col">
+                <span class="d-flex gap-3 justify-content-between">
+                  <span>삭제일시</span>
+                  <button type="button" class="btn btn-reset" data-bs-toggle="dropdown">
+                    <th:block th:replace="~{fragments/svg :: sort('sort-icon')}"></th:block>
+                  </button>
+                </span>
+              </th>
               <th scope="col">포인트</th>
               <th scope="col">소셜</th>
               <th scope="col">성별</th>
@@ -126,8 +174,7 @@
               <td th:text="${jobSeeker.detailAddress}"></td>
               <td class="center bg-body-secondary">
                 <button type="button" class="btn btn-reset dropdown-toggle dropdown-no-caret moderation-btn" data-bs-toggle="dropdown">
-                  <img th:src="@{/images/admin/member/moderation_icon.svg}"
-                       class="moderation-icon">
+                  <th:block th:replace="~{fragments/svg :: moderation('moderation-icon')}"></th:block>
                 </button>
                 <ul class="dropdown-menu moderation-menu">
                   <li th:if="${jobSeeker.status.name() ne 'SUSPENDED'}"><button type="button" class="dropdown-item date-range-criteria-li" data-role="suspendMember">계정 정지</button></li>
