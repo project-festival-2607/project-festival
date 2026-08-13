@@ -52,19 +52,19 @@ public class AdminController {
 
   }
 
-  @PostMapping("/member/job-seeker/remove-phone-verification")
+  @PostMapping("/member/job-seeker/{memberId}/remove-phone-verification")
   @ResponseBody
-  public AdminActionResponse removePhoneVerification(@RequestParam Long memberId) {
+  public AdminActionResponse removePhoneVerification(@PathVariable Long memberId) {
     adminService.removePhoneVerification(memberId);
     return AdminActionResponse.builder()
       .result(true)
-      .message(String.format("id가 %d인 사용자의 전화번호 인증 삭제 및 정지[SUSPENDED] 상태로의 전환을 완료했습니다.", memberId))
+      .message(String.format("id가 %d인 사용자의 전화번호 인증을 삭제했으며,\n\"전화번호 인증 헤제\" 사유로 정지했습니다.", memberId))
       .build();
   }
 
-  @PostMapping("/member/job-seeker/add-phone-with-verification")
+  @PostMapping("/member/job-seeker/{memberId}/add-phone-with-verification")
   @ResponseBody
-  public AdminActionResponse addPhoneWithVerification(@RequestParam Long memberId,
+  public AdminActionResponse addPhoneWithVerification(@PathVariable Long memberId,
                                                       @RequestParam String phone) {
     boolean isChanged = adminService.addPhoneWithVerification(memberId, phone);
     return AdminActionResponse.builder()
