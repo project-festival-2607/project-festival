@@ -8,4 +8,11 @@ public interface AdminService {
 
   Page<JobSeekerTableDTO> getPage(int pageIdx, int pageSize, JobSeekerSearchCondition condition);
 
+  void removePhoneVerification(Long memberId);
+
+  boolean suspendMember(Long memberId, String reason);
+
+  boolean unsuspendMember(Long memberId);
+
+  boolean addPhoneWithVerification(Long memberId, String phone);
 }

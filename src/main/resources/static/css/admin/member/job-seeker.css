@@ -50,9 +50,28 @@ label.search-form-label {
   background-color: var(--bs-body-bg);
 }
 
-.manage-btn {
-  background-color: transparent;
+.result-table-wrapper table tbody td {
+  vertical-align: middle;
+}
+
+.btn-reset {
+  background: transparent;
   border: none;
+  padding: 0;
+  outline: none;
+  box-shadow: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.provider-icon {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.dropdown-no-caret::after {
+  display: none;
 }
 
 .btn-group-xs>.btn, .btn-xs {
@@ -60,4 +79,19 @@ label.search-form-label {
   --bs-btn-padding-x: 0.35rem;
   --bs-btn-font-size: 0.70rem;
   --bs-btn-border-radius: 0.15rem;
+}
+
+.admin-pagination {
+  --bs-pagination-disabled-bg: transparent;
+  --bs-pagination-disabled-color: rgba(var(--bs-dark-rgb), 0.25);
+  --bs-pagination-disabled-border-color: rgba(var(--bs-dark-rgb), 0.15);
+}
+
+.admin-pagination .active>.page-link {
+  background-color: var(--bs-dark);
+  border-color: var(--bs-dark);
+}
+
+.admin-pagination .active>.page-link:focus {
+  box-shadow: 0 0 0 0.25rem rgba(var(--bs-dark-rgb), 0.25);
 }

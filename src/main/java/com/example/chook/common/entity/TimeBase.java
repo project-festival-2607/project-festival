@@ -14,7 +14,8 @@ import java.time.LocalDateTime;
 @MappedSuperclass
 @Getter
 public abstract class TimeBase {
-  // 등록일, 수정일만 따로 관리하는 슈퍼 클래스
+
+  // 추가일시, 수정일시만 따로 관리하는 슈퍼 클래스
 
   @CreatedDate
   @Column(name="created_at", updatable = false)
