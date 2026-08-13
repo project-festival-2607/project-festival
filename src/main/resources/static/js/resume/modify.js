@@ -1,7 +1,55 @@
 document.addEventListener("DOMContentLoaded", function () {
-    // 경력 사항 삭제
+
+    // 경력 사항
+    const addCareerButton = document.getElementById("add-career");
+
     const careerContainer = document.getElementById("career-container");
 
+    // 경력 추가
+    if (careerContainer && addCareerButton){
+        let careerIndex = careerContainer.querySelectorAll(".career-item").length;
+
+        addCareerButton.addEventListener("click", function (){
+            const careerItem = document.createElement("div");
+
+            careerItem.classList.add("career-item");
+
+            careerItem.innerHTML = `
+                <input type="hidden" name="careers[${careerIndex}].id">     
+                
+                <div class="form-group">
+                    <label>회사명</label>
+                    <input type="text" name="careers[${careerIndex}].careerName">
+                </div>     
+                
+                <div class="form-group">
+                    <label>입사일</label>
+                    <input type="date" name="careers[${careerIndex}].startDate">
+                </div>      
+                
+                <div class="form-group">
+                    <label>퇴사일</label>
+                    <input type="date" name="careers[${careerIndex}].endDate">
+                </div>
+                
+                <div class="form-group">
+                    <label>담당 업무</label>
+                    <textarea name="careers[${careerIndex}].duties" rows="5"></textarea>
+                </div>
+                
+                <button type="button" class="remove-career">
+                    경력 삭제
+                </button>
+            `;
+
+            careerContainer.appendChild(careerItem);
+
+            careerIndex++;
+
+        })
+    }
+
+        // 경력 사항 삭제
         if (careerContainer){
                 careerContainer.addEventListener("click", function(event){
 
@@ -128,7 +176,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 <!-- 첨부파일 --> 
                 <div class="form-group portfolio-file" style="display:none;"> 
                     <label> 첨부파일 </label> 
-                    <input type="file" name="portfolioFile"> 
+                    <input type="file" name="portfolios[${portfolioIndex}].file"> 
                 </div>
                 
                 <button type="button" class="remove-portfolio"> 포트폴리오 삭제 </button>

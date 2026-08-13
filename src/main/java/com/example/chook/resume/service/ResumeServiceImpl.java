@@ -189,6 +189,7 @@ public class ResumeServiceImpl implements ResumeService{
     }
 
     // 이력서 수정
+    @Transactional
     @Override
     public void modify(ResumeRequestDTO resumeRequestDTO, Long resumeId) {
         // 기존 이력서 조회
@@ -231,6 +232,13 @@ public class ResumeServiceImpl implements ResumeService{
 
             for (ResumeCareerDTO careerDTO : resumeRequestDTO.getCareers()) {
 
+                log.info("===== 수정 경력 =====");
+                log.info("경력 ID = {}", careerDTO.getId());
+                log.info("회사명 = {}", careerDTO.getCareerName());
+                log.info("입사일 = {}", careerDTO.getStartDate());
+                log.info("퇴사일 = {}", careerDTO.getEndDate());
+                log.info("담당업무 = {}", careerDTO.getDuties());
+
                 // 기존 경력
                 if (careerDTO.getId() != null) {
 
@@ -251,6 +259,17 @@ public class ResumeServiceImpl implements ResumeService{
                     resumeCareerRepository.save(resumeCareer);
 
                 } else {
+
+                    // 새 경력이 완전히 비어있으면 저장하지 않음
+                    if ((careerDTO.getCareerName() == null || careerDTO.getCareerName().isBlank())
+                            && careerDTO.getStartDate() == null
+                            && careerDTO.getEndDate() == null
+                            && (careerDTO.getDuties() == null || careerDTO.getDuties().isBlank())) {
+
+                        log.info("빈 경력이라 저장하지 않음");
+                        continue;
+                    }
+
                     // 새 경력
                     ResumeCareer newCareer = resumeCareerDtoToEntity(careerDTO, resume);
 
@@ -261,7 +280,13 @@ public class ResumeServiceImpl implements ResumeService{
         // 화면에서 삭제한 기존 경력 DB 삭제
         for (ResumeCareer existingCareer : existingCareers) {
 
+            log.info("===== 기존 경력 삭제 검사 =====");
+            log.info("DB 경력 ID = {}", existingCareer.getId());
+            log.info("살아있는 경력 ID 목록 = {}", careerIds);
+
             if (!careerIds.contains(existingCareer.getId())) {
+
+                log.info("삭제할 경력 ID = {}", existingCareer.getId());
 
                 resumeCareerRepository.delete(existingCareer);
             }
@@ -277,8 +302,22 @@ public class ResumeServiceImpl implements ResumeService{
 
             for (ResumePortfolioDTO portfolioDTO : resumeRequestDTO.getPortfolios()) {
 
+                log.info("=================================");
+                log.info("포트폴리오 ID = {}", portfolioDTO.getId());
+                log.info("포트폴리오 제목 = {}", portfolioDTO.getTitle());
+                log.info("포트폴리오 타입 = {}", portfolioDTO.getType());
+                log.info("포트폴리오 URL = {}", portfolioDTO.getUrl());
+                log.info("첨부파일 = {}", portfolioDTO.getFile());
+                log.info("ResumeFile DTO = {}", portfolioDTO.getResumeFile());
+                log.info("=================================");
+
                 // 기존 포트폴리오
                 if (portfolioDTO.getId() != null) {
+
+                    log.info("===== 기존 포트폴리오 =====");
+                    log.info("ID = {}", portfolioDTO.getId());
+                    log.info("제목 = {}", portfolioDTO.getTitle());
+                    log.info("타입 = {}", portfolioDTO.getType());
 
                     portfolioIds.add(portfolioDTO.getId());
 
@@ -325,6 +364,20 @@ public class ResumeServiceImpl implements ResumeService{
                         }
                     }
                 } else {
+
+                    // 포트폴리오 유형이 선택되지 않은 경우 저장하지 않음
+                    if (portfolioDTO.getType() == null) {
+                        log.info("포트폴리오 유형이 없어서 저장하지 않음");
+                        continue;
+                    }
+
+                    log.info("===== 새 포트폴리오 =====");
+                    log.info("포트폴리오 제목 = {}", portfolioDTO.getTitle());
+                    log.info("포트폴리오 타입 = {}", portfolioDTO.getType());
+                    log.info("포트폴리오 URL = {}", portfolioDTO.getUrl());
+                    log.info("첨부파일 = {}", portfolioDTO.getFile());
+                    log.info("ResumeFile DTO = {}", portfolioDTO.getResumeFile());
+
                     // 새 포트폴리오
                     ResumePortfolio newPortfolio = resumePortfolioDtoToEntity(portfolioDTO, resume);
 
