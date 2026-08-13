@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="ko"
+      layout:decorate="~{layout/layout}"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org">
+<div layout:fragment="content">
+    <link rel="stylesheet" th:href="@{/css/resume/manage.css}">
+    <div class="container">
+        <!--                모든 inner는 class="container" 로 맞춤        -->
+        <!--        이 안에서 작업        -->
+        <h1>이력서 관리</h1>
+
+        <!-- 이력서가 없는 경우 -->
+        <div th:if="${resume == null}" class="empty-resume">
+            <p>작성된 이력서가 없습니다.</p>
+
+            <a th:href="@{/resume/register}" class="register-btn">
+                이력서 작성
+            </a>
+        </div>
+
+        <!-- 이력서가 있는 경우 -->
+        <div th:if="${resume != null}" class="resume-content">
+
+            <!-- 기본 정보 -->
+            <section class="resume-section">
+                <h2>기본 정보</h2>
+
+                <div class="profile-area">
+                    <!-- 프로필 사진이 있는 경우 -->
+                    <div th:if="${resume.profileFile != null}" class="profile-image">
+                        <img th:src="@{/test/file/{uuid}(uuid=${resume.profileFile.uuid})}" alt="프로필 사진">
+                    </div>
+
+                    <!-- 프로필 사진이 없는 경우 -->
+                    <div th:unless="${resume.profileFile != null}">
+                        프로필 사진이 없습니다.
+                    </div>
+
+                    <div class="profile-info">
+
+                        <div class="info-row">
+                            <span class="label">자기소개</span>
+                            <p th:text="${resume.introduction}"></p>
+                        </div>
+
+                        <div class="info-row">
+                            <span class="label">작성일</span>
+                            <p th:text="${#temporals.format(resume.savedAt, 'yyyy-MM-dd')}"></p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 경력 -->
+            <section class="resume-section">
+                <h2>경력</h2>
+
+                <div th:if="${resume.careers == null || #lists.isEmpty(resume.careers)}">
+                    <p class="empty-text">등록된 경력이 없습니다.</p>
+                </div>
+
+                <div th:each="career : ${resume.careers}" class="career-item">
+
+                    <div class="info-row">
+                        <span class="label">회사명</span>
+                        <p th:text="${career.careerName}"></p>
+                    </div>
+
+                    <div class="info-row">
+                        <span class="label">입사일</span>
+                        <p th:text="${career.startDate}"></p>
+                    </div>
+
+
+                    <div class="info-row">
+                        <span class="label">퇴사일</span>
+                        <p th:text="${career.endDate}"></p>
+                    </div>
+
+                    <div class="info-row">
+                        <span class="label">담당 업무</span>
+                        <p th:text="${career.duties}"></p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 포트폴리오 -->
+            <section class="resume-section">
+                <h2>포트폴리오</h2>
+
+                <!-- 포트폴리오가 없는 경우 -->
+                <div th:if="${resume.portfolios == null || #lists.isEmpty(resume.portfolios)}">
+                    <p class="empty-text">등록된 포트폴리오가 없습니다.</p>
+                </div>
+
+                <!-- 포트폴리오가 있는 경우 -->
+                <div th:each="portfolio : ${resume.portfolios}" class="portfolio-item">
+
+                    <!-- 포트폴리오 제목 -->
+                    <div class="info-row">
+                        <span class="label">제목</span>
+                        <p th:text="${portfolio.title}"></p>
+                    </div>
+
+                    <!-- 포트폴리오 유형 -->
+                    <div class="info-row">
+                        <span class="label">유형</span>
+                        <p th:text="${portfolio.type}"></p>
+                    </div>
+
+                    <!-- URL인 경우 -->
+                    <div th:if="${portfolio.type.name() == 'URL'}" class="info-row">
+                        <span class="label">URL</span>
+                        <p>
+                            <a th:href="${portfolio.url}"
+                               th:text="${portfolio.url}"
+                               target="_blank"
+                               rel="noopener noreferrer">
+                            </a>
+                        </p>
+                    </div>
+
+                    <!-- FILE인 경우 -->
+                    <div th:if="${portfolio.type.name() == 'FILE'}" class="info-row">
+                        <span class="label">첨부파일</span>
+                        <a th:if="${portfolio.resumeFile != null}"
+                           th:href="@{/test/file/{uuid}/download(uuid=${portfolio.resumeFile.uuid})}"
+                           th:text="${portfolio.resumeFile.originalName}">
+                            첨부파일
+                        </a>
+
+                        <p th:if="${portfolio.resumeFile == null}">
+                            첨부파일이 없습니다.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <div class="resume-buttons">
+                <a th:href="@{/resume/modify(resumeId=${resume.id})}" class="modify-btn">
+                    이력서 수정
+                </a>
+                <form th:action="@{/resume/delete}" method="post">
+                    <input type="hidden" name="resumeId" th:value="${resume.id}">
+
+                    <button type="submit" class="delete-btn">
+                        이력서 삭제
+                    </button>
+                </form>
+
+                <a th:href="@{/mypage}" class="cancel-btn">마이페이지</a>
+            </div>
+        </div>
+    </div>
+</div>
