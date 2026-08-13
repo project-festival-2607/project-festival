@@ -10,11 +10,11 @@
 </head>
 <div layout:fragment="content">
 
-  <div class="container">
+  <div class="container admin-container">
     <form method="get" th:action="@{/admin/member/job-seeker}"
           th:with="form=${pagingHandler.form}">
       <div class="d-flex justify-content-end">
-        <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" id="currentPageSize">30개씩</button>
+        <button class="btn btn-sm btn-outline-dark dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" id="currentPageSize">30개씩</button>
         <ul class="dropdown-menu dropdown-menu-end" id="pageSizeDropdownList">
           <li><button type="button" class="dropdown-item page-size-li" data-value="10">10개씩</button></li>
           <li><button type="button" class="dropdown-item page-size-li" data-value="30">30개씩</button></li>
@@ -27,7 +27,7 @@
         <div class="col-12 col-md-6">
           <label class="search-form-label" for="keywords">검색 키워드</label>
           <div class="input-group input-group-sm">
-            <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" id="currentKeywordType">전체</button>
+            <button class="btn btn-outline-dark dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" id="currentKeywordType">전체</button>
             <ul class="dropdown-menu" id="keywordTypeDropdownList">
               <li><button type="button" class="dropdown-item keyword-type-li" data-value="">전체</button></li>
               <li><button type="button" class="dropdown-item keyword-type-li" data-value="USERNAME">아이디</button></li>
@@ -43,14 +43,14 @@
         <div class="col-12 col-md-6">
           <label class="search-form-label">날짜 범위</label>
           <div class="input-group input-group-sm">
-            <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" id="currentDateRangeCriteria">
+            <button class="btn btn-outline-dark dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" id="currentDateRangeCriteria">
               선택
             </button>
             <ul class="dropdown-menu" id="dateRangeCriteriaDropdownList">
               <li><button type="button" class="dropdown-item date-range-criteria-li" data-value="">선택</button></li>
-              <li><button type="button" class="dropdown-item date-range-criteria-li" data-value="CREATED_AT">계정 생성일</button></li>
-              <li><button type="button" class="dropdown-item date-range-criteria-li" data-value="UPDATED_AT">계정 수정일</button></li>
-              <li><button type="button" class="dropdown-item date-range-criteria-li" data-value="LAST_LOGIN_AT">마지막 로그인</button></li>
+              <li><button type="button" class="dropdown-item date-range-criteria-li" data-value="CREATED_AT">생성일시</button></li>
+              <li><button type="button" class="dropdown-item date-range-criteria-li" data-value="UPDATED_AT">수정일시</button></li>
+              <li><button type="button" class="dropdown-item date-range-criteria-li" data-value="LAST_LOGIN_AT">최근접속일시</button></li>
               <li><button type="button" class="dropdown-item date-range-criteria-li" data-value="BIRTH_DATE">생년월일</button></li>
             </ul>
             <input type="datetime-local" class="form-control" name="startDateTime" id="startDateTime" th:value="${form.startDateTime}"/>
@@ -60,13 +60,13 @@
             <input type="date" class="form-control" name="endDate" id="endDate" th:value="${form.endDate}">
             <input type="hidden" id="dateRangeCriteria" name="dateRangeCriteria" th:value="${form.dateRangeCriteria}"/>
           </div>
-          <div class="btn-group btn-group-xs float-end mt-1" role="group" id="dateRangeCriteriaAutofill">
-            <button type="button" class="btn btn-outline-secondary date-range-criteria-autofill" data-value="1h">1시간</button>
-            <button type="button" class="btn btn-outline-secondary date-range-criteria-autofill" data-value="6h">6시간</button>
-            <button type="button" class="btn btn-outline-secondary date-range-criteria-autofill" data-value="12h">12시간</button>
-            <button type="button" class="btn btn-outline-secondary date-range-criteria-autofill" data-value="1d">1일</button>
-            <button type="button" class="btn btn-outline-secondary date-range-criteria-autofill" data-value="7d">1주</button>
-            <button type="button" class="btn btn-outline-secondary date-range-criteria-autofill" data-value="1M">1개월</button>
+          <div class="btn-group btn-group-xs float-end mt-2" role="group" id="dateRangeCriteriaAutofill">
+            <button type="button" class="btn btn-outline-dark date-range-criteria-autofill" data-value="1h">1시간</button>
+            <button type="button" class="btn btn-outline-dark date-range-criteria-autofill" data-value="6h">6시간</button>
+            <button type="button" class="btn btn-outline-dark date-range-criteria-autofill" data-value="12h">12시간</button>
+            <button type="button" class="btn btn-outline-dark date-range-criteria-autofill" data-value="1d">1일</button>
+            <button type="button" class="btn btn-outline-dark date-range-criteria-autofill" data-value="7d">1주</button>
+            <button type="button" class="btn btn-outline-dark date-range-criteria-autofill" data-value="1M">1개월</button>
           </div>
         </div>
       </div>
@@ -82,7 +82,7 @@
               <th scope="col">상태</th>
               <th scope="col">생성일시</th>
               <th scope="col">수정일시</th>
-              <th scope="col">마지막 접속일시</th>
+              <th scope="col">최근접속일시</th>
               <th scope="col">삭제일시</th>
               <th scope="col">포인트</th>
               <th scope="col">소셜</th>
@@ -90,7 +90,7 @@
               <th scope="col">생일</th>
               <th scope="col">도로명주소</th>
               <th scope="col">상세주소</th>
-              <th scope="col">관리</th>
+              <th scope="col" class="text-center bg-body-secondary">관리</th>
             </tr>
           </thead>
           <tbody>
@@ -124,7 +124,18 @@
               <td th:text="${#temporals.format(jobSeeker.birthDate, 'yyyy.MM.dd.')}"></td>
               <td th:text="${jobSeeker.streetAddress}"></td>
               <td th:text="${jobSeeker.detailAddress}"></td>
-              <td><button type="button" class="btn btn-reset">🛠️</button></td>
+              <td class="center bg-body-secondary">
+                <button type="button" class="btn btn-reset dropdown-toggle dropdown-no-caret moderation-btn" data-bs-toggle="dropdown">
+                  <img th:src="@{/images/admin/member/moderation_icon.svg}"
+                       class="moderation-icon">
+                </button>
+                <ul class="dropdown-menu moderation-menu">
+                  <li th:if="${jobSeeker.status.name() ne 'SUSPENDED'}"><button type="button" class="dropdown-item date-range-criteria-li" data-role="suspendMember">계정 정지</button></li>
+                  <li th:if="${jobSeeker.status.name() eq 'SUSPENDED'}"><button type="button" class="dropdown-item date-range-criteria-li" data-role="unsuspendMember">계정 정지 해제</button></li>
+                  <li th:if="${jobSeeker.phoneVerified}"><button type="button" class="dropdown-item date-range-criteria-li" data-value="removePhoneVerification">휴대전화 인증 삭제</button></li>
+                  <li th:unless="${jobSeeker.phoneVerified}"><button type="button" class="dropdown-item date-range-criteria-li" data-value="removePhoneVerification">휴대전화 인증 추가</button></li>
+                </ul>
+              </td>
             </tr>
           </tbody>
         </table>
