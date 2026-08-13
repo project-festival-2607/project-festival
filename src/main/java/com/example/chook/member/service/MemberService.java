@@ -25,4 +25,6 @@ public interface MemberService {
 
     void changePassword(Long memberId, String currentPassword, String newPassword, String newPasswordConfirm);
 
+    void withdraw(Long memberId, String confirmValue);
+
 }

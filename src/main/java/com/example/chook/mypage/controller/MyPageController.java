@@ -11,6 +11,7 @@ import com.example.chook.mypage.service.MyPageService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.ui.Model;
@@ -122,7 +123,9 @@ public class MyPageController {
 
     // 회원정보 수정 페이지 (구인자)
     @GetMapping("/modify/employer")
-    public String modifyEmployerForm(@AuthenticationPrincipal CustomUserDetails userDetails, HttpSession session, Model model) {
+    public String modifyEmployerForm(
+            @AuthenticationPrincipal CustomUserDetails userDetails,
+            HttpSession session, Model model) {
         if (userDetails == null) {
             return "redirect:/member/login";
         }
@@ -193,8 +196,7 @@ public class MyPageController {
             @RequestParam String currentPassword,
             @RequestParam String newPassword,
             @RequestParam String newPasswordConfirm,
-            RedirectAttributes redirectAttributes
-    ) {
+            RedirectAttributes redirectAttributes) {
         try {
             memberService.changePassword(userDetails.getId(), currentPassword, newPassword, newPasswordConfirm);
             redirectAttributes.addFlashAttribute("SuccessMsg", "비밀번호가 변경되었습니다.");
@@ -211,5 +213,33 @@ public class MyPageController {
             return false;
         }
         return !Boolean.TRUE.equals(session.getAttribute(PASSWORD_VERIFIED_SESSION_KEY));
+    }
+
+    // 회원탈퇴 페이지
+    @GetMapping("/account-leave")
+    public String accountLeaveForm(@AuthenticationPrincipal CustomUserDetails userDetails, Model model) {
+        if (userDetails == null) {
+            return "redirect:/member/login";
+        }
+        model.addAttribute("username", userDetails.getUsername());
+        model.addAttribute("socialSignUp", userDetails.isSocialSignUp());
+        return "mypage/account-leave";
+    }
+
+    // 탈퇴 처리
+    @PostMapping("/withdraw")
+    @ResponseBody
+    public ResponseEntity<Void> withdraw(
+            @AuthenticationPrincipal CustomUserDetails userDetails,
+            @RequestParam String confirmValue,
+            HttpSession session
+    ) {
+        try {
+            memberService.withdraw(userDetails.getId(), confirmValue);
+            session.invalidate();
+            return ResponseEntity.ok().build();
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().build();
+        }
     }
 }
