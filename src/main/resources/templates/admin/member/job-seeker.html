@@ -194,8 +194,8 @@
                 <ul class="dropdown-menu moderation-menu">
                   <li><button type="button" class="dropdown-item date-range-criteria-li" data-role="suspendMember" data-bs-toggle="modal" data-bs-target="#suspendMemberModal" th:text="${'계정 정지'+ ((jobSeeker.status.name() eq 'SUSPENDED') ? ' 사유 변경': '')}"></button></li>
                   <li th:if="${jobSeeker.status.name() eq 'SUSPENDED'}"><button type="button" class="dropdown-item date-range-criteria-li" data-role="unsuspendMember" data-bs-toggle="modal" data-bs-target="#unsuspendMemberModal">계정 정지 해제</button></li>
-                  <li th:if="${jobSeeker.phoneVerified}"><button type="button" class="dropdown-item date-range-criteria-li" data-value="removePhoneVerification">휴대전화 인증 삭제</button></li>
-                  <li th:unless="${jobSeeker.phoneVerified}"><button type="button" class="dropdown-item date-range-criteria-li" data-value="removePhoneVerification">휴대전화 인증 추가</button></li>
+                  <li th:if="${jobSeeker.phoneVerified}"><button type="button" class="dropdown-item date-range-criteria-li" data-role="removePhoneVerification" data-bs-toggle="modal" data-bs-target="#removePhoneVerificationModal">휴대전화 인증 삭제</button></li>
+                  <li th:unless="${jobSeeker.phoneVerified}"><button type="button" class="dropdown-item date-range-criteria-li" data-role="addPhoneWithVerification">휴대전화 인증 추가</button></li>
                 </ul>
               </td>
             </tr>
@@ -273,7 +273,7 @@
     </div>
   </div>
   <!-- unsuspendMemberModal -->
-  <div class="modal fade" id="unsuspendMemberModal" tabindex="-1" aria-labelledby="suspendMemberModal" aria-hidden="true">
+  <div class="modal fade" id="unsuspendMemberModal" tabindex="-1" aria-labelledby="unsuspendMemberModal" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
@@ -307,6 +307,41 @@
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
           <button type="button" class="btn btn-outline-danger" id="unsuspendMemberSubmit">정지 해제</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- removePhoneVerificationModal -->
+  <div class="modal fade" id="removePhoneVerificationModal" tabindex="-1" aria-labelledby="removePhoneVerificationModal" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="removePhoneVerificationModalLabel">휴대전화 번호 인증 해제 확인</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <label class="mb-3">회원 정지 정보</label>
+          <table class="table mb-3">
+            <tbody>
+            <tr>
+              <th scope="row" class="modal-member-info-th">아이디</th>
+              <td id="removePhoneVerificationUsername">(여기에 아이디가 표시됩니다.)</td>
+            </tr>
+            <tr>
+              <th scope="row">이름</th>
+              <td id="removePhoneVerificationName">(여기에 이름이 표시됩니다.)</td>
+            </tr>
+            <tr>
+              <th scope="row">휴대전화 번호</th>
+              <td id="removePhoneVerificationPhone">(여기에 휴대전화 번호가 표시됩니다.)</td>
+            </tr>
+            </tbody>
+          </table>
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+          <button type="button" class="btn btn-outline-danger" id="removePhoneVerificationSubmit">휴대전화 인증 해제</button>
         </div>
       </div>
     </div>

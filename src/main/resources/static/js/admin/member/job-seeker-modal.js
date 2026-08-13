@@ -41,6 +41,20 @@ document.querySelector('.result-table-wrapper').addEventListener('click', (event
 
     document.getElementById('unsuspendMemberSubmit').dataset.id = id;
   }
+
+  if (event.target.dataset.role === 'removePhoneVerification') {
+    const member = event.target.closest('tr');
+    const id = member.querySelector('[data-type="id"]').textContent;
+    const username = member.querySelector('[data-type="username"]').textContent;
+    const name = member.querySelector('[data-type="name"]').textContent;
+    const phone = member.querySelector('[data-type="phone"]').textContent;
+
+    document.getElementById('removePhoneVerificationUsername').textContent = username;
+    document.getElementById('removePhoneVerificationName').textContent = name;
+    document.getElementById('removePhoneVerificationPhone').textContent = phone;
+
+    document.getElementById('removePhoneVerificationSubmit').dataset.id = id;
+  }
 })
 
 document.querySelectorAll('.modal-footer').forEach(element => {
@@ -59,6 +73,15 @@ document.querySelectorAll('.modal-footer').forEach(element => {
     if (event.target.id === 'unsuspendMemberSubmit') {
       const memberId = event.target.dataset.id;
       unsuspendMemberRequest(memberId).then(response => {
+        alert(response.message);
+        if (response.result === true) {
+          event.target.closest('.modal').querySelector('.btn-close').click();
+        }
+      })
+    }
+    if (event.target.id === 'removePhoneVerificationSubmit') {
+      const memberId = event.target.dataset.id;
+      removePhoneVerificationRequest(memberId).then(response => {
         alert(response.message);
         if (response.result === true) {
           event.target.closest('.modal').querySelector('.btn-close').click();
@@ -91,6 +114,24 @@ async function unsuspendMemberRequest(memberId) {
   try {
     const response = await fetch(
       `/admin/member/job-seeker/${memberId}/unsuspend`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+      }
+    );
+    return await response.json();
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+async function removePhoneVerificationRequest(memberId) {
+  console.log('removePhoneVerificationRequest');
+  try {
+    const response = await fetch(
+      `/admin/member/job-seeker/${memberId}/remove-phone-verification`,
       {
         method: 'POST',
         headers: {
