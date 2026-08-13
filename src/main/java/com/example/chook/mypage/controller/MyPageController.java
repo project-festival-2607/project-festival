@@ -1,9 +1,9 @@
 package com.example.chook.mypage.controller;
 
-import com.example.chook.member.entity.enums.MemberRole;
 import com.example.chook.member.dto.EmployerProfileUpdateRequestDTO;
 import com.example.chook.member.dto.JobSeekerProfileUpdateRequestDTO;
 import com.example.chook.member.dto.LoginResponseDTO;
+import com.example.chook.member.entity.enums.MemberRole;
 import com.example.chook.member.security.AuthenticationHelper;
 import com.example.chook.member.security.CustomUserDetails;
 import com.example.chook.member.service.MemberService;
@@ -12,16 +12,13 @@ import com.example.chook.mypage.service.MyPageService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.ui.Model;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
