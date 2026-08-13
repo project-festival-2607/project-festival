@@ -339,6 +339,48 @@ public class MemberServiceImpl implements MemberService {
         memberRepository.save(member);
     }
 
+    @Override
+    public List<Provider> getLinkedProviders(Long memberId) {
+        return socialLoginRepository.findByMemberId(memberId).stream()
+                .map(SocialLogin::getProvider)
+                .toList();
+    }
+
+    @Transactional
+    @Override
+    public void linkSocialAccount(Long memberId, Provider provider, String providerId) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new IllegalArgumentException("회원을 찾을 수 없습니다."));
+
+        if (member.getRole() == MemberRole.RECRUITER) {
+            throw new IllegalStateException("RECRUITER는 소셜 계정을 연동할 수 없습니다.");
+        }
+
+        if (socialLoginRepository.existsByProviderAndProviderId(provider, providerId)) {
+            throw new IllegalArgumentException("이미 사용중인 계정입니다.");
+        }
+
+        socialLoginRepository.save(SocialLogin.builder()
+                .member(member)
+                .provider(provider)
+                .providerId(providerId)
+                .linkedAt(LocalDateTime.now())
+                .build());
+    }
+
+    @Transactional
+    @Override
+    public void unlinkSocialAccount(Long memberId, Provider provider) {
+        socialLoginRepository.deleteByMemberIdAndProvider(memberId, provider);
+    }
+
+    @Override
+    public String getUsernameById(Long memberId) {
+        return memberRepository.findById(memberId)
+                .orElseThrow(() -> new IllegalArgumentException("회원을 찾을 수 없습니다."))
+                .getUsername();
+    }
+
     // 소셜 회원 아이디 생성 (사용자에게 노출/입력되지 않는 내부용 값)
     private String generateSocialUsername(Provider provider) {
         return provider.name().charAt(0) + "-" + UUID.randomUUID();
