@@ -6,6 +6,7 @@
 <head>
   <th:block layout:fragment="css">
     <link rel="stylesheet" th:href="@{/css/admin/member/job-seeker.css}">
+    <link rel="stylesheet" th:href="@{/css/admin/common.css}">
   </th:block>
 </head>
 <div layout:fragment="content">
@@ -88,14 +89,24 @@
                   <span>상태</span>
                   <div class="dropdown d-flex justify-content-center align-items-center">
                     <button type="button" class="btn btn-reset btn-th dropdown-toggle dropdown-no-caret" data-bs-toggle="dropdown">
-                      <th:block th:replace="~{fragments/svg :: filter('filter-icon')}"></th:block>
+                      <th:block th:replace="~{admin/fragments/svg :: filter('filter-icon')}"></th:block>
                     </button>
                     <ul class="dropdown-menu filter-menu" id="statusFilterDropdownList">
-                      <li><button type="button" class="dropdown-item status-filter-li" data-value="">전체</button></li>
-                      <li><button type="button" class="dropdown-item status-filter-li" data-value="ACTIVE">활동</button></li>
-                      <li><button type="button" class="dropdown-item status-filter-li" data-value="DORMANT">휴면</button></li>
-                      <li><button type="button" class="dropdown-item status-filter-li" data-value="SUSPEND">정지</button></li>
-                      <li><button type="button" class="dropdown-item status-filter-li" data-value="DELETED">탈퇴</button></li>
+                      <li><button type="button" class="dropdown-item status-filter-li" data-value="">
+                        <th:block th:replace="~{admin/fragments/badge :: member-status(null, false, true)}"></th:block>
+                      </button></li>
+                      <li><button type="button" class="dropdown-item status-filter-li" data-value="ACTIVE">
+                        <th:block th:replace="~{admin/fragments/badge :: member-status(${memberStatusFilters[0]}, false, false)}"></th:block>
+                      </button></li>
+                      <li><button type="button" class="dropdown-item status-filter-li" data-value="DORMANT">
+                        <th:block th:replace="~{admin/fragments/badge :: member-status(${memberStatusFilters[1]}, false, false)}"></th:block>
+                      </button></li>
+                      <li><button type="button" class="dropdown-item status-filter-li" data-value="SUSPEND">
+                        <th:block th:replace="~{admin/fragments/badge :: member-status(${memberStatusFilters[2]}, false, false)}"></th:block>
+                      </button></li>
+                      <li><button type="button" class="dropdown-item status-filter-li" data-value="DELETED">
+                        <th:block th:replace="~{admin/fragments/badge :: member-status(null, true, false)}"></th:block>
+                      </button></li>
                     </ul>
                   </div>
                 </div>
@@ -104,7 +115,7 @@
                 <span class="d-flex gap-3 justify-content-between">
                   <span>생성일시</span>
                   <button type="button" class="btn btn-reset btn-th dropdown-toggle dropdown-no-caret" data-bs-toggle="dropdown">
-                    <th:block th:replace="~{fragments/svg :: sort('sort-icon')}"></th:block>
+                    <th:block th:replace="~{admin/fragments/svg :: sort('sort-icon')}"></th:block>
                   </button>
                 </span>
               </th>
@@ -112,7 +123,7 @@
                 <span class="d-flex gap-3 justify-content-between">
                   <span>수정일시</span>
                   <button type="button" class="btn btn-reset btn-th" data-bs-toggle="dropdown">
-                    <th:block th:replace="~{fragments/svg :: sort('sort-icon')}"></th:block>
+                    <th:block th:replace="~{admin/fragments/svg :: sort('sort-icon')}"></th:block>
                   </button>
                 </span>
               </th>
@@ -120,7 +131,7 @@
                 <span class="d-flex gap-3 justify-content-between">
                   <span>최근접속일시</span>
                   <button type="button" class="btn btn-reset btn-th" data-bs-toggle="dropdown">
-                    <th:block th:replace="~{fragments/svg :: sort('sort-icon')}"></th:block>
+                    <th:block th:replace="~{admin/fragments/svg :: sort('sort-icon')}"></th:block>
                   </button>
                 </span>
               </th>
@@ -128,7 +139,7 @@
                 <span class="d-flex gap-3 justify-content-between">
                   <span>삭제일시</span>
                   <button type="button" class="btn btn-reset" data-bs-toggle="dropdown">
-                    <th:block th:replace="~{fragments/svg :: sort('sort-icon')}"></th:block>
+                    <th:block th:replace="~{admin/fragments/svg :: sort('sort-icon')}"></th:block>
                   </button>
                 </span>
               </th>
@@ -148,11 +159,13 @@
               <td data-type="name" th:text="${jobSeeker.name}"></td>
               <td data-type="phone">[[${jobSeeker.formattedPhone}]]</td>
               <td>
-                <span th:if="${jobSeeker.phoneVerified}" class="text-success"><th:block th:replace="~{fragments/svg :: verified('phone-verified-icon')}"></th:block></span>
-                <span th:unless="${jobSeeker.phoneVerified}" class="text-danger" title="휴대전화 번호가 인증되지 않았습니다."><th:block th:replace="~{fragments/svg :: not-verified('phone-verified-icon')}"></th:block></span>
+                <span th:if="${jobSeeker.phoneVerified}" class="text-success"><th:block th:replace="~{admin/fragments/svg :: verified('phone-verified-icon')}"></th:block></span>
+                <span th:unless="${jobSeeker.phoneVerified}" class="text-danger" title="휴대전화 번호가 인증되지 않았습니다."><th:block th:replace="~{admin/fragments/svg :: not-verified('phone-verified-icon')}"></th:block></span>
               </td>
               <td data-type="email" th:text="${jobSeeker.email}"></td>
-              <td th:text="${jobSeeker.statusString}"></td>
+              <td data-type="status" class="text-center">
+                <th:block th:replace="~{admin/fragments/badge :: member-status(${jobSeeker.status}, ${jobSeeker.deletedAt ne null}, false)}"></th:block>
+              </td>
               <td th:text="${#temporals.format(jobSeeker.createdAt, 'yyyy.MM.dd. HH:mm')}"></td>
               <td th:text="${#temporals.format(jobSeeker.updatedAt, 'yyyy.MM.dd. HH:mm')}"></td>
               <td data-type="lastLoginAt" th:text="${#temporals.format(jobSeeker.lastLoginAt, 'yyyy.MM.dd. HH:mm')}"></td>
@@ -174,7 +187,7 @@
               <td th:text="${jobSeeker.detailAddress}"></td>
               <td class="center bg-body-secondary">
                 <button type="button" class="btn btn-reset dropdown-toggle dropdown-no-caret moderation-btn" data-bs-toggle="dropdown">
-                  <th:block th:replace="~{fragments/svg :: moderation('moderation-icon')}"></th:block>
+                  <th:block th:replace="~{admin/fragments/svg :: moderation('moderation-icon')}"></th:block>
                 </button>
                 <ul class="dropdown-menu moderation-menu">
                   <li th:if="${jobSeeker.status.name() ne 'SUSPENDED'}"><button type="button" class="dropdown-item date-range-criteria-li" data-role="suspendMember" data-bs-toggle="modal" data-bs-target="#suspendMemberModal">계정 정지</button></li>

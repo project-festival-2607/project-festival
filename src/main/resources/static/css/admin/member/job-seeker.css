@@ -85,6 +85,12 @@ label.search-form-label {
   letter-spacing: -0.03em;
 }
 
+.result-table-wrapper table td[data-type="status"] {
+  font-size: 110%;
+  padding-top: 0.2rem;
+  padding-bottom: 0.2rem;
+}
+
 .result-table-wrapper table thead th {
   position: sticky;
   z-index: 3;
@@ -132,6 +138,9 @@ label.search-form-label {
   font-size: 81%;
 }
 
+.status-filter-li {
+  font-size: 130%;
+}
 
 #statusFilterDropdownList.dropdown-menu,
 .moderation-menu {

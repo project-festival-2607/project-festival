@@ -6,6 +6,7 @@ import com.example.chook.admin.record.AdminActionResponse;
 import com.example.chook.admin.record.JobSeekerSearchCondition;
 import com.example.chook.admin.service.AdminService;
 import com.example.chook.common.handler.PagingHandler;
+import com.example.chook.member.entity.enums.MemberStatus;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,6 +15,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Controller
 @RequestMapping("/admin")
@@ -40,6 +43,12 @@ public class AdminController {
     PagingHandler<JobSeekerTableDTO, JobSeekerSearchForm> pagingHandler =
       new PagingHandler<>(page, form, PAGINATION_SIZE, pageIdx);
     model.addAttribute("pagingHandler", pagingHandler);
+
+    model.addAttribute("memberStatusFilters", List.of(
+      MemberStatus.ACTIVE,
+      MemberStatus.DORMANT,
+      MemberStatus.SUSPENDED
+    ));
 
   }
 

@@ -46,14 +46,4 @@ public class JobSeekerTableDTO {
       ? String.format("%s-%s-%s", phone.substring(0, 3), phone.substring(3, 7), phone.substring(7))
       : phone;
   }
-
-  public String getStatusString() {
-    if (deletedAt != null) return "탈퇴";
-    return switch (status) {
-      case ACTIVE -> "활성";
-      case DORMANT -> "휴면";
-      case SUSPENDED -> "정지";
-    };
-  }
-
 }
