@@ -317,7 +317,7 @@ public class MemberServiceImpl implements MemberService {
         memberRepository.save(member);
     }
 
-    // 회원탈퇴일 삽입
+    // 회원탈퇴
     @Transactional
     @Override
     public void withdraw(Long memberId, String confirmValue) {
@@ -335,6 +335,8 @@ public class MemberServiceImpl implements MemberService {
             }
         }
 
+        // 소셜 로그인 정보 hard delete 추가
+        socialLoginRepository.deleteByMemberId(memberId);
         member.setDeletedAt(LocalDateTime.now());
         memberRepository.save(member);
     }
