@@ -317,7 +317,7 @@ public class MemberServiceImpl implements MemberService {
         memberRepository.save(member);
     }
 
-    // 회원탈퇴일 삽입
+    // 회원탈퇴
     @Transactional
     @Override
     public void withdraw(Long memberId, String confirmValue) {
@@ -335,6 +335,8 @@ public class MemberServiceImpl implements MemberService {
             }
         }
 
+        // 소셜 로그인 정보 hard delete 추가
+        socialLoginRepository.deleteByMemberId(memberId);
         member.setDeletedAt(LocalDateTime.now());
         memberRepository.save(member);
     }
@@ -379,6 +381,15 @@ public class MemberServiceImpl implements MemberService {
         return memberRepository.findById(memberId)
                 .orElseThrow(() -> new IllegalArgumentException("회원을 찾을 수 없습니다."))
                 .getUsername();
+    }
+
+    @Transactional
+    @Override
+    public void updateLastLoginAt(Long memberId) {
+        memberRepository.findById(memberId).ifPresent(member -> {
+            member.setLastLoginAt(LocalDateTime.now());
+            memberRepository.save(member);
+        });
     }
 
     // 소셜 회원 아이디 생성 (사용자에게 노출/입력되지 않는 내부용 값)

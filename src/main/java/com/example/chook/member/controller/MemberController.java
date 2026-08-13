@@ -60,6 +60,7 @@ public class MemberController {
     ) {
         try {
             LoginResponseDTO responseDTO = memberService.signUpJobSeeker(requestDTO);
+            memberService.updateLastLoginAt(responseDTO.getId());
             authenticationHelper.authenticate(responseDTO.getUsername(), request, response);
             return "redirect:/";
         } catch (IllegalArgumentException e) {
@@ -84,6 +85,7 @@ public class MemberController {
     ) {
         try {
             LoginResponseDTO responseDTO = memberService.signUpEmployer(requestDTO);
+            memberService.updateLastLoginAt(responseDTO.getId());
             authenticationHelper.authenticate(responseDTO.getUsername(), request, response);
             return "redirect:/";
         } catch (IllegalArgumentException e) {
@@ -137,6 +139,7 @@ public class MemberController {
         try {
             LoginResponseDTO responseDTO = memberService.signUpSocial(authInfo, requestDTO);
             session.removeAttribute("socialAuthInfo");
+            memberService.updateLastLoginAt(responseDTO.getId());
             authenticationHelper.authenticate(responseDTO.getUsername(), request, response);
             return "redirect:/";
         } catch (IllegalArgumentException e) {

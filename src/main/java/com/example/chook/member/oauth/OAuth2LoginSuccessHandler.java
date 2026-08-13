@@ -71,6 +71,8 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
                     userInfo.getProvider(),
                     userInfo.getProviderId()
             );
+            // 로그인 날짜 업데이트
+            memberService.updateLastLoginAt(responseDTO.getId());
             // 기존 회원 → SecurityContext에 인증 정보 설정 후 홈으로 리다이렉트
             authenticationHelper.authenticate(responseDTO.getUsername(), request, response);
             response.sendRedirect("/");
