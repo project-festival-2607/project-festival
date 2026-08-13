@@ -317,6 +317,28 @@ public class MemberServiceImpl implements MemberService {
         memberRepository.save(member);
     }
 
+    // 회원탈퇴일 삽입
+    @Transactional
+    @Override
+    public void withdraw(Long memberId, String confirmValue) {
+
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new IllegalArgumentException("회원을 찾을 수 없습니다."));
+
+        if (member.isSocialSignUp()) {
+            if (!member.getName().equals(confirmValue)) {
+                throw new IllegalArgumentException("이름이 일치하지 않습니다.");
+            }
+        } else {
+            if (!passwordEncoder.matches(confirmValue, member.getPasswordHash())) {
+                throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+            }
+        }
+
+        member.setDeletedAt(LocalDateTime.now());
+        memberRepository.save(member);
+    }
+
     // 소셜 회원 아이디 생성 (사용자에게 노출/입력되지 않는 내부용 값)
     private String generateSocialUsername(Provider provider) {
         return provider.name().charAt(0) + "-" + UUID.randomUUID();
