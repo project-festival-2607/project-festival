@@ -78,7 +78,7 @@ public class AdminController {
   @PostMapping("/member/job-seeker/{memberId}/suspend")
   @ResponseBody
   public AdminActionResponse suspendMember(@PathVariable Long memberId,
-                                           @RequestBody String reason) {
+                                           @RequestBody(required = false) String reason) {
     log.info("target memberId: {}", memberId);
     boolean isChanged = adminService.suspendMember(memberId, reason);
     return AdminActionResponse.builder()

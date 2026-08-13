@@ -52,7 +52,7 @@ document.querySelectorAll('.modal-footer').forEach(element => {
       suspendMemberRequest(memberId, reason).then(response => {
         alert(response.message);
         if (response.result === true) {
-          document.querySelector(".btn-close").click();
+          event.target.closest('.modal').querySelector('.btn-close').click();
         }
       })
     }
@@ -61,7 +61,7 @@ document.querySelectorAll('.modal-footer').forEach(element => {
       unsuspendMemberRequest(memberId).then(response => {
         alert(response.message);
         if (response.result === true) {
-          document.querySelector(".btn-close").click();
+          event.target.closest('.modal').querySelector('.btn-close').click();
         }
       })
     }
