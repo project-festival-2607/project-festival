@@ -204,22 +204,35 @@ public class ResumeServiceImpl implements ResumeService{
         resumeRepository.save(resume);
 
         // 프로필 파일 수정
-        if (resumeRequestDTO.getProfileFileUuid() != null && !resumeRequestDTO.getProfileFileUuid().isBlank()) {
+        if (resumeRequestDTO.getProfileFileUuid() != null
+                && !resumeRequestDTO.getProfileFileUuid().isBlank()) {
 
-            ProfileFile profileFile = profileFileRepository
-                            .findByResume_Id(resumeId)
-                            .orElseThrow();
-
+            // 새로 업로드한 파일 조회
             UploadedFile uploadedFile = uploadedFileRepository.findById(
-                            UUID.fromString(
-                                    resumeRequestDTO
-                                            .getProfileFileUuid()
-                            )
-                    ).orElseThrow();
+                    UUID.fromString(
+                            resumeRequestDTO.getProfileFileUuid()
+                    )
+            ).orElseThrow();
 
-            profileFile.setUploadedFile(uploadedFile);
+            // 기존 프로필 파일 조회
+            ProfileFile profileFile = profileFileRepository
+                    .findByResume_Id(resumeId)
+                    .orElse(null);
 
-            profileFileRepository.save(profileFile);
+            if (profileFile != null) {
+                // 기존 프로필 사진이 있으면 교체
+                profileFile.setUploadedFile(uploadedFile);
+
+                profileFileRepository.save(profileFile);
+
+            } else {
+                // 기존 프로필 사진이 없으면 새로 생성
+                ProfileFile newProfileFile = ProfileFile.builder()
+                        .resume(resume)
+                        .uploadedFile(uploadedFile)
+                        .build();
+                profileFileRepository.save(newProfileFile);
+            }
         }
         // 기존 경력 조회
         List<ResumeCareer> existingCareers = resumeCareerRepository

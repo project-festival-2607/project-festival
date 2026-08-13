@@ -47,9 +47,42 @@ document.addEventListener("DOMContentLoaded", function () {
 
             const careerItem = event.target.closest(".career-item");
 
-            careerItem.remove();
+            if (careerItem){
+                careerItem.remove();
+
+                // 삭제 후 인덱스 다시 정리
+                reindexCareers();
+            }
         }
     });
+
+    // 경력 인덱스 다시 정리
+    function reindexCareers() {
+
+        const careerItems = document.querySelectorAll("#career-container .career-item");
+
+        careerItems.forEach(function(item, index) {
+
+            const fields = item.querySelectorAll("input, textarea");
+
+            fields.forEach(function(field) {
+
+                const name = field.getAttribute("name");
+
+                if (name) {
+                    field.setAttribute(
+                        "name",
+                        name.replace(
+                            /careers\[\d+\]/,
+                            `careers[${index}]`
+                        )
+                    );
+                }
+            });
+        });
+
+        careerIndex = careerItems.length;
+    }
 
     // 포트폴리오
     const portfolioContainer = document.getElementById("portfolio-container");
