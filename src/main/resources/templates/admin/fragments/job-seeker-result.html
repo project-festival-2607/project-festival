@@ -18,7 +18,7 @@
             <span>상태</span>
             <div class="dropdown d-flex justify-content-center align-items-center">
               <button type="button" class="btn btn-reset btn-th dropdown-toggle dropdown-no-caret" data-bs-toggle="dropdown">
-                <th:block th:replace="~{admin/fragments/svg :: filter('filter-icon')}"></th:block>
+                <th:block th:replace="~{admin/fragments/svg :: filter-idle('filter-idle-icon')}"></th:block>
               </button>
               <ul class="dropdown-menu filter-menu" id="statusFilterDropdownList">
                 <li><button type="button" class="dropdown-item status-filter-li" data-value="">
@@ -73,7 +73,30 @@
           </span>
         </th>
         <th scope="col">포인트</th>
-        <th scope="col">소셜</th>
+        <th scope="col">
+          <div class="d-flex gap-3 justify-content-between">
+            <span>소셜</span>
+            <div class="dropdown d-flex justify-content-center align-items-center">
+              <button type="button" class="btn btn-reset btn-th dropdown-toggle dropdown-no-caret" data-bs-toggle="dropdown">
+                <th:block th:replace="~{admin/fragments/svg :: filter-idle('filter-idle-icon')}"></th:block>
+              </button>
+              <ul class="dropdown-menu filter-menu" id="providerFilterDropdownList">
+                <li><button type="button" class="dropdown-item provider-filter-li" data-value="">
+                  전체
+                </button></li>
+                <li><button type="button" class="dropdown-item provider-filter-li" data-value="GOOGLE">
+                  Google
+                </button></li>
+                <li><button type="button" class="dropdown-item provider-filter-li" data-value="KAKAO">
+                  kakao
+                </button></li>
+                <li><button type="button" class="dropdown-item provider-filter-li" data-value="NAVER">
+                  NAVER
+                </button></li>
+              </ul>
+            </div>
+          </div>
+        </th>
         <th scope="col">성별</th>
         <th scope="col">
           <span class="d-flex gap-3 justify-content-between">
