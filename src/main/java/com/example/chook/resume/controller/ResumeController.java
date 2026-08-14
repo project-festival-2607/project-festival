@@ -176,6 +176,22 @@ public class ResumeController {
         return "redirect:/resume/manage";
     };
 
+    // 지원자 이력서 상세 조회 (구인자용)
+    @GetMapping("/detail")
+    public String detail(@RequestParam Long id, Model model) {
+
+        // 이력서 조회
+        ResumeResponseDTO resumeResponseDTO = resumeService.getResume(id);
+
+        // 이력서 정보 전달
+        model.addAttribute(
+                "resume",
+                resumeResponseDTO
+        );
+
+        return "resume/detail";
+    }
+
     // 이력서 삭제
     @PostMapping("/delete")
     public String delete(
