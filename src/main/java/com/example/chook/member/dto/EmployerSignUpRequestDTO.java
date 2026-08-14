@@ -30,4 +30,6 @@ public class EmployerSignUpRequestDTO {
     private String businessNumber;
     private String verificationToken;
 
+    private String phoneVerificationToken;
+
 }

@@ -2,7 +2,7 @@ const businessNumberDisplay = document.getElementById("businessNumberDisplay");
 const businessNumberInput = document.getElementById("businessNumber");
 const verifyBtn = document.getElementById("verifyBusinessNumberBtn");
 const verificationTokenInput = document.getElementById("verificationToken");
-const form = businessNumberInput.closest("form");
+const businessNumberForm = businessNumberInput.closest("form");
 
 // 이미 등록된 값이 있으면(수정 페이지) 그 값을 "인증된 상태"로 간주, 없으면(가입 폼) null
 let verifiedBusinessNumber = businessNumberInput.value || null;
@@ -87,7 +87,7 @@ verifyBtn.addEventListener("click", async () => {
     }
 });
 
-form.addEventListener("submit", (e) => {
+businessNumberForm.addEventListener("submit", (e) => {
     const businessNumber = businessNumberInput.value;
     if (businessNumber && businessNumber !== verifiedBusinessNumber) {
         e.preventDefault();

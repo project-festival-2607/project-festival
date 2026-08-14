@@ -34,8 +34,19 @@
         </div>
         <div class="mb-3">
             <label for="phone" class="form-label">전화번호</label>
-            <input type="text" class="form-control" id="phone" name="phone" required>
+            <div class="input-group">
+                <input type="text" class="form-control" id="phone" name="phone" required>
+                <button type="button" class="btn btn-outline-secondary" id="sendCodeBtn">인증번호 받기</button>
+            </div>
         </div>
+        <div class="mb-3">
+            <label for="code" class="form-label">인증번호</label>
+            <div class="input-group">
+                <input type="text" class="form-control" id="code" maxlength="6">
+                <button type="button" class="btn btn-outline-secondary" id="verifyCodeBtn">확인</button>
+            </div>
+        </div>
+        <input type="hidden" id="phoneVerificationToken" name="phoneVerificationToken">
         <div class="mb-3">
             <label for="email" class="form-label">이메일</label>
             <input type="email" class="form-control" id="email" name="email" th:value="${prefillEmail}" required>
@@ -82,5 +93,6 @@
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <script th:src="@{/js/member/addressSearch.js}"></script>
 <script th:src="@{/js/member/businessNumberVerify.js}"></script>
+<script th:src="@{/js/member/phoneVerify.js}"></script>
 </body>
 </html>
