@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>아이디 찾기</title>
+    <link rel="stylesheet" th:href="@{/libs/bootstrap-5.3.8-dist/css/bootstrap.min.css}">
+</head>
+<body>
+<div class="container" style="max-width: 400px;">
+    <h1 class="mb-4 text-center mt-5">아이디 찾기</h1>
+
+    <div class="mb-3">
+        <label for="name" class="form-label">이름</label>
+        <input type="text" class="form-control" id="name" required>
+    </div>
+    <div class="mb-3">
+        <label for="searchPhone" class="form-label">전화번호</label>
+        <input type="text" class="form-control" id="searchPhone" required>
+    </div>
+    <button type="button" class="btn btn-primary w-100" id="searchBtn">조회</button>
+
+    <div id="resultList" class="mt-4"></div>
+
+    <div id="verifySection" class="mt-4" style="display:none;">
+        <button type="button" class="btn btn-outline-secondary w-100 mb-2" id="sendCodeBtn">인증번호 받기</button>
+        <div class="mb-3">
+            <label for="code" class="form-label">인증번호</label>
+            <div class="input-group">
+                <input type="text" class="form-control" id="code" maxlength="6">
+                <button type="button" class="btn btn-outline-secondary" id="verifyCodeBtn">확인</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script th:src="@{/js/member/findId.js}"></script>
+</body>
+</html>

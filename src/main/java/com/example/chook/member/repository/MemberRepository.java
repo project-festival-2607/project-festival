@@ -36,6 +36,12 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     // 역할 별 member 조회
     List<Member> findByRole(MemberRole role);
 
+    // 아이디 찾기
+    List<Member> findByNameAndPhoneAndDeletedAtIsNull(String name, String phone);
+
+    // 비밀번호 찾기
+    Optional<Member> findByUsernameAndNameAndPhoneAndDeletedAtIsNull(String username, String name, String phone);
+
     @Query("select m.passwordHash from Member m where m.id = :id")
     Optional<String> findPasswordHashById(@Param("id") Long id);
 }
