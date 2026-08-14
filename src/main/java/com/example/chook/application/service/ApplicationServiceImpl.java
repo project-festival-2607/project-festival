@@ -147,12 +147,12 @@ public class ApplicationServiceImpl implements ApplicationService {
 
         // 이력서 정보 조회
         Resume resume = resumeRepository.findByMemberId(memberId)
-          .orElse(null);
+                .orElse(null);
 
         ResumeResponseDTO resumeResponseDTO = null;
 
         if (resume != null) {
-            resumeResponseDTO = resumeService.resumeEntityToDto(resume);
+            resumeResponseDTO = resumeService.getResumeByMemberId(memberId);
         }
 
         // 회원 정보 조회
@@ -187,8 +187,8 @@ public class ApplicationServiceImpl implements ApplicationService {
                 List<Application> applications = applicationRepository.findByRecruitmentId(recruitment.getId());
 
                 List<ApplicationDTO> applicationDTOList = applications.stream()
-                                .map(this::convertEntityToDto)
-                                .toList();
+                        .map(this::convertEntityToDto)
+                        .toList();
                 // 카테고리별 분류
                 switch (recruitment.getCategory()){
                     case INDIVIDUAL ->

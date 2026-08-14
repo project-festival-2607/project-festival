@@ -56,7 +56,7 @@
                     <div class="applicant-profile">
 
                         <img th:if="${apply.resume.profileFile != null}"
-                             th:src="@{/file/profile/{uuid}(uuid=${apply.resume.profileFile.fileUuid})}"
+                             th:src="@{/application/image/{uuid}(uuid=${apply.resume.profileFile.uuid})}"
                              class="profile-image">
 
                         <div th:unless="${apply.resume.profileFile != null}"
