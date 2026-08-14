@@ -12,29 +12,13 @@
     <div class="container login-container">
         <h1 class="login-h1">로그인</h1>
 
-        <ul class="login-select-box">
-            <li class="select-item">
-                <button type="button" class="select-btn active" id="tab-personal">개인회원</button>
-            </li>
-            <li class="select-item">
-                <button type="button" class="select-btn" id="tab-business">기업회원</button>
-            </li>
-        </ul>
-
         <div th:if="${param.error != null}" class="login-alert" role="alert">
             <div>
                 아이디 또는 비밀번호가 일치하지 않습니다.
             </div>
         </div>
 
-        <div th:if="${param.typeError != null}" class="login-alert" role="alert">
-            <div>
-                아이디 또는 비밀번호가 일치하지 않습니다.
-            </div>
-        </div>
-
         <form th:action="@{/member/login}" method="post">
-            <input type="hidden" id="memberType" name="memberType" value="personal">
             <div class="mb-3">
                 <input type="text" class="login-input" id="username" name="username" placeholder="아이디를입력하세요." required>
             </div>
@@ -44,17 +28,17 @@
             <button type="submit" class="login-btn">로그인</button>
         </form>
 
-            <div class="login-auth" id="socialLoginArea">
-                <div class="auth-span">
-                    소셜로그인 등록자는? ⤵
-                </div>
-
-                <div class="auth-box">
-                    <a href="/oauth2/authorization/google" class="join-google auth">구글</a>
-                    <a href="/oauth2/authorization/naver" class="join-naver auth">네이버</a>
-                    <a href="/oauth2/authorization/kakao" class="join-kakao auth">카카오</a>
-                </div>
+        <div class="login-auth">
+            <div class="auth-span">
+                소셜로그인 등록자는? ⤵
             </div>
+
+            <div class="auth-box">
+                <a href="/oauth2/authorization/google" class="join-google auth">구글</a>
+                <a href="/oauth2/authorization/naver" class="join-naver auth">네이버</a>
+                <a href="/oauth2/authorization/kakao" class="join-kakao auth">카카오</a>
+            </div>
+        </div>
 
         <div class="goToJoin-box">
             <a href="/member/find-id" class="goToJoin">아이디찾기</a>
@@ -62,5 +46,4 @@
             <a th:href="@{/member/signup}" class="goToJoin">회원가입하기 →</a>
         </div>
     </div>
-    <script th:src="@{/js/member/loginTabs.js}"></script>
 </div>
