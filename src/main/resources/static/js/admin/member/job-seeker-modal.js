@@ -81,7 +81,7 @@ document.querySelectorAll('.modal-footer').forEach(element => {
         alert(response.message);
         if (response.result === true) {
           event.target.closest('.modal').querySelector('.btn-close').click();
-          loadJobSeekerResult(jobSeekerResultUrl());
+          loadJobSeekerResult();
         }
       })
     }
@@ -91,7 +91,7 @@ document.querySelectorAll('.modal-footer').forEach(element => {
         alert(response.message);
         if (response.result === true) {
           event.target.closest('.modal').querySelector('.btn-close').click();
-          loadJobSeekerResult(jobSeekerResultUrl());
+          loadJobSeekerResult();
         }
       })
     }
@@ -101,7 +101,7 @@ document.querySelectorAll('.modal-footer').forEach(element => {
         alert(response.message);
         if (response.result === true) {
           event.target.closest('.modal').querySelector('.btn-close').click();
-          loadJobSeekerResult(jobSeekerResultUrl());
+          loadJobSeekerResult();
         }
       })
     }
@@ -113,7 +113,7 @@ document.querySelectorAll('.modal-footer').forEach(element => {
         alert(response.message);
         if (response.result === true) {
           event.target.closest('.modal').querySelector('.btn-close').click();
-          loadJobSeekerResult(jobSeekerResultUrl());
+          loadJobSeekerResult();
         }
       })
     }
