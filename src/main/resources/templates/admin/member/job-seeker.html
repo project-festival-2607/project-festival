@@ -195,7 +195,7 @@
                   <li><button type="button" class="dropdown-item date-range-criteria-li" data-role="suspendMember" data-bs-toggle="modal" data-bs-target="#suspendMemberModal" th:text="${'계정 정지'+ ((jobSeeker.status.name() eq 'SUSPENDED') ? ' 사유 변경': '')}"></button></li>
                   <li th:if="${jobSeeker.status.name() eq 'SUSPENDED'}"><button type="button" class="dropdown-item date-range-criteria-li" data-role="unsuspendMember" data-bs-toggle="modal" data-bs-target="#unsuspendMemberModal">계정 정지 해제</button></li>
                   <li th:if="${jobSeeker.phoneVerified}"><button type="button" class="dropdown-item date-range-criteria-li" data-role="removePhoneVerification" data-bs-toggle="modal" data-bs-target="#removePhoneVerificationModal">휴대전화 인증 삭제</button></li>
-                  <li th:unless="${jobSeeker.phoneVerified}"><button type="button" class="dropdown-item date-range-criteria-li" data-role="addPhoneWithVerification">휴대전화 인증 추가</button></li>
+                  <li th:unless="${jobSeeker.phoneVerified}"><button type="button" class="dropdown-item date-range-criteria-li" data-role="addPhoneWithVerification" data-bs-toggle="modal" data-bs-target="#addPhoneWithVerificationModal">휴대전화 인증 추가</button></li>
                 </ul>
               </td>
             </tr>
@@ -320,7 +320,7 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <label class="mb-3">회원 정지 정보</label>
+          <label class="mb-3">회원 정보</label>
           <table class="table mb-3">
             <tbody>
             <tr>
@@ -342,6 +342,59 @@
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
           <button type="button" class="btn btn-outline-danger" id="removePhoneVerificationSubmit">휴대전화 인증 해제</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- addPhoneWithVerificationModal -->
+  <div class="modal fade" id="addPhoneWithVerificationModal" tabindex="-1" aria-labelledby="addPhoneWithVerificationModal" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="addPhoneWithVerificationModalLabel">휴대전화 번호 인증 해제 확인</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <label class="mb-3">회원 정보</label>
+          <table class="table mb-3">
+            <tbody>
+            <tr>
+              <th scope="row" class="modal-member-info-th">아이디</th>
+              <td id="addPhoneWithVerificationUsername">(여기에 아이디가 표시됩니다.)</td>
+            </tr>
+            <tr>
+              <th scope="row">이름</th>
+              <td id="addPhoneWithVerificationName">(여기에 이름이 표시됩니다.)</td>
+            </tr>
+            <tr>
+              <th scope="row">기존 휴대전화 번호</th>
+              <td id="addPhoneWithVerificationOldPhone">(여기에 기존 휴대전화 번호가 표시됩니다.)</td>
+            </tr>
+            </tbody>
+          </table>
+          <div class="mb-3">
+            <label for="addPhoneWithVerificationPhone" class="form-label">새 휴대전화 번호</label>
+            <div class="input-group">
+              <input type="text" class="form-control form-control-sm" id="addPhoneWithVerificationPhone">
+            </div>
+          </div>
+          <div class="mb-3">
+            <label for="addPhoneWithVerificationPhoneVerify" class="form-label">새 휴대전화 번호 확인</label>
+            <div class="input-group">
+              <input type="text" class="form-control form-control-sm" id="addPhoneWithVerificationPhoneVerify">
+            </div>
+          </div>
+          <div class="alert alert-light d-flex align-items-start" role="alert">
+            <div th:replace="~{admin/fragments/svg :: notification(alert-icon)}"></div>
+            <div>
+              "휴대전화 인증 추가" 버튼을 누르면 <strong>인증 과정 없이</strong> 등록됩니다.<br/>
+              "휴대전화 인증 해제" 사유의 정지는 별도로 해제해야합니다.
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+          <button type="button" class="btn btn-outline-success" id="addPhoneWithVerificationSubmit">휴대전화 인증 추가</button>
         </div>
       </div>
     </div>

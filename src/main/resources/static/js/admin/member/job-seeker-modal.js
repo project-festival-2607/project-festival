@@ -55,6 +55,20 @@ document.querySelector('.result-table-wrapper').addEventListener('click', (event
 
     document.getElementById('removePhoneVerificationSubmit').dataset.id = id;
   }
+
+  if (event.target.dataset.role === 'addPhoneWithVerification') {
+    const member = event.target.closest('tr');
+    const id = member.querySelector('[data-type="id"]').textContent;
+    const username = member.querySelector('[data-type="username"]').textContent;
+    const name = member.querySelector('[data-type="name"]').textContent;
+    const phone = member.querySelector('[data-type="phone"]').textContent;
+
+    document.getElementById('addPhoneWithVerificationUsername').textContent = username;
+    document.getElementById('addPhoneWithVerificationName').textContent = name;
+    document.getElementById('addPhoneWithVerificationOldPhone').textContent = phone;
+
+    document.getElementById('addPhoneWithVerificationSubmit').dataset.id = id;
+  }
 })
 
 document.querySelectorAll('.modal-footer').forEach(element => {
@@ -82,6 +96,17 @@ document.querySelectorAll('.modal-footer').forEach(element => {
     if (event.target.id === 'removePhoneVerificationSubmit') {
       const memberId = event.target.dataset.id;
       removePhoneVerificationRequest(memberId).then(response => {
+        alert(response.message);
+        if (response.result === true) {
+          event.target.closest('.modal').querySelector('.btn-close').click();
+        }
+      })
+    }
+    if (event.target.id === 'addPhoneWithVerificationSubmit') {
+      const memberId = event.target.dataset.id;
+      const newPhone = document.getElementById('addPhoneWithVerificationPhone').value;
+      const newPhoneVerify = document.getElementById('addPhoneWithVerificationPhoneVerify').value;
+      addPhoneWithVerificationRequest(memberId, newPhone, newPhoneVerify).then(response => {
         alert(response.message);
         if (response.result === true) {
           event.target.closest('.modal').querySelector('.btn-close').click();
@@ -137,6 +162,28 @@ async function removePhoneVerificationRequest(memberId) {
         headers: {
           'Content-Type': 'application/json; charset=UTF-8',
         },
+      }
+    );
+    return await response.json();
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+async function addPhoneWithVerificationRequest(memberId, newPhone, newPhoneVerify) {
+  console.log('addPhoneWithVerificationRequest');
+  try {
+    const response = await fetch(
+      `/admin/member/job-seeker/${memberId}/add-phone-with-verification`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: JSON.stringify({
+          phone: newPhone,
+          phoneVerify: newPhoneVerify
+        })
       }
     );
     return await response.json();

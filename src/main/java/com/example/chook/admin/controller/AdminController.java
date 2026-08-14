@@ -4,6 +4,7 @@ import com.example.chook.admin.dto.JobSeekerTableDTO;
 import com.example.chook.admin.form.JobSeekerSearchForm;
 import com.example.chook.admin.record.AdminActionResponse;
 import com.example.chook.admin.record.JobSeekerSearchCondition;
+import com.example.chook.admin.record.PhoneVerificationRequest;
 import com.example.chook.admin.service.AdminService;
 import com.example.chook.common.handler.PagingHandler;
 import com.example.chook.member.entity.enums.MemberStatus;
@@ -58,14 +59,21 @@ public class AdminController {
     adminService.removePhoneVerification(memberId);
     return AdminActionResponse.builder()
       .result(true)
-      .message(String.format("id가 %d인 사용자의 전화번호 인증을 삭제했으며,\n\"전화번호 인증 헤제\" 사유로 정지했습니다.", memberId))
+      .message(String.format("id가 %d인 사용자의 전화번호 인증을 삭제했으며,\n\"휴대전화 인증 헤제\" 사유로 정지했습니다.", memberId))
       .build();
   }
 
   @PostMapping("/member/job-seeker/{memberId}/add-phone-with-verification")
   @ResponseBody
   public AdminActionResponse addPhoneWithVerification(@PathVariable Long memberId,
-                                                      @RequestParam String phone) {
+                                                      @RequestBody PhoneVerificationRequest request) {
+
+    String phone = request.phone();
+    String phoneVerify = request.phoneVerify();
+
+    if (!phone.equals(phoneVerify)) {
+      throw new IllegalArgumentException("입력한 휴대전화 번호가 일치하지 않습니다.");
+    }
     boolean isChanged = adminService.addPhoneWithVerification(memberId, phone);
     return AdminActionResponse.builder()
       .result(isChanged)
