@@ -21,7 +21,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -53,8 +52,8 @@ public class RecruitmentRepositoryCustomImpl implements RecruitmentRepositoryCus
       .and(eq(recruitment.sigungu.sido.code, condition.regionSidoCode()))
       .and(eq(recruitment.sigungu.code, condition.regionSigunguCode()))
       .and(eq(recruitment.category, category))
+      .and(recruitment.publishedAt.isNotNull())
       .and(eq(recruitment.status, RecruitmentStatus.RECRUITING))
-      .and(goe(recruitment.applicationDeadline, LocalDate.now()))
       .and(loe(recruitment.workingStartDate, condition.workingStartDate()))
       .and(goe(recruitment.workingEndDate, condition.workingEndDate()))
       .and(goe(recruitment.workingStartTime, condition.workingStartTime()))
@@ -163,12 +162,12 @@ public class RecruitmentRepositoryCustomImpl implements RecruitmentRepositoryCus
     BooleanBuilder whereCondition = new BooleanBuilder();
 
     whereCondition
+      .and(recruitment.deletedAt.isNull())
       .and(eq(recruitment.festival.contentId, condition.festivalContentId()))
       .and(eq(recruitment.festival.member.username, condition.festivalUserName()))
       .and(eq(recruitment.category, condition.category()))
       .and(eq(recruitment.status, condition.status()))
       .and(isPublishedEq(condition.isPublished()))
-      .and(isDeletedEq(condition.isPublished()))
     ;
 
     JPAQuery<Recruitment> resultQuery = jpaQueryFactory
@@ -224,10 +223,6 @@ public class RecruitmentRepositoryCustomImpl implements RecruitmentRepositoryCus
 
   private BooleanExpression isPublishedEq(Boolean isPublished) {
     return isPublished == null ? null : recruitment.publishedAt.isNotNull().eq(isPublished);
-  }
-
-  private BooleanExpression isDeletedEq(Boolean isDeleted) {
-    return isDeleted == null ? null : recruitment.deletedAt.isNotNull().eq(isDeleted);
   }
 
   private BooleanExpression boothFeeRequiredEq(Boolean value) {

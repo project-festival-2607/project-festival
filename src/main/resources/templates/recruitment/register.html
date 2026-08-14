@@ -67,7 +67,8 @@
                 <div>
                     <label for="applicationDeadline">모집마감 날짜</label>
                     <input type="date" name="applicationDeadline" id="applicationDeadline" class="form-control"
-                           th:value="${recruitmentCreateForm != null} ? ${recruitmentCreateForm.applicationDeadline} : null" required>
+                           th:value="${recruitmentCreateForm != null} ? ${recruitmentCreateForm.applicationDeadline} : null"
+                           th:max="${maxDeadline}" required>
                 </div>
                 <div>
                     <label for="recruitmentCount">모집 인원</label>

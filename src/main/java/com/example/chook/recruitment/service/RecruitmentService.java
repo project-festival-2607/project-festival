@@ -21,6 +21,12 @@ public interface RecruitmentService {
 
   void publish(Long id);
 
+  void close(Long id);
+
+  void reopen(Long id);
+
+  void closeExpiredRecruitments();
+
   RecruitmentResponseDTO getRecruitment(Long id);
 
   Page<RecruitmentListDTO> getPage(int pageIdx, RecruitmentSearchCondition condition);
