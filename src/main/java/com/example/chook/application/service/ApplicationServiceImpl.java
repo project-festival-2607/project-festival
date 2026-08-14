@@ -147,12 +147,12 @@ public class ApplicationServiceImpl implements ApplicationService {
 
         // 이력서 정보 조회
         Resume resume = resumeRepository.findByMemberId(memberId)
-          .orElse(null);
+                .orElse(null);
 
         ResumeResponseDTO resumeResponseDTO = null;
 
         if (resume != null) {
-            resumeResponseDTO = resumeService.resumeEntityToDto(resume);
+            resumeResponseDTO = resumeService.getResumeByMemberId(memberId);
         }
 
         // 회원 정보 조회
@@ -161,6 +161,17 @@ public class ApplicationServiceImpl implements ApplicationService {
 
         // 변환 메서드 호출
         return convertToApplyDto(member, recruitment, resumeResponseDTO);
+    }
+
+    @Override
+    public boolean existsByMemberIdAndRecruitmentId(
+            Long memberId,
+            Long recruitmentId
+    ) {
+        return applicationRepository.existsByMemberIdAndRecruitmentId(
+                memberId,
+                recruitmentId
+        );
     }
 
     // 구인자가 등록한 모집공고 중 선택한 카테고리의 지원자 목록 조회
@@ -187,8 +198,8 @@ public class ApplicationServiceImpl implements ApplicationService {
                 List<Application> applications = applicationRepository.findByRecruitmentId(recruitment.getId());
 
                 List<ApplicationDTO> applicationDTOList = applications.stream()
-                                .map(this::convertEntityToDto)
-                                .toList();
+                        .map(this::convertEntityToDto)
+                        .toList();
                 // 카테고리별 분류
                 switch (recruitment.getCategory()){
                     case INDIVIDUAL ->

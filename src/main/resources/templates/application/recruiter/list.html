@@ -46,7 +46,7 @@
 
                             <td th:text="${app.address}"></td>
 
-                            <td th:text="${app.registerDate}"></td>
+                            <td th:text="${#temporals.format(app.registerDate, 'yyyy-MM-dd')}"></td>
 
                             <td th:text="${app.result}"></td>
 
@@ -92,7 +92,7 @@
 
                             <td th:text="${app.address}"></td>
 
-                            <td th:text="${app.registerDate}"></td>
+                            <td th:text="${#temporals.format(app.registerDate, 'yyyy-MM-dd')}"></td>
 
                             <td th:text="${app.result}"></td>
 
@@ -138,7 +138,7 @@
 
                             <td th:text="${app.address}"></td>
 
-                            <td th:text="${app.registerDate}"></td>
+                            <td th:text="${#temporals.format(app.registerDate, 'yyyy-MM-dd')}"></td>
 
                             <td th:text="${app.result}"></td>
 
@@ -184,7 +184,7 @@
 
                             <td th:text="${app.address}"></td>
 
-                            <td th:text="${app.registerDate}"></td>
+                            <td th:text="${#temporals.format(app.registerDate, 'yyyy-MM-dd')}"></td>
 
                             <td th:text="${app.result}"></td>
 
