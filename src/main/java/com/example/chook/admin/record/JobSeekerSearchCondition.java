@@ -41,8 +41,8 @@ public record JobSeekerSearchCondition(
   public JobSeekerSearchCondition(JobSeekerSearchForm form) {
 
     this(
-      convertStringToEnum(form.keywordType(), JobSeekerKeywordType.class, JobSeekerKeywordType.USERNAME),
       splitByRegex(form.keywords(), "[\\s,&]+"),
+      convertStringToEnum(form.keywordType(), JobSeekerKeywordType.class, null),
       convertStringToEnum(form.status(), MemberStatusFilter.class, null),
       convertStringToEnum(form.gender(), Gender.class, null),
       convertStringToEnum(form.dateRangeCriteria(), JobSeekerDateCriteria.class, null),
