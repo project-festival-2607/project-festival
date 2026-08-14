@@ -1,7 +1,7 @@
 package com.example.chook.admin.repository;
 
 import com.example.chook.admin.dto.JobSeekerTableDTO;
-import com.example.chook.admin.entity.enums.JobSeekerDateRangeCriteria;
+import com.example.chook.admin.entity.enums.JobSeekerDateCriteria;
 import com.example.chook.admin.entity.enums.JobSeekerKeywordType;
 import com.example.chook.admin.record.JobSeekerSearchCondition;
 import com.example.chook.member.entity.enums.MemberRole;
@@ -115,7 +115,7 @@ public class AdminMemberRepositoryImpl implements AdminMemberRepository {
     return eq(member.socialLogins.any().provider, provider);
   }
 
-  private BooleanBuilder checkDataRangeCriteria(JobSeekerDateRangeCriteria criteria,
+  private BooleanBuilder checkDataRangeCriteria(JobSeekerDateCriteria criteria,
                                                 LocalDateTime startDateTime,
                                                 LocalDateTime endDateTime,
                                                 LocalDate startDate,

@@ -41,41 +41,48 @@
           </div>
         </th>
         <th scope="col">
-                <span class="d-flex gap-3 justify-content-between">
-                  <span>생성일시</span>
-                  <button type="button" class="btn btn-reset btn-th dropdown-toggle dropdown-no-caret" data-bs-toggle="dropdown">
-                    <th:block th:replace="~{admin/fragments/svg :: sort('sort-icon')}"></th:block>
-                  </button>
-                </span>
+          <span class="d-flex gap-3 justify-content-between">
+            <span>생성일시</span>
+            <button type="button" class="btn btn-reset btn-th dropdown-toggle dropdown-no-caret">
+              <th:block th:replace="~{admin/fragments/svg :: sort('sort-icon')}"></th:block>
+            </button>
+          </span>
         </th>
         <th scope="col">
-                <span class="d-flex gap-3 justify-content-between">
-                  <span>수정일시</span>
-                  <button type="button" class="btn btn-reset btn-th" data-bs-toggle="dropdown">
-                    <th:block th:replace="~{admin/fragments/svg :: sort('sort-icon')}"></th:block>
-                  </button>
-                </span>
+          <span class="d-flex gap-3 justify-content-between">
+            <span>수정일시</span>
+            <button type="button" class="btn btn-reset btn-th">
+              <th:block th:replace="~{admin/fragments/svg :: sort('sort-icon')}"></th:block>
+            </button>
+          </span>
         </th>
         <th scope="col">
-                <span class="d-flex gap-3 justify-content-between">
-                  <span>최근접속일시</span>
-                  <button type="button" class="btn btn-reset btn-th" data-bs-toggle="dropdown">
-                    <th:block th:replace="~{admin/fragments/svg :: sort('sort-icon')}"></th:block>
-                  </button>
-                </span>
+          <span class="d-flex gap-3 justify-content-between">
+            <span>최근접속일시</span>
+            <button type="button" class="btn btn-reset btn-th">
+              <th:block th:replace="~{admin/fragments/svg :: sort('sort-icon')}"></th:block>
+            </button>
+          </span>
         </th>
         <th scope="col">
-                <span class="d-flex gap-3 justify-content-between">
-                  <span>삭제일시</span>
-                  <button type="button" class="btn btn-reset" data-bs-toggle="dropdown">
-                    <th:block th:replace="~{admin/fragments/svg :: sort('sort-icon')}"></th:block>
-                  </button>
-                </span>
+          <span class="d-flex gap-3 justify-content-between">
+            <span>삭제일시</span>
+            <button type="button" class="btn btn-reset">
+              <th:block th:replace="~{admin/fragments/svg :: sort('sort-icon')}"></th:block>
+            </button>
+          </span>
         </th>
         <th scope="col">포인트</th>
         <th scope="col">소셜</th>
         <th scope="col">성별</th>
-        <th scope="col">생일</th>
+        <th scope="col">
+          <span class="d-flex gap-3 justify-content-between">
+            <span>생년월일</span>
+            <button type="button" class="btn btn-reset">
+              <th:block th:replace="~{admin/fragments/svg :: sort('sort-icon')}"></th:block>
+            </button>
+          </span>
+        </th>
         <th scope="col">도로명주소</th>
         <th scope="col">상세주소</th>
         <th scope="col" class="text-center bg-body-secondary">관리</th>
