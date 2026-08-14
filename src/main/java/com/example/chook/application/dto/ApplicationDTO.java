@@ -1,6 +1,8 @@
 package com.example.chook.application.dto;
 
 import com.example.chook.application.entity.enums.ApplicationResult;
+import com.example.chook.recruitment.entity.enums.RecruitmentCategory;
+import com.example.chook.resume.dto.ResumeResponseDTO;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -39,4 +41,13 @@ public class ApplicationDTO {
 
     // 행사 주소
     private String address;
+
+    // 지원자 정보
+    private String name;
+
+    // 모집공고 제목
+    private String recruitmentTitle;
+
+    // 모집공고 카테고리
+    private RecruitmentCategory category;
 }

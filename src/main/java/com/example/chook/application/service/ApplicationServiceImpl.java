@@ -1,10 +1,13 @@
 package com.example.chook.application.service;
 
+import com.example.chook.application.dto.ApplicationCategoryListDTO;
 import com.example.chook.application.dto.ApplicationDTO;
 import com.example.chook.application.dto.ApplyDTO;
 import com.example.chook.application.entity.Application;
 import com.example.chook.application.entity.enums.ApplicationResult;
 import com.example.chook.application.repository.ApplicationRepository;
+import com.example.chook.festival.Festival;
+import com.example.chook.festival.FestivalRepository;
 import com.example.chook.member.entity.Member;
 import com.example.chook.member.repository.MemberRepository;
 import com.example.chook.recruitment.dto.RecruitmentResponseDTO;
@@ -38,6 +41,9 @@ public class ApplicationServiceImpl implements ApplicationService {
     // 최종 저장용
     private final ApplicationRepository applicationRepository; // 완성된 Application 저장하기
 
+    // 구인자(username)가 등록한 행사 목록 조회
+    private final FestivalRepository festivalRepository;
+
     // applypage Zone
     private final RecruitmentService recruitmentService;
     private final ResumeService resumeService;
@@ -68,11 +74,22 @@ public class ApplicationServiceImpl implements ApplicationService {
         return application.getId();
     }
 
-    // 내가 지원한 목록 조회
+    // 내가 지원한 목록 조회 (구직자용)
     @Override
     public List<ApplicationDTO> getList(Long memberId) {
 
         List<Application> applicationList = applicationRepository.findByMemberId(memberId);
+
+        return applicationList.stream()
+                .map(this::convertEntityToDto)
+                .toList();
+    }
+
+    // 특정 모집공고에 지원한 구직자 목록 조회 (구인자용)
+    @Override
+    public List<ApplicationDTO> getApplicants(Long recruitmentId) {
+        List<Application> applicationList =
+                applicationRepository.findByRecruitmentId(recruitmentId);
 
         return applicationList.stream()
                 .map(this::convertEntityToDto)
@@ -144,5 +161,56 @@ public class ApplicationServiceImpl implements ApplicationService {
 
         // 변환 메서드 호출
         return convertToApplyDto(member, recruitment, resumeResponseDTO);
+    }
+
+    // 구인자가 등록한 모집공고 중 선택한 카테고리의 지원자 목록 조회
+    @Override
+    public ApplicationCategoryListDTO getApplicantsByRecruiter(String username) {
+
+        // 구인자가 등록한 행사 조회
+        List<Festival> festivals =
+                festivalRepository.findByMember_Username(username);
+
+        // 카테고리별 지원자 목록
+        List<ApplicationDTO> individualApplications = new ArrayList<>();
+        List<ApplicationDTO> foodTruckApplications = new ArrayList<>();
+        List<ApplicationDTO> equipmentApplications = new ArrayList<>();
+        List<ApplicationDTO> etcApplications = new ArrayList<>();
+
+        // 구인자가 등록한 모든 행사
+        for (Festival festival : festivals){
+
+            // 해당 행사에 등록된 모든 모집공고
+            for (Recruitment recruitment : festival.getRecruitments()){
+
+                // 해당 모집공고에 지원한 지원자 조회
+                List<Application> applications = applicationRepository.findByRecruitmentId(recruitment.getId());
+
+                List<ApplicationDTO> applicationDTOList = applications.stream()
+                                .map(this::convertEntityToDto)
+                                .toList();
+                // 카테고리별 분류
+                switch (recruitment.getCategory()){
+                    case INDIVIDUAL ->
+                            individualApplications.addAll(applicationDTOList);
+
+                    case FOOD_TRUCK ->
+                            foodTruckApplications.addAll(applicationDTOList);
+
+                    case EQUIPMENT ->
+                            equipmentApplications.addAll(applicationDTOList);
+
+                    case ETC ->
+                            etcApplications.addAll(applicationDTOList);
+                }
+            }
+        }
+        // 4개 목록을 하나로 묶어서 반환
+        return ApplicationCategoryListDTO.builder()
+                .individualApplications(individualApplications)
+                .foodTruckApplications(foodTruckApplications)
+                .equipmentApplications(equipmentApplications)
+                .etcApplications(etcApplications)
+                .build();
     }
 }
