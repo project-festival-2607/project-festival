@@ -1,10 +1,16 @@
 package com.example.chook.resume.controller;
 
 import com.example.chook.file.entity.UploadedFile;
+import com.example.chook.file.record.FileResource;
 import com.example.chook.file.service.FileService;
 import com.example.chook.member.repository.MemberRepository;
 import com.example.chook.resume.dto.ResumeFileDTO;
 import com.example.chook.resume.dto.ResumePortfolioDTO;
+import org.springframework.core.io.Resource;
+import org.springframework.http.ContentDisposition;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,6 +24,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import com.example.chook.member.entity.Member;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.nio.charset.StandardCharsets;
+import java.util.UUID;
 
 @Controller
 @RequestMapping("/resume")
@@ -200,5 +209,29 @@ public class ResumeController {
         resumeService.delete(resumeId);
 
         return "redirect:/";
+    }
+
+    // 이력서 파일 조회 (프로필/첨부파일)
+    @GetMapping("/file/{uuid}")
+    public ResponseEntity<Resource> getResumeFile(@PathVariable UUID uuid){
+        FileResource file = fileService.getFile(uuid);
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType(file.mimeType()))
+                .body(file.resource());
+    }
+
+    // 이력서 파일 다운로드 (프로필/첨부파일)
+    @GetMapping("/file/{uuid}/download")
+    public ResponseEntity<Resource> downloadResumeFile(@PathVariable UUID uuid){
+        FileResource file = fileService.getFile(uuid);
+
+        ContentDisposition contentDisposition = ContentDisposition.attachment()
+                        .filename(file.originalName(), StandardCharsets.UTF_8)
+                        .build();
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType(file.mimeType()))
+                .header(HttpHeaders.CONTENT_DISPOSITION, contentDisposition.toString())
+                .body(file.resource());
     }
 }
