@@ -4,7 +4,8 @@
 <body>
 
 <th:block th:fragment="job-seeker-result(page, pagingHandler)">
-  <div class="result-table-wrapper">
+  <div class="result-table-wrapper"
+       th:with="form=${pagingHandler.form}">
     <table class="table">
       <thead>
       <tr>
@@ -18,25 +19,33 @@
             <span>상태</span>
             <div class="dropdown d-flex justify-content-center align-items-center">
               <button type="button" class="btn btn-reset btn-th dropdown-toggle dropdown-no-caret" data-bs-toggle="dropdown">
-                <th:block th:replace="~{admin/fragments/svg :: filter-idle('filter-idle-icon')}"></th:block>
+                <th:block th:replace="${form.status == null}
+                                      ? ~{admin/fragments/svg :: filter-idle('filter-idle-icon')}
+                                      : ~{admin/fragments/svg :: filter-active('filter-active-icon')}"></th:block>
               </button>
               <ul class="dropdown-menu filter-menu" id="statusFilterDropdownList">
-                <li><button type="button" class="dropdown-item status-filter-li" data-value="">
+                <li><button type="button" class="dropdown-item status-filter-li" data-role="update-status-filter"
+                            th:classappend="${form.status == null} ? 'active'">
                   <th:block th:replace="~{admin/fragments/badge :: member-status(null, false, true)}"></th:block>
                 </button></li>
-                <li><button type="button" class="dropdown-item status-filter-li" data-value="ACTIVE">
+                <li><button type="button" class="dropdown-item status-filter-li" data-role="update-status-filter" data-value="ACTIVE"
+                            th:classappend="${form.status != null and form.status == 'ACTIVE'} ? 'active'">
                   <th:block th:replace="~{admin/fragments/badge :: member-status(${memberStatusFilters[0]}, false, false)}"></th:block>
                 </button></li>
-                <li><button type="button" class="dropdown-item status-filter-li" data-value="DORMANT">
+                <li><button type="button" class="dropdown-item status-filter-li" data-role="update-status-filter" data-value="DORMANT"
+                            th:classappend="${form.status != null and form.status == 'DORMANT'} ? 'active'">
                   <th:block th:replace="~{admin/fragments/badge :: member-status(${memberStatusFilters[1]}, false, false)}"></th:block>
                 </button></li>
-                <li><button type="button" class="dropdown-item status-filter-li" data-value="SUSPEND">
+                <li><button type="button" class="dropdown-item status-filter-li" data-role="update-status-filter" data-value="SUSPEND"
+                            th:classappend="${form.status != null and form.status == 'SUSPEND'} ? 'active'">
                   <th:block th:replace="~{admin/fragments/badge :: member-status(${memberStatusFilters[2]}, false, false)}"></th:block>
                 </button></li>
-                <li><button type="button" class="dropdown-item status-filter-li" data-value="DELETED">
+                <li><button type="button" class="dropdown-item status-filter-li" data-role="update-status-filter" data-value="DELETED"
+                            th:classappend="${form.status != null and form.status == 'DELETED'} ? 'active'">
                   <th:block th:replace="~{admin/fragments/badge :: member-status(null, true, false)}"></th:block>
                 </button></li>
               </ul>
+            <input type="hidden" name="status" id="filterStatus" th:value="${form.status}">
             </div>
           </div>
         </th>
@@ -78,22 +87,29 @@
             <span>소셜</span>
             <div class="dropdown d-flex justify-content-center align-items-center">
               <button type="button" class="btn btn-reset btn-th dropdown-toggle dropdown-no-caret" data-bs-toggle="dropdown">
-                <th:block th:replace="~{admin/fragments/svg :: filter-idle('filter-idle-icon')}"></th:block>
+                <th:block th:replace="${form.provider == null}
+                                      ? ~{admin/fragments/svg :: filter-idle('filter-idle-icon')}
+                                      : ~{admin/fragments/svg :: filter-active('filter-active-icon')}"></th:block>
               </button>
               <ul class="dropdown-menu filter-menu" id="providerFilterDropdownList">
-                <li><button type="button" class="dropdown-item provider-filter-li" data-value="">
-                  전체
+                <li><button type="button" class="dropdown-item provider-filter-li" data-role="update-provider-filter" data-value=""
+                            th:classappend="${form.provider == null} ? 'active'">
+                  <th:block th:replace="~{admin/fragments/badge :: member-provider('전체')}"></th:block>
                 </button></li>
-                <li><button type="button" class="dropdown-item provider-filter-li" data-value="GOOGLE">
-                  Google
+                <li><button type="button" class="dropdown-item provider-filter-li" data-role="update-provider-filter" data-value="GOOGLE"
+                            th:classappend="${form.provider != null and form.provider == 'GOOGLE'} ? 'active'">
+                  <th:block th:replace="~{admin/fragments/badge :: member-provider('Google')}"></th:block>
                 </button></li>
-                <li><button type="button" class="dropdown-item provider-filter-li" data-value="KAKAO">
-                  kakao
+                <li><button type="button" class="dropdown-item provider-filter-li" data-role="update-provider-filter" data-value="KAKAO"
+                            th:classappend="${form.provider != null and form.provider == 'KAKAO'} ? 'active'">
+                  <th:block th:replace="~{admin/fragments/badge :: member-provider('kakao')}"></th:block>
                 </button></li>
-                <li><button type="button" class="dropdown-item provider-filter-li" data-value="NAVER">
-                  NAVER
+                <li><button type="button" class="dropdown-item provider-filter-li" data-role="update-provider-filter" data-value="NAVER"
+                            th:classappend="${form.provider != null and form.provider == 'NAVER'} ? 'active'">
+                  <th:block th:replace="~{admin/fragments/badge :: member-provider('NAVER')}"></th:block>
                 </button></li>
               </ul>
+              <input type="hidden" name="provider" id="filterProvider" th:value="${form.provider}">
             </div>
           </div>
         </th>

@@ -8,3 +8,8 @@
       th:classappend="${clearFilter ? 'member-status-clear-filter' : (deleted ? 'member-status-deleted' : status.badgeClass)}"
       th:text="${clearFilter ? '전체' : (deleted ? '탈퇴' : status.label)}">
 </span>
+
+<span th:fragment="member-provider(label)"
+      class="badge rounded-pill member-provider-filter"
+      th:text="${label}">
+</span>
