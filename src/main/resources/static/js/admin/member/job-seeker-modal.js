@@ -81,6 +81,7 @@ document.querySelectorAll('.modal-footer').forEach(element => {
         alert(response.message);
         if (response.result === true) {
           event.target.closest('.modal').querySelector('.btn-close').click();
+          loadJobSeekerResult(jobSeekerResultUrl());
         }
       })
     }
@@ -90,6 +91,7 @@ document.querySelectorAll('.modal-footer').forEach(element => {
         alert(response.message);
         if (response.result === true) {
           event.target.closest('.modal').querySelector('.btn-close').click();
+          loadJobSeekerResult(jobSeekerResultUrl());
         }
       })
     }
@@ -99,6 +101,7 @@ document.querySelectorAll('.modal-footer').forEach(element => {
         alert(response.message);
         if (response.result === true) {
           event.target.closest('.modal').querySelector('.btn-close').click();
+          loadJobSeekerResult(jobSeekerResultUrl());
         }
       })
     }
@@ -110,35 +113,13 @@ document.querySelectorAll('.modal-footer').forEach(element => {
         alert(response.message);
         if (response.result === true) {
           event.target.closest('.modal').querySelector('.btn-close').click();
+          loadJobSeekerResult(jobSeekerResultUrl());
         }
       })
     }
   })
 });
 
-function jobSeekerResultUrl() {
-
-  const form = document.getElementById('jobSeekerForm');
-  const params = new URLSearchParams(new FormData(form));
-  params.set('pageIdx', '1');
-  params.set('pageSize', document.getElementById('pageSize').value);
-
-  return `/admin/member/job-seeker/result?${params}`;
-
-}
-
-async function loadJobSeekerResult(url) {
-
-  const response = await fetch(url);
-  if (!response.ok) {
-    throw new Error(`HTTP ${response.status}`);
-  }
-  const resultHtml = await response.text();
-  console.log("resultHtml");
-  console.log(resultHtml);
-  const jobSeekerResult = document.querySelector('#jobSeekerResult');
-  jobSeekerResult.outerHTML = resultHtml;
-}
 
 async function suspendMemberRequest(memberId, reason) {
   try {
