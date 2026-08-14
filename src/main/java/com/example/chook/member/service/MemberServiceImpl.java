@@ -43,6 +43,10 @@ public class MemberServiceImpl implements MemberService {
         // 아이디 중복 확인
         validateUsernameNotTaken(requestDTO.getUserName());
 
+        if (!requestDTO.getPassword().equals(requestDTO.getPasswordCheck())) {
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+        }
+
         // 사업자번호가 입력되어 있을 때 인증 토큰 유효 확인
         // true → 사업자번호 인증 완료
         // false → 사업자번호 자체를 입력하지 않음
@@ -91,6 +95,10 @@ public class MemberServiceImpl implements MemberService {
 
         // 아이디 중복 확인
         validateUsernameNotTaken(requestDTO.getUsername());
+
+        if (!requestDTO.getPassword().equals(requestDTO.getPasswordCheck())) {
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+        }
 
         // 구인자는 사업자 인증 필수
         // verify()에서 입력받은 사업자번호와 토큰 정보가 일치하는지 확인
