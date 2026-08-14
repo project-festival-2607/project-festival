@@ -11,39 +11,6 @@
     margin-bottom: 50px;
 }
 
-.login-select-box {
-    display: flex;
-    flex-direction: row;
-    gap: 15px;
-    width: 100%;
-    align-items: center;
-    justify-content: center;
-    padding: 0;
-    margin: 0;
-
-    margin-bottom: 80px;
-}
-
-.select-btn {
-    padding: 5px 25px;
-    border: 1px solid #dc3545;
-    border-radius: 10px;
-    background: #FEFEFE;
-    font-size: 13px;
-
-    transition: 0.3s ease;
-}
-
-.select-btn:hover {
-    background-color: #dc3545;
-    color: #FEFEFE;
-}
-
-.select-btn.active {
-    background-color: #dc3545;
-    color: #FEFEFE;
-}
-
 .login-alert {
     text-align: center;
     width: 100%;
