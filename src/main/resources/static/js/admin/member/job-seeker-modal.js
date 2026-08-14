@@ -2,7 +2,7 @@
 // 관리 메뉴
 // ##############################################
 
-document.querySelector('.result-table-wrapper').addEventListener('click', (event) => {
+document.querySelector('#jobSeekerForm').addEventListener('click', (event) => {
 
   console.log(event.target.dataset.role);
 
@@ -115,6 +115,30 @@ document.querySelectorAll('.modal-footer').forEach(element => {
     }
   })
 });
+
+function jobSeekerResultUrl() {
+
+  const form = document.getElementById('jobSeekerForm');
+  const params = new URLSearchParams(new FormData(form));
+  params.set('pageIdx', '1');
+  params.set('pageSize', document.getElementById('pageSize').value);
+
+  return `/admin/member/job-seeker/result?${params}`;
+
+}
+
+async function loadJobSeekerResult(url) {
+
+  const response = await fetch(url);
+  if (!response.ok) {
+    throw new Error(`HTTP ${response.status}`);
+  }
+  const resultHtml = await response.text();
+  console.log("resultHtml");
+  console.log(resultHtml);
+  const jobSeekerResult = document.querySelector('#jobSeekerResult');
+  jobSeekerResult.outerHTML = resultHtml;
+}
 
 async function suspendMemberRequest(memberId, reason) {
   try {

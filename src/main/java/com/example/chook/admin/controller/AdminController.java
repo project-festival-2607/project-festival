@@ -14,7 +14,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -29,28 +28,42 @@ public class AdminController {
   private final AdminService adminService;
 
   @GetMapping("/member/job-seeker")
-  public void jobSeekerList(Model model,
-                            @RequestParam(name = "pageIdx", required = false, defaultValue = "1") int pageIdx,
-                            @RequestParam(name = "pageSize", required = false, defaultValue = "30") int pageSize,
-                            @Valid @ModelAttribute JobSeekerSearchForm form,
-                            BindingResult bindingResult) {
+  public void loadJobSeekerPage(
+    Model model,
+    @RequestParam(name = "pageIdx", required = false, defaultValue = "1") int pageIdx,
+    @RequestParam(name = "pageSize", required = false, defaultValue = "30") int pageSize,
+    @Valid @ModelAttribute JobSeekerSearchForm form
+  ) {
+    model.addAttribute("pageSize", pageSize);
+    model.addAttribute("form", form);
+  }
 
-    if (bindingResult.hasErrors()) return;
+  @GetMapping("/member/job-seeker/result")
+  public String getJobSeekerResultFragment(
+    Model model,
+    @RequestParam(name = "pageIdx", required = false, defaultValue = "1") int pageIdx,
+    @RequestParam(name = "pageSize", required = false, defaultValue = "30") int pageSize,
+    @Valid @ModelAttribute JobSeekerSearchForm form
+  ) {
+
     JobSeekerSearchCondition condition = new JobSeekerSearchCondition(form);
     Page<JobSeekerTableDTO> page = adminService.getPage(pageIdx, pageSize, condition);
 
     model.addAttribute("page", page);
-    model.addAttribute("pageSize", pageSize);
     PagingHandler<JobSeekerTableDTO, JobSeekerSearchForm> pagingHandler =
       new PagingHandler<>(page, form, PAGINATION_SIZE, pageIdx);
     model.addAttribute("pagingHandler", pagingHandler);
 
+    // thead status dropdown용
     model.addAttribute("memberStatusFilters", List.of(
       MemberStatus.ACTIVE,
       MemberStatus.DORMANT,
       MemberStatus.SUSPENDED
     ));
 
+    log.info("form: {}", form);
+    log.info("model: {}", model);
+    return "admin/fragments/job-seeker-result";
   }
 
   @PostMapping("/member/job-seeker/{memberId}/remove-phone-verification")

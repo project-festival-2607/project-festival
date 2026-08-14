@@ -13,7 +13,7 @@
 
   <div class="container admin-container">
     <form method="get" th:action="@{/admin/member/job-seeker}"
-          th:with="form=${pagingHandler.form}">
+          th:with="form=${form}" id="jobSeekerForm">
       <div class="d-flex justify-content-end input-group input-group-sm">
         <button class="btn btn-light form-btn-left" type="button" id="currentPageSize">30개씩</button>
         <button class="btn btn-light form-btn-right dropdown-toggle dropdown-toggle-split" type="button" data-bs-toggle="dropdown" aria-expanded="false"></button>
@@ -75,151 +75,11 @@
           </div>
         </div>
       </div>
-      <div class="result-table-wrapper">
-        <table class="table">
-          <thead>
-            <tr>
-              <th scope="col">#</th>
-              <th scope="col">아이디</th>
-              <th scope="col">이름</th>
-              <th scope="col" colspan="2">전화번호</th>
-              <th scope="col">이메일</th>
-              <th scope="col">
-                <div class="d-flex gap-3 justify-content-between">
-                  <span>상태</span>
-                  <div class="dropdown d-flex justify-content-center align-items-center">
-                    <button type="button" class="btn btn-reset btn-th dropdown-toggle dropdown-no-caret" data-bs-toggle="dropdown">
-                      <th:block th:replace="~{admin/fragments/svg :: filter('filter-icon')}"></th:block>
-                    </button>
-                    <ul class="dropdown-menu filter-menu" id="statusFilterDropdownList">
-                      <li><button type="button" class="dropdown-item status-filter-li" data-value="">
-                        <th:block th:replace="~{admin/fragments/badge :: member-status(null, false, true)}"></th:block>
-                      </button></li>
-                      <li><button type="button" class="dropdown-item status-filter-li" data-value="ACTIVE">
-                        <th:block th:replace="~{admin/fragments/badge :: member-status(${memberStatusFilters[0]}, false, false)}"></th:block>
-                      </button></li>
-                      <li><button type="button" class="dropdown-item status-filter-li" data-value="DORMANT">
-                        <th:block th:replace="~{admin/fragments/badge :: member-status(${memberStatusFilters[1]}, false, false)}"></th:block>
-                      </button></li>
-                      <li><button type="button" class="dropdown-item status-filter-li" data-value="SUSPEND">
-                        <th:block th:replace="~{admin/fragments/badge :: member-status(${memberStatusFilters[2]}, false, false)}"></th:block>
-                      </button></li>
-                      <li><button type="button" class="dropdown-item status-filter-li" data-value="DELETED">
-                        <th:block th:replace="~{admin/fragments/badge :: member-status(null, true, false)}"></th:block>
-                      </button></li>
-                    </ul>
-                  </div>
-                </div>
-              </th>
-              <th scope="col">
-                <span class="d-flex gap-3 justify-content-between">
-                  <span>생성일시</span>
-                  <button type="button" class="btn btn-reset btn-th dropdown-toggle dropdown-no-caret" data-bs-toggle="dropdown">
-                    <th:block th:replace="~{admin/fragments/svg :: sort('sort-icon')}"></th:block>
-                  </button>
-                </span>
-              </th>
-              <th scope="col">
-                <span class="d-flex gap-3 justify-content-between">
-                  <span>수정일시</span>
-                  <button type="button" class="btn btn-reset btn-th" data-bs-toggle="dropdown">
-                    <th:block th:replace="~{admin/fragments/svg :: sort('sort-icon')}"></th:block>
-                  </button>
-                </span>
-              </th>
-              <th scope="col">
-                <span class="d-flex gap-3 justify-content-between">
-                  <span>최근접속일시</span>
-                  <button type="button" class="btn btn-reset btn-th" data-bs-toggle="dropdown">
-                    <th:block th:replace="~{admin/fragments/svg :: sort('sort-icon')}"></th:block>
-                  </button>
-                </span>
-              </th>
-              <th scope="col">
-                <span class="d-flex gap-3 justify-content-between">
-                  <span>삭제일시</span>
-                  <button type="button" class="btn btn-reset" data-bs-toggle="dropdown">
-                    <th:block th:replace="~{admin/fragments/svg :: sort('sort-icon')}"></th:block>
-                  </button>
-                </span>
-              </th>
-              <th scope="col">포인트</th>
-              <th scope="col">소셜</th>
-              <th scope="col">성별</th>
-              <th scope="col">생일</th>
-              <th scope="col">도로명주소</th>
-              <th scope="col">상세주소</th>
-              <th scope="col" class="text-center bg-body-secondary">관리</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr th:each="jobSeeker : ${page}">
-              <td data-type="id" th:text="${jobSeeker.id}"></td>
-              <td data-type="username" th:text="${jobSeeker.username}"></td>
-              <td data-type="name" th:text="${jobSeeker.name}"></td>
-              <td data-type="phone">[[${jobSeeker.formattedPhone}]]</td>
-              <td>
-                <span th:if="${jobSeeker.phoneVerified}" class="text-success"><th:block th:replace="~{admin/fragments/svg :: verified('phone-verified-icon')}"></th:block></span>
-                <span th:unless="${jobSeeker.phoneVerified}" class="text-danger" title="휴대전화 번호가 인증되지 않았습니다."><th:block th:replace="~{admin/fragments/svg :: not-verified('phone-verified-icon')}"></th:block></span>
-              </td>
-              <td data-type="email" th:text="${jobSeeker.email}"></td>
-              <td data-type="status" class="text-center">
-                <th:block th:replace="~{admin/fragments/badge :: member-status(${jobSeeker.status}, ${jobSeeker.deletedAt ne null}, false)}"></th:block>
-                <span data-type="suspendedAt" class="d-none" th:text="${#temporals.format(jobSeeker.suspendedAt, 'yyyy.MM.dd. HH:mm:ss')}"></span>
-                <span data-type="suspendedReason" class="d-none">[[${jobSeeker.suspendedReason}]]</span>
-              </td>
-              <td th:text="${#temporals.format(jobSeeker.createdAt, 'yyyy.MM.dd. HH:mm')}"></td>
-              <td th:text="${#temporals.format(jobSeeker.updatedAt, 'yyyy.MM.dd. HH:mm')}"></td>
-              <td data-type="lastLoginAt" th:text="${#temporals.format(jobSeeker.lastLoginAt, 'yyyy.MM.dd. HH:mm')}"></td>
-              <td th:text="${#temporals.format(jobSeeker.deletedAt, 'yyyy.MM.dd. HH:mm')}"></td>
-              <td class="text-end" th:text="${jobSeeker.point}"></td>
-              <td>
-                <th:block th:each="socialLoginDto: ${jobSeeker.socialLoginDtoList}">
-                  <img th:src="@{'/images/admin/member/provider_'+${#strings.toLowerCase(socialLoginDto.provider.name())}+'.svg'}"
-                       class="provider-icon"
-                       th:alt-title="${socialLoginDto.provider.name() + ' / 연결 일시: ' + #temporals.format(socialLoginDto.linkedAt, 'yyyy.MM.dd. HH:mm:ss')}"/>
-                </th:block>
-              </td>
-              <td>
-                <span th:if="${jobSeeker.gender.name() == 'MALE'}">남성</span>
-                <span th:if="${jobSeeker.gender.name() == 'FEMALE'}">여성</span>
-              </td>
-              <td th:text="${#temporals.format(jobSeeker.birthDate, 'yyyy.MM.dd.')}"></td>
-              <td th:text="${jobSeeker.streetAddress}"></td>
-              <td th:text="${jobSeeker.detailAddress}"></td>
-              <td class="center bg-body-secondary">
-                <button type="button" class="btn btn-reset dropdown-toggle dropdown-no-caret moderation-btn" data-bs-toggle="dropdown">
-                  <th:block th:replace="~{admin/fragments/svg :: moderation('moderation-icon')}"></th:block>
-                </button>
-                <ul class="dropdown-menu moderation-menu">
-                  <li><button type="button" class="dropdown-item date-range-criteria-li" data-role="suspendMember" data-bs-toggle="modal" data-bs-target="#suspendMemberModal" th:text="${'계정 정지'+ ((jobSeeker.status.name() eq 'SUSPENDED') ? ' 사유 변경': '')}"></button></li>
-                  <li th:if="${jobSeeker.status.name() eq 'SUSPENDED'}"><button type="button" class="dropdown-item date-range-criteria-li" data-role="unsuspendMember" data-bs-toggle="modal" data-bs-target="#unsuspendMemberModal">계정 정지 해제</button></li>
-                  <li th:if="${jobSeeker.phoneVerified}"><button type="button" class="dropdown-item date-range-criteria-li" data-role="removePhoneVerification" data-bs-toggle="modal" data-bs-target="#removePhoneVerificationModal">휴대전화 인증 삭제</button></li>
-                  <li th:unless="${jobSeeker.phoneVerified}"><button type="button" class="dropdown-item date-range-criteria-li" data-role="addPhoneWithVerification" data-bs-toggle="modal" data-bs-target="#addPhoneWithVerificationModal">휴대전화 인증 추가</button></li>
-                </ul>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <div>
-        <nav>
-          <ul class="admin-pagination pagination pagination-sm justify-content-center mt-2">
-            <li class="page-item" th:classappend="${pagingHandler.prevBtnActive eq false ? 'disabled' : '' }">
-              <button class="page-link" name="pageIdx" th:value="${pagingHandler.pageIdx - 1}" type="submit">←</button>
-            </li>
-            <li class="page-item"
-                th:classappend="${i == pagingHandler.pageIdx} ? 'active'"
-                th:each="i : ${#numbers.sequence(pagingHandler.startPageIdx, pagingHandler.endPageIdx)}">
-              <button class="page-link" name="pageIdx" th:value="${i}" type="submit">[[${i}]]</button>
-            </li>
-            <li class="page-item" th:classappend="${pagingHandler.nextBtnActive eq false ? 'disabled' : '' }">
-              <button class="page-link" name="pageIdx" th:value="${pagingHandler.pageIdx + 1}" type="submit">→</button>
-            </li>
-          </ul>
-        </nav>
-      </div>
+      <div id="jobSeekerResult">
+        <div th:fragment="job-seeker-result">
 
+        </div>
+      </div>
     </form>
   </div>
   <!-- suspendMemberModal -->
@@ -401,4 +261,7 @@
   </div>
   <script th:src="@{/js/admin/member/job-seeker.js}"></script>
   <script th:src="@{/js/admin/member/job-seeker-modal.js}"></script>
+  <script>
+    loadJobSeekerResult(jobSeekerResultUrl());
+  </script>
 </div>
