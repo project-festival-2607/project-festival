@@ -73,7 +73,7 @@ public class AdminServiceImpl implements AdminService {
       new EntityNotFoundException("Member with id: " + memberId + " not found")
     );
     member.setPhoneVerified(false);
-    member.setStatus(MemberStatus.SUSPENDED);
+    suspendMember(memberId, "휴대전화 인증 해제");
   }
 
   @Transactional
@@ -94,7 +94,10 @@ public class AdminServiceImpl implements AdminService {
     if (suspension != null && reason.equals(currentSuspendedReason)) return false;
 
     // 개체 (생성 후) 업데이트
-    if (suspension == null) suspension = new MemberSuspension();
+    if (suspension == null) {
+      suspension = new MemberSuspension();
+      suspension.setMember(member);
+    }
     suspension.setReason(reason);
 
     // 저장
@@ -106,11 +109,15 @@ public class AdminServiceImpl implements AdminService {
   @Transactional
   @Override
   public boolean unsuspendMember(Long memberId) {
-    if (memberRepository.existsById(memberId))
-      throw new EntityNotFoundException("Member with id: " + memberId + " not found");
+    Member member = memberRepository.findById(memberId).orElseThrow(() ->
+      new EntityNotFoundException("Member with id: " + memberId + " not found")
+    );
+    if (!member.isPhoneVerified())
+      throw new IllegalStateException("휴대전화 번호가 인증된 상태여야만 정지를 해제할 수 있습니다.");
     boolean isSuspended = memberSuspensionRepository.existsById(memberId);
     if (!isSuspended) return false;
     memberSuspensionRepository.deleteById(memberId);
+    member.setStatus(MemberStatus.ACTIVE);
     return true;
   }
 
