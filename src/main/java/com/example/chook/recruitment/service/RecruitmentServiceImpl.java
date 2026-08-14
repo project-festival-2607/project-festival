@@ -1,10 +1,13 @@
 package com.example.chook.recruitment.service;
 
+import com.example.chook.application.repository.ApplicationRepository;
+import com.example.chook.bookmark.repository.RecruitmentBookmarkRepository;
 import com.example.chook.chookMain.ChookRecruitmentDTO;
 import com.example.chook.festival.Festival;
 import com.example.chook.festival.FestivalRepository;
 import com.example.chook.file.entity.UploadedFile;
 import com.example.chook.file.repository.UploadedFileRepository;
+import com.example.chook.payment.repository.PointHistoryRepository;
 import com.example.chook.recruitment.dto.*;
 import com.example.chook.recruitment.entity.Recruitment;
 import com.example.chook.recruitment.entity.RecruitmentFile;
@@ -53,6 +56,9 @@ public class RecruitmentServiceImpl implements RecruitmentService {
   private final RegionSigunguRepository regionSigunguRepository;
   private final FestivalRepository festivalRepository;
   private final UploadedFileRepository uploadedFileRepository;
+  private final ApplicationRepository applicationRepository;
+  private final RecruitmentBookmarkRepository recruitmentBookmarkRepository;
+  private final PointHistoryRepository pointHistoryRepository;
   private final RecruitmentMapper mapper;
 
   @Transactional
@@ -166,7 +172,10 @@ public class RecruitmentServiceImpl implements RecruitmentService {
     recruitment.setSigungu(sigungu);
     recruitment.setTitle(dto.getRecruitmentTitle());
     recruitment.setContent(dto.getContent());
-    recruitment.setApplicationDeadline(dto.getApplicationDeadline());
+    // 공개(publishedAt 존재) 이후에는 모집 날짜를 바꿀 수 없음 - 폼이 readonly로 막아도 서버에서 다시 한번 무시
+    if (recruitment.getPublishedAt() == null) {
+      recruitment.setApplicationDeadline(dto.getApplicationDeadline());
+    }
     recruitment.setRecruitmentCount(dto.getRecruitmentCount());
     recruitment.setWorkingLocation(dto.getWorkingLocation());
     recruitment.setWorkingStartDate(dto.getWorkingStartDate());
@@ -184,6 +193,13 @@ public class RecruitmentServiceImpl implements RecruitmentService {
   @Override
   public void deleteRecruitment(Long id) {
 
+    // 이 공고를 참조하는 지원/찜 내역 삭제 (FK 제약으로 본 엔티티보다 먼저 지워야 함)
+    applicationRepository.deleteAll(applicationRepository.findByRecruitmentId(id));
+    recruitmentBookmarkRepository.deleteAll(recruitmentBookmarkRepository.findAllByRecruitment_Id(id));
+
+    // 포인트 사용 내역(PointHistory)은 결제 감사 로그이므로 삭제하지 않고 참조만 끊음
+    pointHistoryRepository.clearRecruitReference(id);
+
     // RecruitmentFile 연결 삭제, 실제 파일은 sweepUnreferencedFiles가 담당
     List<RecruitmentFile> fileList = recruitmentFileRepository.findByRecruitment_Id(id);
     recruitmentFileRepository.deleteAll(fileList);
@@ -199,6 +215,26 @@ public class RecruitmentServiceImpl implements RecruitmentService {
   @Override
   public void publish(Long id) {
     recruitmentRepository.publish(id, RecruitmentStatus.RECRUITING);
+  }
+
+  // "마감" 버튼: 모집을 잠시 멈춤 (날짜 만료로 인한 CLOSED와는 다른, 되돌릴 수 있는 상태)
+  @Transactional
+  @Override
+  public void close(Long id) {
+    recruitmentRepository.updateStatus(id, RecruitmentStatus.PAUSED);
+  }
+
+  // "다시 올리기" 버튼: PAUSED -> RECRUITING으로 복귀
+  @Transactional
+  @Override
+  public void reopen(Long id) {
+    recruitmentRepository.updateStatus(id, RecruitmentStatus.RECRUITING);
+  }
+
+  @Transactional
+  @Override
+  public void closeExpiredRecruitments() {
+    recruitmentRepository.closeExpiredRecruitments();
   }
 
   @Override

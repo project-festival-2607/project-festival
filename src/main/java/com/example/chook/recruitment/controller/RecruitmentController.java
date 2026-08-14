@@ -118,6 +118,34 @@ public class RecruitmentController {
     return ResponseEntity.ok(Map.of("success", true, "message", "공고가 게시되었습니다."));
   }
 
+  // "마감" 버튼: RECRUITING -> PAUSED (날짜 만료로 인한 자동 CLOSED와는 별개, 언제든 되돌릴 수 있음)
+  @PostMapping("/close/{id}")
+  @ResponseBody
+  public ResponseEntity<Map<String, Object>> close(
+      @PathVariable Long id,
+      @AuthenticationPrincipal CustomUserDetails user
+  ) {
+    if (requireOwnedRecruitment(id, user) == null) {
+      return ResponseEntity.status(403).body(Map.of("success", false, "message", "마감 권한이 없습니다."));
+    }
+    recruitmentService.close(id);
+    return ResponseEntity.ok(Map.of("success", true, "message", "모집이 마감되었습니다."));
+  }
+
+  // "다시 올리기" 버튼: PAUSED -> RECRUITING
+  @PostMapping("/reopen/{id}")
+  @ResponseBody
+  public ResponseEntity<Map<String, Object>> reopen(
+      @PathVariable Long id,
+      @AuthenticationPrincipal CustomUserDetails user
+  ) {
+    if (requireOwnedRecruitment(id, user) == null) {
+      return ResponseEntity.status(403).body(Map.of("success", false, "message", "재게시 권한이 없습니다."));
+    }
+    recruitmentService.reopen(id);
+    return ResponseEntity.ok(Map.of("success", true, "message", "모집을 다시 시작합니다."));
+  }
+
 
   @GetMapping("/manage")
   public void manageList(Model model,
@@ -167,8 +195,6 @@ public class RecruitmentController {
       && responseDto.getOrganizerMemberId().equals(user.getId());
     model.addAttribute("isOwner", isOwner);
 
-    model.addAttribute("expired", user != null && responseDto.getApplicationDeadline().isBefore(LocalDate.now()));
-
     log.info("recruitment view: {}", responseDto);
     return "recruitment/detail";
   }
@@ -180,6 +206,8 @@ public class RecruitmentController {
     List<RegionDTO> sidoList = regionService.getSidoList();
     model.addAttribute("festivals", festivals);
     model.addAttribute("sidoList", sidoList);
+    // 모집 날짜는 작성일로부터 1달 1주까지만 선택 가능
+    model.addAttribute("maxDeadline", LocalDate.now().plusMonths(1).plusWeeks(1));
   }
 
   @GetMapping("/modify/{id}")
@@ -193,11 +221,6 @@ public class RecruitmentController {
       redirectAttributes.addFlashAttribute("errorMsg", "수정 권한이 없습니다.");
       return redirectToRecruitment(id, from, redirectAttributes);
     }
-    if (current.getApplicationDeadline().isBefore(LocalDate.now())) {
-      redirectAttributes.addFlashAttribute("errorMsg", "모집마감일이 지난 공고는 수정할 수 없습니다.");
-      return redirectToRecruitment(id, from, redirectAttributes);
-    }
-
     RecruitmentUpdateDTO update = recruitmentService.getRecruitmentForUpdate(id);
     model.addAttribute("recruitmentId", id);
     model.addAttribute("update", update);
@@ -207,6 +230,10 @@ public class RecruitmentController {
     model.addAttribute("sidoList", regionService.getSidoList());
     model.addAttribute("sigunguList", regionService.getSigunguList(update.getRegionSidoCode()));
     model.addAttribute("from", from);
+    // 공개(publishedAt 존재) 이후에는 모집 날짜를 바꿀 수 없음
+    model.addAttribute("published", current.getPublishedAt() != null);
+    // 모집 날짜는 (최초 작성 이후) 수정일로부터 1달 1주까지만 선택 가능
+    model.addAttribute("maxDeadline", current.getUpdatedAt().toLocalDate().plusMonths(1).plusWeeks(1));
     return "recruitment/modify";
   }
 
@@ -248,6 +275,7 @@ public class RecruitmentController {
     if (recruitmentCreateForm.regionSidoCode() != null) {
       model.addAttribute("sigunguList", regionService.getSigunguList(recruitmentCreateForm.regionSidoCode()));
     }
+    model.addAttribute("maxDeadline", LocalDate.now().plusMonths(1).plusWeeks(1));
     model.addAttribute("hasError", true);
     List<String> errorMessages = bindingResult.getFieldErrors().stream()
       .map(error -> error.getField() + ": " + error.getDefaultMessage())
@@ -290,6 +318,8 @@ public class RecruitmentController {
     model.addAttribute("sidoList", regionService.getSidoList());
     model.addAttribute("sigunguList", regionService.getSigunguList(update.getRegionSidoCode()));
     model.addAttribute("from", from);
+    model.addAttribute("published", current.getPublishedAt() != null);
+    model.addAttribute("maxDeadline", current.getUpdatedAt().toLocalDate().plusMonths(1).plusWeeks(1));
     model.addAttribute("hasError", true);
     List<String> errorMessages = bindingResult.getFieldErrors().stream()
       .map(error -> error.getField() + ": " + error.getDefaultMessage())
@@ -338,11 +368,6 @@ public class RecruitmentController {
       redirectAttributes.addFlashAttribute("errorMsg", "수정 권한이 없습니다.");
       return redirectToRecruitment(id, from, redirectAttributes);
     }
-    if (current.getApplicationDeadline().isBefore(LocalDate.now())) {
-      redirectAttributes.addFlashAttribute("errorMsg", "모집마감일이 지난 공고는 수정할 수 없습니다.");
-      return redirectToRecruitment(id, from, redirectAttributes);
-    }
-
     if (bindingResult.hasErrors()) return modifyFormWithReloadedOptions(id, current, from, model, bindingResult);
     if (recruitmentCreateForm.workingStartDate().isAfter(
       recruitmentCreateForm.workingEndDate()))

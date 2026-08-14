@@ -21,7 +21,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -53,8 +52,8 @@ public class RecruitmentRepositoryCustomImpl implements RecruitmentRepositoryCus
       .and(eq(recruitment.sigungu.sido.code, condition.regionSidoCode()))
       .and(eq(recruitment.sigungu.code, condition.regionSigunguCode()))
       .and(eq(recruitment.category, category))
+      .and(recruitment.publishedAt.isNotNull())
       .and(eq(recruitment.status, RecruitmentStatus.RECRUITING))
-      .and(goe(recruitment.applicationDeadline, LocalDate.now()))
       .and(loe(recruitment.workingStartDate, condition.workingStartDate()))
       .and(goe(recruitment.workingEndDate, condition.workingEndDate()))
       .and(goe(recruitment.workingStartTime, condition.workingStartTime()))

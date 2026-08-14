@@ -1,6 +1,8 @@
 // 상세요강: adminBoardDetail.js와 동일하게 Toast UI Editor를 읽기 전용 뷰어로 초기화
 const contentInit = document.getElementById("contentInit");
 const payment = document.getElementById("payment");
+const closeRecruit = document.getElementById("closeRecruit");
+const reopenRecruit = document.getElementById("reopenRecruit");
 
 new toastui.Editor.factory({
     el: document.getElementById("viewer"),
@@ -40,9 +42,45 @@ if (bookmarkBtn) {
     });
 }
 
+if (closeRecruit) {
+    closeRecruit.addEventListener("click", () => {
+        if (!confirm("모집을 마감하시겠습니까? (마감 후에도 다시 올리기로 재개할 수 있습니다)")) return;
+
+        const recruitId = closeRecruit.dataset.id;
+        fetch("/recruitment/close/" + recruitId, { method: "POST" })
+            .then(res => res.json().then(data => ({ok: res.ok, data})))
+            .then(({ok, data}) => {
+                alert(data.message);
+                if (ok) location.reload();
+            })
+            .catch(err => {
+                console.error(err);
+                alert("모집 마감 처리에 실패했습니다.");
+            });
+    });
+}
+
+if (reopenRecruit) {
+    reopenRecruit.addEventListener("click", () => {
+        if (!confirm("모집을 다시 시작하시겠습니까?")) return;
+
+        const recruitId = reopenRecruit.dataset.id;
+        fetch("/recruitment/reopen/" + recruitId, { method: "POST" })
+            .then(res => res.json().then(data => ({ok: res.ok, data})))
+            .then(({ok, data}) => {
+                alert(data.message);
+                if (ok) location.reload();
+            })
+            .catch(err => {
+                console.error(err);
+                alert("모집 재게시 처리에 실패했습니다.");
+            });
+    });
+}
+
 if(payment){
     payment.addEventListener("click", ()=>{
-        if(!confirm("포인트를 차감하시겠습니까?")) return;
+        if(!confirm("결제 후에는 모집 날짜를 변경할 수 없습니다. 포인트를 차감하시겠습니까?")) return;
 
         const recruitId = payment.dataset.id;
         // console.log("recruitId:",recruitId);

@@ -273,7 +273,7 @@ public class RecruitmentMapper {
       .workingEndTime(entity.getWorkingEndTime())
       .status(entity.getStatus())
       .publishedAt(entity.getPublishedAt())
-      .updatedAt(entity.getPublishedAt())
+      .updatedAt(entity.getUpdatedAt())
       .deletedAt(entity.getDeletedAt())
       .organizerPhone(organizerPhone)
       .organizerMemberId(entity.getFestival().getMember().getId())
