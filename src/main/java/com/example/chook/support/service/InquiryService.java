@@ -10,7 +10,7 @@ public interface InquiryService {
 
   Inquiry register(InquiryDTO dto, List<MultipartFile> files);
 
-  List<InquiryDTO> getList();
+  List<InquiryDTO> getList(Long memberId);
 
   List<InquiryDTO> getAdminList(String searchType, String keyword, String answered);
 
