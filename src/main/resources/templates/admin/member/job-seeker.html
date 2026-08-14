@@ -42,6 +42,20 @@
             <input type="hidden" id="keywordType" name="keywordType" th:value="${form.keywordType}"/>
             <input type="text" id="keywords" name="keywords" class="form-control" th:value="${form.keywords}"/>
           </div>
+          <div class="mt-2" id="keywordCriteriaWrapper">
+            <div class="d-flex gap-3" role="group" id="keywordCriteria">
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="keywordCriteria" id="keywordCriteriaContains" value="CONTAINS"
+                       th:checked="${form.keywordCriteria == null or form.keywordCriteria == 'CONTAINS'}">
+                <label class="form-check-label" for="keywordCriteriaContains">키워드 포함</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="keywordCriteria" id="keywordCriteriaEquals" value="EQUALS"
+                       th:checked="${form.keywordCriteria != null and form.keywordCriteria == 'EQUALS'}">
+                <label class="form-check-label" for="keywordCriteriaEquals">정확히 일치</label>
+              </div>
+            </div>
+          </div>
         </div>
         <div class="col-12 col-md-6">
           <label class="search-form-label">날짜 범위</label>

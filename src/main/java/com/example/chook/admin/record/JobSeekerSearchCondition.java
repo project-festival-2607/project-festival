@@ -2,6 +2,7 @@ package com.example.chook.admin.record;
 
 import com.example.chook.admin.entity.enums.JobSeekerDateCriteria;
 import com.example.chook.admin.entity.enums.JobSeekerKeywordType;
+import com.example.chook.admin.entity.enums.KeywordCriteria;
 import com.example.chook.admin.entity.enums.MemberStatusFilter;
 import com.example.chook.admin.form.JobSeekerSearchForm;
 import com.example.chook.member.entity.enums.Gender;
@@ -19,6 +20,7 @@ public record JobSeekerSearchCondition(
 
   JobSeekerKeywordType keywordType,
   List<String> keywordList,
+  KeywordCriteria keywordCriteria,
 
   MemberStatusFilter status,
 
@@ -41,8 +43,9 @@ public record JobSeekerSearchCondition(
   public JobSeekerSearchCondition(JobSeekerSearchForm form) {
 
     this(
-      splitByRegex(form.keywords(), "[\\s,&]+"),
       convertStringToEnum(form.keywordType(), JobSeekerKeywordType.class, null),
+      getKeywordList(form.keywords(), form.keywordCriteria()),
+      convertStringToEnum(form.keywordCriteria(), KeywordCriteria.class, KeywordCriteria.CONTAINS),
       convertStringToEnum(form.status(), MemberStatusFilter.class, null),
       convertStringToEnum(form.gender(), Gender.class, null),
       convertStringToEnum(form.dateRangeCriteria(), JobSeekerDateCriteria.class, null),
@@ -54,6 +57,13 @@ public record JobSeekerSearchCondition(
       convertStringToEnum(form.dateSortCriteria(), JobSeekerDateCriteria.class, null),
       form.ascending()
     );
+
+  }
+
+  private static List<String> getKeywordList(String keywords, String keywordCriteriaStr) {
+    KeywordCriteria keywordCriteria = convertStringToEnum(keywordCriteriaStr, KeywordCriteria.class, KeywordCriteria.CONTAINS);
+    if (keywordCriteria == KeywordCriteria.EQUALS) return keywords == null ? List.of() : List.of(keywords);
+    return splitByRegex(keywords, "[\\s,&]+");
   }
 
   private static <T extends Enum<T>> T convertStringToEnum(

@@ -35,8 +35,13 @@ label.search-form-label {
   width: 100px;
 }
 
+#keywordCriteriaWrapper,
 #dateRangeCriteriaAutofillWrapper {
   height: 26px;
+}
+
+#keywordCriteriaWrapper {
+  font-size: 0.80rem;
 }
 
 .result-table-wrapper {

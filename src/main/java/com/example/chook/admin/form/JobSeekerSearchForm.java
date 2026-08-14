@@ -9,6 +9,7 @@ public record JobSeekerSearchForm(
 
   String keywordType,       // JobSeekerKeywordType
   String keywords,
+  String keywordCriteria,
 
   String status,            // MemberStatusFilter
 
@@ -30,6 +31,7 @@ public record JobSeekerSearchForm(
 
     keywordType = blankToNull(keywordType);
     keywords = blankToNull(keywords);
+    keywordCriteria = blankToNull(keywordCriteria);
     status = blankToNull(status);
     dateRangeCriteria = blankToNull(dateRangeCriteria);
     gender = blankToNull(gender);
