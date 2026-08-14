@@ -38,6 +38,7 @@ public class InquiryServiceImpl implements InquiryService {
 
     Inquiry saved = inquiryRepository.save(
       Inquiry.builder()
+        .id(dto.getId())
         .title(dto.getTitle())
         .content(dto.getContent())
         .createdAt(now)
@@ -64,9 +65,8 @@ public class InquiryServiceImpl implements InquiryService {
   }
 
   @Override
-  public List<InquiryDTO> getList() {
-    // ponytail: 로그인 미구현 - 지금은 전체 노출, 로그인 붙으면 본인 문의만 필터링
-    return inquiryRepository.findAll(Sort.by(Sort.Direction.DESC, "createdAt")).stream()
+  public List<InquiryDTO> getList(Long memberId) {
+    return inquiryRepository.findByIdOrderByCreatedAtDesc(memberId).stream()
       .map(this::toDto)
       .toList();
   }

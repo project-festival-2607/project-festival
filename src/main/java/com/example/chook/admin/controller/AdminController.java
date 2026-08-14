@@ -4,8 +4,10 @@ import com.example.chook.admin.dto.JobSeekerTableDTO;
 import com.example.chook.admin.form.JobSeekerSearchForm;
 import com.example.chook.admin.record.AdminActionResponse;
 import com.example.chook.admin.record.JobSeekerSearchCondition;
+import com.example.chook.admin.record.PhoneVerificationRequest;
 import com.example.chook.admin.service.AdminService;
 import com.example.chook.common.handler.PagingHandler;
+import com.example.chook.member.entity.enums.MemberStatus;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,6 +16,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Controller
 @RequestMapping("/admin")
@@ -41,22 +45,35 @@ public class AdminController {
       new PagingHandler<>(page, form, PAGINATION_SIZE, pageIdx);
     model.addAttribute("pagingHandler", pagingHandler);
 
+    model.addAttribute("memberStatusFilters", List.of(
+      MemberStatus.ACTIVE,
+      MemberStatus.DORMANT,
+      MemberStatus.SUSPENDED
+    ));
+
   }
 
-  @PostMapping("/member/job-seeker/remove-phone-verification")
+  @PostMapping("/member/job-seeker/{memberId}/remove-phone-verification")
   @ResponseBody
-  public AdminActionResponse removePhoneVerification(@RequestParam Long memberId) {
+  public AdminActionResponse removePhoneVerification(@PathVariable Long memberId) {
     adminService.removePhoneVerification(memberId);
     return AdminActionResponse.builder()
       .result(true)
-      .message(String.format("id가 %d인 사용자의 전화번호 인증 삭제 및 정지[SUSPENDED] 상태로의 전환을 완료했습니다.", memberId))
+      .message(String.format("id가 %d인 사용자의 전화번호 인증을 삭제했으며,\n\"휴대전화 인증 헤제\" 사유로 정지했습니다.", memberId))
       .build();
   }
 
-  @PostMapping("/member/job-seeker/add-phone-with-verification")
+  @PostMapping("/member/job-seeker/{memberId}/add-phone-with-verification")
   @ResponseBody
-  public AdminActionResponse addPhoneWithVerification(@RequestParam Long memberId,
-                                                      @RequestParam String phone) {
+  public AdminActionResponse addPhoneWithVerification(@PathVariable Long memberId,
+                                                      @RequestBody PhoneVerificationRequest request) {
+
+    String phone = request.phone();
+    String phoneVerify = request.phoneVerify();
+
+    if (!phone.equals(phoneVerify)) {
+      throw new IllegalArgumentException("입력한 휴대전화 번호가 일치하지 않습니다.");
+    }
     boolean isChanged = adminService.addPhoneWithVerification(memberId, phone);
     return AdminActionResponse.builder()
       .result(isChanged)
@@ -66,10 +83,11 @@ public class AdminController {
       .build();
   }
 
-  @PostMapping("/member/job-seeker/suspend-member")
+  @PostMapping("/member/job-seeker/{memberId}/suspend")
   @ResponseBody
-  public AdminActionResponse suspendMember(@RequestParam Long memberId,
-                                           @RequestParam String reason) {
+  public AdminActionResponse suspendMember(@PathVariable Long memberId,
+                                           @RequestBody(required = false) String reason) {
+    log.info("target memberId: {}", memberId);
     boolean isChanged = adminService.suspendMember(memberId, reason);
     return AdminActionResponse.builder()
       .result(isChanged)
@@ -81,8 +99,9 @@ public class AdminController {
 
   }
 
-  @PostMapping("/member/job-seeker/unsuspend-member")
-  public AdminActionResponse unsuspendMember(@RequestParam Long memberId) {
+  @PostMapping("/member/job-seeker/{memberId}/unsuspend")
+  @ResponseBody
+  public AdminActionResponse unsuspendMember(@PathVariable Long memberId) {
     boolean isChanged = adminService.unsuspendMember(memberId);
     return AdminActionResponse.builder()
       .result(isChanged)

@@ -1,0 +1,10 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<span th:fragment="member-status(status, deleted, clearFilter)"
+      class="badge rounded-pill"
+      th:classappend="${clearFilter ? 'member-status-clear-filter' : (deleted ? 'member-status-deleted' : status.badgeClass)}"
+      th:text="${clearFilter ? '전체' : (deleted ? '탈퇴' : status.label)}">
+</span>

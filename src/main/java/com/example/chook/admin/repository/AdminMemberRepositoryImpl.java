@@ -63,7 +63,7 @@ public class AdminMemberRepositoryImpl implements AdminMemberRepository {
         jobSeekerProfile.streetAddress,
         jobSeekerProfile.detailAddress,
 
-        memberSuspension.createdAt.as("suspendedAt"),
+        memberSuspension.updatedAt.as("suspendedAt"),
         memberSuspension.reason.as("suspendedReason")
 
       ))

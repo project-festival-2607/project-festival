@@ -1,0 +1,122 @@
+.up-in-container {
+    width: 20%;
+}
+
+.up-in-h1 {
+    letter-spacing: -1.3px;
+    color: #dc3545;
+    font-size: 22px;
+    font-weight: 900;
+    text-align: center;
+    margin-bottom: 50px;
+    font-style: italic;
+}
+
+.up-in-h1.recruit {
+    color: #4769e4;
+}
+
+.mark-msg {
+    font-size: 13px;
+    color: #999999;
+    margin-bottom: 10px;
+}
+
+.basic-info-box {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 30px;
+}
+
+.input {
+    width: 100%;
+    font-size: 12px;
+    padding: 10px 20px;
+    border: 1px solid #5e5e5e;
+}
+
+.input::placeholder {
+    color: #CCCCCC;
+}
+
+.input:focus {
+    outline: none;
+    border: 1px solid #dc3545;
+}
+
+label {
+    font-size: 14px;
+    color: #333333;
+}
+
+.detail-profile-box {
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    align-items: flex-start;
+    justify-content: center;
+}
+
+.join-gender-select {
+    width: 100px;
+    height: 30px;
+    font-size: 13px;
+    padding: 0px 20px;
+}
+
+.join-btn {
+    font-size: 13px;
+    border: none;
+    border-radius: 10px;
+    padding: 5px 20px;
+    transition: 0.3s ease;
+}
+
+.input-btn-box {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.search-bn-btn, .search-join-btn {
+    align-self: flex-end;
+    margin-top: 5px;
+}
+
+.search-join-btn {
+    background: #4769e4;
+    color: #FEFEFE;
+}
+
+.search-join-btn:hover {
+    background: #3b59cf;
+}
+
+.search-bn-btn {
+    background-color: #dc3545;
+    color: #FEFEFE;
+}
+
+.search-bn-btn:hover {
+    background: #bf2836;
+}
+
+.signup-btn-box {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    margin-top: 100px;
+}
+
+.signup-btn {
+    background-color: #FEFEFE;
+    border: 1px solid #dc3545;
+}
+
+.signup-btn:hover {
+    background: #d8d8d8;
+}

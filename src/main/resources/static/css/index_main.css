@@ -226,7 +226,8 @@
     justify-content: space-between;
 }
 
-.info-menu-items > div > span {
+.info-menu-items > div > a {
+    color: #2c2c2c;
     font-size: 13px;
     margin-left: 30px;
 }
@@ -336,7 +337,7 @@
     padding: 50px 0px;
     width: 100%;
 
-    background: #dc3545;
+    /*background: #dc3545;*/
 }
 
 .index-last-box {
@@ -344,7 +345,7 @@
     flex-direction: row;
 
     background: linear-gradient(to right, #dc3545 0% 30%, #F6F6F9 30% 100%);
-    border-radius: 20px;
+    /*border-radius: 20px;*/
     width: 80%;
 
 }

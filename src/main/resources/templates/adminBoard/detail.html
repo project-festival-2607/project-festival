@@ -16,7 +16,7 @@
         <!--        이 안에서 작업        -->
         <h1>공지사항</h1>
 
-        <form th:action="@{/adminBoard/modify/{bno}(bno=${board.bno}, admin=${isAdmin})}" method="post" id="modifyForm">
+        <form th:action="@{/adminBoard/modify/{bno}(bno=${board.bno})}" method="post" id="modifyForm">
             <div class="mb-3">
                 <input type="text" class="form-control" name="title" id="title" th:value="${board.title}" th:readonly="${!isAdmin}">
             </div>
@@ -48,7 +48,7 @@
             </div>
         </form>
 
-        <form th:action="@{/adminBoard/delete/{bno}(bno=${board.bno}, admin=${isAdmin})}" method="post" id="deleteForm" style="display:none"></form>
+        <form th:action="@{/adminBoard/delete/{bno}(bno=${board.bno})}" method="post" id="deleteForm" style="display:none"></form>
 
         <script th:src="@{/libs/toastui-editor-3.2.2/js/toastui-editor-all.min.js}"></script>
 
