@@ -1,14 +1,19 @@
 package com.example.chook.admin.repository;
 
 import com.example.chook.admin.dto.JobSeekerTableDTO;
-import com.example.chook.admin.entity.enums.JobSeekerDateRangeCriteria;
+import com.example.chook.admin.entity.enums.JobSeekerDateCriteria;
 import com.example.chook.admin.entity.enums.JobSeekerKeywordType;
+import com.example.chook.admin.entity.enums.KeywordCriteria;
+import com.example.chook.admin.entity.enums.MemberStatusFilter;
 import com.example.chook.admin.record.JobSeekerSearchCondition;
+import com.example.chook.common.util.QuerydslUtils;
 import com.example.chook.member.entity.enums.MemberRole;
+import com.example.chook.member.entity.enums.MemberStatus;
 import com.example.chook.member.entity.enums.Provider;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.StringPath;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
@@ -21,6 +26,7 @@ import org.springframework.stereotype.Repository;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.function.BiFunction;
 
 import static com.example.chook.common.util.QuerydslUtils.*;
 import static com.example.chook.member.entity.QJobSeekerProfile.jobSeekerProfile;
@@ -83,9 +89,9 @@ public class AdminMemberRepositoryImpl implements AdminMemberRepository {
 
     whereCondition
       .and(member.role.eq(MemberRole.JOB_SEEKER))
-      .and(containsAnyKeywordWithCriteria(condition.keywordList(), condition.keywordType()))
-      .and(eq(member.status, condition.status()))
+      .and(checkKeywordsWithCriteria(condition.keywordList(), condition.keywordType(), condition.keywordCriteria()))
       .and(eq(jobSeekerProfile.gender, condition.gender()))
+      .and(checkStatusFilter(condition.status()))
       .and(checkDataRangeCriteria(condition.dateRangeCriteria(),
         condition.startDateTime(),
         condition.endDateTime(),
@@ -116,7 +122,24 @@ public class AdminMemberRepositoryImpl implements AdminMemberRepository {
     return eq(member.socialLogins.any().provider, provider);
   }
 
-  private BooleanBuilder checkDataRangeCriteria(JobSeekerDateRangeCriteria criteria,
+  private BooleanBuilder checkStatusFilter(MemberStatusFilter status) {
+
+    BooleanBuilder result = new BooleanBuilder();
+
+    log.info("status: {}", status);
+
+    if (status == null) return null;
+    switch (status) {
+      case ACTIVE -> result.and(eq(member.status,  MemberStatus.ACTIVE));
+      case DORMANT -> result.and(eq(member.status, MemberStatus.DORMANT));
+      case SUSPENDED -> result.and(eq(member.status, MemberStatus.SUSPENDED));
+      case DELETED -> result.and(member.deletedAt.isNotNull());
+    }
+
+    return result;
+  }
+
+  private BooleanBuilder checkDataRangeCriteria(JobSeekerDateCriteria criteria,
                                                 LocalDateTime startDateTime,
                                                 LocalDateTime endDateTime,
                                                 LocalDate startDate,
@@ -139,6 +162,11 @@ public class AdminMemberRepositoryImpl implements AdminMemberRepository {
         result.and(goe(member.lastLoginAt, startDateTime));
         result.and(loe(member.lastLoginAt, endDateTime));
       }
+      case DELETED_AT -> {
+        result.and(member.deletedAt.isNotNull());
+        result.and(goe(member.deletedAt, startDateTime));
+        result.and(loe(member.deletedAt, endDateTime));
+      }
       case BIRTH_DATE -> {
         result.and(goe(jobSeekerProfile.birthDate, startDate));
         result.and(lt(jobSeekerProfile.birthDate, endDate));
@@ -149,8 +177,9 @@ public class AdminMemberRepositoryImpl implements AdminMemberRepository {
     return result;
   }
 
-  private BooleanBuilder containsAnyKeywordWithCriteria(List<String> keywordList,
-                                                        JobSeekerKeywordType keywordType) {
+  private BooleanBuilder checkKeywordsWithCriteria(List<String> keywordList,
+                                                   JobSeekerKeywordType keywordType,
+                                                   KeywordCriteria keywordCriteria) {
 
     if (keywordList == null || keywordList.isEmpty()) return null;
     List<JobSeekerKeywordType> types =
@@ -158,25 +187,23 @@ public class AdminMemberRepositoryImpl implements AdminMemberRepository {
         ? List.of(JobSeekerKeywordType.values())
         : List.of(keywordType);
 
+    log.info("types: {}", types);
     BooleanBuilder result = new BooleanBuilder();
+
+    BiFunction<StringPath, String, BooleanExpression> keywordCheck =
+      keywordCheckFunction(keywordCriteria);
 
     for (String keyword : keywordList) {
       BooleanBuilder keywordResult = new BooleanBuilder();
       for (JobSeekerKeywordType type : types) {
         switch (type) {
-          case USERNAME -> {
-            keywordResult.or(contains(member.username, keyword));
-          }
-          case NAME -> {
-            keywordResult.or(contains(member.name, keyword));
-          }
-          case PHONE -> {
-            keywordResult.or(contains(member.phone, keyword));
-          }
-          case EMAIL -> {
-            keywordResult.or(contains(member.email, keyword));
-          }
+          case USERNAME -> keywordResult.or(keywordCheck.apply(member.username, keyword));
+          case NAME -> keywordResult.or(keywordCheck.apply(member.name, keyword));
+          case PHONE -> keywordResult.or(keywordCheck.apply(member.phone, keyword.replace("-", "")));
+          case EMAIL -> keywordResult.or(keywordCheck.apply(member.email, keyword));
           case ADDRESS -> {
+            // 주소는 전체 주소를 적는 것을 요구하는 것이 불합리하므로,
+            // 공백을 구분으로 나누지 않은 전체 키워드 하나가 포함되어 있는지만 확인
             keywordResult.or(contains(jobSeekerProfile.streetAddress, keyword));
             keywordResult.or(contains(jobSeekerProfile.detailAddress, keyword));
           }
@@ -185,5 +212,11 @@ public class AdminMemberRepositoryImpl implements AdminMemberRepository {
       result.and(keywordResult);
     }
     return result;
+  }
+
+  private BiFunction<StringPath, String, BooleanExpression> keywordCheckFunction(KeywordCriteria keywordCriteria) {
+    return (keywordCriteria == KeywordCriteria.EQUALS)
+      ? QuerydslUtils::eq
+      : QuerydslUtils::contains;
   }
 }

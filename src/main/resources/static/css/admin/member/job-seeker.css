@@ -1,5 +1,9 @@
 .container.admin-container .dropdown-menu {
-  --bs-dropdown-link-active-bg: var(--bs-dark);
+  --bs-dropdown-link-active-bg: rgba(var(--bs-primary-rgb), 0.1);
+}
+
+.container.admin-container .dropdown-menu .active .badge {
+  box-shadow: rgba(13, 110, 253, 0.25) 0 0 0 0.25rem;
 }
 
 label.search-form-label {
@@ -31,8 +35,13 @@ label.search-form-label {
   width: 100px;
 }
 
+#keywordCriteriaWrapper,
 #dateRangeCriteriaAutofillWrapper {
   height: 26px;
+}
+
+#keywordCriteriaWrapper {
+  font-size: 0.80rem;
 }
 
 .result-table-wrapper {
@@ -138,11 +147,13 @@ label.search-form-label {
   font-size: 81%;
 }
 
-.status-filter-li {
+.status-filter-li,
+.provider-filter-li {
   font-size: 130%;
 }
 
 #statusFilterDropdownList.dropdown-menu,
+#providerFilterDropdownList.dropdown-menu,
 .moderation-menu {
   font-size: 90%;
 }
@@ -168,9 +179,19 @@ label.search-form-label {
 }
 
 .sort-icon,
-.filter-icon {
-  width: 0.5rem;
-  height: 0.5rem;
+.filter-active-icon {
+  width: 0.6rem;
+  height: 0.6rem;
+}
+
+.filter-idle-icon {
+  width: 0.75rem;
+  height: 0.75rem;
+}
+
+button:has(.filter-active-icon),
+button:has(.filter-idle-icon) {
+  width: 16px;
 }
 
 .phone-verified-icon,

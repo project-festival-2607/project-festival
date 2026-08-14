@@ -123,3 +123,6 @@ document.querySelectorAll('.date-range-criteria-autofill').forEach((element) => 
 updatePageSize();
 updateCurrentKeywordType();
 updateDateRangeCriteriaAndToggleInputType();
+
+const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));

@@ -9,8 +9,9 @@ public record JobSeekerSearchForm(
 
   String keywordType,       // JobSeekerKeywordType
   String keywords,
+  String keywordCriteria,
 
-  String status,            // MemberStatus
+  String status,            // MemberStatusFilter
 
   String dateRangeCriteria, // dateRangeCriteria
   String gender,            // Gender
@@ -19,7 +20,10 @@ public record JobSeekerSearchForm(
   LocalDate startDate,
   LocalDate endDate,
 
-  String provider           // Provider
+  String provider,          // Provider
+
+  String dateSortCriteria,
+  Boolean ascending
 
 ) {
 
@@ -27,10 +31,12 @@ public record JobSeekerSearchForm(
 
     keywordType = blankToNull(keywordType);
     keywords = blankToNull(keywords);
+    keywordCriteria = blankToNull(keywordCriteria);
     status = blankToNull(status);
     dateRangeCriteria = blankToNull(dateRangeCriteria);
     gender = blankToNull(gender);
     provider = blankToNull(provider);
+    dateSortCriteria = blankToNull(dateSortCriteria);
 
   }
 
