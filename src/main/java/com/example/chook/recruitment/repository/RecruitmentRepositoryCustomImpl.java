@@ -162,12 +162,12 @@ public class RecruitmentRepositoryCustomImpl implements RecruitmentRepositoryCus
     BooleanBuilder whereCondition = new BooleanBuilder();
 
     whereCondition
+      .and(recruitment.deletedAt.isNull())
       .and(eq(recruitment.festival.contentId, condition.festivalContentId()))
       .and(eq(recruitment.festival.member.username, condition.festivalUserName()))
       .and(eq(recruitment.category, condition.category()))
       .and(eq(recruitment.status, condition.status()))
       .and(isPublishedEq(condition.isPublished()))
-      .and(isDeletedEq(condition.isPublished()))
     ;
 
     JPAQuery<Recruitment> resultQuery = jpaQueryFactory
@@ -223,10 +223,6 @@ public class RecruitmentRepositoryCustomImpl implements RecruitmentRepositoryCus
 
   private BooleanExpression isPublishedEq(Boolean isPublished) {
     return isPublished == null ? null : recruitment.publishedAt.isNotNull().eq(isPublished);
-  }
-
-  private BooleanExpression isDeletedEq(Boolean isDeleted) {
-    return isDeleted == null ? null : recruitment.deletedAt.isNotNull().eq(isDeleted);
   }
 
   private BooleanExpression boothFeeRequiredEq(Boolean value) {

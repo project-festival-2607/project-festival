@@ -1,13 +1,10 @@
 package com.example.chook.recruitment.service;
 
-import com.example.chook.application.repository.ApplicationRepository;
-import com.example.chook.bookmark.repository.RecruitmentBookmarkRepository;
 import com.example.chook.chookMain.ChookRecruitmentDTO;
 import com.example.chook.festival.Festival;
 import com.example.chook.festival.FestivalRepository;
 import com.example.chook.file.entity.UploadedFile;
 import com.example.chook.file.repository.UploadedFileRepository;
-import com.example.chook.payment.repository.PointHistoryRepository;
 import com.example.chook.recruitment.dto.*;
 import com.example.chook.recruitment.entity.Recruitment;
 import com.example.chook.recruitment.entity.RecruitmentFile;
@@ -32,6 +29,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -43,7 +41,7 @@ import java.util.stream.Collectors;
 @Slf4j
 public class RecruitmentServiceImpl implements RecruitmentService {
 
-  private static final int PAGE_SIZE = 10;
+  private static final int PAGE_SIZE = 20;
 
   // 본문 마크다운 안에 박혀있는 "/recruitment/image/{uuid}" 링크로 첨부 이미지를 역추적 (admin_board와 동일한 패턴)
   private static final Pattern IMAGE_UUID_PATTERN =
@@ -56,9 +54,6 @@ public class RecruitmentServiceImpl implements RecruitmentService {
   private final RegionSigunguRepository regionSigunguRepository;
   private final FestivalRepository festivalRepository;
   private final UploadedFileRepository uploadedFileRepository;
-  private final ApplicationRepository applicationRepository;
-  private final RecruitmentBookmarkRepository recruitmentBookmarkRepository;
-  private final PointHistoryRepository pointHistoryRepository;
   private final RecruitmentMapper mapper;
 
   @Transactional
@@ -189,26 +184,15 @@ public class RecruitmentServiceImpl implements RecruitmentService {
 
   }
 
+  // 소프트 삭제: row는 남기고 deletedAt만 채움 - 지원(Application)/찜(RecruitmentBookmark)/
+  // 포인트이력(PointHistory)이 이 공고를 계속 유효하게 참조할 수 있어 FK 문제가 애초에 생기지 않음
   @Transactional
   @Override
   public void deleteRecruitment(Long id) {
-
-    // 이 공고를 참조하는 지원/찜 내역 삭제 (FK 제약으로 본 엔티티보다 먼저 지워야 함)
-    applicationRepository.deleteAll(applicationRepository.findByRecruitmentId(id));
-    recruitmentBookmarkRepository.deleteAll(recruitmentBookmarkRepository.findAllByRecruitment_Id(id));
-
-    // 포인트 사용 내역(PointHistory)은 결제 감사 로그이므로 삭제하지 않고 참조만 끊음
-    pointHistoryRepository.clearRecruitReference(id);
-
-    // RecruitmentFile 연결 삭제, 실제 파일은 sweepUnreferencedFiles가 담당
-    List<RecruitmentFile> fileList = recruitmentFileRepository.findByRecruitment_Id(id);
-    recruitmentFileRepository.deleteAll(fileList);
-
-    // 본 엔티티 삭제. Individual/FoodTruck은 Recruitment의 cascade=REMOVE, orphanRemoval로 함께 삭제됨
-    // (별도 리포지토리로 미리 지우면, OSIV로 같은 세션에 남아있는 Recruitment의 in-memory 참조와 어긋나
-    //  TransientPropertyValueException이 발생함)
-    recruitmentRepository.findById(id).ifPresent(recruitmentRepository::delete);
-
+    Recruitment recruitment = recruitmentRepository.findById(id)
+      .orElseThrow(() -> new EntityNotFoundException(String.format("id가 \"%d\"인 공고가 없음", id)));
+    recruitment.setDeletedAt(LocalDateTime.now());
+    recruitmentRepository.save(recruitment);
   }
 
   @Transactional

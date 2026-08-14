@@ -173,6 +173,12 @@ public class RecruitmentController {
                      Model model,
                      @AuthenticationPrincipal CustomUserDetails user) {
     RecruitmentResponseDTO responseDto = recruitmentService.getRecruitment(id);
+
+    // 소프트 삭제된 공고: 알림만 띄우고 원래 있던 페이지로 돌려보냄 (history.back())
+    if (responseDto.getDeletedAt() != null) {
+      return "recruitment/deleted";
+    }
+
     model.addAttribute("recruitment", responseDto);
     model.addAttribute("from", validateFrom(from));
 
