@@ -27,7 +27,14 @@
             </div>
         </div>
 
+        <div th:if="${param.typeError != null}" class="login-alert" role="alert">
+            <div>
+                아이디 또는 비밀번호가 일치하지 않습니다.
+            </div>
+        </div>
+
         <form th:action="@{/member/login}" method="post">
+            <input type="hidden" id="memberType" name="memberType" value="personal">
             <div class="mb-3">
                 <input type="text" class="login-input" id="username" name="username" placeholder="아이디를입력하세요." required>
             </div>
@@ -50,8 +57,8 @@
             </div>
 
         <div class="goToJoin-box">
-            <a href="/" class="goToJoin">아이디찾기</a>
-            <a href="/" class="goToJoin">비밀번호찾기</a>
+            <a href="/member/find-id" class="goToJoin">아이디찾기</a>
+            <a href="/member/find-password" class="goToJoin">비밀번호찾기</a>
             <a th:href="@{/member/signup}" class="goToJoin">회원가입하기 →</a>
         </div>
     </div>
