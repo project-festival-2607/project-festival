@@ -5,21 +5,25 @@ import com.example.chook.application.dto.ApplicationDTO;
 import com.example.chook.application.dto.ApplyDTO;
 import com.example.chook.application.entity.enums.ApplicationResult;
 import com.example.chook.application.service.ApplicationService;
+import com.example.chook.file.record.FileResource;
+import com.example.chook.file.service.FileService;
 import com.example.chook.member.entity.Member;
 import com.example.chook.member.repository.MemberRepository;
 import com.example.chook.member.security.CustomUserDetails;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.Resource;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.util.UUID;
 
 @Controller
 @RequestMapping("/application/*")
@@ -29,6 +33,7 @@ public class ApplicationController {
 
     private final ApplicationService applicationService;
     private final MemberRepository memberRepository;
+    private final FileService fileService;
 
     // 지원하기 기능
     @PostMapping("/apply")
@@ -185,6 +190,14 @@ public class ApplicationController {
         model.addAttribute("apply", applyDTO);
 
         return "application/apply";
+    }
+
+    @GetMapping("/image/{uuid}")
+    public ResponseEntity<Resource> getImage(@PathVariable UUID uuid) {
+        FileResource file = fileService.getFile(uuid);
+        return ResponseEntity.ok()
+          .contentType(MediaType.parseMediaType(file.mimeType()))
+          .body(file.resource());
     }
 
 }
