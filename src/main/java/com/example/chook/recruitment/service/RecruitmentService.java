@@ -19,6 +19,8 @@ public interface RecruitmentService {
 
   void deleteRecruitment(Long id);
 
+  void publish(Long id);
+
   RecruitmentResponseDTO getRecruitment(Long id);
 
   Page<RecruitmentListDTO> getPage(int pageIdx, RecruitmentSearchCondition condition);

@@ -42,13 +42,24 @@ if (bookmarkBtn) {
 
 if(payment){
     payment.addEventListener("click", ()=>{
+        if(!confirm("포인트를 차감하시겠습니까?")) return;
+
         const recruitId = payment.dataset.id;
         // console.log("recruitId:",recruitId);
         fetch("/point/reduce?recruitId="+recruitId, {method: "POST"})
             .then(res => res.json().then(data=>({ok:res.ok, data})))
             .then(({ok, data})=>{
-                alert(data.message);
-                if(ok) location.reload();
+                if(!ok){
+                    alert(data.message);
+                    return;
+                }
+                // 포인트 차감 성공 시에만 게시 처리 (publishedAt은 DB가 UPDATE 시점의 시간으로 채움)
+                return fetch("/recruitment/publish/" + recruitId, {method: "POST"})
+                    .then(res => res.json().then(publishData=>({ok:res.ok, data:publishData})))
+                    .then(({data: publishData})=>{
+                        alert(publishData.message);
+                        location.reload();
+                    });
         })
             .catch(err => {
                 console.log(err);
