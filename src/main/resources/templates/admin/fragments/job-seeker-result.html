@@ -54,7 +54,7 @@
         <th scope="col">
           <span class="d-flex gap-3 justify-content-between">
             <span>생성일시</span>
-            <th:block th:replace="~{admin/fragments/date-sort :: date-sort-button(
+            <th:block th:replace="~{admin/fragments/sort-button :: sort-button(
             'CREATED_AT', ${form.dateSortCriteria}, ${form.ascending}
             )}"></th:block>
           </span>
@@ -62,7 +62,7 @@
         <th scope="col">
           <span class="d-flex gap-3 justify-content-between">
             <span>수정일시</span>
-            <th:block th:replace="~{admin/fragments/date-sort :: date-sort-button(
+            <th:block th:replace="~{admin/fragments/sort-button :: sort-button(
             'UPDATED_AT', ${form.dateSortCriteria}, ${form.ascending}
             )}"></th:block>
           </span>
@@ -70,7 +70,7 @@
         <th scope="col">
           <span class="d-flex gap-3 justify-content-between">
             <span>최근접속일시</span>
-            <th:block th:replace="~{admin/fragments/date-sort :: date-sort-button(
+            <th:block th:replace="~{admin/fragments/sort-button :: sort-button(
             'LAST_LOGIN_AT', ${form.dateSortCriteria}, ${form.ascending}
             )}"></th:block>
           </span>
@@ -78,7 +78,7 @@
         <th scope="col">
           <span class="d-flex gap-3 justify-content-between">
             <span>삭제일시</span>
-            <th:block th:replace="~{admin/fragments/date-sort :: date-sort-button(
+            <th:block th:replace="~{admin/fragments/sort-button :: sort-button(
             'DELETED_AT', ${form.dateSortCriteria}, ${form.ascending}
             )}"></th:block>
           </span>

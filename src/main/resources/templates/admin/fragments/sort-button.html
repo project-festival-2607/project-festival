@@ -4,8 +4,8 @@
 <body>
 
 <button
-  th:fragment="date-sort-button(targetCriteria, criteria, ascending)"
-  class="btn btn-reset btn-th" data-role="update-date-sort-criteria"
+  th:fragment="sort-button(targetCriteria, criteria, ascending)"
+  class="btn btn-reset btn-th" data-role="update-sort-criteria"
   th:data-ascending="${criteria eq targetCriteria and ascending == true ? false : true}"
   th:data-criteria="${criteria eq targetCriteria and ascending == false ? '' : targetCriteria}"
   type="button">

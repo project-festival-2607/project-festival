@@ -15,7 +15,7 @@ document.querySelector('#jobSeekerForm').addEventListener('click', (event) => {
     }
   }
 
-  const sortTarget = event.target.closest('button[data-role="update-date-sort-criteria"]');
+  const sortTarget = event.target.closest('button[data-role="update-sort-criteria"]');
   console.log(sortTarget);
   if (sortTarget) {
     changed = true;
