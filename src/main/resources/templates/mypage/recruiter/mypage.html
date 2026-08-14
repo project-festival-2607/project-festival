@@ -48,6 +48,9 @@
         </div>
 
         <div class="mypage-menu">
+            <div class="menu-item" th:if="${!myPageDTO.socialSignUp}">
+                <a th:href="@{/mypage/password-change}">비밀번호 변경</a>
+            </div>
             <div class="menu-item">
                 행사 진행중 상황
             </div>
@@ -57,7 +60,9 @@
             </div>
 
             <div class="menu-item">
-                지원중인 행사
+                <a th:href="@{/application/recruiter/list(recruitmentId=${recruitment.id})}">
+                    지원자 목록
+                </a>
             </div>
 
             <div class="menu-item">

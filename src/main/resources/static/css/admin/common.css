@@ -1,0 +1,46 @@
+.member-status-clear-filter {
+  background-color: #fafafa;
+  color: var(--bs-secondary-color);
+  font-weight: 500;
+}
+
+.member-status-active {
+  background-color: #5ba456;
+  color: #fff;
+}
+
+.member-status-dormant {
+  background-color: #b0b6bf;
+  color: #fff;
+}
+
+.member-status-suspended {
+  background-color: #C65852;
+  color: #fff;
+}
+
+.member-status-deleted {
+  background-color: #625B62;
+  color: #fff;
+}
+
+.alert-icon {
+  width: 1rem;
+  height: 1rem;
+  margin: 0.1rem 0.25rem;
+}
+
+.alert {
+  --bs-alert-padding-x: 0.5rem;
+  --bs-alert-padding-y: 0.5rem;
+  font-size: 0.8rem;
+}
+
+.alert * {
+  font-weight: 400;
+}
+
+.alert strong {
+  font-weight: 700;
+  text-decoration: underline;
+}

@@ -15,6 +15,7 @@ public class EmployerSignUpRequestDTO {
     // 공통 회원정보
     private String username;
     private String password;
+    private String passwordCheck;
     private String name;
     private String phone;
     private String email;
@@ -29,5 +30,7 @@ public class EmployerSignUpRequestDTO {
     // 사업자등록번호(필수)
     private String businessNumber;
     private String verificationToken;
+
+    private String phoneVerificationToken;
 
 }

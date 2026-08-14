@@ -38,6 +38,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import java.util.regex.Pattern;
@@ -103,6 +104,20 @@ public class RecruitmentController {
     model.addAttribute("jobSeeker", jobSeeker);
     model.addAttribute("sidoList", regionService.getSidoList());
   }
+  // 포인트 차감 성공 후 프론트에서 호출 - publishedAt은 DB가 UPDATE 실행 시점의 시간으로 채움
+  @PostMapping("/publish/{id}")
+  @ResponseBody
+  public ResponseEntity<Map<String, Object>> publish(
+      @PathVariable Long id,
+      @AuthenticationPrincipal CustomUserDetails user
+  ) {
+    if (requireOwnedRecruitment(id, user) == null) {
+      return ResponseEntity.status(403).body(Map.of("success", false, "message", "게시 권한이 없습니다."));
+    }
+    recruitmentService.publish(id);
+    return ResponseEntity.ok(Map.of("success", true, "message", "공고가 게시되었습니다."));
+  }
+
 
   @GetMapping("/manage")
   public void manageList(Model model,

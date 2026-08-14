@@ -10,6 +10,7 @@ import com.example.chook.recruitment.entity.Recruitment;
 import com.example.chook.recruitment.entity.RecruitmentFile;
 import com.example.chook.recruitment.entity.RecruitmentFoodTruck;
 import com.example.chook.recruitment.entity.RecruitmentIndividual;
+import com.example.chook.recruitment.entity.enums.RecruitmentStatus;
 import com.example.chook.recruitment.mapper.RecruitmentMapper;
 import com.example.chook.recruitment.record.RecruitmentManagementCondition;
 import com.example.chook.recruitment.record.RecruitmentSearchCondition;
@@ -192,6 +193,12 @@ public class RecruitmentServiceImpl implements RecruitmentService {
     //  TransientPropertyValueException이 발생함)
     recruitmentRepository.findById(id).ifPresent(recruitmentRepository::delete);
 
+  }
+
+  @Transactional
+  @Override
+  public void publish(Long id) {
+    recruitmentRepository.publish(id, RecruitmentStatus.RECRUITING);
   }
 
   @Override

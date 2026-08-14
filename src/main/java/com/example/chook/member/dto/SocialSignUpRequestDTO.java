@@ -25,4 +25,6 @@ public class SocialSignUpRequestDTO {
     private String businessNumber;
     private String verificationToken;
 
+    private String phoneVerificationToken;
+
 }

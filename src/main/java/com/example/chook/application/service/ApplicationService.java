@@ -1,5 +1,6 @@
 package com.example.chook.application.service;
 
+import com.example.chook.application.dto.ApplicationCategoryListDTO;
 import com.example.chook.application.dto.ApplicationDTO;
 import com.example.chook.application.dto.ApplyDTO;
 import com.example.chook.application.entity.Application;
@@ -44,6 +45,9 @@ public interface ApplicationService {
                 .result(application.getResult())
                 .title(application.getRecruitment().getFestival().getTitle())
                 .address(application.getRecruitment().getFestival().getAddress())
+                .name(application.getMember().getName())
+                .recruitmentTitle(application.getRecruitment().getTitle())
+                .category(application.getRecruitment().getCategory())
                 .build();
     }
 
@@ -66,8 +70,11 @@ public interface ApplicationService {
     // 지원하기 기능
     Long apply(ApplicationDTO applicationDTO);
 
-    // 내가 지원한 목록 조회
+    // 내가 지원한 목록 조회 (구직자용)
     List<ApplicationDTO> getList(Long memberId);
+
+    // 특정 모집공고에 지원한 구직자 목록 조회 (구인자용)
+    List<ApplicationDTO> getApplicants(Long recruitmentId);
 
     // 지원 상세 조회
     ApplicationDTO getDetail(Long id);
@@ -83,4 +90,7 @@ public interface ApplicationService {
 
     // applypage Zone
     ApplyDTO getApplyData(Long recruitmentId, Long memberId);
+
+    // 구인자가 등록한 모든 모집공고의 지원자를 카테고리별로 조회
+    ApplicationCategoryListDTO getApplicantsByRecruiter(String username);
 }

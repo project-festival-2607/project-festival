@@ -1,6 +1,7 @@
 package com.example.chook.member.service;
 
 import com.example.chook.member.BusinessNumberTokenProvider;
+import com.example.chook.member.PhoneVerificationTokenProvider;
 import com.example.chook.member.dto.*;
 import com.example.chook.member.entity.*;
 import com.example.chook.member.entity.enums.MemberRole;
@@ -17,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 @RequiredArgsConstructor
@@ -32,6 +34,7 @@ public class MemberServiceImpl implements MemberService {
     private final PasswordEncoder passwordEncoder; // 비밀번호 암호화 및 입력값 해시 일치 여부 확인
     private final SocialLoginRepository socialLoginRepository; //
     private static final List<MemberRole> JOB_SEEKER_ROLES = List.of(MemberRole.JOB_SEEKER, MemberRole.JOB_EQUIP);
+    private final PhoneVerificationTokenProvider phoneVerificationTokenProvider;
 
     @Transactional
     @Override
@@ -40,6 +43,10 @@ public class MemberServiceImpl implements MemberService {
 
         // 아이디 중복 확인
         validateUsernameNotTaken(requestDTO.getUserName());
+
+        if (!requestDTO.getPassword().equals(requestDTO.getPasswordCheck())) {
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+        }
 
         // 사업자번호가 입력되어 있을 때 인증 토큰 유효 확인
         // true → 사업자번호 인증 완료
@@ -58,6 +65,7 @@ public class MemberServiceImpl implements MemberService {
                 requestDTO.getPassword(),
                 requestDTO.getName(),
                 requestDTO.getPhone(),
+                requestDTO.getPhoneVerificationToken(),
                 requestDTO.getEmail(),
                 isJobEquip ? MemberRole.JOB_EQUIP : MemberRole.JOB_SEEKER
         ));
@@ -89,6 +97,10 @@ public class MemberServiceImpl implements MemberService {
         // 아이디 중복 확인
         validateUsernameNotTaken(requestDTO.getUsername());
 
+        if (!requestDTO.getPassword().equals(requestDTO.getPasswordCheck())) {
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+        }
+
         // 구인자는 사업자 인증 필수
         // verify()에서 입력받은 사업자번호와 토큰 정보가 일치하는지 확인
         if (!businessNumberTokenProvider.verify(requestDTO.getBusinessNumber(), requestDTO.getVerificationToken())) {
@@ -103,6 +115,7 @@ public class MemberServiceImpl implements MemberService {
                 requestDTO.getPassword(),
                 requestDTO.getName(),
                 requestDTO.getPhone(),
+                requestDTO.getPhoneVerificationToken(),
                 requestDTO.getEmail(),
                 MemberRole.RECRUITER
         ));
@@ -136,7 +149,13 @@ public class MemberServiceImpl implements MemberService {
                 .orElseThrow(() -> new IllegalArgumentException("프로필을 찾을 수 없습니다."));
 
         member.setEmail(requestDTO.getEmail());
-        // phone/phoneVerified 갱신은 전화번호 인증 서비스 구현 후 추가
+
+        if (!Objects.equals(member.getPhone(), requestDTO.getPhone())) {
+            if (!phoneVerificationTokenProvider.verify(requestDTO.getPhone(), requestDTO.getPhoneVerificationToken())) {
+                throw new IllegalArgumentException("전화번호 인증이 유효하지 않습니다.");
+            }
+            member.setPhone(requestDTO.getPhone());
+        }
 
         profile.setStreetAddress(requestDTO.getStreetAddress());
         profile.setDetailAddress(requestDTO.getDetailAddress());
@@ -175,6 +194,14 @@ public class MemberServiceImpl implements MemberService {
         }
 
         member.setEmail(requestDTO.getEmail());
+        member.setEmail(requestDTO.getEmail());
+
+        if (!java.util.Objects.equals(member.getPhone(), requestDTO.getPhone())) {
+            if (!phoneVerificationTokenProvider.verify(requestDTO.getPhone(), requestDTO.getPhoneVerificationToken())) {
+                throw new IllegalArgumentException("전화번호 인증이 유효하지 않습니다.");
+            }
+            member.setPhone(requestDTO.getPhone());
+        }
         profile.setCompanyName(requestDTO.getCompanyName());
         profile.setCeoName(requestDTO.getCeoName());
         profile.setStreetAddress(requestDTO.getStreetAddress());
@@ -235,6 +262,7 @@ public class MemberServiceImpl implements MemberService {
                 null,
                 requestDTO.getName(),
                 requestDTO.getPhone(),
+                requestDTO.getPhoneVerificationToken(),
                 requestDTO.getEmail(),
                 isJobEquip ? MemberRole.JOB_EQUIP : MemberRole.JOB_SEEKER
         );
@@ -440,14 +468,20 @@ public class MemberServiceImpl implements MemberService {
     // 공통 회원 정보 생성
     private Member buildMember(
             String username, String rawPassword, String name,
-            String phone, String email, MemberRole role
+            String phone, String phoneVerificationToken, String email, MemberRole role
     ) {
+        // TODO: 문자 인증 한도 문제로 임시 우회
+        boolean phoneProvided = phone != null && !phone.isBlank();
+        // TODO: 배포시 phoneProvided && 삭제
+        if (phoneProvided && !phoneVerificationTokenProvider.verify(phone, phoneVerificationToken)) {
+            throw new IllegalArgumentException("전화번호 인증이 유효하지 않습니다.");
+        }
+
         return Member.builder()
                 .username(username)
                 .passwordHash(rawPassword != null ? passwordEncoder.encode(rawPassword) : null)
                 .name(name)
                 .phone(phone)
-                // TODO phoneVerified는 전화번호 인증 추가 후 삭제
                 .phoneVerified(true)
                 .email(email)
                 .role(role)

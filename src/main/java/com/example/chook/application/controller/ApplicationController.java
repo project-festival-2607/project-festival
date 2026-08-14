@@ -1,5 +1,6 @@
 package com.example.chook.application.controller;
 
+import com.example.chook.application.dto.ApplicationCategoryListDTO;
 import com.example.chook.application.dto.ApplicationDTO;
 import com.example.chook.application.dto.ApplyDTO;
 import com.example.chook.application.entity.enums.ApplicationResult;
@@ -37,8 +38,8 @@ public class ApplicationController {
         return "redirect:/";
     }
 
-    // 내가 지원한 목록 조회
-    @GetMapping("/list")
+    // 내가 지원한 목록 조회 (구직자용)
+    @GetMapping("/jobseeker/list")
     public String list(@AuthenticationPrincipal UserDetails user, Model model) {
         // 로그인하지 않은 경우
         if (user == null) {
@@ -58,7 +59,45 @@ public class ApplicationController {
                 "applicationList",
                 applicationService.getList(member.getId())
         );
-        return "application/list";
+        return "application/jobseeker/list";
+    }
+
+    // 특정 모집공고에 지원한 구직자 목록 조회 (구인자용)
+    @GetMapping("/recruiter/list")
+    public String applicants(@AuthenticationPrincipal UserDetails user, Model model) {
+
+        // 로그인하지 않은 경우
+        if (user == null) {
+            return "redirect:/member/login";
+        }
+
+        // 현재 로그인한 구인자의 username
+        String username = user.getUsername();
+
+        // 구인자의 모집공고 지원자를 카테고리별로 조회
+        ApplicationCategoryListDTO applicationList = applicationService.getApplicantsByRecruiter(username);
+
+        // 카테고리별 지원자 목록 전달
+        model.addAttribute(
+                "individualApplications",
+                applicationList.getIndividualApplications()
+        );
+
+        model.addAttribute(
+                "foodTruckApplications",
+                applicationList.getFoodTruckApplications()
+        );
+
+        model.addAttribute(
+                "equipmentApplications",
+                applicationList.getEquipmentApplications()
+        );
+
+        model.addAttribute(
+                "etcApplications",
+                applicationList.getEtcApplications()
+        );
+        return "application/recruiter/list";
     }
 
     // 지원 상세 조회

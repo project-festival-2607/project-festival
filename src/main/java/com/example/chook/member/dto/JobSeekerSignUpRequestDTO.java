@@ -16,6 +16,7 @@ public class JobSeekerSignUpRequestDTO {
     // 공통 회원정보
     private String userName;
     private String password;
+    private String passwordCheck;
     private String name;
     private String phone;
     private String email;
@@ -29,5 +30,7 @@ public class JobSeekerSignUpRequestDTO {
     // JOB_EQUIP 전환용 옵션
     private String businessNumber;
     private String verificationToken;
+
+    private String phoneVerificationToken;
 
 }
