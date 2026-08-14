@@ -23,6 +23,21 @@
             <input type="text" class="form-control" id="name" th:value="${myPageDTO.name}" disabled>
         </div>
         <div class="mb-3">
+            <label for="phone" class="form-label">전화번호</label>
+            <div class="input-group">
+                <input type="text" class="form-control" id="phone" name="phone" th:value="${myPageDTO.phone}" required>
+                <button type="button" class="btn btn-outline-secondary" id="sendCodeBtn">인증번호 받기</button>
+            </div>
+        </div>
+        <div class="mb-3">
+            <label for="code" class="form-label">인증번호</label>
+            <div class="input-group">
+                <input type="text" class="form-control" id="code" maxlength="6">
+                <button type="button" class="btn btn-outline-secondary" id="verifyCodeBtn">확인</button>
+            </div>
+        </div>
+        <input type="hidden" id="phoneVerificationToken" name="phoneVerificationToken">
+        <div class="mb-3">
             <label for="foundedAt" class="form-label">개업일자</label>
             <input type="text" class="form-control" id="foundedAt" th:value="${myPageDTO.foundedAt}" disabled>
         </div>
@@ -60,5 +75,6 @@
     </form>
 </div>
 <script th:src="@{/js/member/businessNumberVerify.js}"></script>
+<script th:src="@{/js/member/phoneVerify.js}"></script>
 </body>
 </html>

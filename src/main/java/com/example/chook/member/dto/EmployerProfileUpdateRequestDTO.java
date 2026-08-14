@@ -17,5 +17,6 @@ public class EmployerProfileUpdateRequestDTO {
     private String detailAddress;
     private String businessNumber;
     private String verificationToken;
-
+    private String phone;
+    private String phoneVerificationToken;
 }

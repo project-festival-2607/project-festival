@@ -64,6 +64,8 @@ dependencies {
     testCompileOnly 'org.projectlombok:lombok'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
     testAnnotationProcessor 'org.projectlombok:lombok'
+    // SOLAPI 문자 발송 SDK
+    implementation 'com.solapi:sdk:1.0.3'
 }
 
 tasks.named('test') {

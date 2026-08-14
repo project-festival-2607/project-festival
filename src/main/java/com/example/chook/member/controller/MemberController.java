@@ -5,6 +5,7 @@ import com.example.chook.member.security.AuthenticationHelper;
 import com.example.chook.member.security.CustomUserDetails;
 import com.example.chook.member.service.BusinessNumberVerifyService;
 import com.example.chook.member.service.MemberService;
+import com.example.chook.member.service.PhoneVerificationService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -25,6 +26,7 @@ public class MemberController {
     private final MemberService memberService;
     private final BusinessNumberVerifyService businessNumberVerifyService;
     private final AuthenticationHelper authenticationHelper;
+    private final PhoneVerificationService phoneVerificationService;
 
     // 로그인 페이지
     @GetMapping("/login")
@@ -145,6 +147,49 @@ public class MemberController {
         } catch (IllegalArgumentException e) {
             redirectAttributes.addFlashAttribute("FailureMsg", e.getMessage());
             return "redirect:/member/signup/social";
+        }
+    }
+
+    // 전화번호 인증번호 발송
+    @PostMapping("/phone/send-code")
+    @ResponseBody
+    public PhoneVerificationResponseDTO sendPhoneCode(
+            @RequestBody PhoneSendCodeRequestDTO requestDTO,
+            HttpSession session
+    ) {
+        try {
+            phoneVerificationService.sendCode(requestDTO.getPhone(), session);
+            return PhoneVerificationResponseDTO.builder()
+                    .success(true)
+                    .build();
+        } catch (IllegalStateException e) {
+            return PhoneVerificationResponseDTO.builder()
+                    .success(false)
+                    .message(e.getMessage())
+                    .build();
+        }
+    }
+
+    // 전화번호 인증번호 확인
+    @PostMapping("/phone/verify-code")
+    @ResponseBody
+    public PhoneVerificationResponseDTO verifyPhoneCode(
+            @RequestBody PhoneVerifyCodeRequestDTO requestDTO,
+            HttpSession session
+    ) {
+        try {
+            String token = phoneVerificationService.verifyCode(
+                    requestDTO.getPhone(), requestDTO.getCode(), session
+            );
+            return PhoneVerificationResponseDTO.builder()
+                    .success(true)
+                    .verificationToken(token)
+                    .build();
+        } catch (IllegalArgumentException e) {
+            return PhoneVerificationResponseDTO.builder()
+                    .success(false)
+                    .message(e.getMessage())
+                    .build();
         }
     }
 
