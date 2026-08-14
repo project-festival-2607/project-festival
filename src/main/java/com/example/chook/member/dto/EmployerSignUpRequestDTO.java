@@ -15,6 +15,7 @@ public class EmployerSignUpRequestDTO {
     // 공통 회원정보
     private String username;
     private String password;
+    private String passwordCheck;
     private String name;
     private String phone;
     private String email;

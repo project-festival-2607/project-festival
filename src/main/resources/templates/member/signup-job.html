@@ -32,7 +32,7 @@
                 <div class="basic-info-box">
                     <input type="text" class="input id-input" id="userName" name="userName" placeholder="(*) 아이디를입력하세요." required>
                     <input type="password" class="input ps-input" id="password" name="password" placeholder="(*) 비밀번호를입력하세요." required>
-                    <input type="password" class="input ps-input" id="password-check" name="password-check" placeholder="(*) 비밀번호를확인하세요." required>
+                    <input type="password" class="input ps-input" id="password-check" name="passwordCheck" placeholder="(*) 비밀번호를확인하세요." required>
                 </div>
             </div>
 
@@ -43,7 +43,8 @@
             <div class="mb-3">
                 <label for="phone" class="form-label">전화번호</label>
                 <div class="input-group">
-                    <input type="text" class="form-control" id="phone" name="phone" required>
+<!--                    TODO: required 임시삭제-->
+                    <input type="text" class="form-control" id="phone" name="phone">
                     <button type="button" class="btn btn-outline-secondary" id="sendCodeBtn">인증번호 받기</button>
                 </div>
             </div>
@@ -107,5 +108,5 @@
     <script th:src="@{/js/member/addressSearch.js}"></script>
     <script th:src="@{/js/member/businessNumberVerify.js}"></script>
     <script th:src="@{/js/member/phoneVerify.js}"></script>
-
+    <script th:src="@{/js/member/passwordMatch.js}"></script>
 </div>
