@@ -192,6 +192,7 @@
           <button class="page-link" name="pageIdx" th:value="${pagingHandler.pageIdx + 1}" type="submit">→</button>
         </li>
       </ul>
+      <input type="hidden" id="pageIdx" name="pageIdx" th:value="${pagingHandler.pageIdx}"/>
     </nav>
   </div>
 </th:block>
