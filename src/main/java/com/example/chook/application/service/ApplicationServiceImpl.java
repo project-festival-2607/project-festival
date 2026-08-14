@@ -163,6 +163,17 @@ public class ApplicationServiceImpl implements ApplicationService {
         return convertToApplyDto(member, recruitment, resumeResponseDTO);
     }
 
+    @Override
+    public boolean existsByMemberIdAndRecruitmentId(
+            Long memberId,
+            Long recruitmentId
+    ) {
+        return applicationRepository.existsByMemberIdAndRecruitmentId(
+                memberId,
+                recruitmentId
+        );
+    }
+
     // 구인자가 등록한 모집공고 중 선택한 카테고리의 지원자 목록 조회
     @Override
     public ApplicationCategoryListDTO getApplicantsByRecruiter(String username) {

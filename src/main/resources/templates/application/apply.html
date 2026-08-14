@@ -173,7 +173,6 @@
                         <tr>
                             <th>제목</th>
                             <th width="150">종류</th>
-                            <th width="220">등록일</th>
                         </tr>
                         </thead>
 
@@ -186,8 +185,6 @@
                             </td>
 
                             <td th:text="${portfolio.type}"></td>
-
-                            <td th:text="${#temporals.format(portfolio.registeredAt,'yyyy-MM-dd HH:mm')}"></td>
 
                         </tr>
 
