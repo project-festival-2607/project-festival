@@ -2,7 +2,7 @@
 // 관리 메뉴
 // ##############################################
 
-document.querySelector('.result-table-wrapper').addEventListener('click', (event) => {
+document.querySelector('#jobSeekerForm').addEventListener('click', (event) => {
 
   console.log(event.target.dataset.role);
 
@@ -81,6 +81,7 @@ document.querySelectorAll('.modal-footer').forEach(element => {
         alert(response.message);
         if (response.result === true) {
           event.target.closest('.modal').querySelector('.btn-close').click();
+          loadJobSeekerResult();
         }
       })
     }
@@ -90,6 +91,7 @@ document.querySelectorAll('.modal-footer').forEach(element => {
         alert(response.message);
         if (response.result === true) {
           event.target.closest('.modal').querySelector('.btn-close').click();
+          loadJobSeekerResult();
         }
       })
     }
@@ -99,6 +101,7 @@ document.querySelectorAll('.modal-footer').forEach(element => {
         alert(response.message);
         if (response.result === true) {
           event.target.closest('.modal').querySelector('.btn-close').click();
+          loadJobSeekerResult();
         }
       })
     }
@@ -110,11 +113,13 @@ document.querySelectorAll('.modal-footer').forEach(element => {
         alert(response.message);
         if (response.result === true) {
           event.target.closest('.modal').querySelector('.btn-close').click();
+          loadJobSeekerResult();
         }
       })
     }
   })
 });
+
 
 async function suspendMemberRequest(memberId, reason) {
   try {

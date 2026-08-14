@@ -12,4 +12,7 @@ public interface ApplicationRepository extends JpaRepository<Application, Long> 
 
     // 특정 모집공고에 지원한 구직자 목록 조회
     List<Application> findByRecruitmentId(Long recruitmentId);
+
+    // 같은 공고에 이미 지원했는지 확인 (applypage Zone)
+    boolean existsByMemberIdAndRecruitmentId(Long memberId, Long recruitmentId);
 }

@@ -90,6 +90,7 @@ public interface ApplicationService {
 
     // applypage Zone
     ApplyDTO getApplyData(Long recruitmentId, Long memberId);
+    boolean existsByMemberIdAndRecruitmentId(Long memberId, Long recruitmentId);
 
     // 구인자가 등록한 모든 모집공고의 지원자를 카테고리별로 조회
     ApplicationCategoryListDTO getApplicantsByRecruiter(String username);

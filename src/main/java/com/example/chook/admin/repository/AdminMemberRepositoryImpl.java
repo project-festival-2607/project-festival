@@ -165,20 +165,20 @@ public class AdminMemberRepositoryImpl implements AdminMemberRepository {
       for (JobSeekerKeywordType type : types) {
         switch (type) {
           case USERNAME -> {
-            keywordResult.or(eq(member.username, keyword));
+            keywordResult.or(contains(member.username, keyword));
           }
           case NAME -> {
-            keywordResult.or(eq(member.name, keyword));
+            keywordResult.or(contains(member.name, keyword));
           }
           case PHONE -> {
-            keywordResult.or(eq(member.phone, keyword));
+            keywordResult.or(contains(member.phone, keyword));
           }
           case EMAIL -> {
-            keywordResult.or(eq(member.email, keyword));
+            keywordResult.or(contains(member.email, keyword));
           }
           case ADDRESS -> {
-            keywordResult.or(eq(jobSeekerProfile.streetAddress, keyword));
-            keywordResult.or(eq(jobSeekerProfile.detailAddress, keyword));
+            keywordResult.or(contains(jobSeekerProfile.streetAddress, keyword));
+            keywordResult.or(contains(jobSeekerProfile.detailAddress, keyword));
           }
         }
       }

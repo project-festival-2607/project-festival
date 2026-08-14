@@ -3,11 +3,16 @@ package com.example.chook.common.util;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.ComparableExpression;
 import com.querydsl.core.types.dsl.SimpleExpression;
+import com.querydsl.core.types.dsl.StringPath;
 
 public final class QuerydslUtils {
 
   public static <T> BooleanExpression eq(SimpleExpression<T> path, T value) {
     return value == null ? null : path.eq(value);
+  }
+
+  public static BooleanExpression contains(StringPath path, String value) {
+    return value == null ? null : path.contains(value);
   }
 
   public static <T extends Comparable<? super T>> BooleanExpression gt(ComparableExpression<T> path, T value) {
