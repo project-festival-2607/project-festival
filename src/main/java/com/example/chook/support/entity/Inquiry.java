@@ -18,8 +18,7 @@ public class Inquiry {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long ino;
 
-    // ponytail: 로그인 미구현 - 회원 연결 전까지 null 허용, 로그인 붙으면 nullable = false로 되돌리기
-    @Column
+    @Column(nullable = false)
     private Long id; //user 테이블에서 id => 외래키
 
     @Column(nullable = false, length = 100)

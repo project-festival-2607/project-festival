@@ -3,6 +3,8 @@ package com.example.chook.support.controller;
 import com.example.chook.file.dto.FileDTO;
 import com.example.chook.file.record.FileResource;
 import com.example.chook.file.service.FileService;
+import com.example.chook.member.entity.enums.MemberRole;
+import com.example.chook.member.security.CustomUserDetails;
 import com.example.chook.support.dto.AdminBoardDTO;
 import com.example.chook.support.entity.AdminBoard;
 import com.example.chook.support.service.AdminBoardService;
@@ -13,6 +15,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -38,34 +41,37 @@ public class AdminBoardController {
         @RequestParam(defaultValue = "1") int page,
         @RequestParam(required = false) String searchType,
         @RequestParam(required = false) String keyword,
+        @AuthenticationPrincipal CustomUserDetails user,
         Model model
     ) {
         Page<AdminBoardDTO> boardPage = adminBoardService.getList(page, searchType, keyword);
         model.addAttribute("boardPage", boardPage);
         model.addAttribute("searchType", searchType);
         model.addAttribute("keyword", keyword);
+        model.addAttribute("isAdmin", isAdmin(user));
         return "adminBoard/list";
     }
 
     @GetMapping("/register")
-    public String register() {
+    public String register(@AuthenticationPrincipal CustomUserDetails user) {
+        requireAdmin(user);
         return "adminBoard/register";
     }
 
     @GetMapping("/detail/{bno}")
     public String detail(
         @PathVariable Long bno,
-        // ponytail: 로그인 구현 전 임시 - 쿼리스트링(?admin=true)으로만 관리자 여부 확인, 나중에 세션의 회원 role 체크로 교체
-        @RequestParam(defaultValue = "false") boolean admin,
+        @AuthenticationPrincipal CustomUserDetails user,
         Model model
     ) {
         model.addAttribute("board", adminBoardService.getDetail(bno));
-        model.addAttribute("isAdmin", admin);
+        model.addAttribute("isAdmin", isAdmin(user));
         return "adminBoard/detail";
     }
 
     @PostMapping("/register")
-    public String register(AdminBoardDTO dto) {
+    public String register(@AuthenticationPrincipal CustomUserDetails user, AdminBoardDTO dto) {
+        requireAdmin(user);
         AdminBoard saved = adminBoardService.register(dto);
         log.info("admin board saved: {}", saved);
         return "redirect:/adminBoard/list";
@@ -74,29 +80,34 @@ public class AdminBoardController {
     @PostMapping("/modify/{bno}")
     public String modify(
         @PathVariable Long bno,
-        // ponytail: 로그인 구현 전 임시 - detail과 동일하게 쿼리스트링으로만 관리자 여부 확인
-        @RequestParam(defaultValue = "false") boolean admin,
+        @AuthenticationPrincipal CustomUserDetails user,
         AdminBoardDTO dto
     ) {
-        if (!admin) {
-            throw new AccessDeniedException("관리자만 수정할 수 있음");
-        }
+        requireAdmin(user);
         AdminBoard modified = adminBoardService.modify(bno, dto);
         log.info("admin board modified: {}", modified);
-        return "redirect:/adminBoard/detail/" + bno + "?admin=true";
+        return "redirect:/adminBoard/detail/" + bno;
     }
 
     @PostMapping("/delete/{bno}")
     public String delete(
         @PathVariable Long bno,
-        @RequestParam(defaultValue = "false") boolean admin
+        @AuthenticationPrincipal CustomUserDetails user
     ) {
-        if (!admin) {
-            throw new AccessDeniedException("관리자만 삭제할 수 있음");
-        }
+        requireAdmin(user);
         adminBoardService.delete(bno);
         log.info("admin board deleted: {}", bno);
         return "redirect:/adminBoard/list";
+    }
+
+    private boolean isAdmin(CustomUserDetails user) {
+        return user != null && user.getRole() == MemberRole.ADMIN;
+    }
+
+    private void requireAdmin(CustomUserDetails user) {
+        if (!isAdmin(user)) {
+            throw new AccessDeniedException("관리자만 접근할 수 있음");
+        }
     }
 
     // 에디터에 이미지를 삽입하는 시점에 비동기로 호출됨 (addImageBlobHook)

@@ -133,11 +133,11 @@
     margin: 0;
 
     padding: 10px 15px;
-    border-radius: 10px;
-    border: 1px solid #dc3545;
-    font-size: 16px;
+    border-radius: 50px;
+    background: #dc3545;
+    font-size: 13px;
     font-weight: 800;
-    color: #dc3545;
+    color: #FEFEFE;
 
     cursor: pointer;
 }
@@ -150,8 +150,8 @@
     margin: 0;
 
     padding: 10px 15px;
-    border-radius: 10px;
-    background: #dc3545;
+    border-radius: 50px;
+    border: 1px solid #dc3545;
 
     cursor: pointer;
 
@@ -163,9 +163,9 @@
 }
 
 .addBtn > a {
-    font-size: 16px;
+    font-size: 14px;
     font-weight: 800;
-    color: #FEFEFE;
+    color: #2c2c2c;
 }
 
 .pageBtn {
