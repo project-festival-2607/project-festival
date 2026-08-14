@@ -39,4 +39,9 @@ public interface MemberService {
 
     void updateLastLoginAt(Long memberId);
 
+    List<FindIdResultDTO> searchForFindId(String name, String phone);
+    FindIdResultDTO revealFindId(Long memberId);
+
+    Long findMemberForPasswordReset(String name, String username, String phone, String phoneVerificationToken);
+    void resetPassword(Long memberId, String newPassword, String newPasswordConfirm);
 }

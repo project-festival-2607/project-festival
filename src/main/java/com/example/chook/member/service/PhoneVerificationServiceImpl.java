@@ -21,20 +21,25 @@ public class PhoneVerificationServiceImpl implements PhoneVerificationService {
     private static final String SESSION_CODE_KEY = "phoneVerificationCode";
     private static final String SESSION_EXPIRY_KEY = "phoneVerificationExpiresAt";
     private static final long CODE_EXPIRY_SECONDS = 180; // 3분
+    private static final String SESSION_VERIFIED_PHONE_KEY = "verifiedPhone";
+    private static final String SESSION_VERIFIED_EXPIRY_KEY = "verifiedPhoneExpiresAt";
 
     private final DefaultMessageService messageService;
     private final String senderNumber;
     private final PhoneVerificationTokenProvider tokenProvider;
     private final SecureRandom random = new SecureRandom();
+    private final long verifiedExpirySeconds;
 
     public PhoneVerificationServiceImpl(
             @Value("${solapi.api-key}") String apiKey,
             @Value("${solapi.api-secret}") String apiSecret,
             @Value("${solapi.sender-number}") String senderNumber,
+            @Value("${phone-verification.session-verified-expiry-seconds:300}") long verifiedExpirySeconds,
             PhoneVerificationTokenProvider tokenProvider
     ) {
         this.messageService = SolapiClient.INSTANCE.createInstance(apiKey, apiSecret);
         this.senderNumber = senderNumber;
+        this.verifiedExpirySeconds = verifiedExpirySeconds;
         this.tokenProvider = tokenProvider;
     }
 
@@ -83,6 +88,25 @@ public class PhoneVerificationServiceImpl implements PhoneVerificationService {
         session.removeAttribute(SESSION_EXPIRY_KEY);
 
         return tokenProvider.sign(phone);
+    }
+
+    @Override
+    public void markVerified(String phone, HttpSession session) {
+        session.setAttribute(SESSION_VERIFIED_PHONE_KEY, phone);
+        session.setAttribute(SESSION_VERIFIED_EXPIRY_KEY, Instant.now().getEpochSecond() + verifiedExpirySeconds);
+    }
+
+    @Override
+    public boolean isVerified(String phone, HttpSession session) {
+        if (phone == null) return false;
+
+        String verifiedPhone = (String) session.getAttribute(SESSION_VERIFIED_PHONE_KEY);
+        Long expiresAt = (Long) session.getAttribute(SESSION_VERIFIED_EXPIRY_KEY);
+
+        if (verifiedPhone == null || expiresAt == null) return false;
+        if (!verifiedPhone.equals(phone)) return false;
+
+        return Instant.now().getEpochSecond() <= expiresAt;
     }
 
 }

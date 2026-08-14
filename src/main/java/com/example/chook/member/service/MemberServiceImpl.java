@@ -420,6 +420,77 @@ public class MemberServiceImpl implements MemberService {
         });
     }
 
+    @Override
+    public List<FindIdResultDTO> searchForFindId(String name, String phone) {
+        return memberRepository.findByNameAndPhoneAndDeletedAtIsNull(name, phone).stream()
+                .map(member -> FindIdResultDTO.builder()
+                        .memberId(member.getId())
+                        .social(member.isSocialSignUp())
+                        .maskedUsername(member.isSocialSignUp() ? null : maskUsername(member.getUsername()))
+                        .build())
+                .toList();
+    }
+
+    @Override
+    public FindIdResultDTO revealFindId(Long memberId) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new IllegalArgumentException("회원을 찾을 수 없습니다."));
+
+        if (member.isSocialSignUp()) {
+            Provider provider = socialLoginRepository.findByMemberId(memberId).stream()
+                    .findFirst()
+                    .map(SocialLogin::getProvider)
+                    .orElse(null);
+            return FindIdResultDTO.builder()
+                    .memberId(memberId)
+                    .social(true)
+                    .provider(provider)
+                    .build();
+        }
+
+        return FindIdResultDTO.builder()
+                .memberId(memberId)
+                .social(false)
+                .maskedUsername(member.getUsername())
+                .build();
+    }
+
+    @Override
+    public Long findMemberForPasswordReset(String name, String username, String phone, String phoneVerificationToken) {
+        if (!phoneVerificationTokenProvider.verify(phone, phoneVerificationToken)) {
+            throw new IllegalArgumentException("전화번호 인증이 유효하지 않습니다.");
+        }
+
+        // 못 찾은 경우와 소셜 계정(비밀번호 없음)인 경우를 같은 메시지로 통일 (계정 존재 여부 노출 방지)
+        Member member = memberRepository.findByUsernameAndNameAndPhoneAndDeletedAtIsNull(username, name, phone)
+                .filter(m -> m.getPasswordHash() != null)
+                .orElseThrow(() -> new IllegalArgumentException("일치하는 계정을 찾을 수 없습니다."));
+
+        return member.getId();
+    }
+
+    @Transactional
+    @Override
+    public void resetPassword(Long memberId, String newPassword, String newPasswordConfirm) {
+        if (!newPassword.equals(newPasswordConfirm)) {
+            throw new IllegalArgumentException("새 비밀번호가 일치하지 않습니다.");
+        }
+
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new IllegalArgumentException("회원을 찾을 수 없습니다."));
+
+        member.setPasswordHash(passwordEncoder.encode(newPassword));
+        member.setUpdatedAt(LocalDateTime.now());
+        memberRepository.save(member);
+    }
+
+    private String maskUsername(String username) {
+        if (username.length() <= 2) {
+            return username.charAt(0) + "*".repeat(Math.max(username.length() - 1, 0));
+        }
+        return username.substring(0, 2) + "*".repeat(username.length() - 2);
+    }
+
     // 소셜 회원 아이디 생성 (사용자에게 노출/입력되지 않는 내부용 값)
     private String generateSocialUsername(Provider provider) {
         return provider.name().charAt(0) + "-" + UUID.randomUUID();
