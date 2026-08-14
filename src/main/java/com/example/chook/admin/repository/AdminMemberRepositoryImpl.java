@@ -11,8 +11,12 @@ import com.example.chook.member.entity.enums.MemberRole;
 import com.example.chook.member.entity.enums.MemberStatus;
 import com.example.chook.member.entity.enums.Provider;
 import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.Order;
+import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.CaseBuilder;
+import com.querydsl.core.types.dsl.ComparableExpression;
 import com.querydsl.core.types.dsl.StringPath;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -25,6 +29,7 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiFunction;
 
@@ -102,6 +107,7 @@ public class AdminMemberRepositoryImpl implements AdminMemberRepository {
 
     List<JobSeekerTableDTO> content = resultQuery
       .where(whereCondition)
+      .orderBy(getOrderSpecifierArray(condition.dateSortCriteria(), condition.ascending()))
       .offset(pageable.getOffset())
       .limit(pageable.getPageSize())
       .fetch();
@@ -130,7 +136,7 @@ public class AdminMemberRepositoryImpl implements AdminMemberRepository {
 
     if (status == null) return null;
     switch (status) {
-      case ACTIVE -> result.and(eq(member.status,  MemberStatus.ACTIVE));
+      case ACTIVE -> result.and(eq(member.status, MemberStatus.ACTIVE));
       case DORMANT -> result.and(eq(member.status, MemberStatus.DORMANT));
       case SUSPENDED -> result.and(eq(member.status, MemberStatus.SUSPENDED));
       case DELETED -> result.and(member.deletedAt.isNotNull());
@@ -218,5 +224,40 @@ public class AdminMemberRepositoryImpl implements AdminMemberRepository {
     return (keywordCriteria == KeywordCriteria.EQUALS)
       ? QuerydslUtils::eq
       : QuerydslUtils::contains;
+  }
+
+  private OrderSpecifier<?>[] getOrderSpecifierArray(JobSeekerDateCriteria dateSortCriteria,
+                                                     Boolean ascending) {
+    List<OrderSpecifier<?>> orderSpecifiers = new ArrayList<>();
+    if (dateSortCriteria != null) {
+      Order order = ascending ? Order.ASC : Order.DESC;
+      switch (dateSortCriteria) {
+        case CREATED_AT -> orderSpecifiers.addAll(getOrderSpecifier(order, member.createdAt));
+        case UPDATED_AT -> orderSpecifiers.addAll(getOrderSpecifier(order, member.updatedAt));
+        case LAST_LOGIN_AT -> orderSpecifiers.addAll(getOrderSpecifier(order, member.lastLoginAt));
+        case DELETED_AT -> orderSpecifiers.addAll(getOrderSpecifier(order, member.deletedAt));
+        case BIRTH_DATE -> orderSpecifiers.addAll(getOrderSpecifier(order, jobSeekerProfile.birthDate));
+      }
+    }
+    orderSpecifiers.add(new OrderSpecifier<>(Order.ASC, member.id));
+    return orderSpecifiers.toArray(new OrderSpecifier[0]);
+  }
+
+  private <T extends Comparable<? super T>> List<OrderSpecifier<?>> getOrderSpecifier(
+    Order order,
+    ComparableExpression<T> expression) {
+
+    List<OrderSpecifier<?>> orderSpecifiers = new ArrayList<>();
+    orderSpecifiers.add(
+      new OrderSpecifier<>(
+        Order.ASC,
+        new CaseBuilder()
+          .when(expression.isNull()).then(1)
+          .otherwise(0)
+      )
+    );
+    orderSpecifiers.add(new OrderSpecifier<>(order, expression));
+    return orderSpecifiers;
+
   }
 }

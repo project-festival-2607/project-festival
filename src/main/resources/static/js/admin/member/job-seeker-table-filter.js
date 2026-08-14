@@ -1,17 +1,31 @@
 document.querySelector('#jobSeekerForm').addEventListener('click', (event) => {
 
-  const target = event.target.closest('.dropdown-item');
-  console.log(target);
+  let changed = false;
+  const filterTarget = event.target.closest('.dropdown-item');
+  if (filterTarget) {
+    changed = true;
+    if (filterTarget.dataset.role === 'update-status-filter') {
+      const filterStatus = document.getElementById('filterStatus');
+      filterStatus.value = filterTarget.dataset.value ?? '';
+    }
 
-  if (target.dataset.role === 'update-status-filter') {
-    const filterStatus = document.getElementById('filterStatus');
-    filterStatus.value = target.dataset.value ?? '';
+    if (filterTarget.dataset.role === 'update-provider-filter') {
+      const filterProvider = document.getElementById('filterProvider');
+      filterProvider.value = filterTarget.dataset.value ?? '';
+    }
   }
 
-  if (target.dataset.role === 'update-provider-filter') {
-    const filterProvider = document.getElementById('filterProvider');
-    filterProvider.value = target.dataset.value ?? '';
+  const sortTarget = event.target.closest('button[data-role="update-date-sort-criteria"]');
+  console.log(sortTarget);
+  if (sortTarget) {
+    changed = true;
+    const dateSortCriteria = document.getElementById("dateSortCriteria");
+    const ascending = document.getElementById("ascending");
+
+    dateSortCriteria.value = sortTarget.dataset.criteria;
+    ascending.value = sortTarget.dataset.ascending;
   }
-    loadJobSeekerResult();
+
+  if (changed) loadJobSeekerResult();
 
 });
