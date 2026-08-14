@@ -36,8 +36,8 @@
                             th:classappend="${form.status != null and form.status == 'DORMANT'} ? 'active'">
                   <th:block th:replace="~{admin/fragments/badge :: member-status(${memberStatusFilters[1]}, false, false)}"></th:block>
                 </button></li>
-                <li><button type="button" class="dropdown-item status-filter-li" data-role="update-status-filter" data-value="SUSPEND"
-                            th:classappend="${form.status != null and form.status == 'SUSPEND'} ? 'active'">
+                <li><button type="button" class="dropdown-item status-filter-li" data-role="update-status-filter" data-value="SUSPENDED"
+                            th:classappend="${form.status != null and form.status == 'SUSPENDED'} ? 'active'">
                   <th:block th:replace="~{admin/fragments/badge :: member-status(${memberStatusFilters[2]}, false, false)}"></th:block>
                 </button></li>
                 <li><button type="button" class="dropdown-item status-filter-li" data-role="update-status-filter" data-value="DELETED"

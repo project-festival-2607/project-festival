@@ -47,6 +47,7 @@ public class AdminController {
   ) {
 
     JobSeekerSearchCondition condition = new JobSeekerSearchCondition(form);
+    log.info("condition: {}", condition);
     Page<JobSeekerTableDTO> page = adminService.getPage(pageIdx, pageSize, condition);
 
     model.addAttribute("page", page);

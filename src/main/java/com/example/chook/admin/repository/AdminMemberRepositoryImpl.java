@@ -3,8 +3,10 @@ package com.example.chook.admin.repository;
 import com.example.chook.admin.dto.JobSeekerTableDTO;
 import com.example.chook.admin.entity.enums.JobSeekerDateCriteria;
 import com.example.chook.admin.entity.enums.JobSeekerKeywordType;
+import com.example.chook.admin.entity.enums.MemberStatusFilter;
 import com.example.chook.admin.record.JobSeekerSearchCondition;
 import com.example.chook.member.entity.enums.MemberRole;
+import com.example.chook.member.entity.enums.MemberStatus;
 import com.example.chook.member.entity.enums.Provider;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Projections;
@@ -85,6 +87,7 @@ public class AdminMemberRepositoryImpl implements AdminMemberRepository {
       .and(member.role.eq(MemberRole.JOB_SEEKER))
       .and(containsAnyKeywordWithCriteria(condition.keywordList(), condition.keywordType()))
       .and(eq(jobSeekerProfile.gender, condition.gender()))
+      .and(checkStatusFilter(condition.status()))
       .and(checkDataRangeCriteria(condition.dateRangeCriteria(),
         condition.startDateTime(),
         condition.endDateTime(),
@@ -113,6 +116,23 @@ public class AdminMemberRepositoryImpl implements AdminMemberRepository {
 
   private BooleanExpression containsProvider(Provider provider) {
     return eq(member.socialLogins.any().provider, provider);
+  }
+
+  private BooleanBuilder checkStatusFilter(MemberStatusFilter status) {
+
+    BooleanBuilder result = new BooleanBuilder();
+
+    log.info("status: {}", status);
+
+    if (status == null) return null;
+    switch (status) {
+      case ACTIVE -> result.and(eq(member.status,  MemberStatus.ACTIVE));
+      case DORMANT -> result.and(eq(member.status, MemberStatus.DORMANT));
+      case SUSPENDED -> result.and(eq(member.status, MemberStatus.SUSPENDED));
+      case DELETED -> result.and(member.deletedAt.isNotNull());
+    }
+
+    return result;
   }
 
   private BooleanBuilder checkDataRangeCriteria(JobSeekerDateCriteria criteria,
