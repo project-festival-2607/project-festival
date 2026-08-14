@@ -1,5 +1,6 @@
 // 상세요강: adminBoardDetail.js와 동일하게 Toast UI Editor를 읽기 전용 뷰어로 초기화
 const contentInit = document.getElementById("contentInit");
+const payment = document.getElementById("payment");
 
 new toastui.Editor.factory({
     el: document.getElementById("viewer"),
@@ -35,6 +36,23 @@ if (bookmarkBtn) {
             .catch(err => {
                 console.error(err);
                 alert("찜하기 처리에 실패했습니다.");
+            });
+    });
+}
+
+if(payment){
+    payment.addEventListener("click", ()=>{
+        const recruitId = payment.dataset.id;
+        // console.log("recruitId:",recruitId);
+        fetch("/point/reduce?recruitId="+recruitId, {method: "POST"})
+            .then(res => res.json().then(data=>({ok:res.ok, data})))
+            .then(({ok, data})=>{
+                alert(data.message);
+                if(ok) location.reload();
+        })
+            .catch(err => {
+                console.log(err);
+                alert("결제 처리에 실패");
             });
     });
 }

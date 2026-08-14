@@ -103,6 +103,12 @@ public class RecruitmentController {
     model.addAttribute("jobSeeker", jobSeeker);
     model.addAttribute("sidoList", regionService.getSidoList());
   }
+//  @GetMapping("/pay")
+//  public String pay(@RequestParam Long id){
+//
+//    return
+//  }
+
 
   @GetMapping("/manage")
   public void manageList(Model model,
