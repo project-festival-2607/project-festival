@@ -1,5 +1,7 @@
 package com.example.chook.mypage.controller;
 
+import com.example.chook.festival.Festival;
+import com.example.chook.festival.FestivalRepository;
 import com.example.chook.member.dto.EmployerProfileUpdateRequestDTO;
 import com.example.chook.member.dto.JobSeekerProfileUpdateRequestDTO;
 import com.example.chook.member.dto.LoginResponseDTO;
@@ -10,6 +12,8 @@ import com.example.chook.member.security.CustomUserDetails;
 import com.example.chook.member.service.MemberService;
 import com.example.chook.mypage.dto.MyPageDTO;
 import com.example.chook.mypage.service.MyPageService;
+import com.example.chook.recruitment.entity.Recruitment;
+import com.example.chook.recruitment.repository.RecruitmentRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -24,6 +28,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.List;
+
 @Controller
 @RequestMapping("/mypage")
 @RequiredArgsConstructor
@@ -32,6 +38,8 @@ public class MyPageController {
 
     private final MyPageService myPageService;
     private final MemberService memberService;
+    private final FestivalRepository festivalRepository;
+    private final RecruitmentRepository recruitmentRepository;
     private final AuthenticationHelper authenticationHelper;
     private static final String PASSWORD_VERIFIED_SESSION_KEY = "passwordVerified";
 
@@ -114,8 +122,27 @@ public class MyPageController {
             return "redirect:/";
         }
 
+        // 구인자가 등록한 행사 조회
+        List<Festival> festivals = festivalRepository.findByMember_Username(username);
+        Recruitment recruitment = null;
+
+        // 구인자가 등록한 행사 중 모집공고 조회
+        if (!festivals.isEmpty()){
+            Festival festival = festivals.get(0);
+
+            List<Recruitment> recruitments = recruitmentRepository.findByFestival_ContentId(
+                            festival.getContentId()
+                    );
+            if (!recruitments.isEmpty()){
+                recruitment = recruitments.get(0);
+            }
+        }
+
         // HTML에 회원 정보 전달
         model.addAttribute("myPageDTO", myPageDTO);
+
+        // HTML에 모집공고 전달
+        model.addAttribute("recruitment", recruitment);
 
         // 구직자 마이페이지
         return "mypage/recruiter/mypage";
