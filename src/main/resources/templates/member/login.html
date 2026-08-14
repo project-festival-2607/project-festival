@@ -27,7 +27,14 @@
             </div>
         </div>
 
+        <div th:if="${param.typeError != null}" class="login-alert" role="alert">
+            <div>
+                아이디 또는 비밀번호가 일치하지 않습니다.
+            </div>
+        </div>
+
         <form th:action="@{/member/login}" method="post">
+            <input type="hidden" id="memberType" name="memberType" value="personal">
             <div class="mb-3">
                 <input type="text" class="login-input" id="username" name="username" placeholder="아이디를입력하세요." required>
             </div>
