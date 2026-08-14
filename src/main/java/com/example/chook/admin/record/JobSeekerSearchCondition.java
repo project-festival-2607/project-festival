@@ -15,6 +15,8 @@ import static com.example.chook.common.util.CustomStringUtils.splitByRegex;
 
 public record JobSeekerSearchCondition(
 
+  // 필터용
+
   JobSeekerKeywordType keywordType,
   List<String> keywordList,
 
@@ -27,7 +29,12 @@ public record JobSeekerSearchCondition(
   LocalDate startDate,
   LocalDate endDate,
 
-  Provider provider
+  Provider provider,
+
+  // 정렬용
+  JobSeekerDateCriteria dateSortCriteria,
+  Boolean ascending
+
 
 ) {
 
@@ -43,7 +50,9 @@ public record JobSeekerSearchCondition(
       form.endDateTime(),
       form.startDate(),
       form.endDate(),
-      convertStringToEnum(form.provider(), Provider.class, null)
+      convertStringToEnum(form.provider(), Provider.class, null),
+      convertStringToEnum(form.dateSortCriteria(), JobSeekerDateCriteria.class, null),
+      form.ascending()
     );
   }
 

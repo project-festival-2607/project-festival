@@ -19,7 +19,10 @@ public record JobSeekerSearchForm(
   LocalDate startDate,
   LocalDate endDate,
 
-  String provider           // Provider
+  String provider,          // Provider
+
+  String dateSortCriteria,
+  Boolean ascending
 
 ) {
 
@@ -31,6 +34,7 @@ public record JobSeekerSearchForm(
     dateRangeCriteria = blankToNull(dateRangeCriteria);
     gender = blankToNull(gender);
     provider = blankToNull(provider);
+    dateSortCriteria = blankToNull(dateSortCriteria);
 
   }
 
