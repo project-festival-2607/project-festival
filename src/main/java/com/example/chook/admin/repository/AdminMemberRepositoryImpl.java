@@ -138,6 +138,11 @@ public class AdminMemberRepositoryImpl implements AdminMemberRepository {
         result.and(goe(member.lastLoginAt, startDateTime));
         result.and(loe(member.lastLoginAt, endDateTime));
       }
+      case DELETED_AT -> {
+        result.and(member.deletedAt.isNotNull());
+        result.and(goe(member.deletedAt, startDateTime));
+        result.and(loe(member.deletedAt, endDateTime));
+      }
       case BIRTH_DATE -> {
         result.and(goe(jobSeekerProfile.birthDate, startDate));
         result.and(lt(jobSeekerProfile.birthDate, endDate));
