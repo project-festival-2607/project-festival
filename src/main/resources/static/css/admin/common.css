@@ -45,3 +45,17 @@
   font-weight: 700;
   text-decoration: underline;
 }
+
+.tooltip-icon {
+  width: 0.9rem;
+  height: 0.9rem;
+}
+
+a[data-bs-toggle="tooltip"] {
+  color: inherit;
+}
+
+.tooltip-inner {
+  font-size: 90%;
+  font-weight: 500;
+}
