@@ -6,6 +6,8 @@
 <th:block th:fragment="job-seeker-result(page, pagingHandler)">
   <div class="result-table-wrapper"
        th:with="form=${pagingHandler.form}">
+    <input type="hidden" name="dateSortCriteria" id="dateSortCriteria" th:value="${form.dateSortCriteria}"/>
+    <input type="hidden" name="ascending" id="ascending" th:value="${form.ascending}"/>
     <table class="table">
       <thead>
       <tr>
@@ -52,33 +54,33 @@
         <th scope="col">
           <span class="d-flex gap-3 justify-content-between">
             <span>생성일시</span>
-            <button type="button" class="btn btn-reset btn-th dropdown-toggle dropdown-no-caret">
-              <th:block th:replace="~{admin/fragments/svg :: sort('sort-icon')}"></th:block>
-            </button>
+            <th:block th:replace="~{admin/fragments/sort-button :: sort-button(
+            'CREATED_AT', ${form.dateSortCriteria}, ${form.ascending}
+            )}"></th:block>
           </span>
         </th>
         <th scope="col">
           <span class="d-flex gap-3 justify-content-between">
             <span>수정일시</span>
-            <button type="button" class="btn btn-reset btn-th">
-              <th:block th:replace="~{admin/fragments/svg :: sort('sort-icon')}"></th:block>
-            </button>
+            <th:block th:replace="~{admin/fragments/sort-button :: sort-button(
+            'UPDATED_AT', ${form.dateSortCriteria}, ${form.ascending}
+            )}"></th:block>
           </span>
         </th>
         <th scope="col">
           <span class="d-flex gap-3 justify-content-between">
             <span>최근접속일시</span>
-            <button type="button" class="btn btn-reset btn-th">
-              <th:block th:replace="~{admin/fragments/svg :: sort('sort-icon')}"></th:block>
-            </button>
+            <th:block th:replace="~{admin/fragments/sort-button :: sort-button(
+            'LAST_LOGIN_AT', ${form.dateSortCriteria}, ${form.ascending}
+            )}"></th:block>
           </span>
         </th>
         <th scope="col">
           <span class="d-flex gap-3 justify-content-between">
             <span>삭제일시</span>
-            <button type="button" class="btn btn-reset">
-              <th:block th:replace="~{admin/fragments/svg :: sort('sort-icon')}"></th:block>
-            </button>
+            <th:block th:replace="~{admin/fragments/sort-button :: sort-button(
+            'DELETED_AT', ${form.dateSortCriteria}, ${form.ascending}
+            )}"></th:block>
           </span>
         </th>
         <th scope="col">포인트</th>
@@ -117,9 +119,9 @@
         <th scope="col">
           <span class="d-flex gap-3 justify-content-between">
             <span>생년월일</span>
-            <button type="button" class="btn btn-reset">
-              <th:block th:replace="~{admin/fragments/svg :: sort('sort-icon')}"></th:block>
-            </button>
+            <th:block th:replace="~{admin/fragments/sort-button :: sort-button(
+            'BIRTH_DATE', ${form.dateSortCriteria}, ${form.ascending}
+            )}"></th:block>
           </span>
         </th>
         <th scope="col">도로명주소</th>

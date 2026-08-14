@@ -46,7 +46,7 @@ label.search-form-label {
 
 .result-table-wrapper {
   overflow: scroll;
-  height: 440px;
+  height: 450px;
   font-size: 90%;
 
   scrollbar-width: thin;
