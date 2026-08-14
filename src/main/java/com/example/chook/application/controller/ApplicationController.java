@@ -119,7 +119,7 @@ public class ApplicationController {
 
         applicationService.cancel(id);
 
-        return "redirect:/application/list";
+        return "redirect:/application/jobseeker/list";
     }
 
     // 합격/불합격 처리
