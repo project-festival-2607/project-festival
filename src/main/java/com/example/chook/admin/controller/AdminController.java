@@ -72,7 +72,7 @@ public class AdminController {
     adminService.removePhoneVerification(memberId);
     return AdminActionResponse.builder()
       .result(true)
-      .message(String.format("id가 %d인 사용자의 전화번호 인증을 삭제했으며,\n\"휴대전화 인증 헤제\" 사유로 정지했습니다.", memberId))
+      .message(String.format("id가 %d인 사용자의 전화번호 인증을 삭제했으며,\n\"휴대전화 인증 해제\" 사유로 정지했습니다.", memberId))
       .build();
   }
 
