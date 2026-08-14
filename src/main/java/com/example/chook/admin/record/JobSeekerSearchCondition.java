@@ -2,9 +2,9 @@ package com.example.chook.admin.record;
 
 import com.example.chook.admin.entity.enums.JobSeekerDateRangeCriteria;
 import com.example.chook.admin.entity.enums.JobSeekerKeywordType;
+import com.example.chook.admin.entity.enums.MemberStatusFilter;
 import com.example.chook.admin.form.JobSeekerSearchForm;
 import com.example.chook.member.entity.enums.Gender;
-import com.example.chook.member.entity.enums.MemberStatus;
 import com.example.chook.member.entity.enums.Provider;
 
 import java.time.LocalDate;
@@ -18,7 +18,7 @@ public record JobSeekerSearchCondition(
   JobSeekerKeywordType keywordType,
   List<String> keywordList,
 
-  MemberStatus status,
+  MemberStatusFilter status,
 
   Gender gender,
   JobSeekerDateRangeCriteria dateRangeCriteria,
@@ -36,7 +36,7 @@ public record JobSeekerSearchCondition(
     this(
       convertStringToEnum(form.keywordType(), JobSeekerKeywordType.class, JobSeekerKeywordType.USERNAME),
       splitByRegex(form.keywords(), "[\\s,&]+"),
-      convertStringToEnum(form.status(), MemberStatus.class, null),
+      convertStringToEnum(form.status(), MemberStatusFilter.class, null),
       convertStringToEnum(form.gender(), Gender.class, null),
       convertStringToEnum(form.dateRangeCriteria(), JobSeekerDateRangeCriteria.class, null),
       form.startDateTime(),

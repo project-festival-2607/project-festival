@@ -84,7 +84,6 @@ public class AdminMemberRepositoryImpl implements AdminMemberRepository {
     whereCondition
       .and(member.role.eq(MemberRole.JOB_SEEKER))
       .and(containsAnyKeywordWithCriteria(condition.keywordList(), condition.keywordType()))
-      .and(eq(member.status, condition.status()))
       .and(eq(jobSeekerProfile.gender, condition.gender()))
       .and(checkDataRangeCriteria(condition.dateRangeCriteria(),
         condition.startDateTime(),

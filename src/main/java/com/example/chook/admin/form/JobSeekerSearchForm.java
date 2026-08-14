@@ -10,7 +10,7 @@ public record JobSeekerSearchForm(
   String keywordType,       // JobSeekerKeywordType
   String keywords,
 
-  String status,            // MemberStatus
+  String status,            // MemberStatusFilter
 
   String dateRangeCriteria, // dateRangeCriteria
   String gender,            // Gender
