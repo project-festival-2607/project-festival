@@ -287,6 +287,7 @@
 }
 
 .recruit-card {
+    position: relative;
     display: block;
     border: 1px solid #e5e0d3;
     border-radius: 10px;
@@ -294,6 +295,36 @@
     text-decoration: none;
     color: inherit;
     transition: 0.2s ease;
+}
+
+.recruit-card-status {
+    position: absolute;
+    top: -10px;
+    right: 0;
+    padding: 4px 12px;
+    border-radius: 14px 14px 14px 2px;
+    font-size: 12px;
+    font-weight: 700;
+    color: #fff;
+    white-space: nowrap;
+    transform: rotate(8deg);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+.recruit-card-status.status-draft {
+    background-color: #9e9e9e;
+}
+
+.recruit-card-status.status-recruiting {
+    background-color: #4caf50;
+}
+
+.recruit-card-status.status-paused {
+    background-color: #e8a33d;
+}
+
+.recruit-card-status.status-closed {
+    background-color: #8b3a3a;
 }
 
 .recruit-card:hover {
