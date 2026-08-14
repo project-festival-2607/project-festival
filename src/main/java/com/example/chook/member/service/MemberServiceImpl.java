@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 @RequiredArgsConstructor
@@ -149,7 +150,7 @@ public class MemberServiceImpl implements MemberService {
 
         member.setEmail(requestDTO.getEmail());
 
-        if (!member.getPhone().equals(requestDTO.getPhone())) {
+        if (!Objects.equals(member.getPhone(), requestDTO.getPhone())) {
             if (!phoneVerificationTokenProvider.verify(requestDTO.getPhone(), requestDTO.getPhoneVerificationToken())) {
                 throw new IllegalArgumentException("전화번호 인증이 유효하지 않습니다.");
             }
@@ -195,7 +196,7 @@ public class MemberServiceImpl implements MemberService {
         member.setEmail(requestDTO.getEmail());
         member.setEmail(requestDTO.getEmail());
 
-        if (!member.getPhone().equals(requestDTO.getPhone())) {
+        if (!java.util.Objects.equals(member.getPhone(), requestDTO.getPhone())) {
             if (!phoneVerificationTokenProvider.verify(requestDTO.getPhone(), requestDTO.getPhoneVerificationToken())) {
                 throw new IllegalArgumentException("전화번호 인증이 유효하지 않습니다.");
             }
@@ -469,7 +470,10 @@ public class MemberServiceImpl implements MemberService {
             String username, String rawPassword, String name,
             String phone, String phoneVerificationToken, String email, MemberRole role
     ) {
-        if (!phoneVerificationTokenProvider.verify(phone, phoneVerificationToken)) {
+        // TODO: 문자 인증 한도 문제로 임시 우회
+        boolean phoneProvided = phone != null && !phone.isBlank();
+        // TODO: 배포시 phoneProvided && 삭제
+        if (phoneProvided && !phoneVerificationTokenProvider.verify(phone, phoneVerificationToken)) {
             throw new IllegalArgumentException("전화번호 인증이 유효하지 않습니다.");
         }
 

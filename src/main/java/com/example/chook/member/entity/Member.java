@@ -41,10 +41,11 @@ public class Member {
     @Column(name = "name", nullable = false, length = 50)
     private String name;
 
-    @Column(name = "phone", nullable = false, length = 20)
+    // TODO: 문자 인증 한도 문제로 임시 허용. 테스트 종료 후 nullable = false로 복원
+    @Column(name = "phone", length = 20)
     private String phone;
 
-    @Column(name = "phone_verified", nullable = false)
+    @Column(name = "phone_verified")
     private boolean phoneVerified = false;
 
     @Column(name = "email", nullable = false, length = 255)
