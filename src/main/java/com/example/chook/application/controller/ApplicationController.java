@@ -40,7 +40,7 @@ public class ApplicationController {
     public String apply (ApplicationDTO applicationDTO){
         applicationService.apply(applicationDTO);
 
-        return "redirect:/";
+        return "redirect:/application/jobseeker/list";
     }
 
     // 내가 지원한 목록 조회 (구직자용)
@@ -174,6 +174,19 @@ public class ApplicationController {
                         recruitmentId,
                         userDetails.getId()
                 );
+
+        // 이미 지원한 공고일 경우
+        if (applicationService.existsByMemberIdAndRecruitmentId(
+                userDetails.getId(),
+                recruitmentId
+        )) {
+            redirectAttributes.addFlashAttribute(
+                    "applicationMessage",
+                    "이미 지원한 공고입니다."
+            );
+
+            return "redirect:/recruitment/" + recruitmentId;
+        }
 
         // 이력서가 없는 경우
         if (applyDTO.getResume() == null) {
