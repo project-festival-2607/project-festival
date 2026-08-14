@@ -39,9 +39,14 @@ function loadJobSeekerResult() {
         throw new Error(`HTTP ${response.status}`);
       }
       response.text().then((resultHtml) => {
+
         const jobSeekerResult = document.querySelector('#jobSeekerResult');
         jobSeekerResult.innerHTML = resultHtml;
         history.pushState({}, '', pageUrl);
+
+        const tooltipTriggerList = jobSeekerResult.querySelectorAll('[data-bs-toggle="tooltip"]');
+        const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
+
       })
     }
   );

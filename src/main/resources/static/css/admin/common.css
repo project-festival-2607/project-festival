@@ -58,4 +58,5 @@ a[data-bs-toggle="tooltip"] {
 .tooltip-inner {
   font-size: 90%;
   font-weight: 500;
+  max-width: 400px;
 }

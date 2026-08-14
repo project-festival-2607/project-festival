@@ -150,9 +150,11 @@
         <td class="text-end" th:text="${jobSeeker.point}"></td>
         <td>
           <th:block th:each="socialLoginDto: ${jobSeeker.socialLoginDtoList}">
-            <img th:src="@{'/images/admin/member/provider_'+${#strings.toLowerCase(socialLoginDto.provider.name())}+'.svg'}"
-                 class="provider-icon"
-                 th:alt-title="${socialLoginDto.provider.name() + ' / 연결 일시: ' + #temporals.format(socialLoginDto.linkedAt, 'yyyy.MM.dd. HH:mm:ss')}"/>
+            <a href="#" data-bs-toggle="tooltip" data-bs-html="true"
+               th:data-bs-title="${'연결 일시: ' + #temporals.format(socialLoginDto.linkedAt, 'yyyy.MM.dd. HH:mm:ss')}">
+              <img th:src="@{'/images/admin/member/provider_'+${#strings.toLowerCase(socialLoginDto.provider.name())}+'.svg'}"
+                   class="provider-icon"/>
+            </a>
           </th:block>
         </td>
         <td>
