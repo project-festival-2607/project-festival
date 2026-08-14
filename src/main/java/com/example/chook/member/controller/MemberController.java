@@ -17,6 +17,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.List;
+
 @Controller
 @RequestMapping("/member")
 @RequiredArgsConstructor
@@ -193,4 +195,100 @@ public class MemberController {
         }
     }
 
+    // 아이디 찾기
+    @GetMapping("/find-id")
+    public String findIdForm() {
+        return "member/find-id";
+    }
+
+    @PostMapping("/find-id/search")
+    @ResponseBody
+    public List<FindIdResultDTO> searchFindId(@RequestBody FindIdSearchRequestDTO requestDTO) {
+        return memberService.searchForFindId(requestDTO.getName(), requestDTO.getPhone());
+    }
+
+    @PostMapping("/find-id/reveal")
+    @ResponseBody
+    public FindIdResultDTO revealFindId(
+            @RequestParam Long memberId,
+            @RequestParam String phone,
+            HttpSession session
+    ) {
+        if (!phoneVerificationService.isVerified(phone, session)) {
+            return FindIdResultDTO.builder().verified(false).build();
+        }
+        FindIdResultDTO result = memberService.revealFindId(memberId);
+        result.setVerified(true);
+        return result;
+    }
+
+    @PostMapping("/find-id/verify-phone")
+    @ResponseBody
+    public PhoneVerificationResponseDTO verifyFindIdPhone(
+            @RequestBody PhoneVerifyCodeRequestDTO requestDTO,
+            HttpSession session
+    ) {
+        try {
+            phoneVerificationService.verifyCode(requestDTO.getPhone(), requestDTO.getCode(), session);
+            phoneVerificationService.markVerified(requestDTO.getPhone(), session);
+            return PhoneVerificationResponseDTO.builder().success(true).build();
+        } catch (IllegalArgumentException e) {
+            return PhoneVerificationResponseDTO.builder().success(false).message(e.getMessage()).build();
+        }
+    }
+
+    @GetMapping("/find-password")
+    public String findPasswordForm() {
+        return "member/find-password";
+    }
+
+    @PostMapping("/find-password")
+    public String findPassword(
+            @RequestParam String name,
+            @RequestParam String username,
+            @RequestParam String phone,
+            @RequestParam String phoneVerificationToken,
+            HttpSession session,
+            RedirectAttributes redirectAttributes
+    ) {
+        try {
+            Long memberId = memberService.findMemberForPasswordReset(name, username, phone, phoneVerificationToken);
+            session.setAttribute("resetPasswordMemberId", memberId);
+            return "redirect:/member/reset-password";
+        } catch (IllegalArgumentException e) {
+            redirectAttributes.addFlashAttribute("FailureMsg", e.getMessage());
+            return "redirect:/member/find-password";
+        }
+    }
+
+    @GetMapping("/reset-password")
+    public String resetPasswordForm(HttpSession session) {
+        if (session.getAttribute("resetPasswordMemberId") == null) {
+            return "redirect:/member/find-password";
+        }
+        return "member/reset-password";
+    }
+
+    @PostMapping("/reset-password")
+    public String resetPassword(
+            @RequestParam String newPassword,
+            @RequestParam String newPasswordConfirm,
+            HttpSession session,
+            RedirectAttributes redirectAttributes
+    ) {
+        Long memberId = (Long) session.getAttribute("resetPasswordMemberId");
+        if (memberId == null) {
+            return "redirect:/member/find-password";
+        }
+
+        try {
+            memberService.resetPassword(memberId, newPassword, newPasswordConfirm);
+            session.removeAttribute("resetPasswordMemberId");
+            redirectAttributes.addFlashAttribute("SuccessMsg", "비밀번호가 재설정되었습니다. 다시 로그인해주세요.");
+            return "redirect:/member/login";
+        } catch (IllegalArgumentException e) {
+            redirectAttributes.addFlashAttribute("FailureMsg", e.getMessage());
+            return "redirect:/member/reset-password";
+        }
+    }
 }
