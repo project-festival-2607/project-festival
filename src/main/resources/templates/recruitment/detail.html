@@ -174,7 +174,7 @@
                               onsubmit="return confirm('정말 삭제하시겠습니까?');">
                             <button type="submit" class="btn btn-outline-danger">삭제</button>
                         </form>
-                        <a href="#" class="btn btn-primary">결제</a>
+                        <a class="btn btn-primary" id="payment" th:attr="data-id=${recruitment.recruitmentId}">결제</a>
                     </div>
                 </div>
 
