@@ -2,6 +2,8 @@ package com.example.chook.support.controller;
 
 import com.example.chook.file.record.FileResource;
 import com.example.chook.file.service.FileService;
+import com.example.chook.member.entity.enums.MemberRole;
+import com.example.chook.member.security.CustomUserDetails;
 import com.example.chook.support.dto.InquiryDTO;
 import com.example.chook.support.entity.Inquiry;
 import com.example.chook.support.service.InquiryService;
@@ -12,6 +14,8 @@ import org.springframework.http.ContentDisposition;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -37,7 +41,11 @@ public class InquiryController {
     private final FileService fileService;
 
     @GetMapping("/register")
-    public String register() {
+    public String register(@AuthenticationPrincipal CustomUserDetails user, RedirectAttributes redirectAttributes) {
+        if (user == null) {
+            redirectAttributes.addFlashAttribute("message", "로그인이 필요합니다.");
+            return "redirect:/member/login";
+        }
         return "inquiry/register";
     }
 
@@ -45,8 +53,14 @@ public class InquiryController {
     public String register(
         InquiryDTO dto,
         @RequestParam(value = "attachments", required = false) List<MultipartFile> attachments,
+        @AuthenticationPrincipal CustomUserDetails user,
         RedirectAttributes redirectAttributes
     ) {
+        if (user == null) {
+            redirectAttributes.addFlashAttribute("message", "로그인이 필요합니다.");
+            return "redirect:/member/login";
+        }
+        dto.setId(user.getId());
         Inquiry saved = inquiryService.register(dto, attachments);
         log.info("inquiry registered: {}", saved);
         redirectAttributes.addFlashAttribute("message", "문의가 접수되었습니다.");
@@ -54,15 +68,23 @@ public class InquiryController {
     }
 
     @GetMapping("/list")
-    public String list(Model model) {
-        // ponytail: 로그인 미구현 - 지금은 전체 노출, 로그인 붙으면 본인 문의만 필터링
-        model.addAttribute("inquiries", inquiryService.getList());
+    public String list(@AuthenticationPrincipal CustomUserDetails user, Model model, RedirectAttributes redirectAttributes) {
+        if (user == null) {
+            redirectAttributes.addFlashAttribute("message", "로그인이 필요합니다.");
+            return "redirect:/member/login";
+        }
+        model.addAttribute("inquiries", inquiryService.getList(user.getId()));
         return "inquiry/list";
     }
 
     @GetMapping("/detail/{ino}")
-    public String detail(@PathVariable Long ino, Model model) {
-        model.addAttribute("inquiry", inquiryService.getDetail(ino));
+    public String detail(@PathVariable Long ino, @AuthenticationPrincipal CustomUserDetails user, Model model) {
+        InquiryDTO inquiry = inquiryService.getDetail(ino);
+        boolean isAdmin = user != null && user.getRole() == MemberRole.ADMIN;
+        if (!isAdmin && (user == null || !user.getId().equals(inquiry.getId()))) {
+            throw new AccessDeniedException("본인 문의만 조회할 수 있음");
+        }
+        model.addAttribute("inquiry", inquiry);
         return "inquiry/detail";
     }
 

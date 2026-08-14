@@ -14,7 +14,7 @@
         <!--        이 안에서 작업        -->
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h1 class="mb-0">공지사항</h1>
-            <a th:href="@{/adminBoard/register}" class="btn btn-primary">글등록</a>
+            <a th:if="${isAdmin}" th:href="@{/adminBoard/register}" class="btn btn-primary" >글등록</a>
         </div>
 
         <form th:action="@{/adminBoard/list}" method="get" class="mz-search">
