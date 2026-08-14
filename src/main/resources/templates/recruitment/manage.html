@@ -37,6 +37,13 @@
                       th:text="${festival.title}">
               </option>
             </select>
+            <select id="status" name="status">
+              <option th:selected="${form.status == null}" value="">전체 상태</option>
+              <option th:selected="${form.status != null and form.status.name() == 'DRAFT'}" value="DRAFT">모집예정</option>
+              <option th:selected="${form.status != null and form.status.name() == 'RECRUITING'}" value="RECRUITING">모집중</option>
+              <option th:selected="${form.status != null and form.status.name() == 'PAUSED'}" value="PAUSED">모집 중지</option>
+              <option th:selected="${form.status != null and form.status.name() == 'CLOSED'}" value="CLOSED">모집 마감</option>
+            </select>
             <select id="listCriteria" name="listCriteria">
               <option th:selected="${form.listCriteria == null or form.listCriteria.name() == 'LATEST'}"
                       value="LATEST">
@@ -53,6 +60,14 @@
         <div class="recruit-card-grid">
           <a class="recruit-card" th:each="r : ${pagingHandler.elementList}"
              th:href="@{/recruitment/{id}(id=${r.recruitmentId}, from='manage')}">
+            <span class="recruit-card-status" th:if="${r.status != null}"
+                  th:classappend="${'status-' + #strings.toLowerCase(r.status.name())}"
+                  th:switch="${r.status.name()}">
+                <span th:case="'DRAFT'">모집예정</span>
+                <span th:case="'RECRUITING'">모집중</span>
+                <span th:case="'PAUSED'">모집 중지</span>
+                <span th:case="'CLOSED'">모집 마감</span>
+            </span>
             <div class="recruit-card-top">
                             <span class="recruit-card-emoji" th:switch="${r.category != null ? r.category.name() : ''}">
                                 <span th:case="'INDIVIDUAL'">🙋</span>
