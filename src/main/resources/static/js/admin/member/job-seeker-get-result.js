@@ -41,8 +41,30 @@ function loadJobSeekerResult() {
       response.text().then((resultHtml) => {
 
         const jobSeekerResult = document.querySelector('#jobSeekerResult');
+        let jobSeekerTableWrapper = document.querySelector('#jobSeekerTableWrapper');
+
+        // 이전 스크롤 임시 저장
+        if (jobSeekerTableWrapper) {
+          localStorage.setItem(
+            'admin-table-scroll-x',
+            jobSeekerTableWrapper.scrollLeft
+          );
+          localStorage.setItem(
+            'admin-table-scroll-y',
+            jobSeekerTableWrapper.scrollTop
+          );
+        }
+
         jobSeekerResult.innerHTML = resultHtml;
         history.pushState({}, '', pageUrl);
+
+        // 저장한 스크롤 불러오기 및 삭제
+        jobSeekerTableWrapper = document.querySelector('#jobSeekerTableWrapper');
+        jobSeekerTableWrapper.scrollLeft = Number(localStorage.getItem('admin-table-scroll-x') ?? 0);
+        jobSeekerTableWrapper.scrollTop = Number(localStorage.getItem('admin-table-scroll-y') ?? 0);
+        localStorage.removeItem('admin-table-scroll-x');
+        localStorage.removeItem('admin-table-scroll-y');
+
 
         const tooltipTriggerList = jobSeekerResult.querySelectorAll('[data-bs-toggle="tooltip"]');
         const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
