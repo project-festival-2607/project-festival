@@ -82,15 +82,15 @@
             <input type="date" class="form-control form-control-end" name="endDate" id="endDate" th:value="${form.endDate}">
             <input type="hidden" id="dateRangeCriteria" name="dateRangeCriteria" th:value="${form.dateRangeCriteria}"/>
           </div>
-          <div class="float-end mt-2" id="dateRangeCriteriaAutofillWrapper">
+          <div class="float-end mt-2 d-flex align-items-center gap-2" id="dateRangeCriteriaAutofillWrapper">
+            <label>빠른 설정</label>
             <div class="btn-group btn-group-xs" role="group" id="dateRangeCriteriaAutofill">
-              <span class="btn btn-secondary">빠른 설정</span>
-              <button type="button" class="btn btn-outline-secondary date-range-criteria-autofill" data-value="1h">1시간</button>
-              <button type="button" class="btn btn-outline-secondary date-range-criteria-autofill" data-value="6h">6시간</button>
-              <button type="button" class="btn btn-outline-secondary date-range-criteria-autofill" data-value="12h">12시간</button>
-              <button type="button" class="btn btn-outline-secondary date-range-criteria-autofill" data-value="1d">1일</button>
-              <button type="button" class="btn btn-outline-secondary date-range-criteria-autofill" data-value="7d">1주</button>
-              <button type="button" class="btn btn-outline-secondary date-range-criteria-autofill" data-value="1M">1개월</button>
+              <button type="button" class="btn btn-outline-light text-body date-range-criteria-autofill" data-value="1h">1시간</button>
+              <button type="button" class="btn btn-outline-light text-body date-range-criteria-autofill" data-value="6h">6시간</button>
+              <button type="button" class="btn btn-outline-light text-body date-range-criteria-autofill" data-value="12h">12시간</button>
+              <button type="button" class="btn btn-outline-light text-body date-range-criteria-autofill" data-value="1d">1일</button>
+              <button type="button" class="btn btn-outline-light text-body date-range-criteria-autofill" data-value="7d">1주</button>
+              <button type="button" class="btn btn-outline-light text-body date-range-criteria-autofill" data-value="1M">1개월</button>
             </div>
           </div>
         </div>

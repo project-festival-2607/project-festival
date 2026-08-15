@@ -12,6 +12,15 @@ label.search-form-label {
   padding-bottom: 0.5rem;
 }
 
+#dateRangeCriteriaAutofillWrapper label {
+  font-size: 80%;
+}
+
+#dateRangeCriteriaAutofillWrapper button {
+  color: var(--bs-body-color) !important;
+  border-color: var(--bs-border-color) !important;
+}
+
 .form-btn-left {
   border: var(--bs-border-width) solid var(--bs-border-color);
   border-right: 0 none;
@@ -70,6 +79,7 @@ label.search-form-label {
   border-collapse: separate;
   border-spacing: 0;
   margin-bottom: 0;
+  table-layout: fixed;
 }
 
 .result-table-wrapper table thead th {
@@ -82,16 +92,22 @@ label.search-form-label {
   padding-right: 0.1rem;
 }
 
-.result-table-wrapper table tr {
-  white-space: nowrap;
-}
-
 .result-table-wrapper table td {
   font-weight: 400;
   white-space: nowrap;
   padding-left: 0.5rem;
   padding-right: 0.5rem;
   letter-spacing: -0.03em;
+}
+
+.result-table-wrapper table td:not(:last-child) {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.result-table-wrapper table td[data-type="socialLogins"] {
+  padding-top: 0.1rem;
+  padding-bottom: 0.1rem;
 }
 
 .result-table-wrapper table td[data-type="status"] {
@@ -113,6 +129,14 @@ label.search-form-label {
   z-index: 4;
 }
 
+.result-table-wrapper table thead th:first-child {
+  position: sticky;
+  left: 0;
+  top: 0;
+  z-index: 5;
+  border-right: 0.1rem double rgba(var(--bs-dark-rgb), 0.1);
+}
+
 .result-table-wrapper table thead th:last-child {
   position: sticky;
   right: 0;
@@ -120,6 +144,13 @@ label.search-form-label {
   z-index: 5;
   background-color: var(--bs-body-bg);
   border-left: 0.1rem double rgba(var(--bs-dark-rgb), 0.1);
+}
+
+.result-table-wrapper table tbody td:first-child {
+  position: sticky;
+  left: 0;
+  z-index: 2;
+  border-right: 0.1rem double rgba(var(--bs-dark-rgb), 0.1);
 }
 
 .result-table-wrapper table tbody td:last-child {
@@ -220,6 +251,10 @@ button:has(.filter-idle-icon) {
   --bs-pagination-disabled-bg: transparent;
   --bs-pagination-disabled-color: rgba(var(--bs-dark-rgb), 0.25);
   --bs-pagination-disabled-border-color: rgba(var(--bs-dark-rgb), 0.15);
+  --bs-pagination-color: #dc3545;
+  --bs-pagination-hover-color: #ac2a36;
+  --bs-pagination-focus-color: #87212b;
+  --bs-pagination-focus-box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.25);
 }
 
 .admin-pagination .active>.page-link {
@@ -244,4 +279,13 @@ button:has(.filter-idle-icon) {
 
 .modal-member-info-th {
   width: 120px;
+}
+
+.form-check-input:checked {
+  background-color: #dc3545;
+  border-color: #dc3545;
+}
+
+.form-check-input:focus {
+  box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.25);
 }

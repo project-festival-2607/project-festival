@@ -5,10 +5,31 @@
 
 <th:block th:fragment="job-seeker-result(page, pagingHandler)">
   <div class="result-table-wrapper"
-       th:with="form=${pagingHandler.form}">
+       th:with="form=${pagingHandler.form}"
+       id="jobSeekerTableWrapper">
     <input type="hidden" name="dateSortCriteria" id="dateSortCriteria" th:value="${form.dateSortCriteria}"/>
     <input type="hidden" name="ascending" id="ascending" th:value="${form.ascending}"/>
     <table class="table">
+      <colgroup>
+        <col style="width: 65px;">  <!-- # -->
+        <col style="width: 200px;"> <!-- 아이디 -->
+        <col style="width: 115px;"> <!-- 이름 -->
+        <col style="width: 115px;"> <!-- 전화번호 -->
+        <col style="width: 32px;">  <!-- (전화번호 확인) -->
+        <col style="width: 250px;"> <!-- 이메일 -->
+        <col style="width: 80px;">  <!-- 상태 -->
+        <col style="width: 135px;"> <!-- 생성일시 -->
+        <col style="width: 135px;"> <!-- 수정일시 -->
+        <col style="width: 135px;"> <!-- 최근접속일시 -->
+        <col style="width: 135px;"> <!-- 삭제일시 -->
+        <col style="width: 80px;">  <!-- 포인트 -->
+        <col style="width: 110px;"> <!-- 소셜 -->
+        <col style="width: 45px;">  <!-- 성별 -->
+        <col style="width: 100px;"> <!-- 생년월일 -->
+        <col style="width: 300px;"> <!-- 도로명주소 -->
+        <col style="width: 300px;"> <!-- 상세주소 -->
+        <col style="width: 45px;">  <!-- 관리 -->
+      </colgroup>
       <thead>
       <tr>
         <th scope="col">#</th>
@@ -131,7 +152,7 @@
       </thead>
       <tbody>
       <tr th:each="jobSeeker : ${page}">
-        <td data-type="id" th:text="${jobSeeker.id}"></td>
+        <td data-type="id" th:text="${jobSeeker.id}" class="text-end"></td>
         <td data-type="username" th:text="${jobSeeker.username}"></td>
         <td data-type="name" th:text="${jobSeeker.name}"></td>
         <td data-type="phone">[[${jobSeeker.formattedPhone}]]</td>
@@ -150,7 +171,7 @@
         <td data-type="lastLoginAt" th:text="${#temporals.format(jobSeeker.lastLoginAt, 'yyyy.MM.dd. HH:mm')}"></td>
         <td th:text="${#temporals.format(jobSeeker.deletedAt, 'yyyy.MM.dd. HH:mm')}"></td>
         <td class="text-end" th:text="${jobSeeker.point}"></td>
-        <td>
+        <td data-type="socialLogins">
           <th:block th:each="socialLoginDto: ${jobSeeker.socialLoginDtoList}">
             <a href="#" data-bs-toggle="tooltip" data-bs-html="true"
                th:data-bs-title="${'연결 일시: ' + #temporals.format(socialLoginDto.linkedAt, 'yyyy.MM.dd. HH:mm:ss')}">
