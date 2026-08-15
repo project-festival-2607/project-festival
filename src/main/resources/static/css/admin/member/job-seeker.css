@@ -12,6 +12,15 @@ label.search-form-label {
   padding-bottom: 0.5rem;
 }
 
+#dateRangeCriteriaAutofillWrapper label {
+  font-size: 80%;
+}
+
+#dateRangeCriteriaAutofillWrapper button {
+  color: var(--bs-body-color) !important;
+  border-color: var(--bs-border-color) !important;
+}
+
 .form-btn-left {
   border: var(--bs-border-width) solid var(--bs-border-color);
   border-right: 0 none;
@@ -242,6 +251,10 @@ button:has(.filter-idle-icon) {
   --bs-pagination-disabled-bg: transparent;
   --bs-pagination-disabled-color: rgba(var(--bs-dark-rgb), 0.25);
   --bs-pagination-disabled-border-color: rgba(var(--bs-dark-rgb), 0.15);
+  --bs-pagination-color: #dc3545;
+  --bs-pagination-hover-color: #ac2a36;
+  --bs-pagination-focus-color: #87212b;
+  --bs-pagination-focus-box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.25);
 }
 
 .admin-pagination .active>.page-link {
@@ -266,4 +279,13 @@ button:has(.filter-idle-icon) {
 
 .modal-member-info-th {
   width: 120px;
+}
+
+.form-check-input:checked {
+  background-color: #dc3545;
+  border-color: #dc3545;
+}
+
+.form-check-input:focus {
+  box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.25);
 }
