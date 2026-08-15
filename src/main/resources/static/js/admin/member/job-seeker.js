@@ -19,20 +19,6 @@ document.getElementById('pageSizeDropdownList').addEventListener('click', (e) =>
   }
 });
 
-//  ###############################################
-//  KeywordType 초기화 및 드롭다운 설정
-//  ###############################################
-
-const currentKeywordType = document.getElementById('currentKeywordType');
-const keywordType = document.getElementById('keywordType');
-
-function updateCurrentKeywordType() {
-  const selected = document.querySelector(
-    `.keyword-type-li[data-value="${keywordType.value}"]`
-  );
-  currentKeywordType.textContent = selected?.textContent ?? '전체';
-}
-
 document.getElementById('keywordTypeDropdownList').addEventListener('click', (event) => {
   const target = event.target.closest('.keyword-type-li');
   if (!target) return;
@@ -121,8 +107,4 @@ document.querySelectorAll('.date-range-criteria-autofill').forEach((element) => 
 })
 
 updatePageSize();
-updateCurrentKeywordType();
 updateDateRangeCriteriaAndToggleInputType();
-
-const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
-const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));

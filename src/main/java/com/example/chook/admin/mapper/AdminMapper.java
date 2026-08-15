@@ -1,6 +1,8 @@
 package com.example.chook.admin.mapper;
 
 import com.example.chook.admin.dto.SocialLoginDTO;
+import com.example.chook.admin.entity.enums.JobSeekerKeywordType;
+import com.example.chook.admin.record.DropdownOption;
 import com.example.chook.member.entity.SocialLogin;
 import org.springframework.stereotype.Component;
 
@@ -12,6 +14,10 @@ public class AdminMapper {
       .provider(socialLogin.getProvider())
       .linkedAt(socialLogin.getLinkedAt())
       .build();
+  }
+
+  public DropdownOption toDropdownOption(JobSeekerKeywordType type) {
+    return new DropdownOption(type.name(), type.getLabel(), type.isExactMatchSupported());
   }
 
 }

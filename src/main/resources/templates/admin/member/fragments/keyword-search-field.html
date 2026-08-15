@@ -23,7 +23,7 @@
                value="CONTAINS">
         <label class="form-check-label" for="keywordCriteriaContains">키워드 포함</label>
       </div>
-      <div class="form-check">
+      <div class="form-check" id="keywordCriteriaEqualsGroup">
         <input class="form-check-input" data-type="keywordCriteria" id="keywordCriteriaEquals"
                name="keywordCriteria"
                th:checked="${form.keywordCriteria != null and form.keywordCriteria == 'EQUALS'}"
@@ -42,6 +42,7 @@
         <li th:each="option: ${keywordOptions}">
           <button class="dropdown-item keyword-type-li"
                   th:data-value="${option.value}"
+                  th:data-exact-match-supported="${option.exactMatchSupported}"
                   th:text="${option.label}"
                   type="button"></button>
         </li>

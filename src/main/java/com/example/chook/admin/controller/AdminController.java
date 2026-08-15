@@ -1,7 +1,9 @@
 package com.example.chook.admin.controller;
 
 import com.example.chook.admin.dto.JobSeekerTableDTO;
+import com.example.chook.admin.entity.enums.JobSeekerKeywordType;
 import com.example.chook.admin.form.JobSeekerSearchForm;
+import com.example.chook.admin.mapper.AdminMapper;
 import com.example.chook.admin.record.AdminActionResponse;
 import com.example.chook.admin.record.DropdownOption;
 import com.example.chook.admin.record.JobSeekerSearchCondition;
@@ -17,7 +19,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Stream;
 
 @Controller
 @RequestMapping("/admin")
@@ -27,25 +31,22 @@ public class AdminController {
 
   private static final int PAGINATION_SIZE = 10;
   private final AdminService adminService;
+  private final AdminMapper adminMapper;
 
   @GetMapping("/member/job-seeker")
   public void loadJobSeekerPage(
     Model model,
-    @RequestParam(name = "pageIdx", required = false, defaultValue = "1") int pageIdx,
     @RequestParam(name = "pageSize", required = false, defaultValue = "30") int pageSize,
     @Valid @ModelAttribute JobSeekerSearchForm form
   ) {
     model.addAttribute("pageSize", pageSize);
     model.addAttribute("form", form);
 
-    List<DropdownOption> keywordOptions = List.of(
-      new DropdownOption("ALL", "전체"),
-      new DropdownOption("USERNAME", "아이디"),
-      new DropdownOption("NAME", "이름"),
-      new DropdownOption("PHONE", "전화번호"),
-      new DropdownOption("EMAIL", "이메일"),
-      new DropdownOption("ADDRESS", "주소")
-    );
+    List<DropdownOption> keywordOptions = Stream.concat(
+      Stream.of(new DropdownOption("ALL", "전체", false)),
+      Arrays.stream(JobSeekerKeywordType.values())
+        .map(adminMapper::toDropdownOption)
+    ).toList();
 
     model.addAttribute("keywordOptions",  keywordOptions);
   }

@@ -45,7 +45,7 @@ public record JobSeekerSearchCondition(
     this(
       convertStringToEnum(form.keywordType(), JobSeekerKeywordType.class, null),
       getKeywordList(form.keywords(), form.keywordCriteria()),
-      convertStringToEnum(form.keywordCriteria(), KeywordCriteria.class, KeywordCriteria.CONTAINS),
+      getKeywordCriteria(form.keywordType(), form.keywordCriteria()),
       convertStringToEnum(form.status(), MemberStatusFilter.class, null),
       convertStringToEnum(form.gender(), Gender.class, null),
       convertStringToEnum(form.dateRangeCriteria(), JobSeekerDateCriteria.class, null),
@@ -58,6 +58,12 @@ public record JobSeekerSearchCondition(
       form.ascending()
     );
 
+  }
+
+  private static KeywordCriteria getKeywordCriteria(String keywordTypeStr, String keywordCriteria) {
+    JobSeekerKeywordType keywordType = convertStringToEnum(keywordTypeStr, JobSeekerKeywordType.class, null);
+    if (keywordType == null || !keywordType.isExactMatchSupported()) return KeywordCriteria.CONTAINS;
+    return convertStringToEnum(keywordCriteria, KeywordCriteria.class, KeywordCriteria.CONTAINS);
   }
 
   private static List<String> getKeywordList(String keywords, String keywordCriteriaStr) {
