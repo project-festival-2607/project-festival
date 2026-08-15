@@ -21,16 +21,6 @@ label.search-form-label {
   border-color: var(--bs-border-color) !important;
 }
 
-.form-btn-left {
-  border: var(--bs-border-width) solid var(--bs-border-color);
-  border-right: 0 none;
-}
-
-.form-btn-right {
-  border: var(--bs-border-width) solid var(--bs-border-color);
-  border-left: 0 none;
-}
-
 .form-control-end {
   border-top-right-radius: var(--bs-border-radius-sm) !important;
   border-bottom-right-radius: var(--bs-border-radius-sm) !important;
@@ -44,13 +34,8 @@ label.search-form-label {
   width: 100px;
 }
 
-#keywordCriteriaWrapper,
 #dateRangeCriteriaAutofillWrapper {
   height: 26px;
-}
-
-#keywordCriteriaWrapper {
-  font-size: 0.80rem;
 }
 
 .result-table-wrapper {
@@ -166,14 +151,12 @@ label.search-form-label {
   z-index: 3;
 }
 
-#keywordTypeDropdownList.dropdown-menu,
 #dateRangeCriteriaDropdownList.dropdown-menu,
 .moderation-menu {
   --bs-dropdown-padding-y: .25rem;
   --bs-dropdown-item-padding-y: .15rem;
 }
 
-#keywordTypeDropdownList.dropdown-menu,
 #dateRangeCriteriaDropdownList.dropdown-menu {
   font-size: 81%;
 }

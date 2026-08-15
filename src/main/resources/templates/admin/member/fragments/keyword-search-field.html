@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<th:block th:fragment="keyword-search-field(keywordOptions, form)">
+  <div class="search-field-head">
+    <label class="search-field-label"
+           for="keywords">검색 키워드
+      <a data-bs-html="true"
+         data-bs-title="키워드 여러 개를 공백으로 구분해 검색할 수 있습니다."
+         data-bs-toggle="tooltip"
+         href="#">
+        <span th:replace="~{admin/fragments/svg :: tooltip(tooltip-icon)}"></span>
+      </a>
+    </label>
+    <div class="search-criteria" role="group">
+      <div class="form-check">
+        <input class="form-check-input" data-type="keywordCriteria" id="keywordCriteriaContains"
+               name="keywordCriteria"
+               th:checked="${form.keywordCriteria == null or form.keywordCriteria == 'CONTAINS'}"
+               type="radio"
+               value="CONTAINS">
+        <label class="form-check-label" for="keywordCriteriaContains">키워드 포함</label>
+      </div>
+      <div class="form-check">
+        <input class="form-check-input" data-type="keywordCriteria" id="keywordCriteriaEquals"
+               name="keywordCriteria"
+               th:checked="${form.keywordCriteria != null and form.keywordCriteria == 'EQUALS'}"
+               type="radio"
+               value="EQUALS">
+        <label class="form-check-label" for="keywordCriteriaEquals">정확히 일치</label>
+      </div>
+    </div>
+  </div>
+  <div class="search-field-main">
+    <div class="input-group input-group-sm">
+      <button class="btn btn-light form-btn-left" id="currentKeywordType" type="button">전체</button>
+      <button aria-expanded="false" class="btn btn-light form-btn-right dropdown-toggle dropdown-toggle-split"
+              data-bs-toggle="dropdown" type="button"></button>
+      <ul class="dropdown-menu" id="keywordTypeDropdownList">
+        <li th:each="option: ${keywordOptions}">
+          <button class="dropdown-item keyword-type-li"
+                  th:data-value="${option.value}"
+                  th:text="${option.label}"
+                  type="button"></button>
+        </li>
+      </ul>
+      <input id="keywordType" name="keywordType" th:value="${form.keywordType}" type="hidden">
+      <input class="form-control" id="keywords" name="keywords" th:value="${form.keywords}" type="text">
+    </div>
+  </div>
+</th:block>

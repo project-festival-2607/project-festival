@@ -33,11 +33,11 @@ function updateCurrentKeywordType() {
   currentKeywordType.textContent = selected?.textContent ?? '전체';
 }
 
-document.getElementById('keywordTypeDropdownList').addEventListener('click', (e) => {
-  if (e.target.classList.contains('keyword-type-li')) {
-    keywordType.value = e.target.dataset.value;
-    updateCurrentKeywordType();
-  }
+document.getElementById('keywordTypeDropdownList').addEventListener('click', (event) => {
+  const target = event.target.closest('.keyword-type-li');
+  if (!target) return;
+  keywordType.value = target.dataset.value;
+  updateCurrentKeywordType();
 });
 
 

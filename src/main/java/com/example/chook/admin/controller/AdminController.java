@@ -3,6 +3,7 @@ package com.example.chook.admin.controller;
 import com.example.chook.admin.dto.JobSeekerTableDTO;
 import com.example.chook.admin.form.JobSeekerSearchForm;
 import com.example.chook.admin.record.AdminActionResponse;
+import com.example.chook.admin.record.DropdownOption;
 import com.example.chook.admin.record.JobSeekerSearchCondition;
 import com.example.chook.admin.record.PhoneVerificationRequest;
 import com.example.chook.admin.service.AdminService;
@@ -36,6 +37,17 @@ public class AdminController {
   ) {
     model.addAttribute("pageSize", pageSize);
     model.addAttribute("form", form);
+
+    List<DropdownOption> keywordOptions = List.of(
+      new DropdownOption("ALL", "전체"),
+      new DropdownOption("USERNAME", "아이디"),
+      new DropdownOption("NAME", "이름"),
+      new DropdownOption("PHONE", "전화번호"),
+      new DropdownOption("EMAIL", "이메일"),
+      new DropdownOption("ADDRESS", "주소")
+    );
+
+    model.addAttribute("keywordOptions",  keywordOptions);
   }
 
   @GetMapping("/member/job-seeker/result")
