@@ -70,6 +70,7 @@ label.search-form-label {
   border-collapse: separate;
   border-spacing: 0;
   margin-bottom: 0;
+  table-layout: fixed;
 }
 
 .result-table-wrapper table thead th {
@@ -82,16 +83,22 @@ label.search-form-label {
   padding-right: 0.1rem;
 }
 
-.result-table-wrapper table tr {
-  white-space: nowrap;
-}
-
 .result-table-wrapper table td {
   font-weight: 400;
   white-space: nowrap;
   padding-left: 0.5rem;
   padding-right: 0.5rem;
   letter-spacing: -0.03em;
+}
+
+.result-table-wrapper table td:not(:last-child) {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.result-table-wrapper table td[data-type="socialLogins"] {
+  padding-top: 0.1rem;
+  padding-bottom: 0.1rem;
 }
 
 .result-table-wrapper table td[data-type="status"] {
@@ -113,6 +120,14 @@ label.search-form-label {
   z-index: 4;
 }
 
+.result-table-wrapper table thead th:first-child {
+  position: sticky;
+  left: 0;
+  top: 0;
+  z-index: 5;
+  border-right: 0.1rem double rgba(var(--bs-dark-rgb), 0.1);
+}
+
 .result-table-wrapper table thead th:last-child {
   position: sticky;
   right: 0;
@@ -120,6 +135,13 @@ label.search-form-label {
   z-index: 5;
   background-color: var(--bs-body-bg);
   border-left: 0.1rem double rgba(var(--bs-dark-rgb), 0.1);
+}
+
+.result-table-wrapper table tbody td:first-child {
+  position: sticky;
+  left: 0;
+  z-index: 2;
+  border-right: 0.1rem double rgba(var(--bs-dark-rgb), 0.1);
 }
 
 .result-table-wrapper table tbody td:last-child {
