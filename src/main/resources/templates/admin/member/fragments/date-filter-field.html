@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<th:block class="search-field-group" th:fragment="date-filter-field(dateRangeOptions, form)">
+  <div class="search-field-group">
+    <div class="search-field-head">
+      <label class="search-field-label"
+      >날짜 범위
+      </label>
+      <div id="dateRangeCriteriaAutofill" role="group">
+        <button class="btn btn-outline-danger date-range-criteria-autofill" data-value="1h"
+                type="button">1시간
+        </button>
+        <button class="btn btn-outline-danger date-range-criteria-autofill" data-value="6h"
+                type="button">6시간
+        </button>
+        <button class="btn btn-outline-danger date-range-criteria-autofill" data-value="12h"
+                type="button">12시간
+        </button>
+        <button class="btn btn-outline-danger date-range-criteria-autofill" data-value="1d"
+                type="button">1일
+        </button>
+        <button class="btn btn-outline-danger date-range-criteria-autofill" data-value="7d"
+                type="button">1주
+        </button>
+        <button class="btn btn-outline-danger date-range-criteria-autofill" data-value="1M"
+                type="button">1개월
+        </button>
+      </div>
+    </div>
+    <div class="search-field-main">
+      <div class="input-group input-group-sm">
+        <button class="btn btn-light form-btn-left" id="currentDateRangeCriteria" type="button">선택</button>
+        <button aria-expanded="false" class="btn btn-light form-btn-right dropdown-toggle dropdown-toggle-split"
+                data-bs-toggle="dropdown" type="button"></button>
+        <ul class="dropdown-menu" id="dateRangeCriteriaDropdownList">
+          <li>
+            <button class="dropdown-item date-range-criteria-li"
+                    data-date-only="false"
+                    data-value="NONE"
+                    type="button">선택
+            </button>
+          </li>
+          <li th:each="option: ${dateRangeOptions}">
+            <button class="dropdown-item date-range-criteria-li"
+                    th:data-date-only="${option.dateOnly}"
+                    th:data-value="${option.name}"
+                    th:text="${option.label}"
+                    type="button"></button>
+          </li>
+        </ul>
+        <input class="form-control border-end-0" id="startDateTime" name="startDateTime"
+               th:value="${form.startDateTime}"
+               type="datetime-local"/>
+        <input class="form-control border-end-0" id="startDate" name="startDate" th:value="${form.startDate}"
+               type="date">
+        <span class="input-group-text border-start-0 border-end-0" id="dateRangeBetween">~</span>
+        <input class="form-control form-control-end border-start-0" id="endDateTime" name="endDateTime"
+               th:value="${form.endDateTime}"
+               type="datetime-local">
+        <input class="form-control form-control-end border-start-0" id="endDate" name="endDate"
+               th:value="${form.endDate}"
+               type="date">
+        <input id="dateRangeCriteria" name="dateRangeCriteria" th:value="${form.dateRangeCriteria}" type="hidden"/>
+      </div>
+    </div>
+  </div>
+</th:block>

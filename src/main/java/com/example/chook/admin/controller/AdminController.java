@@ -1,11 +1,11 @@
 package com.example.chook.admin.controller;
 
 import com.example.chook.admin.dto.JobSeekerTableDTO;
+import com.example.chook.admin.entity.enums.JobSeekerDateCriteria;
 import com.example.chook.admin.entity.enums.JobSeekerKeywordType;
 import com.example.chook.admin.form.JobSeekerSearchForm;
 import com.example.chook.admin.mapper.AdminMapper;
 import com.example.chook.admin.record.AdminActionResponse;
-import com.example.chook.admin.record.DropdownOption;
 import com.example.chook.admin.record.JobSeekerSearchCondition;
 import com.example.chook.admin.record.PhoneVerificationRequest;
 import com.example.chook.admin.service.AdminService;
@@ -19,9 +19,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Stream;
 
 @Controller
 @RequestMapping("/admin")
@@ -41,14 +39,8 @@ public class AdminController {
   ) {
     model.addAttribute("pageSize", pageSize);
     model.addAttribute("form", form);
-
-    List<DropdownOption> keywordOptions = Stream.concat(
-      Stream.of(new DropdownOption("ALL", "전체", false)),
-      Arrays.stream(JobSeekerKeywordType.values())
-        .map(adminMapper::toDropdownOption)
-    ).toList();
-
-    model.addAttribute("keywordOptions",  keywordOptions);
+    model.addAttribute("keywordOptions", List.of(JobSeekerKeywordType.values()));
+    model.addAttribute("dateRangeOptions", List.of(JobSeekerDateCriteria.values()));
   }
 
   @GetMapping("/member/job-seeker/result")

@@ -35,6 +35,7 @@ const startDateTime = document.getElementById('startDateTime');
 const endDateTime = document.getElementById('endDateTime');
 const startDate = document.getElementById('startDate');
 const endDate = document.getElementById('endDate');
+const dateRangeBetween = document.getElementById('dateRangeBetween');
 const currentDateRangeCriteria = document.getElementById('currentDateRangeCriteria');
 const dateRangeCriteria = document.getElementById('dateRangeCriteria');
 const dateRangeCriteriaAutofill = document.getElementById('dateRangeCriteriaAutofill');
@@ -44,13 +45,15 @@ function updateDateRangeCriteriaAndToggleInputType() {
     `.date-range-criteria-li[data-value="${dateRangeCriteria.value}"]`
   );
   currentDateRangeCriteria.textContent = selected?.textContent ?? '선택';
-  const isBirthDate = dateRangeCriteria.value === 'BIRTH_DATE';
-  const isNotSelected = dateRangeCriteria.value === '';
-  startDateTime.classList.toggle('d-none', isBirthDate);
-  endDateTime.classList.toggle('d-none', isBirthDate);
-  startDate.classList.toggle('d-none', !isBirthDate);
-  endDate.classList.toggle('d-none', !isBirthDate);
-  dateRangeCriteriaAutofill.classList.toggle('d-none', isBirthDate);
+  const isDateOnly = dateRangeCriteria.dataset.dateOnly === 'true';
+  console.log('dateRangeCriteria.value: ', dateRangeCriteria.value);
+  const isNotSelected = [undefined, '', 'NONE'].includes(dateRangeCriteria.value);
+  startDateTime.classList.toggle('d-none', isDateOnly);
+  endDateTime.classList.toggle('d-none', isDateOnly);
+  startDate.classList.toggle('d-none', !isDateOnly);
+  endDate.classList.toggle('d-none', !isDateOnly);
+  dateRangeBetween.classList.toggle('disabled', isNotSelected);
+  dateRangeCriteriaAutofill.classList.toggle('d-none', isDateOnly);
 
   [startDateTime, endDateTime, startDate, endDate].forEach(element => {
     element.disabled = isNotSelected;

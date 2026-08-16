@@ -18,87 +18,29 @@
         <th:block th:replace="~{admin/member/fragments/keyword-search-field :: keyword-search-field(
           keywordOptions=${keywordOptions},
           form=${form})}"></th:block>
-      </div>
-
-      <div class="admin-search-form d-flex justify-content-end input-group input-group-sm">
-        <button class="btn btn-light form-btn-left" id="currentPageSize" type="button">30개씩</button>
-        <button aria-expanded="false" class="btn btn-light form-btn-right dropdown-toggle dropdown-toggle-split"
-                data-bs-toggle="dropdown" type="button"></button>
-        <ul class="dropdown-menu dropdown-menu-end" id="pageSizeDropdownList">
-          <li>
-            <button class="dropdown-item page-size-li" data-value="10" type="button">10개씩</button>
-          </li>
-          <li>
-            <button class="dropdown-item page-size-li" data-value="30" type="button">30개씩</button>
-          </li>
-          <li>
-            <button class="dropdown-item page-size-li" data-value="50" type="button">50개씩</button>
-          </li>
-        </ul>
-        <input id="pageSize" name="pageSize" th:value="${pageSize}" type="hidden"/>
+        <th:block th:replace="~{admin/member/fragments/date-filter-field ::date-filter-field(
+          dateRangeOptions=${dateRangeOptions},
+          form=${form})}"></th:block>
       </div>
       <div class="row mb-3">
         <div>
-          <label class="search-form-label">날짜 범위</label>
-          <div class="input-group input-group-sm">
-            <button class="btn btn-light form-btn-left" id="currentDateRangeCriteria" type="button">선택</button>
-            <button aria-expanded="false" class="btn btn-light form-btn-right dropdown-toggle dropdown-toggle-split"
-                    data-bs-toggle="dropdown" type="button"></button>
-            <ul class="dropdown-menu" id="dateRangeCriteriaDropdownList">
-              <li>
-                <button class="dropdown-item date-range-criteria-li" data-value="" type="button">선택</button>
-              </li>
-              <li>
-                <button class="dropdown-item date-range-criteria-li" data-value="CREATED_AT" type="button">생성일시</button>
-              </li>
-              <li>
-                <button class="dropdown-item date-range-criteria-li" data-value="UPDATED_AT" type="button">수정일시</button>
-              </li>
-              <li>
-                <button class="dropdown-item date-range-criteria-li" data-value="LAST_LOGIN_AT" type="button">최근접속일시
-                </button>
-              </li>
-              <li>
-                <button class="dropdown-item date-range-criteria-li" data-value="DELETED_AT" type="button">삭제일시</button>
-              </li>
-              <li>
-                <button class="dropdown-item date-range-criteria-li" data-value="BIRTH_DATE" type="button">생년월일</button>
-              </li>
-            </ul>
-            <input class="form-control" id="startDateTime" name="startDateTime" th:value="${form.startDateTime}"
-                   type="datetime-local"/>
-            <input class="form-control" id="startDate" name="startDate" th:value="${form.startDate}" type="date">
-            <span class="input-group-text">~</span>
-            <input class="form-control form-control-end" id="endDateTime" name="endDateTime"
-                   th:value="${form.endDateTime}"
-                   type="datetime-local">
-            <input class="form-control form-control-end" id="endDate" name="endDate" th:value="${form.endDate}"
-                   type="date">
-            <input id="dateRangeCriteria" name="dateRangeCriteria" th:value="${form.dateRangeCriteria}" type="hidden"/>
-          </div>
-          <div class="float-end mt-2 d-flex align-items-center gap-2" id="dateRangeCriteriaAutofillWrapper">
-            <label>빠른 설정</label>
-            <div class="btn-group btn-group-xs" id="dateRangeCriteriaAutofill" role="group">
-              <button class="btn btn-outline-light text-body date-range-criteria-autofill" data-value="1h"
-                      type="button">1시간
-              </button>
-              <button class="btn btn-outline-light text-body date-range-criteria-autofill" data-value="6h"
-                      type="button">6시간
-              </button>
-              <button class="btn btn-outline-light text-body date-range-criteria-autofill" data-value="12h"
-                      type="button">12시간
-              </button>
-              <button class="btn btn-outline-light text-body date-range-criteria-autofill" data-value="1d"
-                      type="button">1일
-              </button>
-              <button class="btn btn-outline-light text-body date-range-criteria-autofill" data-value="7d"
-                      type="button">1주
-              </button>
-              <button class="btn btn-outline-light text-body date-range-criteria-autofill" data-value="1M"
-                      type="button">1개월
-              </button>
-            </div>
-          </div>
+        </div>
+        <div class="admin-search-form d-flex justify-content-end input-group input-group-sm">
+          <button class="btn btn-light form-btn-left" id="currentPageSize" type="button">30개씩</button>
+          <button aria-expanded="false" class="btn btn-light form-btn-right dropdown-toggle dropdown-toggle-split"
+                  data-bs-toggle="dropdown" type="button"></button>
+          <ul class="dropdown-menu dropdown-menu-end" id="pageSizeDropdownList">
+            <li>
+              <button class="dropdown-item page-size-li" data-value="10" type="button">10개씩</button>
+            </li>
+            <li>
+              <button class="dropdown-item page-size-li" data-value="30" type="button">30개씩</button>
+            </li>
+            <li>
+              <button class="dropdown-item page-size-li" data-value="50" type="button">50개씩</button>
+            </li>
+          </ul>
+          <input id="pageSize" name="pageSize" th:value="${pageSize}" type="hidden"/>
         </div>
         <button class="btn btn-dark" type="submit">검색</button>
       </div>

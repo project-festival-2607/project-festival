@@ -20,6 +20,7 @@
 .admin-search-form .form-btn-left {
   border: var(--bs-border-width) solid var(--bs-border-color);
   border-right: 0 none;
+  width: 100px;
 }
 
 .admin-search-form .form-btn-right {
@@ -49,11 +50,15 @@
   font-weight: 500;
 }
 
+.admin-search-form .search-field-group {
+  margin-bottom: 15px;
+}
+
 .admin-search-form .search-field-head {
   display: flex;
   gap: 20px;
   align-items: center;
-  margin-bottom: 6px;
+  margin-bottom: 5px;
 }
 
 .admin-search-form .search-field-head .search-field-label {
@@ -75,4 +80,28 @@
   display: flex;
   gap: 10px;
   align-items: center;
+}
+
+.admin-search-form #dateRangeBetween {
+  background-color: var(--bs-body-bg);
+}
+
+.admin-search-form #dateRangeBetween.disabled {
+  background-color: var(--bs-secondary-bg);
+}
+
+.admin-search-form .form-control-end {
+  border-top-right-radius: var(--bs-border-radius-sm) !important;
+  border-bottom-right-radius: var(--bs-border-radius-sm) !important;
+}
+
+.admin-search-form #dateRangeCriteriaAutofill button {
+  font-size: 11px;
+  font-weight: 500;
+
+  --bs-btn-padding-y: 0.10rem;
+  --bs-btn-padding-x: 0.25rem;
+  --bs-btn-border-radius: 50rem;  /* rounded-pill */
+  --bs-btn-color: var(--bs-secondary);
+  --bs-btn-border-color: var(--bs-border-color);
 }
