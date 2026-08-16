@@ -5,7 +5,6 @@ import com.example.chook.admin.entity.enums.DateRangeAutofillOption;
 import com.example.chook.admin.entity.enums.JobSeekerDateCriteria;
 import com.example.chook.admin.entity.enums.JobSeekerKeywordType;
 import com.example.chook.admin.form.JobSeekerSearchForm;
-import com.example.chook.admin.mapper.AdminMapper;
 import com.example.chook.admin.record.AdminActionResponse;
 import com.example.chook.admin.record.JobSeekerSearchCondition;
 import com.example.chook.admin.record.MemberInfoField;
@@ -31,7 +30,6 @@ public class AdminController {
 
   private static final int PAGINATION_SIZE = 10;
   private final AdminService adminService;
-  private final AdminMapper adminMapper;
 
   @GetMapping("/member/job-seeker")
   public void loadJobSeekerPage(
@@ -98,7 +96,7 @@ public class AdminController {
 
     log.info("form: {}", form);
     log.info("model: {}", model);
-    return "admin/member/fragments/job-seeker-result";
+    return "admin/member/fragments/result/job-seeker";
   }
 
   @PostMapping("/member/job-seeker/{memberId}/remove-phone-verification")
