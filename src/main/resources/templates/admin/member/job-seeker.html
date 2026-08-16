@@ -27,166 +27,80 @@
         <button class="btn btn-dark" type="submit">검색</button>
       </div>
       <div id="jobSeekerResult">
-        <div th:fragment="job-seeker-result">
-
-        </div>
       </div>
     </form>
   </div>
   <!-- suspendMemberModal -->
-  <div aria-hidden="true" aria-labelledby="suspendMemberModal" class="modal fade" id="suspendMemberModal" tabindex="-1">
+  <div aria-hidden="true" class="modal fade"
+       data-role="suspendMember" id="suspendMemberModal"
+       tabindex="-1">
     <div class="modal-dialog">
       <div class="modal-content">
-        <div class="modal-header">
-          <h1 class="modal-title fs-5" id="suspendMemberModalLabel">계정 정지 확인</h1>
-          <button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>
-        </div>
+        <div th:replace="~{admin/member/fragments/modal :: modal-header('계정 정지')}"></div>
         <div class="modal-body">
-          <label class="mb-3">회원 정보</label>
-          <table class="table mb-3">
-            <tbody>
-            <tr>
-              <th class="modal-member-info-th" scope="row">아이디</th>
-              <td id="suspendMemberUsername">(여기에 아이디가 표시됩니다.)</td>
-            </tr>
-            <tr>
-              <th scope="row">이름</th>
-              <td id="suspendMemberName">(여기에 이름이 표시됩니다.)</td>
-            </tr>
-            <tr>
-              <th scope="row">전화번호</th>
-              <td id="suspendMemberPhone">(여기에 전화번호 표시됩니다.)</td>
-            </tr>
-            <tr>
-              <th scope="row">이메일</th>
-              <td id="suspendMemberEmail">(여기에 이메일이 표시됩니다.)</td>
-            </tr>
-            <tr>
-              <th scope="row">최근접속일시</th>
-              <td id="suspendMemberLastLoginAt">(여기에 최근접속일시가 표시됩니다.)</td>
-            </tr>
-            </tbody>
-          </table>
-
+          <div
+            th:replace="~{admin/member/fragments/modal :: modal-member-info(targetInfoList=${suspendMemberInfo})}"></div>
           <div class="mb-3">
             <label class="form-label" for="suspensionReason">정지 사유</label>
-            <div class="input-group">
-              <input class="form-control form-control-sm" id="suspensionReason" type="text">
+            <div class="input-group" data-member-info data-member-field="suspendedReason">
+              <input class="form-control form-control-sm" data-load-here id="suspensionReason"
+                     type="text">
             </div>
           </div>
-
         </div>
         <div class="modal-footer">
           <button class="btn btn-secondary" data-bs-dismiss="modal" type="button">취소</button>
-          <button class="btn btn-outline-danger" id="suspendMemberSubmit" type="button">저장</button>
+          <button class="btn btn-outline-danger" data-role="submit" type="button">저장</button>
         </div>
       </div>
     </div>
   </div>
   <!-- unsuspendMemberModal -->
-  <div aria-hidden="true" aria-labelledby="unsuspendMemberModal" class="modal fade" id="unsuspendMemberModal"
+  <div aria-hidden="true" class="modal fade"
+       data-role="unsuspendMember" id="unsuspendMemberModal"
        tabindex="-1">
     <div class="modal-dialog">
       <div class="modal-content">
-        <div class="modal-header">
-          <h1 class="modal-title fs-5" id="unsuspendMemberModalLabel">계정 정지 확인</h1>
-          <button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>
-        </div>
+        <div th:replace="~{admin/member/fragments/modal :: modal-header('계정 정지 해제')}"></div>
         <div class="modal-body">
-          <label class="mb-3">회원 정지 정보</label>
-          <table class="table mb-3">
-            <tbody>
-            <tr>
-              <th class="modal-member-info-th" scope="row">아이디</th>
-              <td id="unsuspendMemberUsername">(여기에 아이디가 표시됩니다.)</td>
-            </tr>
-            <tr>
-              <th scope="row">이름</th>
-              <td id="unsuspendMemberName">(여기에 이름이 표시됩니다.)</td>
-            </tr>
-            <tr>
-              <th scope="row">정지 일시</th>
-              <td id="unsuspendMemberSuspendedAt">(여기에 정지 일시가 표시됩니다.)</td>
-            </tr>
-            <tr>
-              <th scope="row">정지 사유</th>
-              <td id="unsuspendMemberSuspendedReason">(여기에 정지 사유가 표시됩니다.)</td>
-            </tr>
-            </tbody>
-          </table>
-
+          <div
+            th:replace="~{admin/member/fragments/modal :: modal-member-info(targetInfoList=${unsuspendMemberInfo})}"></div>
         </div>
         <div class="modal-footer">
           <button class="btn btn-secondary" data-bs-dismiss="modal" type="button">취소</button>
-          <button class="btn btn-outline-danger" id="unsuspendMemberSubmit" type="button">정지 해제</button>
+          <button class="btn btn-outline-danger" data-role="submit" type="button">정지 해제</button>
         </div>
       </div>
     </div>
   </div>
   <!-- removePhoneVerificationModal -->
-  <div aria-hidden="true" aria-labelledby="removePhoneVerificationModal" class="modal fade"
-       id="removePhoneVerificationModal"
+  <div aria-hidden="true" class="modal fade"
+       data-role="removePhoneVerification" id="removePhoneVerificationModal"
        tabindex="-1">
     <div class="modal-dialog">
       <div class="modal-content">
-        <div class="modal-header">
-          <h1 class="modal-title fs-5" id="removePhoneVerificationModalLabel">휴대전화 번호 인증 해제 확인</h1>
-          <button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>
-        </div>
+        <div th:replace="~{admin/member/fragments/modal :: modal-header('휴대전화 인증 삭제')}"></div>
         <div class="modal-body">
-          <label class="mb-3">회원 정보</label>
-          <table class="table mb-3">
-            <tbody>
-            <tr>
-              <th class="modal-member-info-th" scope="row">아이디</th>
-              <td id="removePhoneVerificationUsername">(여기에 아이디가 표시됩니다.)</td>
-            </tr>
-            <tr>
-              <th scope="row">이름</th>
-              <td id="removePhoneVerificationName">(여기에 이름이 표시됩니다.)</td>
-            </tr>
-            <tr>
-              <th scope="row">휴대전화 번호</th>
-              <td id="removePhoneVerificationPhone">(여기에 휴대전화 번호가 표시됩니다.)</td>
-            </tr>
-            </tbody>
-          </table>
-
+          <div
+            th:replace="~{admin/member/fragments/modal :: modal-member-info(targetInfoList=${removePhoneVerificationInfo})}"></div>
         </div>
         <div class="modal-footer">
           <button class="btn btn-secondary" data-bs-dismiss="modal" type="button">취소</button>
-          <button class="btn btn-outline-danger" id="removePhoneVerificationSubmit" type="button">휴대전화 인증 해제</button>
+          <button class="btn btn-outline-danger" data-role="submit" type="button">휴대전화 인증 해제</button>
         </div>
       </div>
     </div>
   </div>
   <!-- addPhoneWithVerificationModal -->
-  <div aria-hidden="true" aria-labelledby="addPhoneWithVerificationModal" class="modal fade"
-       id="addPhoneWithVerificationModal" tabindex="-1">
+  <div aria-hidden="true" class="modal fade"
+       data-role="addPhoneWithVerification" id="addPhoneWithVerificationModal"
+       tabindex="-1">
     <div class="modal-dialog">
       <div class="modal-content">
-        <div class="modal-header">
-          <h1 class="modal-title fs-5" id="addPhoneWithVerificationModalLabel">휴대전화 번호 인증 해제 확인</h1>
-          <button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>
-        </div>
+        <div th:replace="~{admin/member/fragments/modal :: modal-header('휴대전화 인증 추가')}"></div>
         <div class="modal-body">
-          <label class="mb-3">회원 정보</label>
-          <table class="table mb-3">
-            <tbody>
-            <tr>
-              <th class="modal-member-info-th" scope="row">아이디</th>
-              <td id="addPhoneWithVerificationUsername">(여기에 아이디가 표시됩니다.)</td>
-            </tr>
-            <tr>
-              <th scope="row">이름</th>
-              <td id="addPhoneWithVerificationName">(여기에 이름이 표시됩니다.)</td>
-            </tr>
-            <tr>
-              <th scope="row">기존 휴대전화 번호</th>
-              <td id="addPhoneWithVerificationOldPhone">(여기에 기존 휴대전화 번호가 표시됩니다.)</td>
-            </tr>
-            </tbody>
-          </table>
+          <div
+            th:replace="~{admin/member/fragments/modal :: modal-member-info(targetInfoList=${addPhoneWithVerificationInfo})}"></div>
           <div class="mb-3">
             <label class="form-label" for="addPhoneWithVerificationPhone">새 휴대전화 번호</label>
             <div class="input-group">
@@ -209,7 +123,7 @@
         </div>
         <div class="modal-footer">
           <button class="btn btn-secondary" data-bs-dismiss="modal" type="button">취소</button>
-          <button class="btn btn-outline-success" id="addPhoneWithVerificationSubmit" type="button">휴대전화 인증 추가</button>
+          <button class="btn btn-outline-success" data-role="submit" type="button">휴대전화 인증 추가</button>
         </div>
       </div>
     </div>

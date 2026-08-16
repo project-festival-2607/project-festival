@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<th:block th:fragment="modal-header(title)">
+  <div class="modal-header">
+    <h1 class="modal-title fs-5" th:text="${title}"></h1>
+    <button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>
+  </div>
+</th:block>
+
+<th:block th:fragment="modal-member-info(targetInfoList)">
+  <label class="mb-3">회원 정보</label>
+  <table class="table mb-3">
+    <tbody>
+    <tr data-member-info th:data-member-field="${targetInfo.field}"
+        th:each="targetInfo: ${targetInfoList}">
+      <th class="modal-member-info-th" scope="row" th:text="${targetInfo.label}"></th>
+      <td data-load-here></td>
+    </tr>
+    </tbody>
+  </table>
+</th:block>

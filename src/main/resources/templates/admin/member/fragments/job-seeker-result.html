@@ -35,7 +35,7 @@
         <th scope="col">#</th>
         <th scope="col">아이디</th>
         <th scope="col">이름</th>
-        <th scope="col" colspan="2">전화번호</th>
+        <th scope="col" colspan="2">휴대전화번호</th>
         <th scope="col">이메일</th>
         <th scope="col">
           <div class="d-flex gap-3 justify-content-between">
@@ -152,26 +152,26 @@
       </thead>
       <tbody>
       <tr th:each="jobSeeker : ${page}">
-        <td data-type="id" th:text="${jobSeeker.id}" class="text-end"></td>
-        <td data-type="username" th:text="${jobSeeker.username}"></td>
-        <td data-type="name" th:text="${jobSeeker.name}"></td>
-        <td data-type="phone">[[${jobSeeker.formattedPhone}]]</td>
-        <td>
+        <td data-field="id" th:text="${jobSeeker.id}" class="text-end"></td>
+        <td data-field="username" th:text="${jobSeeker.username}"></td>
+        <td data-field="name" th:text="${jobSeeker.name}"></td>
+        <td data-field="phone">[[${jobSeeker.formattedPhone}]]</td>
+        <td data-field="phoneVerified">
           <span th:if="${jobSeeker.phoneVerified}" class="text-success"><th:block th:replace="~{admin/fragments/svg :: verified('phone-verified-icon')}"></th:block></span>
           <span th:unless="${jobSeeker.phoneVerified}" class="text-danger" title="휴대전화 번호가 인증되지 않았습니다."><th:block th:replace="~{admin/fragments/svg :: not-verified('phone-verified-icon')}"></th:block></span>
         </td>
-        <td data-type="email" th:text="${jobSeeker.email}"></td>
-        <td data-type="status" class="text-center">
+        <td data-field="email" th:text="${jobSeeker.email}"></td>
+        <td data-field="status" class="text-center">
           <th:block th:replace="~{admin/fragments/badge :: member-status(${jobSeeker.status}, ${jobSeeker.deletedAt ne null}, false)}"></th:block>
-          <span data-type="suspendedAt" class="d-none" th:text="${#temporals.format(jobSeeker.suspendedAt, 'yyyy.MM.dd. HH:mm:ss')}"></span>
-          <span data-type="suspendedReason" class="d-none">[[${jobSeeker.suspendedReason}]]</span>
+          <span data-field="suspendedAt" class="d-none" th:text="${#temporals.format(jobSeeker.suspendedAt, 'yyyy.MM.dd. HH:mm:ss')}"></span>
+          <span data-field="suspendedReason" class="d-none">[[${jobSeeker.suspendedReason}]]</span>
         </td>
-        <td th:text="${#temporals.format(jobSeeker.createdAt, 'yyyy.MM.dd. HH:mm')}"></td>
-        <td th:text="${#temporals.format(jobSeeker.updatedAt, 'yyyy.MM.dd. HH:mm')}"></td>
-        <td data-type="lastLoginAt" th:text="${#temporals.format(jobSeeker.lastLoginAt, 'yyyy.MM.dd. HH:mm')}"></td>
-        <td th:text="${#temporals.format(jobSeeker.deletedAt, 'yyyy.MM.dd. HH:mm')}"></td>
-        <td class="text-end" th:text="${jobSeeker.point}"></td>
-        <td data-type="socialLogins">
+        <td data-field="createdAt" th:text="${#temporals.format(jobSeeker.createdAt, 'yyyy.MM.dd. HH:mm')}"></td>
+        <td data-field="updatedAt" th:text="${#temporals.format(jobSeeker.updatedAt, 'yyyy.MM.dd. HH:mm')}"></td>
+        <td data-field="lastLoginAt" th:text="${#temporals.format(jobSeeker.lastLoginAt, 'yyyy.MM.dd. HH:mm')}"></td>
+        <td data-field="deletedAt" th:text="${#temporals.format(jobSeeker.deletedAt, 'yyyy.MM.dd. HH:mm')}"></td>
+        <td data-field="point" class="text-end" th:text="${jobSeeker.point}"></td>
+        <td data-field="socialLogins">
           <th:block th:each="socialLoginDto: ${jobSeeker.socialLoginDtoList}">
             <a href="#" data-bs-toggle="tooltip" data-bs-html="true"
                th:data-bs-title="${'연결 일시: ' + #temporals.format(socialLoginDto.linkedAt, 'yyyy.MM.dd. HH:mm:ss')}">
@@ -180,13 +180,13 @@
             </a>
           </th:block>
         </td>
-        <td>
+        <td data-field="gender">
           <span th:if="${jobSeeker.gender.name() == 'MALE'}">남성</span>
           <span th:if="${jobSeeker.gender.name() == 'FEMALE'}">여성</span>
         </td>
-        <td th:text="${#temporals.format(jobSeeker.birthDate, 'yyyy.MM.dd.')}"></td>
-        <td th:text="${jobSeeker.streetAddress}"></td>
-        <td th:text="${jobSeeker.detailAddress}"></td>
+        <td data-field="birthDate" th:text="${#temporals.format(jobSeeker.birthDate, 'yyyy.MM.dd.')}"></td>
+        <td data-field="streetAddress" th:text="${jobSeeker.streetAddress}"></td>
+        <td data-field="detailAddress" th:text="${jobSeeker.detailAddress}"></td>
         <td class="center bg-body-secondary">
           <button type="button" class="btn btn-reset dropdown-toggle dropdown-no-caret moderation-btn" data-bs-toggle="dropdown">
             <th:block th:replace="~{admin/fragments/svg :: moderation('moderation-icon')}"></th:block>
