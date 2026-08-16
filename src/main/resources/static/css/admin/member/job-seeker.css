@@ -64,12 +64,12 @@ label.search-form-label {
   text-overflow: ellipsis;
 }
 
-.result-table-wrapper table td[data-type="socialLogins"] {
+.result-table-wrapper table td[data-field="socialLogins"] {
   padding-top: 0.1rem;
   padding-bottom: 0.1rem;
 }
 
-.result-table-wrapper table td[data-type="status"] {
+.result-table-wrapper table td[data-field="status"] {
   font-size: 110%;
   padding-top: 0.2rem;
   padding-bottom: 0.2rem;
