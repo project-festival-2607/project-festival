@@ -4,10 +4,12 @@ import com.example.chook.admin.condition.JobSeekerSearchCondition;
 import com.example.chook.admin.dto.JobSeekerTableDTO;
 import com.example.chook.admin.mapper.AdminMapper;
 import com.example.chook.admin.repository.AdminMemberRepository;
+import com.example.chook.member.entity.BusinessRegistration;
 import com.example.chook.member.entity.Member;
 import com.example.chook.member.entity.MemberSuspension;
 import com.example.chook.member.entity.SocialLogin;
 import com.example.chook.member.entity.enums.MemberStatus;
+import com.example.chook.member.repository.BusinessRegistrationRepository;
 import com.example.chook.member.repository.MemberRepository;
 import com.example.chook.member.repository.MemberSuspensionRepository;
 import com.example.chook.member.repository.SocialLoginRepository;
@@ -20,6 +22,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -31,14 +34,17 @@ import java.util.stream.Collectors;
 public class AdminServiceImpl implements AdminService {
 
   private final AdminMemberRepository adminMemberRepository;
-  private final SocialLoginRepository socialLoginRepository;
+  private final AdminMapper adminMapper;
+
   private final MemberRepository memberRepository;
   private final MemberSuspensionRepository memberSuspensionRepository;
-  private final AdminMapper adminMapper;
+
+  private final SocialLoginRepository socialLoginRepository;
+  private final BusinessRegistrationRepository businessRegistrationRepository;
 
 
   @Override
-  public Page<JobSeekerTableDTO> getPage(int pageIdx, int pageSize, JobSeekerSearchCondition condition) {
+  public Page<JobSeekerTableDTO> getJobSeekerPage(int pageIdx, int pageSize, JobSeekerSearchCondition condition) {
     Pageable pageable = PageRequest.of(pageIdx - 1, pageSize);
     Page<JobSeekerTableDTO> result = adminMemberRepository.getJobSeekerPage(pageable, condition);
     List<Long> memberIdList = result.stream().map(JobSeekerTableDTO::getId).toList();
@@ -64,16 +70,6 @@ public class AdminServiceImpl implements AdminService {
     });
 
     return result;
-  }
-
-  @Transactional
-  @Override
-  public void removePhoneVerification(Long memberId) {
-    Member member = memberRepository.findById(memberId).orElseThrow(() ->
-      new EntityNotFoundException("Member with id: " + memberId + " not found")
-    );
-    member.setPhoneVerified(false);
-    suspendMember(memberId, "휴대전화번호 인증이 유효하지 않음");
   }
 
   @Transactional
@@ -123,6 +119,16 @@ public class AdminServiceImpl implements AdminService {
 
   @Transactional
   @Override
+  public void removePhoneVerification(Long memberId) {
+    Member member = memberRepository.findById(memberId).orElseThrow(() ->
+      new EntityNotFoundException("Member with id: " + memberId + " not found")
+    );
+    member.setPhoneVerified(false);
+    suspendMember(memberId, "휴대전화번호 인증이 유효하지 않음");
+  }
+
+  @Transactional
+  @Override
   public boolean addPhoneWithVerification(Long memberId, String phone) {
     Member member = memberRepository.findById(memberId).orElseThrow(() ->
       new EntityNotFoundException("Member with id: " + memberId + " not found")
@@ -130,6 +136,35 @@ public class AdminServiceImpl implements AdminService {
     if (member.isPhoneVerified()) return false;
     member.setPhone(phone);
     member.setPhoneVerified(true);
+    return true;
+  }
+
+  @Transactional
+  @Override
+  public void removeBusinessRegistration(Long memberId) {
+    Member member = memberRepository.findById(memberId).orElseThrow(() ->
+      new EntityNotFoundException("Member with id: " + memberId + " not found")
+    );
+    if (!businessRegistrationRepository.existsById(memberId)) {
+      throw new IllegalArgumentException("Member with id: " + memberId + " doesn't have business registration");
+    }
+    businessRegistrationRepository.deleteById(memberId);
+    suspendMember(memberId, "사업자등록번호 인증이 유효하지 않음");
+  }
+
+  @Transactional
+  @Override
+  public boolean addBusinessRegistration(Long memberId, String businessNumber) {
+    Member member = memberRepository.findById(memberId).orElseThrow(() ->
+      new EntityNotFoundException("Member with id: " + memberId + " not found")
+    );
+    if (businessRegistrationRepository.existsById(memberId)) return false;
+    businessRegistrationRepository.save(BusinessRegistration.builder()
+      .member(member)
+      .businessNumber(businessNumber)
+      .verified(true)
+      .verifiedAt(LocalDateTime.now())
+      .build());
     return true;
   }
 

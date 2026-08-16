@@ -6,13 +6,14 @@ import org.springframework.data.domain.Page;
 
 public interface AdminService {
 
-  Page<JobSeekerTableDTO> getPage(int pageIdx, int pageSize, JobSeekerSearchCondition condition);
-
-  void removePhoneVerification(Long memberId);
+  Page<JobSeekerTableDTO> getJobSeekerPage(int pageIdx, int pageSize, JobSeekerSearchCondition condition);
 
   boolean suspendMember(Long memberId, String reason);
-
   boolean unsuspendMember(Long memberId);
 
+  void removePhoneVerification(Long memberId);
   boolean addPhoneWithVerification(Long memberId, String phone);
+
+  void removeBusinessRegistration(Long memberId);
+  boolean addBusinessRegistration(Long memberId, String businessNumber);
 }
