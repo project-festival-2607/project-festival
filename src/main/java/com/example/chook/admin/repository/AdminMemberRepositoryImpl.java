@@ -204,6 +204,8 @@ public class AdminMemberRepositoryImpl implements AdminMemberRepository {
     );
   }
 
+  // #################### JOIN 적용 메서드 ####################
+
   private <T> JPAQuery<T> applyJobSeekerJoin(JPAQuery<T> query) {
     return query
       .leftJoin(memberSuspension)
@@ -222,24 +224,86 @@ public class AdminMemberRepositoryImpl implements AdminMemberRepository {
       .on(businessRegistration.memberId.eq(member.id));
   }
 
-  private BooleanExpression applyProviderFilter(Provider provider) {
-    return eq(member.socialLogins.any().provider, provider);
-  }
 
-  private BooleanBuilder applyStatusFilter(MemberStatusFilter status) {
+  // #################### KEYWORD FILTER 적용 메서드 ####################
+
+  private BooleanBuilder applyJobSeekerKeywordFilter(List<String> keywordList,
+                                                     JobSeekerKeywordType keywordType,
+                                                     KeywordCriteria keywordCriteria) {
+
+    if (keywordList == null || keywordList.isEmpty()) return null;
+    List<JobSeekerKeywordType> types =
+      keywordType == null
+        ? List.of(JobSeekerKeywordType.values())
+        : List.of(keywordType);
 
     BooleanBuilder result = new BooleanBuilder();
 
-    if (status == null) return null;
-    switch (status) {
-      case ACTIVE -> result.and(eq(member.status, MemberStatus.ACTIVE));
-      case DORMANT -> result.and(eq(member.status, MemberStatus.DORMANT));
-      case SUSPENDED -> result.and(eq(member.status, MemberStatus.SUSPENDED));
-      case DELETED -> result.and(member.deletedAt.isNotNull());
-    }
+    BiFunction<StringPath, String, BooleanExpression> keywordCheck =
+      getKeywordCheckFunction(keywordCriteria);
 
+    for (String keyword : keywordList) {
+      BooleanBuilder keywordResult = new BooleanBuilder();
+      for (JobSeekerKeywordType type : types) {
+        switch (type) {
+          case USERNAME -> keywordResult.or(keywordCheck.apply(member.username, keyword));
+          case NAME -> keywordResult.or(keywordCheck.apply(member.name, keyword));
+          case PHONE -> keywordResult.or(keywordCheck.apply(member.phone, keyword.replace("-", "")));
+          case EMAIL -> keywordResult.or(keywordCheck.apply(member.email, keyword));
+          case ADDRESS -> {
+            keywordResult.or(contains(jobSeekerProfile.streetAddress, keyword));
+            keywordResult.or(contains(jobSeekerProfile.detailAddress, keyword));
+          }
+        }
+      }
+      result.and(keywordResult);
+    }
     return result;
   }
+
+  private BooleanBuilder applyRecruiterKeywordFilter(List<String> keywordList,
+                                                     RecruiterKeywordType keywordType,
+                                                     KeywordCriteria keywordCriteria) {
+
+    if (keywordList == null || keywordList.isEmpty()) return null;
+    List<RecruiterKeywordType> types =
+      keywordType == null
+        ? List.of(RecruiterKeywordType.values())
+        : List.of(keywordType);
+
+    BooleanBuilder result = new BooleanBuilder();
+
+    BiFunction<StringPath, String, BooleanExpression> keywordCheck =
+      getKeywordCheckFunction(keywordCriteria);
+
+    for (String keyword : keywordList) {
+      BooleanBuilder keywordResult = new BooleanBuilder();
+      for (RecruiterKeywordType type : types) {
+        switch (type) {
+          case USERNAME -> keywordResult.or(keywordCheck.apply(member.username, keyword));
+          case COMPANY_NAME -> keywordResult.or(keywordCheck.apply(employerProfile.companyName, keyword));
+          case CEO_NAME -> keywordResult.or(keywordCheck.apply(employerProfile.ceoName, keyword));
+          case BUSINESS_NUMBER ->
+            keywordResult.or(keywordCheck.apply(businessRegistration.businessNumber, keyword.replace("-", "")));
+          case ADDRESS -> {
+            keywordResult.or(contains(employerProfile.streetAddress, keyword));
+            keywordResult.or(contains(employerProfile.detailAddress, keyword));
+          }
+        }
+      }
+      result.and(keywordResult);
+    }
+    return result;
+  }
+
+  private BiFunction<StringPath, String, BooleanExpression> getKeywordCheckFunction(KeywordCriteria keywordCriteria) {
+    return (keywordCriteria == KeywordCriteria.EQUALS)
+      ? QuerydslUtils::eq
+      : QuerydslUtils::contains;
+  }
+
+
+  // #################### DATE CRITERIA FILTER 적용 메서드 ####################
 
   private BooleanBuilder applyJobSeekerDateCriteriaFilter(JobSeekerDateCriteria criteria,
                                                           LocalDateTime startDateTime,
@@ -321,6 +385,31 @@ public class AdminMemberRepositoryImpl implements AdminMemberRepository {
     return result;
   }
 
+
+  // #################### 테이블 상단 필터 적용 메서드 ####################
+
+  private BooleanBuilder applyStatusFilter(MemberStatusFilter status) {
+
+    BooleanBuilder result = new BooleanBuilder();
+
+    if (status == null) return null;
+    switch (status) {
+      case ACTIVE -> result.and(eq(member.status, MemberStatus.ACTIVE));
+      case DORMANT -> result.and(eq(member.status, MemberStatus.DORMANT));
+      case SUSPENDED -> result.and(eq(member.status, MemberStatus.SUSPENDED));
+      case DELETED -> result.and(member.deletedAt.isNotNull());
+    }
+
+    return result;
+  }
+
+  private BooleanExpression applyProviderFilter(Provider provider) {
+    return eq(member.socialLogins.any().provider, provider);
+  }
+
+
+  // #################### 테이블 상단 정렬 OrderSpecifier<>[] 구축 메서드 ####################
+
   private OrderSpecifier<?>[] getJobSeekerOrderSpecifierArray(JobSeekerSortCriteria sortCriteria,
                                                               Boolean ascending) {
     List<OrderSpecifier<?>> orderSpecifiers = new ArrayList<>();
@@ -357,81 +446,6 @@ public class AdminMemberRepositoryImpl implements AdminMemberRepository {
     }
     orderSpecifiers.add(new OrderSpecifier<>(Order.ASC, member.id));
     return orderSpecifiers.toArray(new OrderSpecifier[0]);
-  }
-
-  private BooleanBuilder applyJobSeekerKeywordFilter(List<String> keywordList,
-                                                     JobSeekerKeywordType keywordType,
-                                                     KeywordCriteria keywordCriteria) {
-
-    if (keywordList == null || keywordList.isEmpty()) return null;
-    List<JobSeekerKeywordType> types =
-      keywordType == null
-        ? List.of(JobSeekerKeywordType.values())
-        : List.of(keywordType);
-
-    BooleanBuilder result = new BooleanBuilder();
-
-    BiFunction<StringPath, String, BooleanExpression> keywordCheck =
-      getKeywordCheckFunction(keywordCriteria);
-
-    for (String keyword : keywordList) {
-      BooleanBuilder keywordResult = new BooleanBuilder();
-      for (JobSeekerKeywordType type : types) {
-        switch (type) {
-          case USERNAME -> keywordResult.or(keywordCheck.apply(member.username, keyword));
-          case NAME -> keywordResult.or(keywordCheck.apply(member.name, keyword));
-          case PHONE -> keywordResult.or(keywordCheck.apply(member.phone, keyword.replace("-", "")));
-          case EMAIL -> keywordResult.or(keywordCheck.apply(member.email, keyword));
-          case ADDRESS -> {
-            keywordResult.or(contains(jobSeekerProfile.streetAddress, keyword));
-            keywordResult.or(contains(jobSeekerProfile.detailAddress, keyword));
-          }
-        }
-      }
-      result.and(keywordResult);
-    }
-    return result;
-  }
-
-  private BooleanBuilder applyRecruiterKeywordFilter(List<String> keywordList,
-                                                     RecruiterKeywordType keywordType,
-                                                     KeywordCriteria keywordCriteria) {
-
-    if (keywordList == null || keywordList.isEmpty()) return null;
-    List<RecruiterKeywordType> types =
-      keywordType == null
-        ? List.of(RecruiterKeywordType.values())
-        : List.of(keywordType);
-
-    BooleanBuilder result = new BooleanBuilder();
-
-    BiFunction<StringPath, String, BooleanExpression> keywordCheck =
-      getKeywordCheckFunction(keywordCriteria);
-
-    for (String keyword : keywordList) {
-      BooleanBuilder keywordResult = new BooleanBuilder();
-      for (RecruiterKeywordType type : types) {
-        switch (type) {
-          case USERNAME -> keywordResult.or(keywordCheck.apply(member.username, keyword));
-          case COMPANY_NAME -> keywordResult.or(keywordCheck.apply(employerProfile.companyName, keyword));
-          case CEO_NAME -> keywordResult.or(keywordCheck.apply(employerProfile.ceoName, keyword));
-          case BUSINESS_NUMBER ->
-            keywordResult.or(keywordCheck.apply(businessRegistration.businessNumber, keyword.replace("-", "")));
-          case ADDRESS -> {
-            keywordResult.or(contains(employerProfile.streetAddress, keyword));
-            keywordResult.or(contains(employerProfile.detailAddress, keyword));
-          }
-        }
-      }
-      result.and(keywordResult);
-    }
-    return result;
-  }
-
-  private BiFunction<StringPath, String, BooleanExpression> getKeywordCheckFunction(KeywordCriteria keywordCriteria) {
-    return (keywordCriteria == KeywordCriteria.EQUALS)
-      ? QuerydslUtils::eq
-      : QuerydslUtils::contains;
   }
 
   private <T extends Comparable<? super T>> List<OrderSpecifier<?>> getOrderSpecifier(
