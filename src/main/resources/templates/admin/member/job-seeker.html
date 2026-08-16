@@ -24,25 +24,6 @@
           form=${form})}"></th:block>
       </div>
       <div class="row mb-3">
-        <div>
-        </div>
-        <div class="admin-search-form d-flex justify-content-end input-group input-group-sm">
-          <button class="btn btn-light form-btn-left" id="currentPageSize" type="button">30개씩</button>
-          <button aria-expanded="false" class="btn btn-light form-btn-right dropdown-toggle dropdown-toggle-split"
-                  data-bs-toggle="dropdown" type="button"></button>
-          <ul class="dropdown-menu dropdown-menu-end" id="pageSizeDropdownList">
-            <li>
-              <button class="dropdown-item page-size-li" data-value="10" type="button">10개씩</button>
-            </li>
-            <li>
-              <button class="dropdown-item page-size-li" data-value="30" type="button">30개씩</button>
-            </li>
-            <li>
-              <button class="dropdown-item page-size-li" data-value="50" type="button">50개씩</button>
-            </li>
-          </ul>
-          <input id="pageSize" name="pageSize" th:value="${pageSize}" type="hidden"/>
-        </div>
         <button class="btn btn-dark" type="submit">검색</button>
       </div>
       <div id="jobSeekerResult">

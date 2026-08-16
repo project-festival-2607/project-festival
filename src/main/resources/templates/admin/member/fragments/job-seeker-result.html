@@ -3,7 +3,7 @@
       xmlns:th="http://www.thymeleaf.org">
 <body>
 
-<th:block th:fragment="job-seeker-result(page, pagingHandler)">
+<th:block th:fragment="job-seeker-result(page, pageSize, pagingHandler)">
   <div class="result-table-wrapper"
        th:with="form=${pagingHandler.form}"
        id="jobSeekerTableWrapper">
@@ -219,5 +219,24 @@
       </ul>
       <input type="hidden" id="pageIdx" name="pageIdx" th:value="${pagingHandler.pageIdx}"/>
     </nav>
+    <div>
+      <div class="d-flex justify-content-end input-group input-group-sm">
+        <button class="btn btn-light form-btn-left" id="currentPageSize" type="button">10개씩</button>
+        <button aria-expanded="false" class="btn btn-light form-btn-right dropdown-toggle dropdown-toggle-split"
+                data-bs-toggle="dropdown" type="button"></button>
+        <ul class="dropdown-menu dropdown-menu-end" id="pageSizeDropdownList">
+          <li>
+            <button class="dropdown-item page-size-li" value="10" type="submit">10개씩</button>
+          </li>
+          <li>
+            <button class="dropdown-item page-size-li" value="30" type="submit">30개씩</button>
+          </li>
+          <li>
+            <button class="dropdown-item page-size-li" value="50" type="submit">50개씩</button>
+          </li>
+        </ul>
+        <input id="pageSize" name="pageSize" th:value="${pageSize}" type="hidden"/>
+      </div>
+    </div>
   </div>
 </th:block>

@@ -35,10 +35,8 @@ public class AdminController {
   @GetMapping("/member/job-seeker")
   public void loadJobSeekerPage(
     Model model,
-    @RequestParam(name = "pageSize", required = false, defaultValue = "30") int pageSize,
     @Valid @ModelAttribute JobSeekerSearchForm form
   ) {
-    model.addAttribute("pageSize", pageSize);
     model.addAttribute("form", form);
     model.addAttribute("keywordOptions", List.of(JobSeekerKeywordType.values()));
     model.addAttribute("dateRangeOptions", List.of(JobSeekerDateCriteria.values()));
@@ -49,7 +47,7 @@ public class AdminController {
   public String getJobSeekerResultFragment(
     Model model,
     @RequestParam(name = "pageIdx", required = false, defaultValue = "1") int pageIdx,
-    @RequestParam(name = "pageSize", required = false, defaultValue = "30") int pageSize,
+    @RequestParam(name = "pageSize", required = false, defaultValue = "10") int pageSize,
     @Valid @ModelAttribute JobSeekerSearchForm form
   ) {
 
@@ -58,6 +56,7 @@ public class AdminController {
     Page<JobSeekerTableDTO> page = adminService.getPage(pageIdx, pageSize, condition);
 
     model.addAttribute("page", page);
+    model.addAttribute("pageSize", pageSize);
     PagingHandler<JobSeekerTableDTO, JobSeekerSearchForm> pagingHandler =
       new PagingHandler<>(page, form, PAGINATION_SIZE, pageIdx);
     model.addAttribute("pagingHandler", pagingHandler);

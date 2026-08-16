@@ -1,24 +1,3 @@
-//  ###############################################
-//  pageSize 초기화 및 드롭다운 설정
-//  ###############################################
-
-const currentPageSize = document.getElementById('currentPageSize');
-const pageSize = document.getElementById('pageSize');
-
-function updatePageSize() {
-  const selected = document.querySelector(
-    `.page-size-li[data-value="${pageSize.value}"]`
-  );
-  currentPageSize.textContent = selected?.textContent ?? '30개씩';
-}
-
-document.getElementById('pageSizeDropdownList').addEventListener('click', (e) => {
-  if (e.target.classList.contains('page-size-li')) {
-    pageSize.value = e.target.dataset.value;
-    updatePageSize();
-  }
-});
-
 document.getElementById('keywordTypeDropdownList').addEventListener('click', (event) => {
   const target = event.target.closest('.keyword-type-li');
   if (!target) return;
@@ -105,5 +84,4 @@ document.querySelectorAll('.date-range-criteria-autofill').forEach((element) => 
   })
 })
 
-updatePageSize();
 updateDateRangeCriteriaAndToggleInputType();
