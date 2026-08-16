@@ -15,10 +15,10 @@
     <form id="jobSeekerForm" method="get"
           th:action="@{/admin/member/job-seeker}" th:with="form=${form}">
       <div class="admin-search-form">
-        <th:block th:replace="~{admin/member/fragments/keyword-search-field :: keyword-search-field(
+        <th:block th:replace="~{admin/member/fragments/search-option :: keyword(
           keywordOptions=${keywordOptions},
           form=${form})}"></th:block>
-        <th:block th:replace="~{admin/member/fragments/date-filter-field ::date-filter-field(
+        <th:block th:replace="~{admin/member/fragments/search-option ::date-range(
           dateRangeOptions=${dateRangeOptions},
           dateRangeAutofillOptions=${dateRangeAutofillOptions},
           form=${form})}"></th:block>
