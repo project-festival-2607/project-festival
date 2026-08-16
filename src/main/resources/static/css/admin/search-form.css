@@ -11,23 +11,6 @@
   max-width: 600px;
 }
 
-.admin-search-form .dropdown-menu * {
-  --bs-dropdown-padding-y: .25rem;
-  --bs-dropdown-item-padding-y: .15rem;
-  font-size: 13px;
-}
-
-.admin-search-form .form-btn-left {
-  border: var(--bs-border-width) solid var(--bs-border-color);
-  border-right: 0 none;
-  width: 100px;
-}
-
-.admin-search-form .form-btn-right {
-  border: var(--bs-border-width) solid var(--bs-border-color);
-  border-left: 0 none;
-}
-
 .admin-search-form a[data-bs-toggle="tooltip"] {
   color: inherit;
 }
@@ -93,11 +76,6 @@
 .admin-search-form #dateRangeBetween.disabled {
   background-color: var(--bs-secondary-bg);
   color: rgba(var(--bs-body-color-rgb), 0.25);
-}
-
-.admin-search-form .form-control-end {
-  border-top-right-radius: var(--bs-border-radius-sm) !important;
-  border-bottom-right-radius: var(--bs-border-radius-sm) !important;
 }
 
 .admin-search-form #dateRangeCriteriaAutofill {

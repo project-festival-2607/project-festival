@@ -36,8 +36,8 @@
     </div>
     <div class="search-field-main">
       <div class="input-group input-group-sm">
-        <button class="btn btn-light form-btn-left" id="currentKeywordType" type="button">전체</button>
-        <button aria-expanded="false" class="btn btn-light form-btn-right dropdown-toggle dropdown-toggle-split"
+        <button class="btn btn-light dropdown-btn-left" id="currentKeywordType" type="button">전체</button>
+        <button aria-expanded="false" class="btn btn-light dropdown-btn-right dropdown-toggle dropdown-toggle-split"
                 data-bs-toggle="dropdown" type="button"></button>
         <ul class="dropdown-menu" id="keywordTypeDropdownList">
           <li>
@@ -78,8 +78,8 @@
     </div>
     <div class="search-field-main">
       <div class="input-group input-group-sm">
-        <button class="btn btn-light form-btn-left" id="currentDateRangeCriteria" type="button">선택</button>
-        <button aria-expanded="false" class="btn btn-light form-btn-right dropdown-toggle dropdown-toggle-split"
+        <button class="btn btn-light dropdown-btn-left" id="currentDateRangeCriteria" type="button">선택</button>
+        <button aria-expanded="false" class="btn btn-light dropdown-btn-right dropdown-toggle dropdown-toggle-split"
                 data-bs-toggle="dropdown" type="button"></button>
         <ul class="dropdown-menu" id="dateRangeCriteriaDropdownList">
           <li>
@@ -103,10 +103,10 @@
         <input class="form-control border-end-0" id="startDate" name="startDate" th:value="${form.startDate}"
                type="date">
         <span class="input-group-text border-start-0 border-end-0" id="dateRangeBetween">~</span>
-        <input class="form-control form-control-end border-start-0" id="endDateTime" name="endDateTime"
+        <input class="form-control border-radius-end border-start-0" id="endDateTime" name="endDateTime"
                th:value="${form.endDateTime}"
                type="datetime-local">
-        <input class="form-control form-control-end border-start-0" id="endDate" name="endDate"
+        <input class="form-control border-radius-end border-start-0" id="endDate" name="endDate"
                th:value="${form.endDate}"
                type="date">
         <input id="dateRangeCriteria" name="dateRangeCriteria" th:value="${form.dateRangeCriteria}" type="hidden"/>

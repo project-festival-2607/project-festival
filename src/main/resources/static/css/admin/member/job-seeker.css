@@ -88,11 +88,15 @@ label.search-form-label {
   z-index: 4;
 }
 
+.result-table-wrapper table thead th:has(.dropdown .dropdown-toggle.show) {
+  z-index: 5;
+}
+
 .result-table-wrapper table thead th:first-child {
   position: sticky;
   left: 0;
   top: 0;
-  z-index: 5;
+  z-index: 6;
   border-right: 0.1rem double rgba(var(--bs-dark-rgb), 0.1);
 }
 
@@ -100,7 +104,7 @@ label.search-form-label {
   position: sticky;
   right: 0;
   top: 0;
-  z-index: 5;
+  z-index: 6;
   background-color: var(--bs-body-bg);
   border-left: 0.1rem double rgba(var(--bs-dark-rgb), 0.1);
 }
@@ -128,18 +132,6 @@ label.search-form-label {
 .moderation-menu {
   --bs-dropdown-padding-y: .25rem;
   --bs-dropdown-item-padding-y: .15rem;
-}
-
-
-.status-filter-li,
-.provider-filter-li {
-  font-size: 130%;
-}
-
-#statusFilterDropdownList.dropdown-menu,
-#providerFilterDropdownList.dropdown-menu,
-.moderation-menu {
-  font-size: 90%;
 }
 
 .result-table-wrapper table tbody td {

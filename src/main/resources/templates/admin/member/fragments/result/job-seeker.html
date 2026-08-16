@@ -3,7 +3,7 @@
       xmlns:th="http://www.thymeleaf.org">
 <body>
 
-<th:block th:fragment="job-seeker-result(page, pageSize, pagingHandler)">
+<th:block th:fragment="job-seeker-result">
   <div class="result-table-wrapper"
        th:with="form=${pagingHandler.form}"
        id="jobSeekerTableWrapper">
@@ -24,7 +24,7 @@
         <col style="width: 135px;"> <!-- 삭제일시 -->
         <col style="width: 80px;">  <!-- 포인트 -->
         <col style="width: 110px;"> <!-- 소셜 -->
-        <col style="width: 45px;">  <!-- 성별 -->
+        <col style="width: 75px;">  <!-- 성별 -->
         <col style="width: 100px;"> <!-- 생년월일 -->
         <col style="width: 300px;"> <!-- 도로명주소 -->
         <col style="width: 300px;"> <!-- 상세주소 -->
@@ -51,18 +51,12 @@
                             th:classappend="${form.status == null} ? 'active'">
                   <th:block th:replace="~{admin/fragments/badge :: member-status(null, false, true)}"></th:block>
                 </button></li>
-                <li><button type="button" class="dropdown-item status-filter-li" data-role="update-status-filter" data-value="ACTIVE"
-                            th:classappend="${form.status != null and form.status == 'ACTIVE'} ? 'active'">
-                  <th:block th:replace="~{admin/fragments/badge :: member-status(${memberStatusFilters[0]}, false, false)}"></th:block>
-                </button></li>
-                <li><button type="button" class="dropdown-item status-filter-li" data-role="update-status-filter" data-value="DORMANT"
-                            th:classappend="${form.status != null and form.status == 'DORMANT'} ? 'active'">
-                  <th:block th:replace="~{admin/fragments/badge :: member-status(${memberStatusFilters[1]}, false, false)}"></th:block>
-                </button></li>
-                <li><button type="button" class="dropdown-item status-filter-li" data-role="update-status-filter" data-value="SUSPENDED"
-                            th:classappend="${form.status != null and form.status == 'SUSPENDED'} ? 'active'">
-                  <th:block th:replace="~{admin/fragments/badge :: member-status(${memberStatusFilters[2]}, false, false)}"></th:block>
-                </button></li>
+                <li th:each="status: ${memberStatusList}">
+                  <button type="button" class="dropdown-item status-filter-li" data-role="update-status-filter" th:data-value="${status.name}"
+                            th:classappend="${form.status != null and form.status == status.name} ? 'active'">
+                  <th:block th:replace="~{admin/fragments/badge :: member-status(${status}, false, false)}"></th:block>
+                </button>
+                </li>
                 <li><button type="button" class="dropdown-item status-filter-li" data-role="update-status-filter" data-value="DELETED"
                             th:classappend="${form.status != null and form.status == 'DELETED'} ? 'active'">
                   <th:block th:replace="~{admin/fragments/badge :: member-status(null, true, false)}"></th:block>
@@ -119,24 +113,42 @@
                             th:classappend="${form.provider == null} ? 'active'">
                   <th:block th:replace="~{admin/fragments/badge :: member-provider('전체')}"></th:block>
                 </button></li>
-                <li><button type="button" class="dropdown-item provider-filter-li" data-role="update-provider-filter" data-value="GOOGLE"
-                            th:classappend="${form.provider != null and form.provider == 'GOOGLE'} ? 'active'">
-                  <th:block th:replace="~{admin/fragments/badge :: member-provider('Google')}"></th:block>
-                </button></li>
-                <li><button type="button" class="dropdown-item provider-filter-li" data-role="update-provider-filter" data-value="KAKAO"
-                            th:classappend="${form.provider != null and form.provider == 'KAKAO'} ? 'active'">
-                  <th:block th:replace="~{admin/fragments/badge :: member-provider('kakao')}"></th:block>
-                </button></li>
-                <li><button type="button" class="dropdown-item provider-filter-li" data-role="update-provider-filter" data-value="NAVER"
-                            th:classappend="${form.provider != null and form.provider == 'NAVER'} ? 'active'">
-                  <th:block th:replace="~{admin/fragments/badge :: member-provider('NAVER')}"></th:block>
-                </button></li>
+                <li th:each="provider: ${memberProviderList}">
+                  <button type="button" class="dropdown-item provider-filter-li" data-role="update-provider-filter" th:data-value="${provider.name}"
+                            th:classappend="${form.provider != null and form.provider == provider.name} ? 'active'">
+                    <th:block th:replace="~{admin/fragments/badge :: member-provider(${provider.label})}"></th:block>
+                  </button>
+                </li>
               </ul>
               <input type="hidden" name="provider" id="filterProvider" th:value="${form.provider}">
             </div>
           </div>
         </th>
-        <th scope="col">성별</th>
+        <th scope="col">
+          <div class="d-flex gap-3 justify-content-between">
+          <span>성별</span>
+          <div class="dropdown d-flex justify-content-center align-items-center">
+            <button type="button" class="btn btn-reset btn-th dropdown-toggle dropdown-no-caret" data-bs-toggle="dropdown">
+              <th:block th:replace="${form.provider == null}
+                                      ? ~{admin/fragments/svg :: filter-idle('filter-idle-icon')}
+                                      : ~{admin/fragments/svg :: filter-active('filter-active-icon')}"></th:block>
+            </button>
+            <ul class="dropdown-menu filter-menu" id="genderFilterDropdownList">
+              <li><button type="button" class="dropdown-item gender-filter-li" data-role="update-gender-filter" data-value=""
+                          th:classappend="${form.gender == null} ? 'active'">
+                <th:block th:replace="~{admin/fragments/badge :: member-gender('전체')}"></th:block>
+              </button></li>
+<!--              <li th:each="gender: ${memberGenderList}">-->
+<!--                <button type="button" class="dropdown-item gender-filter-li" data-role="update-gender-filter" th:data-value="${gender.name}"-->
+<!--                        th:classappend="${form.gender != null and form.gender == gender.name} ? 'active'">-->
+<!--                  <th:block th:replace="~{admin/fragments/badge :: member-gender(${gender.label})}"></th:block>-->
+<!--                </button>-->
+<!--              </li>-->
+            </ul>
+<!--            <input type="hidden" name="gender" id="filterGender" th:value="${form.gender}">-->
+          </div>
+          </div>
+        </th>
         <th scope="col">
           <span class="d-flex gap-3 justify-content-between">
             <span>생년월일</span>
@@ -203,40 +215,36 @@
     </table>
   </div>
   <div>
-    <nav>
-      <ul class="admin-pagination pagination pagination-sm justify-content-center mt-2">
-        <li class="page-item" th:classappend="${pagingHandler.prevBtnActive eq false ? 'disabled' : '' }">
-          <button class="page-link" name="pageIdx" th:value="${pagingHandler.pageIdx - 1}" type="submit">←</button>
-        </li>
-        <li class="page-item"
-            th:classappend="${i == pagingHandler.pageIdx} ? 'active'"
-            th:each="i : ${#numbers.sequence(pagingHandler.startPageIdx, pagingHandler.endPageIdx)}">
-          <button class="page-link" name="pageIdx" th:value="${i}" type="submit">[[${i}]]</button>
-        </li>
-        <li class="page-item" th:classappend="${pagingHandler.nextBtnActive eq false ? 'disabled' : '' }">
-          <button class="page-link" name="pageIdx" th:value="${pagingHandler.pageIdx + 1}" type="submit">→</button>
-        </li>
-      </ul>
-      <input type="hidden" id="pageIdx" name="pageIdx" th:value="${pagingHandler.pageIdx}"/>
-    </nav>
-    <div>
-      <div class="d-flex justify-content-end input-group input-group-sm">
-        <button class="btn btn-light form-btn-left" id="currentPageSize" type="button">10개씩</button>
-        <button aria-expanded="false" class="btn btn-light form-btn-right dropdown-toggle dropdown-toggle-split"
-                data-bs-toggle="dropdown" type="button"></button>
-        <ul class="dropdown-menu dropdown-menu-end" id="pageSizeDropdownList">
-          <li>
-            <button class="dropdown-item page-size-li" value="10" type="submit">10개씩</button>
+    <nav class="d-flex mt-2">
+      <div class="flex-grow-1">
+        <ul class="admin-pagination pagination pagination-sm justify-content-center mb-0">
+          <li class="page-item" th:classappend="${pagingHandler.prevBtnActive eq false ? 'disabled' : '' }">
+            <button class="page-link" name="pageIdx" th:value="${pagingHandler.pageIdx - 1}" type="submit">←</button>
           </li>
-          <li>
-            <button class="dropdown-item page-size-li" value="30" type="submit">30개씩</button>
+          <li class="page-item"
+              th:classappend="${i == pagingHandler.pageIdx} ? 'active'"
+              th:each="i : ${#numbers.sequence(pagingHandler.startPageIdx, pagingHandler.endPageIdx)}">
+            <button class="page-link" name="pageIdx" th:value="${i}" type="submit">[[${i}]]</button>
           </li>
-          <li>
-            <button class="dropdown-item page-size-li" value="50" type="submit">50개씩</button>
+          <li class="page-item" th:classappend="${pagingHandler.nextBtnActive eq false ? 'disabled' : '' }">
+            <button class="page-link" name="pageIdx" th:value="${pagingHandler.pageIdx + 1}" type="submit">→</button>
           </li>
         </ul>
-        <input id="pageSize" name="pageSize" th:value="${pageSize}" type="hidden"/>
       </div>
-    </div>
+      <div class="page-size-selector">
+        <div class="d-flex justify-content-end input-group input-group-sm">
+          <button class="btn btn-light dropdown-btn-left" id="currentPageSize" type="button"></button>
+          <button aria-expanded="false" class="btn btn-light dropdown-btn-right dropdown-toggle dropdown-toggle-split border-radius-end"
+                  data-bs-toggle="dropdown" type="button"></button>
+          <ul class="dropdown-menu dropdown-menu-end" id="pageSizeDropdownList">
+            <li th:each="value: ${pageSizeOptions}">
+              <button class="dropdown-item page-size-li" th:value="${value}" th:text="${value + '개씩'}" type="submit"></button>
+            </li>
+          </ul>
+          <input id="pageSize" name="pageSize" th:value="${pageSize}" type="hidden"/>
+      </div>
+      </div>
+      <input type="hidden" id="pageIdx" name="pageIdx" th:value="${pagingHandler.pageIdx}"/>
+    </nav>
   </div>
 </th:block>

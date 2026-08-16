@@ -1,3 +1,4 @@
+.member-gender-filter,
 .member-provider-filter,
 .member-status-clear-filter {
   background-color: #fafafa;
@@ -46,11 +47,6 @@
   text-decoration: underline;
 }
 
-.tooltip-icon {
-  width: 0.9rem;
-  height: 0.9rem;
-}
-
 a[data-bs-toggle="tooltip"] {
   color: inherit;
 }
@@ -59,4 +55,35 @@ a[data-bs-toggle="tooltip"] {
   font-size: 90%;
   font-weight: 500;
   max-width: 400px;
+}
+
+.dropdown-menu * {
+  --bs-dropdown-padding-y: .25rem;
+  --bs-dropdown-item-padding-y: .15rem;
+  font-size: 13px;
+}
+
+.dropdown-item:has(span.badge) {
+  --bs-dropdown-item-padding-y: .25rem;
+  font-size: 12px;
+}
+
+.dropdown-btn-left {
+  border: var(--bs-border-width) solid var(--bs-border-color);
+  border-right: 0 none;
+  width: 100px;
+}
+
+.dropdown-btn-right {
+  border: var(--bs-border-width) solid var(--bs-border-color);
+  border-left: 0 none;
+}
+
+.border-radius-end {
+  border-top-right-radius: var(--bs-border-radius-sm) !important;
+  border-bottom-right-radius: var(--bs-border-radius-sm) !important;
+}
+
+.page-size-selector .dropdown-btn-left {
+  width: 60px;
 }
