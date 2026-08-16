@@ -2,7 +2,7 @@
 // 관리 메뉴
 // ##############################################
 
-document.querySelector('#jobSeekerForm').addEventListener('click', (event) => {
+document.querySelector('#form').addEventListener('click', (event) => {
 
   if (event.target.dataset.bsToggle === 'modal') {
     const modal = document.querySelector(`${event.target.dataset.bsTarget}`);
@@ -33,7 +33,7 @@ document.querySelectorAll('.modal-footer').forEach(element => {
         alert(response.message);
         if (response.result === true) {
           modal.querySelector('.btn-close').click();
-          loadJobSeekerResult();
+          loadResult('/admin/member/job-seeker');
         }
       })
     }
@@ -43,7 +43,7 @@ document.querySelectorAll('.modal-footer').forEach(element => {
         alert(response.message);
         if (response.result === true) {
           modal.querySelector('.btn-close').click();
-          loadJobSeekerResult();
+          loadResult('/admin/member/job-seeker');
         }
       })
     }
@@ -53,7 +53,7 @@ document.querySelectorAll('.modal-footer').forEach(element => {
         alert(response.message);
         if (response.result === true) {
           modal.querySelector('.btn-close').click();
-          loadJobSeekerResult();
+          loadResult('/admin/member/job-seeker');
         }
       })
     }
@@ -65,7 +65,7 @@ document.querySelectorAll('.modal-footer').forEach(element => {
         alert(response.message);
         if (response.result === true) {
           modal.querySelector('.btn-close').click();
-          loadJobSeekerResult();
+          loadResult('/admin/member/job-seeker');
         }
       })
     }

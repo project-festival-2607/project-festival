@@ -1,4 +1,4 @@
-document.querySelector('#jobSeekerForm').addEventListener('click', (event) => {
+document.querySelector('#form').addEventListener('click', (event) => {
 
   let changed = false;
   const filterTarget = event.target.closest('button[data-role="update-filter"]');
@@ -18,6 +18,6 @@ document.querySelector('#jobSeekerForm').addEventListener('click', (event) => {
     ascending.value = sortTarget.dataset.ascending;
   }
 
-  if (changed) loadJobSeekerResult();
+  if (changed) loadResult(window.location.pathname);
 
 });

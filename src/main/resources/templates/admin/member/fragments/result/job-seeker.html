@@ -5,7 +5,7 @@
 
 <th:block th:fragment="job-seeker-result">
   <div class="result-table-wrapper"
-       id="jobSeekerTableWrapper"
+       id="tableWrapper"
        th:with="form=${pagingHandler.form}">
     <input id="sortCriteria" name="sortCriteria" th:value="${form.sortCriteria}" type="hidden"/>
     <input id="ascending" name="ascending" th:value="${form.ascending}" type="hidden"/>
