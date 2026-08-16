@@ -1,7 +1,7 @@
 package com.example.chook.admin.repository;
 
 import com.example.chook.admin.dto.JobSeekerTableDTO;
-import com.example.chook.admin.record.JobSeekerSearchCondition;
+import com.example.chook.admin.condition.JobSeekerSearchCondition;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

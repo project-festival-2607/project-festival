@@ -1,4 +1,4 @@
-package com.example.chook.admin.record;
+package com.example.chook.admin.condition;
 
 import com.example.chook.admin.entity.enums.KeywordCriteria;
 import com.example.chook.admin.entity.enums.MemberStatusFilter;

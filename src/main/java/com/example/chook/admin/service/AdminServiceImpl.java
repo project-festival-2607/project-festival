@@ -2,7 +2,7 @@ package com.example.chook.admin.service;
 
 import com.example.chook.admin.dto.JobSeekerTableDTO;
 import com.example.chook.admin.mapper.AdminMapper;
-import com.example.chook.admin.record.JobSeekerSearchCondition;
+import com.example.chook.admin.condition.JobSeekerSearchCondition;
 import com.example.chook.admin.repository.AdminMemberRepository;
 import com.example.chook.member.entity.Member;
 import com.example.chook.member.entity.MemberSuspension;

@@ -6,7 +6,7 @@ import com.example.chook.admin.entity.enums.jobseeker.JobSeekerDateCriteria;
 import com.example.chook.admin.entity.enums.jobseeker.JobSeekerKeywordType;
 import com.example.chook.admin.form.JobSeekerSearchForm;
 import com.example.chook.admin.record.AdminActionResponse;
-import com.example.chook.admin.record.JobSeekerSearchCondition;
+import com.example.chook.admin.condition.JobSeekerSearchCondition;
 import com.example.chook.admin.record.MemberInfoField;
 import com.example.chook.admin.record.PhoneVerificationRequest;
 import com.example.chook.admin.service.AdminService;
