@@ -1,14 +1,11 @@
 package com.example.chook.admin.dto;
 
-import com.example.chook.member.entity.enums.Gender;
 import com.example.chook.member.entity.enums.MemberRole;
 import com.example.chook.member.entity.enums.MemberStatus;
 import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Getter
 @Setter
@@ -16,9 +13,8 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class JobSeekerTableDTO {
+public class RecruiterTableDTO {
 
-  // Member 공통 필드
   Long id;
   String username;
   String name;
@@ -35,17 +31,16 @@ public class JobSeekerTableDTO {
   LocalDateTime suspendedAt;
   String suspendedReason;
 
-  // JOB_SEEKER 전용 필드
-  @Builder.Default
-  List<SocialLoginDTO> socialLoginDtoList = new ArrayList<>();
-  Gender gender;
-  LocalDate birthDate;
+  // RECRUITER 전용 필드
+  String companyName;
+  String ceoName;
+  LocalDate foundedAt;
   String streetAddress;
   String detailAddress;
 
-  public String getFormattedPhone() {
-    return phone.length() == 11
-      ? String.format("%s-%s-%s", phone.substring(0, 3), phone.substring(3, 7), phone.substring(7))
-      : phone;
-  }
+  // RECRUITER 사업자등록번호 정보
+  String businessNumber;
+  LocalDateTime businessNumberVerifiedAt;
+
+
 }

@@ -1,8 +1,10 @@
 package com.example.chook.member.entity.enums;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
+@AllArgsConstructor
 public enum MemberRole {
 
     ADMIN("ROLE_ADMIN"),
@@ -11,7 +13,5 @@ public enum MemberRole {
     JOB_EQUIP("ROLE_JOB_EQUIP");
 
     private final String role;
-    MemberRole(String role) {
-        this.role = role;
-    }
+
 }

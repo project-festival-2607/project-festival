@@ -1,4 +1,4 @@
-package com.example.chook.admin.entity.enums;
+package com.example.chook.admin.entity.enums.jobseeker;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

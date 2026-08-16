@@ -13,4 +13,17 @@ public final class CustomStringUtils {
   public static String blankToNull(String string) {
     return (string == null || string.isBlank()) ? null : string;
   }
+
+  public static <T extends Enum<T>> T toEnum(
+    String string,
+    Class<T> enumClass,
+    T defaultValue
+  ) {
+    if (string == null) return defaultValue;
+    try {
+      return Enum.valueOf(enumClass, string);
+    } catch (IllegalArgumentException e) {
+      return defaultValue;
+    }
+  }
 }

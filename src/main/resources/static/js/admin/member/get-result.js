@@ -1,4 +1,4 @@
-document.querySelector('#jobSeekerForm').addEventListener('submit', event => {
+document.querySelector('#form').addEventListener('submit', event => {
   event.preventDefault();
 
   if (event.submitter?.classList.contains('page-link')) {
@@ -11,44 +11,44 @@ document.querySelector('#jobSeekerForm').addEventListener('submit', event => {
     document.getElementById('pageSize').value = event.submitter.value;
   }
 
-  loadJobSeekerResult();
+  loadResult(window.location.pathname);
 });
 
 document.querySelector('button[data-role="reset-search-form"]').addEventListener('click', event => {
-  loadJobSeekerResult(true);
+  loadResult(window.location.pathname, true);
+  document.querySelector('#form').querySelectorAll('input[type="hidden"]').forEach(element => {
+    element.value = '';
+  })
 })
 
-function jobSeekerPageUrl(reset = false) {
+function getPageUrl(baseUrl, reset = false) {
 
-  if (reset) return `/admin/member/job-seeker`;
+  if (reset) return `${baseUrl}`;
 
-  const form = document.getElementById('jobSeekerForm');
+  const form = document.getElementById('form');
   const params = new URLSearchParams(new FormData(form));
 
-  return `/admin/member/job-seeker?${params}`;
+  return `${baseUrl}?${params}`;
 
 }
 
-function jobSeekerResultUrl(reset = false) {
+function getResultRequestUrl(baseUrl, reset = false) {
 
-  if (reset) return `/admin/member/job-seeker/result`;
+  if (reset) return `${baseUrl}/result`;
 
-  const form = document.getElementById('jobSeekerForm');
+  const form = document.getElementById('form');
   const params = new URLSearchParams(new FormData(form));
 
-  return `/admin/member/job-seeker/result?${params}`;
+  return `${baseUrl}/result?${params}`;
 
 }
 
-function loadJobSeekerResult(reset = false) {
+function loadResult(baseUrl, reset = false) {
+  
+  const pageUrl = getPageUrl(baseUrl, reset);
+  const resultUrl = getResultRequestUrl(baseUrl, reset);
 
-  console.log("reset:", reset);
-
-  const pageUrl = jobSeekerPageUrl(reset);
-  const resultUrl = jobSeekerResultUrl(reset);
-
-  console.log("pageUrl:", pageUrl);
-  console.log("resultUrl:", resultUrl);
+  console.log('resultUrl: ', resultUrl);
 
   fetch(resultUrl).then(
     (response) => {
@@ -57,33 +57,33 @@ function loadJobSeekerResult(reset = false) {
       }
       response.text().then((resultHtml) => {
 
-        const jobSeekerResult = document.querySelector('#jobSeekerResult');
-        let jobSeekerTableWrapper = document.querySelector('#jobSeekerTableWrapper');
+        const resultElement = document.querySelector('#result');
+        let tableWrapper = document.querySelector('#tableWrapper');
 
         // 이전 스크롤 임시 저장
-        if (jobSeekerTableWrapper) {
+        if (tableWrapper) {
           localStorage.setItem(
             'admin-table-scroll-x',
-            `${jobSeekerTableWrapper.scrollLeft}`
+            `${tableWrapper.scrollLeft}`
           );
           localStorage.setItem(
             'admin-table-scroll-y',
-            `${jobSeekerTableWrapper.scrollTop}`
+            `${tableWrapper.scrollTop}`
           );
         }
 
-        jobSeekerResult.innerHTML = resultHtml;
+        resultElement.innerHTML = resultHtml;
         history.pushState({}, '', pageUrl);
 
         // 저장한 스크롤 불러오기 및 삭제
-        jobSeekerTableWrapper = document.querySelector('#jobSeekerTableWrapper');
-        jobSeekerTableWrapper.scrollLeft = Number(localStorage.getItem('admin-table-scroll-x') ?? 0);
-        jobSeekerTableWrapper.scrollTop = Number(localStorage.getItem('admin-table-scroll-y') ?? 0);
+        tableWrapper = document.querySelector('#tableWrapper');
+        tableWrapper.scrollLeft = Number(localStorage.getItem('admin-table-scroll-x') ?? 0);
+        tableWrapper.scrollTop = Number(localStorage.getItem('admin-table-scroll-y') ?? 0);
         localStorage.removeItem('admin-table-scroll-x');
         localStorage.removeItem('admin-table-scroll-y');
 
 
-        const tooltipTriggerList = jobSeekerResult.querySelectorAll('[data-bs-toggle="tooltip"]');
+        const tooltipTriggerList = resultElement.querySelectorAll('[data-bs-toggle="tooltip"]');
         [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
 
         //  pageSize 초기화 및 드롭다운 설정
