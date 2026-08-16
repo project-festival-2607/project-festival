@@ -95,10 +95,10 @@ public class AdminMemberRepositoryImpl implements AdminMemberRepository {
 
     whereCondition
       .and(member.role.eq(MemberRole.JOB_SEEKER))
-      .and(checkKeywordsWithCriteria(condition.keywordList(), condition.keywordType(), condition.keywordCriteria()))
+      .and(applyKeywordCriteria(condition.keywordList(), condition.keywordType(), condition.keywordCriteria()))
       .and(eq(jobSeekerProfile.gender, condition.gender()))
-      .and(checkStatusFilter(condition.status()))
-      .and(checkDataRangeCriteria(condition.dateRangeCriteria(),
+      .and(applyStatusFilter(condition.status()))
+      .and(applyDateCriteriaFilter(condition.dateRangeCriteria(),
         condition.startDateTime(),
         condition.endDateTime(),
         condition.startDate(),
@@ -108,7 +108,7 @@ public class AdminMemberRepositoryImpl implements AdminMemberRepository {
 
     List<JobSeekerTableDTO> content = resultQuery
       .where(whereCondition)
-      .orderBy(getOrderSpecifierArray(condition.sortCriteria(), condition.ascending()))
+      .orderBy(getJobSeekerOrderSpecifierArray(condition.sortCriteria(), condition.ascending()))
       .offset(pageable.getOffset())
       .limit(pageable.getPageSize())
       .fetch();
@@ -129,7 +129,7 @@ public class AdminMemberRepositoryImpl implements AdminMemberRepository {
     return eq(member.socialLogins.any().provider, provider);
   }
 
-  private BooleanBuilder checkStatusFilter(MemberStatusFilter status) {
+  private BooleanBuilder applyStatusFilter(MemberStatusFilter status) {
 
     BooleanBuilder result = new BooleanBuilder();
 
@@ -146,11 +146,11 @@ public class AdminMemberRepositoryImpl implements AdminMemberRepository {
     return result;
   }
 
-  private BooleanBuilder checkDataRangeCriteria(JobSeekerDateCriteria criteria,
-                                                LocalDateTime startDateTime,
-                                                LocalDateTime endDateTime,
-                                                LocalDate startDate,
-                                                LocalDate endDate) {
+  private BooleanBuilder applyDateCriteriaFilter(JobSeekerDateCriteria criteria,
+                                                 LocalDateTime startDateTime,
+                                                 LocalDateTime endDateTime,
+                                                 LocalDate startDate,
+                                                 LocalDate endDate) {
 
     if (criteria == null) return null;
 
@@ -184,9 +184,27 @@ public class AdminMemberRepositoryImpl implements AdminMemberRepository {
     return result;
   }
 
-  private BooleanBuilder checkKeywordsWithCriteria(List<String> keywordList,
-                                                   JobSeekerKeywordType keywordType,
-                                                   KeywordCriteria keywordCriteria) {
+  private OrderSpecifier<?>[] getJobSeekerOrderSpecifierArray(JobSeekerSortCriteria sortCriteria,
+                                                              Boolean ascending) {
+    List<OrderSpecifier<?>> orderSpecifiers = new ArrayList<>();
+    if (sortCriteria != null) {
+      Order order = ascending ? Order.ASC : Order.DESC;
+      switch (sortCriteria) {
+        case CREATED_AT -> orderSpecifiers.addAll(getOrderSpecifier(order, member.createdAt));
+        case UPDATED_AT -> orderSpecifiers.addAll(getOrderSpecifier(order, member.updatedAt));
+        case LAST_LOGIN_AT -> orderSpecifiers.addAll(getOrderSpecifier(order, member.lastLoginAt));
+        case DELETED_AT -> orderSpecifiers.addAll(getOrderSpecifier(order, member.deletedAt));
+        case BIRTH_DATE -> orderSpecifiers.addAll(getOrderSpecifier(order, jobSeekerProfile.birthDate));
+        case POINT -> orderSpecifiers.addAll(getOrderSpecifier(order, member.point));
+      }
+    }
+    orderSpecifiers.add(new OrderSpecifier<>(Order.ASC, member.id));
+    return orderSpecifiers.toArray(new OrderSpecifier[0]);
+  }
+
+  private BooleanBuilder applyKeywordCriteria(List<String> keywordList,
+                                              JobSeekerKeywordType keywordType,
+                                              KeywordCriteria keywordCriteria) {
 
     if (keywordList == null || keywordList.isEmpty()) return null;
     List<JobSeekerKeywordType> types =
@@ -198,7 +216,7 @@ public class AdminMemberRepositoryImpl implements AdminMemberRepository {
     BooleanBuilder result = new BooleanBuilder();
 
     BiFunction<StringPath, String, BooleanExpression> keywordCheck =
-      keywordCheckFunction(keywordCriteria);
+      getKeywordCheckFunction(keywordCriteria);
 
     for (String keyword : keywordList) {
       BooleanBuilder keywordResult = new BooleanBuilder();
@@ -219,28 +237,10 @@ public class AdminMemberRepositoryImpl implements AdminMemberRepository {
     return result;
   }
 
-  private BiFunction<StringPath, String, BooleanExpression> keywordCheckFunction(KeywordCriteria keywordCriteria) {
+  private BiFunction<StringPath, String, BooleanExpression> getKeywordCheckFunction(KeywordCriteria keywordCriteria) {
     return (keywordCriteria == KeywordCriteria.EQUALS)
       ? QuerydslUtils::eq
       : QuerydslUtils::contains;
-  }
-
-  private OrderSpecifier<?>[] getOrderSpecifierArray(JobSeekerSortCriteria sortCriteria,
-                                                     Boolean ascending) {
-    List<OrderSpecifier<?>> orderSpecifiers = new ArrayList<>();
-    if (sortCriteria != null) {
-      Order order = ascending ? Order.ASC : Order.DESC;
-      switch (sortCriteria) {
-        case CREATED_AT -> orderSpecifiers.addAll(getOrderSpecifier(order, member.createdAt));
-        case UPDATED_AT -> orderSpecifiers.addAll(getOrderSpecifier(order, member.updatedAt));
-        case LAST_LOGIN_AT -> orderSpecifiers.addAll(getOrderSpecifier(order, member.lastLoginAt));
-        case DELETED_AT -> orderSpecifiers.addAll(getOrderSpecifier(order, member.deletedAt));
-        case BIRTH_DATE -> orderSpecifiers.addAll(getOrderSpecifier(order, jobSeekerProfile.birthDate));
-        case POINT -> orderSpecifiers.addAll(getOrderSpecifier(order, member.point));
-      }
-    }
-    orderSpecifiers.add(new OrderSpecifier<>(Order.ASC, member.id));
-    return orderSpecifiers.toArray(new OrderSpecifier[0]);
   }
 
   private <T extends Comparable<? super T>> List<OrderSpecifier<?>> getOrderSpecifier(
