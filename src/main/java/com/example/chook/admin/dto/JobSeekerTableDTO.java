@@ -31,6 +31,7 @@ public class JobSeekerTableDTO {
   LocalDateTime lastLoginAt;
   LocalDateTime deletedAt;
   Long point;
+  @Builder.Default
   List<SocialLoginDTO> socialLoginDtoList = new ArrayList<>();
 
   Gender gender;
