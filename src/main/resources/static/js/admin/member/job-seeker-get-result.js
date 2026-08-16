@@ -14,6 +14,10 @@ document.querySelector('#jobSeekerForm').addEventListener('submit', event => {
   loadJobSeekerResult();
 });
 
+document.querySelector('button[data-role="reset-search-form"]').addEventListener('click', event => {
+  loadJobSeekerResult(true);
+})
+
 function jobSeekerPageUrl(reset = false) {
 
   if (reset) return `/admin/member/job-seeker`;
@@ -38,8 +42,13 @@ function jobSeekerResultUrl(reset = false) {
 
 function loadJobSeekerResult(reset = false) {
 
+  console.log("reset:", reset);
+
   const pageUrl = jobSeekerPageUrl(reset);
   const resultUrl = jobSeekerResultUrl(reset);
+
+  console.log("pageUrl:", pageUrl);
+  console.log("resultUrl:", resultUrl);
 
   fetch(resultUrl).then(
     (response) => {

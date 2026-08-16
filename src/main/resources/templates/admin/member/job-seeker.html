@@ -14,14 +14,14 @@
   <div class="container admin-container">
     <form id="jobSeekerForm" method="get"
           th:action="@{/admin/member/job-seeker}">
-      <div class="admin-search-form">
-        <th:block th:replace="~{admin/member/fragments/search-option :: keyword(
-          ${keywordOptions}, ${form})}"></th:block>
-        <th:block th:replace="~{admin/member/fragments/search-option ::date-range(
-          ${dateRangeOptions}, ${dateRangeAutofillOptions}, ${form})}"></th:block>
-      </div>
-      <div class="row mb-3">
-        <button class="btn btn-dark" type="submit">검색</button>
+      <div class="mb-3">
+        <div class="admin-search-form">
+          <th:block th:replace="~{admin/member/fragments/search-form :: keyword(
+            ${keywordOptions}, ${form})}"></th:block>
+          <th:block th:replace="~{admin/member/fragments/search-form ::date-range(
+            ${dateRangeOptions}, ${dateRangeAutofillOptions}, ${form})}"></th:block>
+        </div>
+        <th:block th:replace="~{admin/member/fragments/search-form :: search-buttons}"></th:block>
       </div>
       <div id="jobSeekerResult">
       </div>
@@ -102,7 +102,7 @@
             </div>
           </div>
           <div class="alert alert-light d-flex align-items-start" role="alert">
-            <div th:replace="~{admin/fragments/svg :: notification(alert-icon)}"></div>
+            <div th:replace="~{admin/fragments/svg :: notification('alert-icon')}"></div>
             <div>
               "휴대전화 인증 추가" 버튼을 누르면 <strong>인증 과정 없이</strong> 등록됩니다.<br/>
               "휴대전화 인증 해제" 사유의 정지는 별도로 해제해야합니다.

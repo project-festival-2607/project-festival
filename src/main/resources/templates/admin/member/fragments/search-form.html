@@ -12,7 +12,7 @@
            data-bs-title="키워드 여러 개를 공백으로 구분해 검색할 수 있습니다."
            data-bs-toggle="tooltip"
            href="#">
-          <span th:replace="~{admin/fragments/svg :: tooltip(tooltip-icon)}"></span>
+          <span th:replace="~{admin/fragments/svg :: tooltip('tooltip-icon')}"></span>
         </a>
       </label>
       <div class="search-criteria" role="group">
@@ -112,5 +112,19 @@
         <input id="dateRangeCriteria" name="dateRangeCriteria" th:value="${form.dateRangeCriteria}" type="hidden"/>
       </div>
     </div>
+  </div>
+</th:block>
+
+<th:block th:fragment="search-buttons">
+  <div class="admin-search-button-wrapper">
+    <button class="btn btn-sm btn-outline-secondary" type="button"
+            data-role="reset-search-form">
+      <span th:replace="~{admin/fragments/svg :: reset('search-icon')}"></span>
+      <span>초기화</span>
+    </button>
+    <button class="btn btn-sm btn-dark" type="submit">
+      <span th:replace="~{admin/fragments/svg :: search('search-icon')}"></span>
+      <span>검색</span>
+    </button>
   </div>
 </th:block>
