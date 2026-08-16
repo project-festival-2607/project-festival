@@ -46,6 +46,7 @@ public class Member {
     private String phone;
 
     @Column(name = "phone_verified")
+    @Builder.Default
     private boolean phoneVerified = false;
 
     @Column(name = "email", nullable = false, length = 255)
@@ -80,8 +81,9 @@ public class Member {
 
     @OneToMany(mappedBy = "member")
     @ToString.Exclude // 순환 참조 방지
+    @Builder.Default
     // 소셜 연동 리스트 컬렉션 초기화
-    private List<SocialLogin> socialLogins =  new ArrayList<>();
+    private List<SocialLogin> socialLogins = new ArrayList<>();
 
     // 소셜 회원가입 여부
     @Column(name = "social_signup", nullable = false)
