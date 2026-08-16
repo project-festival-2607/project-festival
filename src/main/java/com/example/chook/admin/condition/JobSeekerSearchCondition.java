@@ -14,7 +14,9 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static com.example.chook.common.util.CustomStringUtils.splitByRegex;
+import static com.example.chook.admin.util.KeywordUtils.getKeywordCriteria;
+import static com.example.chook.admin.util.KeywordUtils.getKeywordList;
+import static com.example.chook.common.util.CustomStringUtils.toEnum;
 
 @Builder
 public record JobSeekerSearchCondition(
@@ -44,46 +46,21 @@ public record JobSeekerSearchCondition(
   public static JobSeekerSearchCondition from(JobSeekerSearchForm form) {
 
     return JobSeekerSearchCondition.builder()
-      .keywordType(convertStringToEnum(form.keywordType(), JobSeekerKeywordType.class, null))
+      .keywordType(toEnum(form.keywordType(), JobSeekerKeywordType.class, null))
       .keywordList(getKeywordList(form.keywords(), form.keywordCriteria()))
       .keywordCriteria(getKeywordCriteria(form.keywordType(), form.keywordCriteria()))
-      .dateRangeCriteria(convertStringToEnum(form.dateRangeCriteria(), JobSeekerDateCriteria.class, null))
+      .dateRangeCriteria(toEnum(form.dateRangeCriteria(), JobSeekerDateCriteria.class, null))
       .startDateTime(form.startDateTime())
       .endDateTime(form.endDateTime())
       .startDate(form.startDate())
       .endDate(form.endDate())
-      .status(convertStringToEnum(form.status(), MemberStatusFilter.class, null))
-      .gender(convertStringToEnum(form.gender(), Gender.class, null))
-      .provider(convertStringToEnum(form.provider(), Provider.class, null))
-      .sortCriteria(convertStringToEnum(form.sortCriteria(), JobSeekerSortCriteria.class, null))
+      .status(toEnum(form.status(), MemberStatusFilter.class, null))
+      .gender(toEnum(form.gender(), Gender.class, null))
+      .provider(toEnum(form.provider(), Provider.class, null))
+      .sortCriteria(toEnum(form.sortCriteria(), JobSeekerSortCriteria.class, null))
       .ascending(form.ascending())
       .build();
 
-  }
-
-  private static KeywordCriteria getKeywordCriteria(String keywordTypeStr, String keywordCriteria) {
-    JobSeekerKeywordType keywordType = convertStringToEnum(keywordTypeStr, JobSeekerKeywordType.class, null);
-    if (keywordType == null || !keywordType.isExactMatchSupported()) return KeywordCriteria.CONTAINS;
-    return convertStringToEnum(keywordCriteria, KeywordCriteria.class, KeywordCriteria.CONTAINS);
-  }
-
-  private static List<String> getKeywordList(String keywords, String keywordCriteriaStr) {
-    KeywordCriteria keywordCriteria = convertStringToEnum(keywordCriteriaStr, KeywordCriteria.class, KeywordCriteria.CONTAINS);
-    if (keywordCriteria == KeywordCriteria.EQUALS) return keywords == null ? List.of() : List.of(keywords);
-    return splitByRegex(keywords, "[\\s,&]+");
-  }
-
-  private static <T extends Enum<T>> T convertStringToEnum(
-    String string,
-    Class<T> enumClass,
-    T defaultValue
-  ) {
-    if (string == null) return defaultValue;
-    try {
-      return Enum.valueOf(enumClass, string);
-    } catch (IllegalArgumentException e) {
-      return defaultValue;
-    }
   }
 
 }
