@@ -76,7 +76,7 @@ document.querySelectorAll('.modal-footer').forEach(element => {
 async function suspendMemberRequest(memberId, reason) {
   try {
     const response = await fetch(
-      `/admin/member/job-seeker/${memberId}/suspend`,
+      `/admin/member/${memberId}/suspend`,
       {
         method: 'POST',
         headers: {
@@ -95,7 +95,7 @@ async function unsuspendMemberRequest(memberId) {
   console.log('unsuspendMemberRequest');
   try {
     const response = await fetch(
-      `/admin/member/job-seeker/${memberId}/unsuspend`,
+      `/admin/member/${memberId}/unsuspend`,
       {
         method: 'POST',
         headers: {
@@ -113,7 +113,7 @@ async function removePhoneVerificationRequest(memberId) {
   console.log('removePhoneVerificationRequest');
   try {
     const response = await fetch(
-      `/admin/member/job-seeker/${memberId}/remove-phone-verification`,
+      `/admin/member/${memberId}/remove-phone-verification`,
       {
         method: 'POST',
         headers: {
@@ -131,7 +131,7 @@ async function addPhoneWithVerificationRequest(memberId, newPhone, newPhoneVerif
   console.log('addPhoneWithVerificationRequest');
   try {
     const response = await fetch(
-      `/admin/member/job-seeker/${memberId}/add-phone-with-verification`,
+      `/admin/member/${memberId}/add-phone-with-verification`,
       {
         method: 'POST',
         headers: {

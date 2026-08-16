@@ -6,9 +6,7 @@ import com.example.chook.admin.entity.enums.DateRangeAutofillOption;
 import com.example.chook.admin.entity.enums.jobseeker.JobSeekerDateCriteria;
 import com.example.chook.admin.entity.enums.jobseeker.JobSeekerKeywordType;
 import com.example.chook.admin.form.JobSeekerSearchForm;
-import com.example.chook.admin.record.AdminActionResponse;
 import com.example.chook.admin.record.MemberInfoField;
-import com.example.chook.admin.record.PhoneVerificationRequest;
 import com.example.chook.admin.service.AdminService;
 import com.example.chook.common.handler.PagingHandler;
 import com.example.chook.member.entity.enums.Gender;
@@ -20,7 +18,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -98,65 +99,6 @@ public class AdminJobSeekerController {
     log.info("form: {}", form);
     log.info("model: {}", model);
     return "admin/member/fragments/result/job-seeker";
-  }
-
-  @PostMapping("/{memberId}/remove-phone-verification")
-  @ResponseBody
-  public AdminActionResponse removePhoneVerification(@PathVariable Long memberId) {
-    adminService.removePhoneVerification(memberId);
-    return AdminActionResponse.builder()
-      .result(true)
-      .message(String.format("id가 %d인 사용자의 전화번호 인증을 삭제했으며,\n\"휴대전화번호 인증이 유효하지 않음\" 사유로 정지했습니다.", memberId))
-      .build();
-  }
-
-  @PostMapping("/{memberId}/add-phone-with-verification")
-  @ResponseBody
-  public AdminActionResponse addPhoneWithVerification(@PathVariable Long memberId,
-                                                      @RequestBody PhoneVerificationRequest request) {
-
-    String phone = request.phone();
-    String phoneVerify = request.phoneVerify();
-
-    if (!phone.equals(phoneVerify)) {
-      throw new IllegalArgumentException("입력한 휴대전화 번호가 일치하지 않습니다.");
-    }
-    boolean isChanged = adminService.addPhoneWithVerification(memberId, phone);
-    return AdminActionResponse.builder()
-      .result(isChanged)
-      .message(isChanged
-        ? String.format("id가 %d인 사용자의 전화번호가 %s로 변경되었습니다.", memberId, phone)
-        : "해당 사용자는 이미 전화번호가 인증된 상태입니다.")
-      .build();
-  }
-
-  @PostMapping("/{memberId}/suspend")
-  @ResponseBody
-  public AdminActionResponse suspendMember(@PathVariable Long memberId,
-                                           @RequestBody(required = false) String reason) {
-    log.info("target memberId: {}", memberId);
-    boolean isChanged = adminService.suspendMember(memberId, reason);
-    return AdminActionResponse.builder()
-      .result(isChanged)
-      .message(isChanged
-        ? String.format("id가 %d인 사용자를 %s 사유로 정지했습니다.", memberId, reason)
-        : "입력한 사유가 현재 정지 사유와 같습니다.")
-      .build()
-      ;
-
-  }
-
-  @PostMapping("/{memberId}/unsuspend")
-  @ResponseBody
-  public AdminActionResponse unsuspendMember(@PathVariable Long memberId) {
-    boolean isChanged = adminService.unsuspendMember(memberId);
-    return AdminActionResponse.builder()
-      .result(isChanged)
-      .message(isChanged
-        ? String.format("id가 %d인 사용자의 정지를 해제했습니다.", memberId)
-        : "해당 사용자는 정지되어 있지 않습니다.")
-      .build()
-      ;
   }
 
 }
