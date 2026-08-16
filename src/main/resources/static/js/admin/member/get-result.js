@@ -16,6 +16,9 @@ document.querySelector('#form').addEventListener('submit', event => {
 
 document.querySelector('button[data-role="reset-search-form"]').addEventListener('click', event => {
   loadResult(window.location.pathname, true);
+  document.querySelector('#form').querySelectorAll('input[type="hidden"]').forEach(element => {
+    element.value = '';
+  })
 })
 
 function getPageUrl(baseUrl, reset = false) {
