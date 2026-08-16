@@ -18,10 +18,10 @@ document.querySelector('#jobSeekerForm').addEventListener('click', (event) => {
   const sortTarget = event.target.closest('button[data-role="update-sort-criteria"]');
   if (sortTarget) {
     changed = true;
-    const dateSortCriteria = document.getElementById("dateSortCriteria");
+    const sortCriteria = document.getElementById("sortCriteria");
     const ascending = document.getElementById("ascending");
 
-    dateSortCriteria.value = sortTarget.dataset.criteria;
+    sortCriteria.value = sortTarget.dataset.criteria;
     ascending.value = sortTarget.dataset.ascending;
   }
 

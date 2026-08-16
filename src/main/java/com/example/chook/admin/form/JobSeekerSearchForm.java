@@ -22,7 +22,7 @@ public record JobSeekerSearchForm(
 
   String provider,          // Provider
 
-  String dateSortCriteria,
+  String sortCriteria,
   Boolean ascending
 
 ) {
@@ -36,7 +36,7 @@ public record JobSeekerSearchForm(
     dateRangeCriteria = blankToNull(dateRangeCriteria);
     gender = blankToNull(gender);
     provider = blankToNull(provider);
-    dateSortCriteria = blankToNull(dateSortCriteria);
+    sortCriteria = blankToNull(sortCriteria);
 
   }
 

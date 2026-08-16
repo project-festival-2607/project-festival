@@ -1,10 +1,7 @@
 package com.example.chook.admin.repository;
 
 import com.example.chook.admin.dto.JobSeekerTableDTO;
-import com.example.chook.admin.entity.enums.JobSeekerDateCriteria;
-import com.example.chook.admin.entity.enums.JobSeekerKeywordType;
-import com.example.chook.admin.entity.enums.KeywordCriteria;
-import com.example.chook.admin.entity.enums.MemberStatusFilter;
+import com.example.chook.admin.entity.enums.*;
 import com.example.chook.admin.record.JobSeekerSearchCondition;
 import com.example.chook.common.util.QuerydslUtils;
 import com.example.chook.member.entity.enums.MemberRole;
@@ -16,7 +13,7 @@ import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.CaseBuilder;
-import com.querydsl.core.types.dsl.ComparableExpression;
+import com.querydsl.core.types.dsl.ComparableExpressionBase;
 import com.querydsl.core.types.dsl.StringPath;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -107,7 +104,7 @@ public class AdminMemberRepositoryImpl implements AdminMemberRepository {
 
     List<JobSeekerTableDTO> content = resultQuery
       .where(whereCondition)
-      .orderBy(getOrderSpecifierArray(condition.dateSortCriteria(), condition.ascending()))
+      .orderBy(getOrderSpecifierArray(condition.sortCriteria(), condition.ascending()))
       .offset(pageable.getOffset())
       .limit(pageable.getPageSize())
       .fetch();
@@ -224,17 +221,18 @@ public class AdminMemberRepositoryImpl implements AdminMemberRepository {
       : QuerydslUtils::contains;
   }
 
-  private OrderSpecifier<?>[] getOrderSpecifierArray(JobSeekerDateCriteria dateSortCriteria,
+  private OrderSpecifier<?>[] getOrderSpecifierArray(JobSeekerSortCriteria sortCriteria,
                                                      Boolean ascending) {
     List<OrderSpecifier<?>> orderSpecifiers = new ArrayList<>();
-    if (dateSortCriteria != null) {
+    if (sortCriteria != null) {
       Order order = ascending ? Order.ASC : Order.DESC;
-      switch (dateSortCriteria) {
+      switch (sortCriteria) {
         case CREATED_AT -> orderSpecifiers.addAll(getOrderSpecifier(order, member.createdAt));
         case UPDATED_AT -> orderSpecifiers.addAll(getOrderSpecifier(order, member.updatedAt));
         case LAST_LOGIN_AT -> orderSpecifiers.addAll(getOrderSpecifier(order, member.lastLoginAt));
         case DELETED_AT -> orderSpecifiers.addAll(getOrderSpecifier(order, member.deletedAt));
         case BIRTH_DATE -> orderSpecifiers.addAll(getOrderSpecifier(order, jobSeekerProfile.birthDate));
+        case POINT -> orderSpecifiers.addAll(getOrderSpecifier(order, member.point));
       }
     }
     orderSpecifiers.add(new OrderSpecifier<>(Order.ASC, member.id));
@@ -243,7 +241,7 @@ public class AdminMemberRepositoryImpl implements AdminMemberRepository {
 
   private <T extends Comparable<? super T>> List<OrderSpecifier<?>> getOrderSpecifier(
     Order order,
-    ComparableExpression<T> expression) {
+    ComparableExpressionBase<T> expression) {
 
     List<OrderSpecifier<?>> orderSpecifiers = new ArrayList<>();
     orderSpecifiers.add(

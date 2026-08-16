@@ -1,9 +1,6 @@
 package com.example.chook.admin.record;
 
-import com.example.chook.admin.entity.enums.JobSeekerDateCriteria;
-import com.example.chook.admin.entity.enums.JobSeekerKeywordType;
-import com.example.chook.admin.entity.enums.KeywordCriteria;
-import com.example.chook.admin.entity.enums.MemberStatusFilter;
+import com.example.chook.admin.entity.enums.*;
 import com.example.chook.admin.form.JobSeekerSearchForm;
 import com.example.chook.member.entity.enums.Gender;
 import com.example.chook.member.entity.enums.Provider;
@@ -34,7 +31,7 @@ public record JobSeekerSearchCondition(
   Provider provider,
 
   // 정렬용
-  JobSeekerDateCriteria dateSortCriteria,
+  JobSeekerSortCriteria sortCriteria,
   Boolean ascending
 
 
@@ -54,7 +51,7 @@ public record JobSeekerSearchCondition(
       form.startDate(),
       form.endDate(),
       convertStringToEnum(form.provider(), Provider.class, null),
-      convertStringToEnum(form.dateSortCriteria(), JobSeekerDateCriteria.class, null),
+      convertStringToEnum(form.sortCriteria(), JobSeekerSortCriteria.class, null),
       form.ascending()
     );
 
