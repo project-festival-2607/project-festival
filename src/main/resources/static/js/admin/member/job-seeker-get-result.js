@@ -14,7 +14,9 @@ document.querySelector('#jobSeekerForm').addEventListener('submit', event => {
   loadJobSeekerResult();
 });
 
-function jobSeekerPageUrl() {
+function jobSeekerPageUrl(reset = false) {
+
+  if (reset) return `/admin/member/job-seeker`;
 
   const form = document.getElementById('jobSeekerForm');
   const params = new URLSearchParams(new FormData(form));
@@ -23,7 +25,9 @@ function jobSeekerPageUrl() {
 
 }
 
-function jobSeekerResultUrl() {
+function jobSeekerResultUrl(reset = false) {
+
+  if (reset) return `/admin/member/job-seeker/result`;
 
   const form = document.getElementById('jobSeekerForm');
   const params = new URLSearchParams(new FormData(form));
@@ -32,10 +36,10 @@ function jobSeekerResultUrl() {
 
 }
 
-function loadJobSeekerResult() {
+function loadJobSeekerResult(reset = false) {
 
-  const pageUrl = jobSeekerPageUrl();
-  const resultUrl = jobSeekerResultUrl();
+  const pageUrl = jobSeekerPageUrl(reset);
+  const resultUrl = jobSeekerResultUrl(reset);
 
   fetch(resultUrl).then(
     (response) => {
