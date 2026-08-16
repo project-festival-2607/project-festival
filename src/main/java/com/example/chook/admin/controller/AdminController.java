@@ -1,6 +1,7 @@
 package com.example.chook.admin.controller;
 
 import com.example.chook.admin.dto.JobSeekerTableDTO;
+import com.example.chook.admin.entity.enums.DateRangeAutofillOption;
 import com.example.chook.admin.entity.enums.JobSeekerDateCriteria;
 import com.example.chook.admin.entity.enums.JobSeekerKeywordType;
 import com.example.chook.admin.form.JobSeekerSearchForm;
@@ -41,6 +42,7 @@ public class AdminController {
     model.addAttribute("form", form);
     model.addAttribute("keywordOptions", List.of(JobSeekerKeywordType.values()));
     model.addAttribute("dateRangeOptions", List.of(JobSeekerDateCriteria.values()));
+    model.addAttribute("dateRangeAutofillOptions", List.of(DateRangeAutofillOption.values()));
   }
 
   @GetMapping("/member/job-seeker/result")

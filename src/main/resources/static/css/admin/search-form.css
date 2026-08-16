@@ -95,11 +95,18 @@
   border-bottom-right-radius: var(--bs-border-radius-sm) !important;
 }
 
+.admin-search-form #dateRangeCriteriaAutofill {
+  display: flex;
+  gap: 2px;
+}
+
 .admin-search-form #dateRangeCriteriaAutofill button {
   font-size: 11px;
   font-weight: 500;
+  height: 19.5px;
+  box-sizing: border-box;
 
-  --bs-btn-padding-y: 0.10rem;
+  --bs-btn-padding-y: 0rem;
   --bs-btn-padding-x: 0.25rem;
   --bs-btn-border-radius: 50rem;  /* rounded-pill */
   --bs-btn-color: var(--bs-secondary);

@@ -3,31 +3,18 @@
       xmlns:th="http://www.thymeleaf.org">
 <body>
 
-<th:block class="search-field-group" th:fragment="date-filter-field(dateRangeOptions, form)">
+<th:block class="search-field-group" th:fragment="date-filter-field(dateRangeOptions, dateRangeAutofillOptions, form)">
   <div class="search-field-group">
     <div class="search-field-head">
       <label class="search-field-label"
       >날짜 범위
       </label>
-      <div id="dateRangeCriteriaAutofill" role="group">
-        <button class="btn btn-outline-danger date-range-criteria-autofill" data-value="1h"
-                type="button">1시간
-        </button>
-        <button class="btn btn-outline-danger date-range-criteria-autofill" data-value="6h"
-                type="button">6시간
-        </button>
-        <button class="btn btn-outline-danger date-range-criteria-autofill" data-value="12h"
-                type="button">12시간
-        </button>
-        <button class="btn btn-outline-danger date-range-criteria-autofill" data-value="1d"
-                type="button">1일
-        </button>
-        <button class="btn btn-outline-danger date-range-criteria-autofill" data-value="7d"
-                type="button">1주
-        </button>
-        <button class="btn btn-outline-danger date-range-criteria-autofill" data-value="1M"
-                type="button">1개월
-        </button>
+      <div id="dateRangeCriteriaAutofill">
+        <button th:each="option: ${dateRangeAutofillOptions}" class="btn btn-outline-danger date-range-criteria-autofill"
+                th:data-value="${option.value}"
+                th:data-unit="${option.unit}"
+                th:text="${option.label}"
+                type="button"></button>
       </div>
     </div>
     <div class="search-field-main">

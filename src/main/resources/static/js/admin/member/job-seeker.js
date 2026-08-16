@@ -45,8 +45,7 @@ function updateDateRangeCriteriaAndToggleInputType() {
     `.date-range-criteria-li[data-value="${dateRangeCriteria.value}"]`
   );
   currentDateRangeCriteria.textContent = selected?.textContent ?? '선택';
-  const isDateOnly = dateRangeCriteria.dataset.dateOnly === 'true';
-  console.log('dateRangeCriteria.value: ', dateRangeCriteria.value);
+  const isDateOnly = selected?.dataset.dateOnly === 'true';
   const isNotSelected = [undefined, '', 'NONE'].includes(dateRangeCriteria.value);
   startDateTime.classList.toggle('d-none', isDateOnly);
   endDateTime.classList.toggle('d-none', isDateOnly);
@@ -93,19 +92,16 @@ function toDateTimeLocal(date) {
 
 document.querySelectorAll('.date-range-criteria-autofill').forEach((element) => {
   element.addEventListener('click', (e) => {
-    const diff = e.target.dataset.value;
-    console.log(diff);
-    const hour = 60 * 60 * 1000;
+    const value = parseInt(e.target.dataset.value);
+    const unit = e.target.dataset.unit;
+    const unitMultiplier = {
+      'MINUTE': 60 * 1000,
+      'HOUR': 60 * 60 * 1000,
+      'DAY': 24 * 60 * 60 * 1000
+    };
     const now = new Date();
     endDateTime.value = toDateTimeLocal(now);
-    switch (diff) {
-      case '1h': startDateTime.value = toDateTimeLocal(new Date(now - hour)); break;
-      case '6h': startDateTime.value = toDateTimeLocal(new Date(now - 6 * hour)); break;
-      case '12h': startDateTime.value = toDateTimeLocal(new Date(now - 12 * hour)); break;
-      case '1d': startDateTime.value = toDateTimeLocal(new Date(now - 24 * hour)); break;
-      case '7d': startDateTime.value = toDateTimeLocal(new Date(now - 7 * 24 * hour)); break;
-      case '1M': startDateTime.value = toDateTimeLocal(new Date(now - 30 * 24 * hour)); break;
-    }
+    startDateTime.value = toDateTimeLocal(new Date(now - value * unitMultiplier[unit]));
   })
 })
 

@@ -3,8 +3,8 @@ package com.example.chook.admin.entity.enums;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-@Getter
 @AllArgsConstructor
+@Getter
 public enum JobSeekerKeywordType {
 
   USERNAME("아이디"),
