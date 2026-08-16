@@ -5,7 +5,6 @@ import com.example.chook.admin.entity.enums.DateRangeAutofillOption;
 import com.example.chook.admin.entity.enums.JobSeekerDateCriteria;
 import com.example.chook.admin.entity.enums.JobSeekerKeywordType;
 import com.example.chook.admin.form.JobSeekerSearchForm;
-import com.example.chook.admin.mapper.AdminMapper;
 import com.example.chook.admin.record.AdminActionResponse;
 import com.example.chook.admin.record.JobSeekerSearchCondition;
 import com.example.chook.admin.record.MemberInfoField;
@@ -13,6 +12,7 @@ import com.example.chook.admin.record.PhoneVerificationRequest;
 import com.example.chook.admin.service.AdminService;
 import com.example.chook.common.handler.PagingHandler;
 import com.example.chook.member.entity.enums.MemberStatus;
+import com.example.chook.member.entity.enums.Provider;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,7 +31,6 @@ public class AdminController {
 
   private static final int PAGINATION_SIZE = 10;
   private final AdminService adminService;
-  private final AdminMapper adminMapper;
 
   @GetMapping("/member/job-seeker")
   public void loadJobSeekerPage(
@@ -88,17 +87,15 @@ public class AdminController {
     PagingHandler<JobSeekerTableDTO, JobSeekerSearchForm> pagingHandler =
       new PagingHandler<>(page, form, PAGINATION_SIZE, pageIdx);
     model.addAttribute("pagingHandler", pagingHandler);
+    model.addAttribute("pageSizeOptions", List.of(10, 30, 50));
 
     // thead status dropdown용
-    model.addAttribute("memberStatusFilters", List.of(
-      MemberStatus.ACTIVE,
-      MemberStatus.DORMANT,
-      MemberStatus.SUSPENDED
-    ));
+    model.addAttribute("memberStatusList", List.of(MemberStatus.values()));
+    model.addAttribute("memberProviderList", List.of(Provider.values()));
 
     log.info("form: {}", form);
     log.info("model: {}", model);
-    return "admin/member/fragments/job-seeker-result";
+    return "admin/member/fragments/result/job-seeker";
   }
 
   @PostMapping("/member/job-seeker/{memberId}/remove-phone-verification")

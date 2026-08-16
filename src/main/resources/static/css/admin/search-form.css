@@ -7,29 +7,16 @@
   --theme-main-color-subtle: var(--bs-danger-border-subtle);
 }
 
-.admin-search-form {
-  max-width: 600px;
-}
-
-.admin-search-form .dropdown-menu * {
-  --bs-dropdown-padding-y: .25rem;
-  --bs-dropdown-item-padding-y: .15rem;
-  font-size: 13px;
-}
-
-.admin-search-form .form-btn-left {
-  border: var(--bs-border-width) solid var(--bs-border-color);
-  border-right: 0 none;
-  width: 100px;
-}
-
-.admin-search-form .form-btn-right {
-  border: var(--bs-border-width) solid var(--bs-border-color);
-  border-left: 0 none;
-}
-
 .admin-search-form a[data-bs-toggle="tooltip"] {
   color: inherit;
+}
+
+.admin-search-form {
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: 20px;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .admin-search-form .form-check {
@@ -39,7 +26,7 @@
 
 .admin-search-form .form-check-input:checked {
   background-color: var(--theme-main-color);
-  border-color:  var(--theme-main-color);
+  border-color: var(--theme-main-color);
 }
 
 .admin-search-form .form-check-input:focus {
@@ -51,6 +38,8 @@
 }
 
 .admin-search-form .search-field-group {
+  min-width: 540px;
+  flex-grow: 1;
   margin-bottom: 15px;
 }
 
@@ -95,11 +84,6 @@
   color: rgba(var(--bs-body-color-rgb), 0.25);
 }
 
-.admin-search-form .form-control-end {
-  border-top-right-radius: var(--bs-border-radius-sm) !important;
-  border-bottom-right-radius: var(--bs-border-radius-sm) !important;
-}
-
 .admin-search-form #dateRangeCriteriaAutofill {
   display: flex;
   gap: 2px;
@@ -113,7 +97,35 @@
 
   --bs-btn-padding-y: 0rem;
   --bs-btn-padding-x: 0.25rem;
-  --bs-btn-border-radius: 50rem;  /* rounded-pill */
+  --bs-btn-border-radius: 50rem; /* rounded-pill */
   --bs-btn-color: var(--bs-secondary);
   --bs-btn-border-color: var(--bs-border-color);
+}
+
+.admin-search-button-wrapper {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  column-gap: 10px;
+}
+
+.admin-search-button-wrapper button {
+  width: 80px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  column-gap: 5px;
+  --bs-btn-border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.admin-search-button-wrapper .search-icon {
+  width: 13px;
+  height: 13px;
+}
+
+.admin-search-button-wrapper span {
+  flex-grow: 1;
+  text-align: center;
 }

@@ -13,18 +13,15 @@
 <div layout:fragment="content">
   <div class="container admin-container">
     <form id="jobSeekerForm" method="get"
-          th:action="@{/admin/member/job-seeker}" th:with="form=${form}">
-      <div class="admin-search-form">
-        <th:block th:replace="~{admin/member/fragments/search-option :: keyword(
-          keywordOptions=${keywordOptions},
-          form=${form})}"></th:block>
-        <th:block th:replace="~{admin/member/fragments/search-option ::date-range(
-          dateRangeOptions=${dateRangeOptions},
-          dateRangeAutofillOptions=${dateRangeAutofillOptions},
-          form=${form})}"></th:block>
-      </div>
-      <div class="row mb-3">
-        <button class="btn btn-dark" type="submit">검색</button>
+          th:action="@{/admin/member/job-seeker}">
+      <div class="mb-3">
+        <div class="admin-search-form">
+          <th:block th:replace="~{admin/member/fragments/search-form :: keyword(
+            ${keywordOptions}, ${form})}"></th:block>
+          <th:block th:replace="~{admin/member/fragments/search-form ::date-range(
+            ${dateRangeOptions}, ${dateRangeAutofillOptions}, ${form})}"></th:block>
+        </div>
+        <th:block th:replace="~{admin/member/fragments/search-form :: search-buttons}"></th:block>
       </div>
       <div id="jobSeekerResult">
       </div>
@@ -39,7 +36,7 @@
         <div th:replace="~{admin/member/fragments/modal :: modal-header('계정 정지')}"></div>
         <div class="modal-body">
           <div
-            th:replace="~{admin/member/fragments/modal :: modal-member-info(targetInfoList=${suspendMemberInfo})}"></div>
+            th:replace="~{admin/member/fragments/modal :: modal-member-info(${suspendMemberInfo})}"></div>
           <div class="mb-3">
             <label class="form-label" for="suspensionReason">정지 사유</label>
             <div class="input-group" data-member-info data-member-field="suspendedReason">
@@ -61,7 +58,7 @@
         <div th:replace="~{admin/member/fragments/modal :: modal-header('계정 정지 해제')}"></div>
         <div class="modal-body">
           <div
-            th:replace="~{admin/member/fragments/modal :: modal-member-info(targetInfoList=${unsuspendMemberInfo})}"></div>
+            th:replace="~{admin/member/fragments/modal :: modal-member-info(${unsuspendMemberInfo})}"></div>
         </div>
         <div th:replace="~{admin/member/fragments/modal :: modal-footer('danger', '정지 해제')}"></div>
       </div>
@@ -76,7 +73,7 @@
         <div th:replace="~{admin/member/fragments/modal :: modal-header('휴대전화번호 인증 삭제')}"></div>
         <div class="modal-body">
           <div
-            th:replace="~{admin/member/fragments/modal :: modal-member-info(targetInfoList=${removePhoneVerificationInfo})}"></div>
+            th:replace="~{admin/member/fragments/modal :: modal-member-info(${removePhoneVerificationInfo})}"></div>
         </div>
         <div th:replace="~{admin/member/fragments/modal :: modal-footer('danger', '인증 삭제')}"></div>
       </div>
@@ -91,7 +88,7 @@
         <div th:replace="~{admin/member/fragments/modal :: modal-header('휴대전화 인증 추가')}"></div>
         <div class="modal-body">
           <div
-            th:replace="~{admin/member/fragments/modal :: modal-member-info(targetInfoList=${addPhoneWithVerificationInfo})}"></div>
+            th:replace="~{admin/member/fragments/modal :: modal-member-info(${addPhoneWithVerificationInfo})}"></div>
           <div class="mb-3">
             <label class="form-label" for="addPhoneWithVerificationPhone">새 휴대전화 번호</label>
             <div class="input-group">
@@ -105,7 +102,7 @@
             </div>
           </div>
           <div class="alert alert-light d-flex align-items-start" role="alert">
-            <div th:replace="~{admin/fragments/svg :: notification(alert-icon)}"></div>
+            <div th:replace="~{admin/fragments/svg :: notification('alert-icon')}"></div>
             <div>
               "휴대전화 인증 추가" 버튼을 누르면 <strong>인증 과정 없이</strong> 등록됩니다.<br/>
               "휴대전화 인증 해제" 사유의 정지는 별도로 해제해야합니다.
