@@ -32,6 +32,7 @@ public class BusinessRegistration {
     private String businessNumber;
 
     @Column(name = "verified",  nullable = false)
+    @Builder.Default
     private Boolean verified = false;
 
     @Column(name = "verified_at")
