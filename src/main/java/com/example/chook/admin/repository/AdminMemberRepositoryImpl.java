@@ -1,12 +1,12 @@
 package com.example.chook.admin.repository;
 
+import com.example.chook.admin.condition.JobSeekerSearchCondition;
 import com.example.chook.admin.dto.JobSeekerTableDTO;
 import com.example.chook.admin.entity.enums.KeywordCriteria;
 import com.example.chook.admin.entity.enums.MemberStatusFilter;
 import com.example.chook.admin.entity.enums.jobseeker.JobSeekerDateCriteria;
 import com.example.chook.admin.entity.enums.jobseeker.JobSeekerKeywordType;
 import com.example.chook.admin.entity.enums.jobseeker.JobSeekerSortCriteria;
-import com.example.chook.admin.condition.JobSeekerSearchCondition;
 import com.example.chook.common.util.QuerydslUtils;
 import com.example.chook.member.entity.enums.MemberRole;
 import com.example.chook.member.entity.enums.MemberStatus;
