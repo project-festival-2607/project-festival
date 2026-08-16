@@ -1,6 +1,10 @@
 package com.example.chook.admin.record;
 
-import com.example.chook.admin.entity.enums.*;
+import com.example.chook.admin.entity.enums.KeywordCriteria;
+import com.example.chook.admin.entity.enums.MemberStatusFilter;
+import com.example.chook.admin.entity.enums.jobseeker.JobSeekerDateCriteria;
+import com.example.chook.admin.entity.enums.jobseeker.JobSeekerKeywordType;
+import com.example.chook.admin.entity.enums.jobseeker.JobSeekerSortCriteria;
 import com.example.chook.admin.form.JobSeekerSearchForm;
 import com.example.chook.member.entity.enums.Gender;
 import com.example.chook.member.entity.enums.Provider;

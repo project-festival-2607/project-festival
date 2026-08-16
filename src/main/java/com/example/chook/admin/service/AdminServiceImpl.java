@@ -40,7 +40,7 @@ public class AdminServiceImpl implements AdminService {
   @Override
   public Page<JobSeekerTableDTO> getPage(int pageIdx, int pageSize, JobSeekerSearchCondition condition) {
     Pageable pageable = PageRequest.of(pageIdx - 1, pageSize);
-    Page<JobSeekerTableDTO> result = adminMemberRepository.getPage(pageable, condition);
+    Page<JobSeekerTableDTO> result = adminMemberRepository.getJobSeekerPage(pageable, condition);
     List<Long> memberIdList = result.stream().map(JobSeekerTableDTO::getId).toList();
     List<SocialLogin> socialLoginList = socialLoginRepository.findAllByMember_IdIn(memberIdList);
 

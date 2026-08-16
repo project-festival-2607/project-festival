@@ -1,4 +1,4 @@
-package com.example.chook.admin.entity.enums;
+package com.example.chook.admin.entity.enums.jobseeker;
 
 public enum JobSeekerSortCriteria {
 
@@ -6,7 +6,7 @@ public enum JobSeekerSortCriteria {
   UPDATED_AT,
   LAST_LOGIN_AT,
   DELETED_AT,
-  BIRTH_DATE,
-  POINT
+  POINT,
+  BIRTH_DATE
 
 }

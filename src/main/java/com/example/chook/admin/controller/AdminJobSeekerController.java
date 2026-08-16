@@ -2,8 +2,8 @@ package com.example.chook.admin.controller;
 
 import com.example.chook.admin.dto.JobSeekerTableDTO;
 import com.example.chook.admin.entity.enums.DateRangeAutofillOption;
-import com.example.chook.admin.entity.enums.JobSeekerDateCriteria;
-import com.example.chook.admin.entity.enums.JobSeekerKeywordType;
+import com.example.chook.admin.entity.enums.jobseeker.JobSeekerDateCriteria;
+import com.example.chook.admin.entity.enums.jobseeker.JobSeekerKeywordType;
 import com.example.chook.admin.form.JobSeekerSearchForm;
 import com.example.chook.admin.record.AdminActionResponse;
 import com.example.chook.admin.record.JobSeekerSearchCondition;
@@ -25,15 +25,15 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @Controller
-@RequestMapping("/admin")
+@RequestMapping("/admin/member/job-seeker")
 @RequiredArgsConstructor
 @Slf4j
-public class AdminController {
+public class AdminJobSeekerController {
 
   private static final int PAGINATION_SIZE = 10;
   private final AdminService adminService;
 
-  @GetMapping("/member/job-seeker")
+  @GetMapping
   public void loadJobSeekerPage(
     Model model,
     @Valid @ModelAttribute JobSeekerSearchForm form
@@ -71,7 +71,7 @@ public class AdminController {
     ));
   }
 
-  @GetMapping("/member/job-seeker/result")
+  @GetMapping("/result")
   public String getJobSeekerResultFragment(
     Model model,
     @RequestParam(name = "pageIdx", required = false, defaultValue = "1") int pageIdx,
@@ -100,7 +100,7 @@ public class AdminController {
     return "admin/member/fragments/result/job-seeker";
   }
 
-  @PostMapping("/member/job-seeker/{memberId}/remove-phone-verification")
+  @PostMapping("/{memberId}/remove-phone-verification")
   @ResponseBody
   public AdminActionResponse removePhoneVerification(@PathVariable Long memberId) {
     adminService.removePhoneVerification(memberId);
@@ -110,7 +110,7 @@ public class AdminController {
       .build();
   }
 
-  @PostMapping("/member/job-seeker/{memberId}/add-phone-with-verification")
+  @PostMapping("/{memberId}/add-phone-with-verification")
   @ResponseBody
   public AdminActionResponse addPhoneWithVerification(@PathVariable Long memberId,
                                                       @RequestBody PhoneVerificationRequest request) {
@@ -130,7 +130,7 @@ public class AdminController {
       .build();
   }
 
-  @PostMapping("/member/job-seeker/{memberId}/suspend")
+  @PostMapping("/{memberId}/suspend")
   @ResponseBody
   public AdminActionResponse suspendMember(@PathVariable Long memberId,
                                            @RequestBody(required = false) String reason) {
@@ -146,7 +146,7 @@ public class AdminController {
 
   }
 
-  @PostMapping("/member/job-seeker/{memberId}/unsuspend")
+  @PostMapping("/{memberId}/unsuspend")
   @ResponseBody
   public AdminActionResponse unsuspendMember(@PathVariable Long memberId) {
     boolean isChanged = adminService.unsuspendMember(memberId);

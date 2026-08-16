@@ -7,6 +7,6 @@ import org.springframework.data.domain.Pageable;
 
 public interface AdminMemberRepository {
 
-  Page<JobSeekerTableDTO> getPage(Pageable pageable, JobSeekerSearchCondition condition);
+  Page<JobSeekerTableDTO> getJobSeekerPage(Pageable pageable, JobSeekerSearchCondition condition);
 
 }
