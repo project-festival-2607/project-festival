@@ -18,6 +18,7 @@ import java.util.List;
 @Builder
 public class JobSeekerTableDTO {
 
+  // Member 공통 필드
   Long id;
   String username;
   String name;
@@ -31,16 +32,16 @@ public class JobSeekerTableDTO {
   LocalDateTime lastLoginAt;
   LocalDateTime deletedAt;
   Long point;
+  LocalDateTime suspendedAt;
+  String suspendedReason;
+
+  // JOB_SEEKER 전용 필드
   @Builder.Default
   List<SocialLoginDTO> socialLoginDtoList = new ArrayList<>();
-
   Gender gender;
   LocalDate birthDate;
   String streetAddress;
   String detailAddress;
-
-  LocalDateTime suspendedAt;
-  String suspendedReason;
 
   public String getFormattedPhone() {
     return phone.length() == 11

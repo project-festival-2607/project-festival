@@ -7,21 +7,22 @@ import static com.example.chook.common.util.CustomStringUtils.blankToNull;
 
 public record JobSeekerSearchForm(
 
-  String keywordType,       // JobSeekerKeywordType
+  // 공통 검색 폼
+  String keywordType,
   String keywords,
   String keywordCriteria,
-
-  String status,            // MemberStatusFilter
-
-  String dateRangeCriteria, // dateRangeCriteria
-  String gender,            // Gender
+  String dateRangeCriteria,
   LocalDateTime startDateTime,
   LocalDateTime endDateTime,
   LocalDate startDate,
   LocalDate endDate,
 
-  String provider,          // Provider
+  // 테이블 상단 필터
+  String status,
+  String gender,
+  String provider,
 
+  // 테이블 상단 정렬
   String sortCriteria,
   Boolean ascending
 
@@ -32,8 +33,8 @@ public record JobSeekerSearchForm(
     keywordType = blankToNull(keywordType);
     keywords = blankToNull(keywords);
     keywordCriteria = blankToNull(keywordCriteria);
-    status = blankToNull(status);
     dateRangeCriteria = blankToNull(dateRangeCriteria);
+    status = blankToNull(status);
     gender = blankToNull(gender);
     provider = blankToNull(provider);
     sortCriteria = blankToNull(sortCriteria);

@@ -8,6 +8,7 @@ import com.example.chook.admin.entity.enums.jobseeker.JobSeekerSortCriteria;
 import com.example.chook.admin.form.JobSeekerSearchForm;
 import com.example.chook.member.entity.enums.Gender;
 import com.example.chook.member.entity.enums.Provider;
+import lombok.Builder;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -15,49 +16,48 @@ import java.util.List;
 
 import static com.example.chook.common.util.CustomStringUtils.splitByRegex;
 
+@Builder
 public record JobSeekerSearchCondition(
 
-  // 필터용
-
+  // 공통 검색 폼
   JobSeekerKeywordType keywordType,
   List<String> keywordList,
   KeywordCriteria keywordCriteria,
-
-  MemberStatusFilter status,
-
-  Gender gender,
   JobSeekerDateCriteria dateRangeCriteria,
   LocalDateTime startDateTime,
   LocalDateTime endDateTime,
   LocalDate startDate,
   LocalDate endDate,
 
+  // 테이블 상단 필터
+  MemberStatusFilter status,
+  Gender gender,
   Provider provider,
 
-  // 정렬용
+  // 테이블 상단 정렬
   JobSeekerSortCriteria sortCriteria,
   Boolean ascending
 
 
 ) {
 
-  public JobSeekerSearchCondition(JobSeekerSearchForm form) {
+  public static JobSeekerSearchCondition from(JobSeekerSearchForm form) {
 
-    this(
-      convertStringToEnum(form.keywordType(), JobSeekerKeywordType.class, null),
-      getKeywordList(form.keywords(), form.keywordCriteria()),
-      getKeywordCriteria(form.keywordType(), form.keywordCriteria()),
-      convertStringToEnum(form.status(), MemberStatusFilter.class, null),
-      convertStringToEnum(form.gender(), Gender.class, null),
-      convertStringToEnum(form.dateRangeCriteria(), JobSeekerDateCriteria.class, null),
-      form.startDateTime(),
-      form.endDateTime(),
-      form.startDate(),
-      form.endDate(),
-      convertStringToEnum(form.provider(), Provider.class, null),
-      convertStringToEnum(form.sortCriteria(), JobSeekerSortCriteria.class, null),
-      form.ascending()
-    );
+    return JobSeekerSearchCondition.builder()
+      .keywordType(convertStringToEnum(form.keywordType(), JobSeekerKeywordType.class, null))
+      .keywordList(getKeywordList(form.keywords(), form.keywordCriteria()))
+      .keywordCriteria(getKeywordCriteria(form.keywordType(), form.keywordCriteria()))
+      .dateRangeCriteria(convertStringToEnum(form.dateRangeCriteria(), JobSeekerDateCriteria.class, null))
+      .startDateTime(form.startDateTime())
+      .endDateTime(form.endDateTime())
+      .startDate(form.startDate())
+      .endDate(form.endDate())
+      .status(convertStringToEnum(form.status(), MemberStatusFilter.class, null))
+      .gender(convertStringToEnum(form.gender(), Gender.class, null))
+      .provider(convertStringToEnum(form.provider(), Provider.class, null))
+      .sortCriteria(convertStringToEnum(form.sortCriteria(), JobSeekerSortCriteria.class, null))
+      .ascending(form.ascending())
+      .build();
 
   }
 

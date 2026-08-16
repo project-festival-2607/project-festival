@@ -79,7 +79,7 @@ public class AdminJobSeekerController {
     @Valid @ModelAttribute JobSeekerSearchForm form
   ) {
 
-    JobSeekerSearchCondition condition = new JobSeekerSearchCondition(form);
+    JobSeekerSearchCondition condition = JobSeekerSearchCondition.from(form);
     log.info("condition: {}", condition);
     Page<JobSeekerTableDTO> page = adminService.getPage(pageIdx, pageSize, condition);
 
