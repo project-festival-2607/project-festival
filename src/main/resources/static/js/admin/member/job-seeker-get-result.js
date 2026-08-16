@@ -5,33 +5,41 @@ document.querySelector('#jobSeekerForm').addEventListener('submit', event => {
     document.getElementById('pageIdx').value = event.submitter.value;
   }
 
+  if (event.submitter?.classList.contains('page-size-li')) {
+    console.log("PAGE SIZE LI");
+    document.getElementById('pageIdx').value = 1;
+    document.getElementById('pageSize').value = event.submitter.value;
+  }
+
   loadJobSeekerResult();
 });
 
-function jobSeekerPageUrl() {
+function jobSeekerPageUrl(reset = false) {
+
+  if (reset) return `/admin/member/job-seeker`;
 
   const form = document.getElementById('jobSeekerForm');
   const params = new URLSearchParams(new FormData(form));
-  params.set('pageSize', document.getElementById('pageSize').value);
 
   return `/admin/member/job-seeker?${params}`;
 
 }
 
-function jobSeekerResultUrl() {
+function jobSeekerResultUrl(reset = false) {
+
+  if (reset) return `/admin/member/job-seeker/result`;
 
   const form = document.getElementById('jobSeekerForm');
   const params = new URLSearchParams(new FormData(form));
-  params.set('pageSize', document.getElementById('pageSize').value);
 
   return `/admin/member/job-seeker/result?${params}`;
 
 }
 
-function loadJobSeekerResult() {
+function loadJobSeekerResult(reset = false) {
 
-  const pageUrl = jobSeekerPageUrl();
-  const resultUrl = jobSeekerResultUrl();
+  const pageUrl = jobSeekerPageUrl(reset);
+  const resultUrl = jobSeekerResultUrl(reset);
 
   fetch(resultUrl).then(
     (response) => {
@@ -47,11 +55,11 @@ function loadJobSeekerResult() {
         if (jobSeekerTableWrapper) {
           localStorage.setItem(
             'admin-table-scroll-x',
-            jobSeekerTableWrapper.scrollLeft
+            `${jobSeekerTableWrapper.scrollLeft}`
           );
           localStorage.setItem(
             'admin-table-scroll-y',
-            jobSeekerTableWrapper.scrollTop
+            `${jobSeekerTableWrapper.scrollTop}`
           );
         }
 
@@ -67,7 +75,13 @@ function loadJobSeekerResult() {
 
 
         const tooltipTriggerList = jobSeekerResult.querySelectorAll('[data-bs-toggle="tooltip"]');
-        const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
+        [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
+
+        //  pageSize 초기화 및 드롭다운 설정
+
+        const currentPageSize = document.getElementById('currentPageSize');
+        const pageSize = document.getElementById('pageSize');
+        currentPageSize.textContent = pageSize.value + '개씩';
 
       })
     }

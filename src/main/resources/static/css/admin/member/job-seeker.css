@@ -12,47 +12,6 @@ label.search-form-label {
   padding-bottom: 0.5rem;
 }
 
-#dateRangeCriteriaAutofillWrapper label {
-  font-size: 80%;
-}
-
-#dateRangeCriteriaAutofillWrapper button {
-  color: var(--bs-body-color) !important;
-  border-color: var(--bs-border-color) !important;
-}
-
-.form-btn-left {
-  border: var(--bs-border-width) solid var(--bs-border-color);
-  border-right: 0 none;
-}
-
-.form-btn-right {
-  border: var(--bs-border-width) solid var(--bs-border-color);
-  border-left: 0 none;
-}
-
-.form-control-end {
-  border-top-right-radius: var(--bs-border-radius-sm) !important;
-  border-bottom-right-radius: var(--bs-border-radius-sm) !important;
-}
-
-#currentKeywordType {
-  width: 80px;
-}
-
-#currentDateRangeCriteria {
-  width: 100px;
-}
-
-#keywordCriteriaWrapper,
-#dateRangeCriteriaAutofillWrapper {
-  height: 26px;
-}
-
-#keywordCriteriaWrapper {
-  font-size: 0.80rem;
-}
-
 .result-table-wrapper {
   overflow: scroll;
   height: 450px;
@@ -166,17 +125,11 @@ label.search-form-label {
   z-index: 3;
 }
 
-#keywordTypeDropdownList.dropdown-menu,
-#dateRangeCriteriaDropdownList.dropdown-menu,
 .moderation-menu {
   --bs-dropdown-padding-y: .25rem;
   --bs-dropdown-item-padding-y: .15rem;
 }
 
-#keywordTypeDropdownList.dropdown-menu,
-#dateRangeCriteriaDropdownList.dropdown-menu {
-  font-size: 81%;
-}
 
 .status-filter-li,
 .provider-filter-li {
@@ -238,13 +191,6 @@ button:has(.filter-idle-icon) {
 
 .dropdown-no-caret::after {
   display: none;
-}
-
-.btn-group-xs>.btn, .btn-xs {
-  --bs-btn-padding-y: 0.20rem;
-  --bs-btn-padding-x: 0.35rem;
-  --bs-btn-font-size: 0.70rem;
-  --bs-btn-border-radius: 0.15rem;
 }
 
 .admin-pagination {

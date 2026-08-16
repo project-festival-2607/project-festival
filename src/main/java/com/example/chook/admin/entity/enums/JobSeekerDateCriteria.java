@@ -1,11 +1,23 @@
 package com.example.chook.admin.entity.enums;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
+@AllArgsConstructor
+@Getter
 public enum JobSeekerDateCriteria {
 
-  CREATED_AT,
-  UPDATED_AT,
-  LAST_LOGIN_AT,
-  DELETED_AT,
-  BIRTH_DATE
+  CREATED_AT("생성일시"),
+  UPDATED_AT("수정일시"),
+  LAST_LOGIN_AT("최근접속일시"),
+  DELETED_AT("삭제일시"),
+  BIRTH_DATE("생년월일", true);
+
+  private final String label;
+  private final boolean dateOnly;
+
+  JobSeekerDateCriteria(String label) {
+    this(label, false);
+  }
 
 }

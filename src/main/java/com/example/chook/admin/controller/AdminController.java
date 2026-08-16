@@ -1,9 +1,14 @@
 package com.example.chook.admin.controller;
 
 import com.example.chook.admin.dto.JobSeekerTableDTO;
+import com.example.chook.admin.entity.enums.DateRangeAutofillOption;
+import com.example.chook.admin.entity.enums.JobSeekerDateCriteria;
+import com.example.chook.admin.entity.enums.JobSeekerKeywordType;
 import com.example.chook.admin.form.JobSeekerSearchForm;
+import com.example.chook.admin.mapper.AdminMapper;
 import com.example.chook.admin.record.AdminActionResponse;
 import com.example.chook.admin.record.JobSeekerSearchCondition;
+import com.example.chook.admin.record.MemberInfoField;
 import com.example.chook.admin.record.PhoneVerificationRequest;
 import com.example.chook.admin.service.AdminService;
 import com.example.chook.common.handler.PagingHandler;
@@ -26,23 +31,51 @@ public class AdminController {
 
   private static final int PAGINATION_SIZE = 10;
   private final AdminService adminService;
+  private final AdminMapper adminMapper;
 
   @GetMapping("/member/job-seeker")
   public void loadJobSeekerPage(
     Model model,
-    @RequestParam(name = "pageIdx", required = false, defaultValue = "1") int pageIdx,
-    @RequestParam(name = "pageSize", required = false, defaultValue = "30") int pageSize,
     @Valid @ModelAttribute JobSeekerSearchForm form
   ) {
-    model.addAttribute("pageSize", pageSize);
     model.addAttribute("form", form);
+    model.addAttribute("keywordOptions", List.of(JobSeekerKeywordType.values()));
+    model.addAttribute("dateRangeOptions", List.of(JobSeekerDateCriteria.values()));
+    model.addAttribute("dateRangeAutofillOptions", List.of(DateRangeAutofillOption.values()));
+
+    model.addAttribute("suspendMemberInfo", List.of(
+      new MemberInfoField("아이디", "username"),
+      new MemberInfoField("이름", "name"),
+      new MemberInfoField("이메일", "email"),
+      new MemberInfoField("휴대전화번호", "phone"),
+      new MemberInfoField("최근접속일시", "lastLoginAt")
+    ));
+
+    model.addAttribute("unsuspendMemberInfo", List.of(
+      new MemberInfoField("아이디", "username"),
+      new MemberInfoField("이름", "name"),
+      new MemberInfoField("정지일시", "suspendedAt"),
+      new MemberInfoField("정지사유", "suspendedReason")
+    ));
+
+    model.addAttribute("removePhoneVerificationInfo", List.of(
+      new MemberInfoField("아이디", "username"),
+      new MemberInfoField("이름", "name"),
+      new MemberInfoField("휴대전화번호", "phone")
+    ));
+
+    model.addAttribute("addPhoneWithVerificationInfo", List.of(
+      new MemberInfoField("아이디", "username"),
+      new MemberInfoField("이름", "name"),
+      new MemberInfoField("기존 휴대전화번호", "phone")
+    ));
   }
 
   @GetMapping("/member/job-seeker/result")
   public String getJobSeekerResultFragment(
     Model model,
     @RequestParam(name = "pageIdx", required = false, defaultValue = "1") int pageIdx,
-    @RequestParam(name = "pageSize", required = false, defaultValue = "30") int pageSize,
+    @RequestParam(name = "pageSize", required = false, defaultValue = "10") int pageSize,
     @Valid @ModelAttribute JobSeekerSearchForm form
   ) {
 
@@ -51,6 +84,7 @@ public class AdminController {
     Page<JobSeekerTableDTO> page = adminService.getPage(pageIdx, pageSize, condition);
 
     model.addAttribute("page", page);
+    model.addAttribute("pageSize", pageSize);
     PagingHandler<JobSeekerTableDTO, JobSeekerSearchForm> pagingHandler =
       new PagingHandler<>(page, form, PAGINATION_SIZE, pageIdx);
     model.addAttribute("pagingHandler", pagingHandler);
@@ -64,7 +98,7 @@ public class AdminController {
 
     log.info("form: {}", form);
     log.info("model: {}", model);
-    return "admin/fragments/job-seeker-result";
+    return "admin/member/fragments/job-seeker-result";
   }
 
   @PostMapping("/member/job-seeker/{memberId}/remove-phone-verification")
@@ -73,7 +107,7 @@ public class AdminController {
     adminService.removePhoneVerification(memberId);
     return AdminActionResponse.builder()
       .result(true)
-      .message(String.format("id가 %d인 사용자의 전화번호 인증을 삭제했으며,\n\"휴대전화 인증 해제\" 사유로 정지했습니다.", memberId))
+      .message(String.format("id가 %d인 사용자의 전화번호 인증을 삭제했으며,\n\"휴대전화번호 인증이 유효하지 않음\" 사유로 정지했습니다.", memberId))
       .build();
   }
 

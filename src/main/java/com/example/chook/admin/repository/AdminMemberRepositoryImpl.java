@@ -208,8 +208,6 @@ public class AdminMemberRepositoryImpl implements AdminMemberRepository {
           case PHONE -> keywordResult.or(keywordCheck.apply(member.phone, keyword.replace("-", "")));
           case EMAIL -> keywordResult.or(keywordCheck.apply(member.email, keyword));
           case ADDRESS -> {
-            // 주소는 전체 주소를 적는 것을 요구하는 것이 불합리하므로,
-            // 공백을 구분으로 나누지 않은 전체 키워드 하나가 포함되어 있는지만 확인
             keywordResult.or(contains(jobSeekerProfile.streetAddress, keyword));
             keywordResult.or(contains(jobSeekerProfile.detailAddress, keyword));
           }

@@ -7,261 +7,101 @@
   <th:block layout:fragment="css">
     <link rel="stylesheet" th:href="@{/css/admin/member/job-seeker.css}">
     <link rel="stylesheet" th:href="@{/css/admin/common.css}">
+    <link rel="stylesheet" th:href="@{/css/admin/search-form.css}">
   </th:block>
 </head>
 <div layout:fragment="content">
-
   <div class="container admin-container">
-    <form method="get" th:action="@{/admin/member/job-seeker}"
-          th:with="form=${form}" id="jobSeekerForm">
-      <div class="d-flex justify-content-end input-group input-group-sm">
-        <button class="btn btn-light form-btn-left" type="button" id="currentPageSize">30개씩</button>
-        <button class="btn btn-light form-btn-right dropdown-toggle dropdown-toggle-split" type="button" data-bs-toggle="dropdown" aria-expanded="false"></button>
-        <ul class="dropdown-menu dropdown-menu-end" id="pageSizeDropdownList">
-          <li><button type="button" class="dropdown-item page-size-li" data-value="10">10개씩</button></li>
-          <li><button type="button" class="dropdown-item page-size-li" data-value="30">30개씩</button></li>
-          <li><button type="button" class="dropdown-item page-size-li" data-value="50">50개씩</button></li>
-        </ul>
-        <input type="hidden" id="pageSize" name="pageSize" th:value="${pageSize}"/>
-        <button type="submit" class="btn btn-dark">검색</button>
+    <form id="jobSeekerForm" method="get"
+          th:action="@{/admin/member/job-seeker}" th:with="form=${form}">
+      <div class="admin-search-form">
+        <th:block th:replace="~{admin/member/fragments/search-option :: keyword(
+          keywordOptions=${keywordOptions},
+          form=${form})}"></th:block>
+        <th:block th:replace="~{admin/member/fragments/search-option ::date-range(
+          dateRangeOptions=${dateRangeOptions},
+          dateRangeAutofillOptions=${dateRangeAutofillOptions},
+          form=${form})}"></th:block>
       </div>
       <div class="row mb-3">
-        <div class="col-12 col-md-6">
-          <label class="search-form-label" for="keywords">검색 키워드
-            <a href="#" data-bs-toggle="tooltip" data-bs-html="true"
-               data-bs-title="키워드는 띄어쓰기로 구분합니다. <br/>[정확히 일치] 항목을 선택 시 주소는 전체 문자열의 포함 여부를, <br/>그 외의 조건은 전체 문자열과 값이 동일한 결과만 나타납니다.">
-              <span th:replace="~{admin/fragments/svg :: tooltip(tooltip-icon)}"></span>
-            </a>
-          </label>
-          <div class="input-group input-group-sm">
-            <button class="btn btn-light form-btn-left" type="button" id="currentKeywordType">전체</button>
-            <button class="btn btn-light form-btn-right dropdown-toggle dropdown-toggle-split" type="button" data-bs-toggle="dropdown" aria-expanded="false"></button>
-            <ul class="dropdown-menu" id="keywordTypeDropdownList">
-              <li><button type="button" class="dropdown-item keyword-type-li" data-value="">전체</button></li>
-              <li><button type="button" class="dropdown-item keyword-type-li" data-value="USERNAME">아이디</button></li>
-              <li><button type="button" class="dropdown-item keyword-type-li" data-value="NAME">이름</button></li>
-              <li><button type="button" class="dropdown-item keyword-type-li" data-value="PHONE">전화번호</button></li>
-              <li><button type="button" class="dropdown-item keyword-type-li" data-value="EMAIL">이메일</button></li>
-              <li><button type="button" class="dropdown-item keyword-type-li" data-value="ADDRESS">주소</button></li>
-            </ul>
-            <input type="hidden" id="keywordType" name="keywordType" th:value="${form.keywordType}"/>
-            <input type="text" id="keywords" name="keywords" class="form-control" th:value="${form.keywords}"/>
-          </div>
-          <div class="mt-2" id="keywordCriteriaWrapper">
-            <div class="d-flex gap-3" role="group" id="keywordCriteria">
-              <div class="form-check">
-                <input class="form-check-input" type="radio" name="keywordCriteria" id="keywordCriteriaContains" value="CONTAINS"
-                       th:checked="${form.keywordCriteria == null or form.keywordCriteria == 'CONTAINS'}">
-                <label class="form-check-label" for="keywordCriteriaContains">키워드 포함</label>
-              </div>
-              <div class="form-check">
-                <input class="form-check-input" type="radio" name="keywordCriteria" id="keywordCriteriaEquals" value="EQUALS"
-                       th:checked="${form.keywordCriteria != null and form.keywordCriteria == 'EQUALS'}">
-                <label class="form-check-label" for="keywordCriteriaEquals">정확히 일치</label>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-12 col-md-6">
-          <label class="search-form-label">날짜 범위</label>
-          <div class="input-group input-group-sm">
-            <button class="btn btn-light form-btn-left" type="button" id="currentDateRangeCriteria">선택</button>
-            <button class="btn btn-light form-btn-right dropdown-toggle dropdown-toggle-split" type="button" data-bs-toggle="dropdown" aria-expanded="false"></button>
-            <ul class="dropdown-menu" id="dateRangeCriteriaDropdownList">
-              <li><button type="button" class="dropdown-item date-range-criteria-li" data-value="">선택</button></li>
-              <li><button type="button" class="dropdown-item date-range-criteria-li" data-value="CREATED_AT">생성일시</button></li>
-              <li><button type="button" class="dropdown-item date-range-criteria-li" data-value="UPDATED_AT">수정일시</button></li>
-              <li><button type="button" class="dropdown-item date-range-criteria-li" data-value="LAST_LOGIN_AT">최근접속일시</button></li>
-              <li><button type="button" class="dropdown-item date-range-criteria-li" data-value="DELETED_AT">삭제일시</button></li>
-              <li><button type="button" class="dropdown-item date-range-criteria-li" data-value="BIRTH_DATE">생년월일</button></li>
-            </ul>
-            <input type="datetime-local" class="form-control" name="startDateTime" id="startDateTime" th:value="${form.startDateTime}"/>
-            <input type="date" class="form-control" name="startDate" id="startDate" th:value="${form.startDate}">
-            <span class="input-group-text">~</span>
-            <input type="datetime-local" class="form-control form-control-end" name="endDateTime" id="endDateTime" th:value="${form.endDateTime}">
-            <input type="date" class="form-control form-control-end" name="endDate" id="endDate" th:value="${form.endDate}">
-            <input type="hidden" id="dateRangeCriteria" name="dateRangeCriteria" th:value="${form.dateRangeCriteria}"/>
-          </div>
-          <div class="float-end mt-2 d-flex align-items-center gap-2" id="dateRangeCriteriaAutofillWrapper">
-            <label>빠른 설정</label>
-            <div class="btn-group btn-group-xs" role="group" id="dateRangeCriteriaAutofill">
-              <button type="button" class="btn btn-outline-light text-body date-range-criteria-autofill" data-value="1h">1시간</button>
-              <button type="button" class="btn btn-outline-light text-body date-range-criteria-autofill" data-value="6h">6시간</button>
-              <button type="button" class="btn btn-outline-light text-body date-range-criteria-autofill" data-value="12h">12시간</button>
-              <button type="button" class="btn btn-outline-light text-body date-range-criteria-autofill" data-value="1d">1일</button>
-              <button type="button" class="btn btn-outline-light text-body date-range-criteria-autofill" data-value="7d">1주</button>
-              <button type="button" class="btn btn-outline-light text-body date-range-criteria-autofill" data-value="1M">1개월</button>
-            </div>
-          </div>
-        </div>
+        <button class="btn btn-dark" type="submit">검색</button>
       </div>
       <div id="jobSeekerResult">
-        <div th:fragment="job-seeker-result">
-
-        </div>
       </div>
     </form>
   </div>
   <!-- suspendMemberModal -->
-  <div class="modal fade" id="suspendMemberModal" tabindex="-1" aria-labelledby="suspendMemberModal" aria-hidden="true">
+  <div aria-hidden="true" class="modal fade"
+       data-role="suspendMember" id="suspendMemberModal"
+       tabindex="-1">
     <div class="modal-dialog">
       <div class="modal-content">
-        <div class="modal-header">
-          <h1 class="modal-title fs-5" id="suspendMemberModalLabel">계정 정지 확인</h1>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
+        <div th:replace="~{admin/member/fragments/modal :: modal-header('계정 정지')}"></div>
         <div class="modal-body">
-          <label class="mb-3">회원 정보</label>
-          <table class="table mb-3">
-            <tbody>
-            <tr>
-              <th scope="row" class="modal-member-info-th">아이디</th>
-              <td id="suspendMemberUsername">(여기에 아이디가 표시됩니다.)</td>
-            </tr>
-            <tr>
-              <th scope="row">이름</th>
-              <td id="suspendMemberName">(여기에 이름이 표시됩니다.)</td>
-            </tr>
-            <tr>
-              <th scope="row">전화번호</th>
-              <td id="suspendMemberPhone">(여기에 전화번호 표시됩니다.)</td>
-            </tr>
-            <tr>
-              <th scope="row">이메일</th>
-              <td id="suspendMemberEmail">(여기에 이메일이 표시됩니다.)</td>
-            </tr>
-            <tr>
-              <th scope="row">최근접속일시</th>
-              <td id="suspendMemberLastLoginAt">(여기에 최근접속일시가 표시됩니다.)</td>
-            </tr>
-            </tbody>
-          </table>
-
+          <div
+            th:replace="~{admin/member/fragments/modal :: modal-member-info(targetInfoList=${suspendMemberInfo})}"></div>
           <div class="mb-3">
-            <label for="suspensionReason" class="form-label">정지 사유</label>
-            <div class="input-group">
-              <input type="text" class="form-control form-control-sm" id="suspensionReason">
+            <label class="form-label" for="suspensionReason">정지 사유</label>
+            <div class="input-group" data-member-info data-member-field="suspendedReason">
+              <input class="form-control form-control-sm" data-load-here id="suspensionReason"
+                     type="text">
             </div>
           </div>
-
         </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
-          <button type="button" class="btn btn-outline-danger" id="suspendMemberSubmit">저장</button>
-        </div>
+        <div th:replace="~{admin/member/fragments/modal :: modal-footer('danger', '저장')}"></div>
       </div>
     </div>
   </div>
   <!-- unsuspendMemberModal -->
-  <div class="modal fade" id="unsuspendMemberModal" tabindex="-1" aria-labelledby="unsuspendMemberModal" aria-hidden="true">
+  <div aria-hidden="true" class="modal fade"
+       data-role="unsuspendMember" id="unsuspendMemberModal"
+       tabindex="-1">
     <div class="modal-dialog">
       <div class="modal-content">
-        <div class="modal-header">
-          <h1 class="modal-title fs-5" id="unsuspendMemberModalLabel">계정 정지 확인</h1>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
+        <div th:replace="~{admin/member/fragments/modal :: modal-header('계정 정지 해제')}"></div>
         <div class="modal-body">
-          <label class="mb-3">회원 정지 정보</label>
-          <table class="table mb-3">
-            <tbody>
-            <tr>
-              <th scope="row" class="modal-member-info-th">아이디</th>
-              <td id="unsuspendMemberUsername">(여기에 아이디가 표시됩니다.)</td>
-            </tr>
-            <tr>
-              <th scope="row">이름</th>
-              <td id="unsuspendMemberName">(여기에 이름이 표시됩니다.)</td>
-            </tr>
-            <tr>
-              <th scope="row">정지 일시</th>
-              <td id="unsuspendMemberSuspendedAt">(여기에 정지 일시가 표시됩니다.)</td>
-            </tr>
-            <tr>
-              <th scope="row">정지 사유</th>
-              <td id="unsuspendMemberSuspendedReason">(여기에 정지 사유가 표시됩니다.)</td>
-            </tr>
-            </tbody>
-          </table>
-
+          <div
+            th:replace="~{admin/member/fragments/modal :: modal-member-info(targetInfoList=${unsuspendMemberInfo})}"></div>
         </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
-          <button type="button" class="btn btn-outline-danger" id="unsuspendMemberSubmit">정지 해제</button>
-        </div>
+        <div th:replace="~{admin/member/fragments/modal :: modal-footer('danger', '정지 해제')}"></div>
       </div>
     </div>
   </div>
   <!-- removePhoneVerificationModal -->
-  <div class="modal fade" id="removePhoneVerificationModal" tabindex="-1" aria-labelledby="removePhoneVerificationModal" aria-hidden="true">
+  <div aria-hidden="true" class="modal fade"
+       data-role="removePhoneVerification" id="removePhoneVerificationModal"
+       tabindex="-1">
     <div class="modal-dialog">
       <div class="modal-content">
-        <div class="modal-header">
-          <h1 class="modal-title fs-5" id="removePhoneVerificationModalLabel">휴대전화 번호 인증 해제 확인</h1>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
+        <div th:replace="~{admin/member/fragments/modal :: modal-header('휴대전화번호 인증 삭제')}"></div>
         <div class="modal-body">
-          <label class="mb-3">회원 정보</label>
-          <table class="table mb-3">
-            <tbody>
-            <tr>
-              <th scope="row" class="modal-member-info-th">아이디</th>
-              <td id="removePhoneVerificationUsername">(여기에 아이디가 표시됩니다.)</td>
-            </tr>
-            <tr>
-              <th scope="row">이름</th>
-              <td id="removePhoneVerificationName">(여기에 이름이 표시됩니다.)</td>
-            </tr>
-            <tr>
-              <th scope="row">휴대전화 번호</th>
-              <td id="removePhoneVerificationPhone">(여기에 휴대전화 번호가 표시됩니다.)</td>
-            </tr>
-            </tbody>
-          </table>
-
+          <div
+            th:replace="~{admin/member/fragments/modal :: modal-member-info(targetInfoList=${removePhoneVerificationInfo})}"></div>
         </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
-          <button type="button" class="btn btn-outline-danger" id="removePhoneVerificationSubmit">휴대전화 인증 해제</button>
-        </div>
+        <div th:replace="~{admin/member/fragments/modal :: modal-footer('danger', '인증 삭제')}"></div>
       </div>
     </div>
   </div>
   <!-- addPhoneWithVerificationModal -->
-  <div class="modal fade" id="addPhoneWithVerificationModal" tabindex="-1" aria-labelledby="addPhoneWithVerificationModal" aria-hidden="true">
+  <div aria-hidden="true" class="modal fade"
+       data-role="addPhoneWithVerification" id="addPhoneWithVerificationModal"
+       tabindex="-1">
     <div class="modal-dialog">
       <div class="modal-content">
-        <div class="modal-header">
-          <h1 class="modal-title fs-5" id="addPhoneWithVerificationModalLabel">휴대전화 번호 인증 해제 확인</h1>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
+        <div th:replace="~{admin/member/fragments/modal :: modal-header('휴대전화 인증 추가')}"></div>
         <div class="modal-body">
-          <label class="mb-3">회원 정보</label>
-          <table class="table mb-3">
-            <tbody>
-            <tr>
-              <th scope="row" class="modal-member-info-th">아이디</th>
-              <td id="addPhoneWithVerificationUsername">(여기에 아이디가 표시됩니다.)</td>
-            </tr>
-            <tr>
-              <th scope="row">이름</th>
-              <td id="addPhoneWithVerificationName">(여기에 이름이 표시됩니다.)</td>
-            </tr>
-            <tr>
-              <th scope="row">기존 휴대전화 번호</th>
-              <td id="addPhoneWithVerificationOldPhone">(여기에 기존 휴대전화 번호가 표시됩니다.)</td>
-            </tr>
-            </tbody>
-          </table>
+          <div
+            th:replace="~{admin/member/fragments/modal :: modal-member-info(targetInfoList=${addPhoneWithVerificationInfo})}"></div>
           <div class="mb-3">
-            <label for="addPhoneWithVerificationPhone" class="form-label">새 휴대전화 번호</label>
+            <label class="form-label" for="addPhoneWithVerificationPhone">새 휴대전화 번호</label>
             <div class="input-group">
-              <input type="text" class="form-control form-control-sm" id="addPhoneWithVerificationPhone">
+              <input class="form-control form-control-sm" id="addPhoneWithVerificationPhone" type="text">
             </div>
           </div>
           <div class="mb-3">
-            <label for="addPhoneWithVerificationPhoneVerify" class="form-label">새 휴대전화 번호 확인</label>
+            <label class="form-label" for="addPhoneWithVerificationPhoneVerify">새 휴대전화 번호 확인</label>
             <div class="input-group">
-              <input type="text" class="form-control form-control-sm" id="addPhoneWithVerificationPhoneVerify">
+              <input class="form-control form-control-sm" id="addPhoneWithVerificationPhoneVerify" type="text">
             </div>
           </div>
           <div class="alert alert-light d-flex align-items-start" role="alert">
@@ -272,15 +112,12 @@
             </div>
           </div>
         </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
-          <button type="button" class="btn btn-outline-success" id="addPhoneWithVerificationSubmit">휴대전화 인증 추가</button>
-        </div>
+        <div th:replace="~{admin/member/fragments/modal :: modal-footer('success', '인증 추가')}"></div>
       </div>
     </div>
   </div>
+  <script th:src="@{/js/admin/member/member.js}"></script>
   <script th:src="@{/js/admin/member/job-seeker-get-result.js}"></script>
-  <script th:src="@{/js/admin/member/job-seeker.js}"></script>
   <script th:src="@{/js/admin/member/job-seeker-table-filter.js}"></script>
   <script th:src="@{/js/admin/member/job-seeker-modal.js}"></script>
   <script>

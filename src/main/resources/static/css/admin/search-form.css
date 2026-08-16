@@ -1,0 +1,119 @@
+/**
+ 검색창
+ */
+:root {
+  --theme-main-color: var(--bs-danger);
+  --theme-main-color-rgb: var(--bs-danger-rgb);
+  --theme-main-color-subtle: var(--bs-danger-border-subtle);
+}
+
+.admin-search-form {
+  max-width: 600px;
+}
+
+.admin-search-form .dropdown-menu * {
+  --bs-dropdown-padding-y: .25rem;
+  --bs-dropdown-item-padding-y: .15rem;
+  font-size: 13px;
+}
+
+.admin-search-form .form-btn-left {
+  border: var(--bs-border-width) solid var(--bs-border-color);
+  border-right: 0 none;
+  width: 100px;
+}
+
+.admin-search-form .form-btn-right {
+  border: var(--bs-border-width) solid var(--bs-border-color);
+  border-left: 0 none;
+}
+
+.admin-search-form a[data-bs-toggle="tooltip"] {
+  color: inherit;
+}
+
+.admin-search-form .form-check {
+  margin-bottom: 0;
+  min-height: 0;
+}
+
+.admin-search-form .form-check-input:checked {
+  background-color: var(--theme-main-color);
+  border-color:  var(--theme-main-color);
+}
+
+.admin-search-form .form-check-input:focus {
+  box-shadow: 0 0 0 0.25rem rgba(var(--theme-main-color-rgb), 0.25);
+}
+
+.admin-search-form .form-check-label {
+  font-weight: 500;
+}
+
+.admin-search-form .search-field-group {
+  margin-bottom: 15px;
+}
+
+.admin-search-form .search-field-head {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.admin-search-form .search-field-head .search-field-label {
+  font-size: 13px;
+  display: flex;
+  gap: 5px;
+  align-items: center;
+  color: var(--bs-secondary);
+}
+
+.admin-search-form .search-field-head .tooltip-icon {
+  display: block;
+  width: 13px;
+  height: 13px;
+}
+
+.admin-search-form .search-criteria {
+  font-size: 13px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.admin-search-form #dateRangeBetween {
+  background-color: var(--bs-body-bg);
+}
+
+.admin-search-form .form-control:disabled {
+  color: rgba(var(--bs-body-color-rgb), 0.25);
+}
+
+.admin-search-form #dateRangeBetween.disabled {
+  background-color: var(--bs-secondary-bg);
+  color: rgba(var(--bs-body-color-rgb), 0.25);
+}
+
+.admin-search-form .form-control-end {
+  border-top-right-radius: var(--bs-border-radius-sm) !important;
+  border-bottom-right-radius: var(--bs-border-radius-sm) !important;
+}
+
+.admin-search-form #dateRangeCriteriaAutofill {
+  display: flex;
+  gap: 2px;
+}
+
+.admin-search-form #dateRangeCriteriaAutofill button {
+  font-size: 11px;
+  font-weight: 500;
+  height: 19.5px;
+  box-sizing: border-box;
+
+  --bs-btn-padding-y: 0rem;
+  --bs-btn-padding-x: 0.25rem;
+  --bs-btn-border-radius: 50rem;  /* rounded-pill */
+  --bs-btn-color: var(--bs-secondary);
+  --bs-btn-border-color: var(--bs-border-color);
+}

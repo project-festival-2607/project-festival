@@ -1,7 +1,7 @@
 document.querySelector('#jobSeekerForm').addEventListener('click', (event) => {
 
   let changed = false;
-  const filterTarget = event.target.closest('.dropdown-item');
+  const filterTarget = event.target.closest('#jobSeekerTableWrapper .dropdown-item');
   if (filterTarget) {
     changed = true;
     if (filterTarget.dataset.role === 'update-status-filter') {
@@ -16,7 +16,6 @@ document.querySelector('#jobSeekerForm').addEventListener('click', (event) => {
   }
 
   const sortTarget = event.target.closest('button[data-role="update-sort-criteria"]');
-  console.log(sortTarget);
   if (sortTarget) {
     changed = true;
     const dateSortCriteria = document.getElementById("dateSortCriteria");
