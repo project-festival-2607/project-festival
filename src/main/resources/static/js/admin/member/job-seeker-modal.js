@@ -4,8 +4,6 @@
 
 document.querySelector('#jobSeekerForm').addEventListener('click', (event) => {
 
-  console.log(event.target.dataset.role);
-
   if (event.target.dataset.role === 'suspendMember') {
     const member = event.target.closest('tr');
     const id = member.querySelector('[data-type="id"]').textContent;

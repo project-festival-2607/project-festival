@@ -86,8 +86,13 @@
   background-color: var(--bs-body-bg);
 }
 
+.admin-search-form .form-control:disabled {
+  color: rgba(var(--bs-body-color-rgb), 0.25);
+}
+
 .admin-search-form #dateRangeBetween.disabled {
   background-color: var(--bs-secondary-bg);
+  color: rgba(var(--bs-body-color-rgb), 0.25);
 }
 
 .admin-search-form .form-control-end {

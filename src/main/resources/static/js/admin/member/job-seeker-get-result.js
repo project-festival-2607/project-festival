@@ -55,11 +55,11 @@ function loadJobSeekerResult(reset = false) {
         if (jobSeekerTableWrapper) {
           localStorage.setItem(
             'admin-table-scroll-x',
-            jobSeekerTableWrapper.scrollLeft
+            `${jobSeekerTableWrapper.scrollLeft}`
           );
           localStorage.setItem(
             'admin-table-scroll-y',
-            jobSeekerTableWrapper.scrollTop
+            `${jobSeekerTableWrapper.scrollTop}`
           );
         }
 
@@ -75,7 +75,7 @@ function loadJobSeekerResult(reset = false) {
 
 
         const tooltipTriggerList = jobSeekerResult.querySelectorAll('[data-bs-toggle="tooltip"]');
-        const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
+        [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
 
         //  pageSize 초기화 및 드롭다운 설정
 
