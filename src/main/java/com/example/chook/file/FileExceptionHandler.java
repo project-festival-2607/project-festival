@@ -1,5 +1,6 @@
 package com.example.chook.file;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -13,7 +14,8 @@ public class FileExceptionHandler {
   @ExceptionHandler(MaxUploadSizeExceededException.class)
   public String handleMaxUploadSizeExceededException(
     MaxUploadSizeExceededException e,
-    RedirectAttributes redirectAttributes) {
+    RedirectAttributes redirectAttributes,
+    HttpServletRequest request) {
 
     redirectAttributes.addFlashAttribute(
       "FailureMsg",
@@ -21,7 +23,13 @@ public class FileExceptionHandler {
     );
     log.error("MaxUploadSizeExceededException", e);
 
-    return "redirect:/test/file";
+    String referer = request.getHeader("Referer");
+
+    if (referer == null || referer.isBlank()) {
+      return "redirect:/";
+    }
+
+    return "redirect:" + referer;
   }
 
 }
