@@ -11,6 +11,7 @@ import com.example.chook.admin.record.MemberInfoField;
 import com.example.chook.admin.record.PhoneVerificationRequest;
 import com.example.chook.admin.service.AdminService;
 import com.example.chook.common.handler.PagingHandler;
+import com.example.chook.member.entity.enums.Gender;
 import com.example.chook.member.entity.enums.MemberStatus;
 import com.example.chook.member.entity.enums.Provider;
 import jakarta.validation.Valid;
@@ -92,6 +93,7 @@ public class AdminController {
     // thead status dropdown용
     model.addAttribute("memberStatusList", List.of(MemberStatus.values()));
     model.addAttribute("memberProviderList", List.of(Provider.values()));
+    model.addAttribute("memberGenderList", List.of(Gender.values()));
 
     log.info("form: {}", form);
     log.info("model: {}", model);

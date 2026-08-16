@@ -1,18 +1,11 @@
 document.querySelector('#jobSeekerForm').addEventListener('click', (event) => {
 
   let changed = false;
-  const filterTarget = event.target.closest('#jobSeekerTableWrapper .dropdown-item');
+  const filterTarget = event.target.closest('button[data-role="update-filter"]');
   if (filterTarget) {
     changed = true;
-    if (filterTarget.dataset.role === 'update-status-filter') {
-      const filterStatus = document.getElementById('filterStatus');
-      filterStatus.value = filterTarget.dataset.value ?? '';
-    }
-
-    if (filterTarget.dataset.role === 'update-provider-filter') {
-      const filterProvider = document.getElementById('filterProvider');
-      filterProvider.value = filterTarget.dataset.value ?? '';
-    }
+    const filterElement = document.getElementById(filterTarget.dataset.targetElement);
+    filterElement.value = filterTarget.dataset.value ?? '';
   }
 
   const sortTarget = event.target.closest('button[data-role="update-sort-criteria"]');
