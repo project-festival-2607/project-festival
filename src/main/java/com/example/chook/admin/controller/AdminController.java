@@ -77,7 +77,7 @@ public class AdminController {
 
     log.info("form: {}", form);
     log.info("model: {}", model);
-    return "admin/fragments/job-seeker-result";
+    return "admin/member/fragments/job-seeker-result";
   }
 
   @PostMapping("/member/job-seeker/{memberId}/remove-phone-verification")
