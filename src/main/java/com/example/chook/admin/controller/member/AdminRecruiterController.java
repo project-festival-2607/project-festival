@@ -7,7 +7,7 @@ import com.example.chook.admin.entity.enums.recruiter.RecruiterDateRangeType;
 import com.example.chook.admin.entity.enums.recruiter.RecruiterKeywordType;
 import com.example.chook.admin.form.RecruiterSearchForm;
 import com.example.chook.admin.provider.AdminMemberInfoFieldProvider;
-import com.example.chook.admin.service.AdminService;
+import com.example.chook.admin.service.AdminMemberService;
 import com.example.chook.common.handler.PagingHandler;
 import com.example.chook.member.entity.enums.MemberStatus;
 import jakarta.validation.Valid;
@@ -30,7 +30,7 @@ import java.util.List;
 public class AdminRecruiterController {
 
   private static final int PAGINATION_SIZE = 10;
-  private final AdminService adminService;
+  private final AdminMemberService adminMemberService;
   private final AdminMemberInfoFieldProvider infoFieldProvider;
 
   @GetMapping
@@ -61,7 +61,7 @@ public class AdminRecruiterController {
 
     RecruiterSearchCondition condition = RecruiterSearchCondition.from(form);
     log.info("condition: {}", condition);
-    Page<RecruiterTableDTO> page = adminService.getRecruiterPage(pageIdx, pageSize, condition);
+    Page<RecruiterTableDTO> page = adminMemberService.getRecruiterPage(pageIdx, pageSize, condition);
 
     model.addAttribute("page", page);
     model.addAttribute("pageSize", pageSize);

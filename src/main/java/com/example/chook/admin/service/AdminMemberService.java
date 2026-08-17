@@ -8,7 +8,7 @@ import com.example.chook.admin.dto.JobSeekerTableDTO;
 import com.example.chook.admin.dto.RecruiterTableDTO;
 import org.springframework.data.domain.Page;
 
-public interface AdminService {
+public interface AdminMemberService {
 
   Page<JobSeekerTableDTO> getJobSeekerPage(int pageIdx, int pageSize, JobSeekerSearchCondition condition);
 

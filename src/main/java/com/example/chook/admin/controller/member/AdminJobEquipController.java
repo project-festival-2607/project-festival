@@ -8,7 +8,7 @@ import com.example.chook.admin.entity.enums.jobequip.JobEquipKeywordType;
 import com.example.chook.admin.form.JobSeekerSearchForm;
 import com.example.chook.admin.form.RecruiterSearchForm;
 import com.example.chook.admin.provider.AdminMemberInfoFieldProvider;
-import com.example.chook.admin.service.AdminService;
+import com.example.chook.admin.service.AdminMemberService;
 import com.example.chook.common.handler.PagingHandler;
 import com.example.chook.member.entity.enums.Gender;
 import com.example.chook.member.entity.enums.MemberStatus;
@@ -33,7 +33,7 @@ import java.util.List;
 public class AdminJobEquipController {
 
   private static final int PAGINATION_SIZE = 10;
-  private final AdminService adminService;
+  private final AdminMemberService adminMemberService;
   private final AdminMemberInfoFieldProvider infoFieldProvider;
 
   @GetMapping
@@ -63,7 +63,7 @@ public class AdminJobEquipController {
 
     JobEquipSearchCondition condition = JobEquipSearchCondition.from(form);
     log.info("condition: {}", condition);
-    Page<JobEquipTableDTO> page = adminService.getJobEquipPage(pageIdx, pageSize, condition);
+    Page<JobEquipTableDTO> page = adminMemberService.getJobEquipPage(pageIdx, pageSize, condition);
 
     model.addAttribute("page", page);
     model.addAttribute("pageSize", pageSize);

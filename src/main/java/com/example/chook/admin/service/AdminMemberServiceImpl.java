@@ -37,7 +37,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Service
 @Slf4j
-public class AdminServiceImpl implements AdminService {
+public class AdminMemberServiceImpl implements AdminMemberService {
 
   private final AdminMemberRepository adminMemberRepository;
   private final AdminMapper adminMapper;
