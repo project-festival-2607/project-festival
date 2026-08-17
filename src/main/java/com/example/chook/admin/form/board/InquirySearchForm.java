@@ -1,4 +1,4 @@
-package com.example.chook.admin.form.support;
+package com.example.chook.admin.form.board;
 
 import java.time.LocalDateTime;
 
