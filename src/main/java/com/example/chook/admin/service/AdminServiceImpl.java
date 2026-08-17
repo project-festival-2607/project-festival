@@ -119,8 +119,13 @@ public class AdminServiceImpl implements AdminService {
     Member member = memberRepository.findById(memberId).orElseThrow(() ->
       new EntityNotFoundException("Member with id: " + memberId + " not found")
     );
+    // Member 공통
     if (!member.isPhoneVerified())
       throw new IllegalStateException("휴대전화번호가 인증된 상태여야만 정지를 해제할 수 있습니다.");
+    // RECRUITER 한정
+    if (member.getRole() == MemberRole.RECRUITER && !businessRegistrationRepository.existsById(memberId)) {
+      throw new IllegalStateException("사업자등록번호가 인증된 상태여야만 정지를 해제할 수 있습니다.");
+    }
     boolean isSuspended = memberSuspensionRepository.existsById(memberId);
     if (!isSuspended) return false;
     memberSuspensionRepository.deleteById(memberId);

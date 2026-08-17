@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<th:block th:fragment="recruiter-result">
+  <div class="result-table-wrapper"
+       id="tableWrapper"
+       th:with="form=${pagingHandler.form}">
+    <input id="sortCriteria" name="sortCriteria" th:value="${form.sortCriteria}" type="hidden"/>
+    <input id="ascending" name="ascending" th:value="${form.ascending}" type="hidden"/>
+    <table class="table">
+      <colgroup>
+        <col style="width: 65px;">  <!-- # -->
+        <col style="width: 200px;"> <!-- 아이디 -->
+        <col style="width: 115px;"> <!-- 이름 -->
+        <col style="width: 120px;"> <!-- 전화번호 -->
+        <col style="width: 32px;">  <!-- (전화번호 확인) -->
+        <col style="width: 250px;"> <!-- 이메일 -->
+        <col style="width: 80px;">  <!-- 상태 -->
+        <col style="width: 135px;"> <!-- 생성일시 -->
+        <col style="width: 135px;"> <!-- 수정일시 -->
+        <col style="width: 135px;"> <!-- 최근접속일시 -->
+        <col style="width: 135px;"> <!-- 삭제일시 -->
+        <col style="width: 90px;">  <!-- 포인트 -->
+        <col style="width: 115px;"> <!-- 상호명 -->
+        <col style="width: 115px;"> <!-- 대표자명 -->
+        <col style="width: 100px;"> <!-- 설립일 -->
+        <col style="width: 300px;"> <!-- 도로명주소 -->
+        <col style="width: 300px;"> <!-- 상세주소 -->
+        <col style="width: 120px;"> <!-- 사업자등록번호 -->
+        <col style="width: 135px;"> <!-- 인증일시 -->
+        <col style="width: 45px;">  <!-- 관리 -->
+      </colgroup>
+      <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">아이디</th>
+        <th scope="col">이름</th>
+        <th colspan="2" scope="col">휴대전화번호</th>
+        <th scope="col">이메일</th>
+        <th scope="col">
+          <div class="d-flex gap-3 justify-content-between">
+            <span>상태</span>
+            <div class="dropdown d-flex justify-content-center align-items-center">
+              <button class="btn btn-reset btn-th dropdown-toggle dropdown-no-caret" data-bs-toggle="dropdown"
+                      type="button">
+                <th:block th:replace="${form.status == null}
+                                      ? ~{admin/fragments/svg :: filter-idle('filter-idle-icon')}
+                                      : ~{admin/fragments/svg :: filter-active('filter-active-icon')}"></th:block>
+              </button>
+              <ul class="dropdown-menu filter-menu" id="statusFilterDropdownList">
+                <li>
+                  <button class="dropdown-item status-filter-li" data-role="update-filter"
+                          data-target-element="filterStatus"
+                          th:classappend="${form.status == null} ? 'active'"
+                          type="button">
+                    <th:block th:replace="~{admin/fragments/badge :: member-status(null, false, true)}"></th:block>
+                  </button>
+                </li>
+                <li th:each="status: ${memberStatusList}">
+                  <button class="dropdown-item status-filter-li" data-role="update-filter"
+                          data-target-element="filterStatus"
+                          th:classappend="${form.status != null and form.status == status.name} ? 'active'"
+                          th:data-value="${status.name}"
+                          type="button">
+                    <th:block
+                      th:replace="~{admin/fragments/badge :: member-status(${status}, false, false)}"></th:block>
+                  </button>
+                </li>
+                <li>
+                  <button class="dropdown-item status-filter-li" data-role="update-filter"
+                          data-target-element="filterStatus"
+                          data-value="DELETED"
+                          th:classappend="${form.status != null and form.status == 'DELETED'} ? 'active'"
+                          type="button">
+                    <th:block th:replace="~{admin/fragments/badge :: member-status(null, true, false)}"></th:block>
+                  </button>
+                </li>
+              </ul>
+              <input id="filterStatus" name="status" th:value="${form.status}" type="hidden">
+            </div>
+          </div>
+        </th>
+        <th scope="col">
+          <span class="d-flex gap-3 justify-content-between">
+            <span>생성일시</span>
+            <th:block th:replace="~{admin/fragments/sort-button :: sort-button(
+            'CREATED_AT', ${form.sortCriteria}, ${form.ascending}
+            )}"></th:block>
+          </span>
+        </th>
+        <th scope="col">
+          <span class="d-flex gap-3 justify-content-between">
+            <span>수정일시</span>
+            <th:block th:replace="~{admin/fragments/sort-button :: sort-button(
+            'UPDATED_AT', ${form.sortCriteria}, ${form.ascending}
+            )}"></th:block>
+          </span>
+        </th>
+        <th scope="col">
+          <span class="d-flex gap-3 justify-content-between">
+            <span>최근접속일시</span>
+            <th:block th:replace="~{admin/fragments/sort-button :: sort-button(
+            'LAST_LOGIN_AT', ${form.sortCriteria}, ${form.ascending}
+            )}"></th:block>
+          </span>
+        </th>
+        <th scope="col">
+          <span class="d-flex gap-3 justify-content-between">
+            <span>삭제일시</span>
+            <th:block th:replace="~{admin/fragments/sort-button :: sort-button(
+            'DELETED_AT', ${form.sortCriteria}, ${form.ascending}
+            )}"></th:block>
+          </span>
+        </th>
+        <th scope="col">
+          <span class="d-flex gap-3 justify-content-between">
+            <span>포인트</span>
+            <th:block th:replace="~{admin/fragments/sort-button :: sort-button(
+            'POINT', ${form.sortCriteria}, ${form.ascending}
+            )}"></th:block>
+          </span>
+        </th>
+        <th scope="col">상호명</th>
+        <th scope="col">대표자명</th>
+        <th scope="col">
+          <span class="d-flex gap-3 justify-content-between">
+            <span>설립일</span>
+            <th:block th:replace="~{admin/fragments/sort-button :: sort-button(
+            'FOUNDED_AT', ${form.sortCriteria}, ${form.ascending}
+            )}"></th:block>
+          </span>
+        </th>
+        <th scope="col">도로명주소</th>
+        <th scope="col">상세주소</th>
+        <th scope="col">사업자등록번호</th>
+        <th scope="col">
+          <span class="d-flex gap-3 justify-content-between">
+            <span>인증일시</span>
+            <th:block th:replace="~{admin/fragments/sort-button :: sort-button(
+            'BUSINESS_NUMBER_VERIFIED_AT', ${form.sortCriteria}, ${form.ascending}
+            )}"></th:block>
+          </span>
+        </th>
+        <th class="text-center bg-body-secondary" scope="col">관리</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="recruiter : ${page}">
+        <td class="text-end" data-field="id" th:text="${recruiter.id}"></td>
+        <td data-field="username" th:text="${recruiter.username}"></td>
+        <td data-field="name" th:text="${recruiter.name}"></td>
+        <td data-field="phone">[[${recruiter.formattedPhone}]]</td>
+        <td data-field="phoneVerified">
+          <span class="text-success" th:if="${recruiter.phoneVerified}"><th:block
+            th:replace="~{admin/fragments/svg :: verified('phone-verified-icon')}"></th:block></span>
+          <span class="text-danger" th:unless="${recruiter.phoneVerified}" title="휴대전화 번호가 인증되지 않았습니다."><th:block
+            th:replace="~{admin/fragments/svg :: not-verified('phone-verified-icon')}"></th:block></span>
+        </td>
+        <td data-field="email" th:text="${recruiter.email}"></td>
+        <td class="text-center" data-field="status">
+          <th:block
+            th:replace="~{admin/fragments/badge :: member-status(${recruiter.status}, ${recruiter.deletedAt ne null}, false)}"></th:block>
+          <span class="d-none" data-field="suspendedAt"
+                th:text="${#temporals.format(recruiter.suspendedAt, 'yyyy.MM.dd. HH:mm:ss')}"></span>
+          <span class="d-none" data-field="suspendedReason">[[${recruiter.suspendedReason}]]</span>
+        </td>
+        <td data-field="createdAt" th:text="${#temporals.format(recruiter.createdAt, 'yyyy.MM.dd. HH:mm')}"></td>
+        <td data-field="updatedAt" th:text="${#temporals.format(recruiter.updatedAt, 'yyyy.MM.dd. HH:mm')}"></td>
+        <td data-field="lastLoginAt" th:text="${#temporals.format(recruiter.lastLoginAt, 'yyyy.MM.dd. HH:mm')}"></td>
+        <td data-field="deletedAt" th:text="${#temporals.format(recruiter.deletedAt, 'yyyy.MM.dd. HH:mm')}"></td>
+        <td class="text-end" data-field="point" th:text="${recruiter.point}"></td>
+        <td data-field="companyName" th:text="${recruiter.companyName}"></td>
+        <td data-field="ceoName" th:text="${recruiter.ceoName}"></td>
+        <td data-field="foundedAt" th:text="${#temporals.format(recruiter.foundedAt, 'yyyy.MM.dd.')}"></td>
+        <td data-field="streetAddress" th:text="${recruiter.streetAddress}"></td>
+        <td data-field="detailAddress" th:text="${recruiter.detailAddress}"></td>
+        <td data-field="businessNumber" th:text="${recruiter.businessNumber}"></td>
+        <td data-field="businessNumberVerifiedAt" th:text="${#temporals.format(recruiter.businessNumberVerifiedAt, 'yyyy.MM.dd.')}"></td>
+        <td class="center bg-body-secondary">
+          <button class="btn btn-reset dropdown-toggle dropdown-no-caret moderation-btn" data-bs-toggle="dropdown"
+                  type="button">
+            <th:block th:replace="~{admin/fragments/svg :: moderation('moderation-icon')}"></th:block>
+          </button>
+          <ul class="dropdown-menu moderation-menu">
+            <li>
+              <button class="dropdown-item date-range-criteria-li" data-bs-target="#suspendMemberModal"
+                      data-bs-toggle="modal"
+                      data-role="suspendMember"
+                      th:text="${'계정 정지'+ ((recruiter.status.name() eq 'SUSPENDED') ? ' 사유 변경': '')}"
+                      type="button"></button>
+            </li>
+            <li th:if="${recruiter.status.name() eq 'SUSPENDED'}">
+              <button class="dropdown-item date-range-criteria-li" data-bs-target="#unsuspendMemberModal"
+                      data-bs-toggle="modal"
+                      data-role="unsuspendMember" type="button">계정 정지 해제
+              </button>
+            </li>
+            <li th:if="${recruiter.phoneVerified}">
+              <button class="dropdown-item date-range-criteria-li" data-bs-target="#removePhoneVerificationModal"
+                      data-bs-toggle="modal"
+                      data-role="removePhoneVerification" type="button">휴대전화번호 인증 삭제
+              </button>
+            </li>
+            <li th:unless="${recruiter.phoneVerified}">
+              <button class="dropdown-item date-range-criteria-li" data-bs-target="#addPhoneWithVerificationModal"
+                      data-bs-toggle="modal"
+                      data-role="addPhoneWithVerification" type="button">휴대전화번호 인증 추가
+              </button>
+            </li>
+            <li th:if="${recruiter.businessNumberVerifiedAt ne null}">
+              <button class="dropdown-item date-range-criteria-li" data-bs-target="#removeBusinessRegistrationModal"
+                      data-bs-toggle="modal"
+                      data-role="removePhoneVerification" type="button">사업자등록번호 인증 삭제
+              </button>
+            </li>
+            <li th:if="${recruiter.businessNumberVerifiedAt eq null}">
+              <button class="dropdown-item date-range-criteria-li" data-bs-target="#addBusinessRegistrationModal"
+                      data-bs-toggle="modal"
+                      data-role="addPhoneWithVerification" type="button">사업자등록번호 인증 추가
+              </button>
+            </li>
+          </ul>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+  <div>
+    <nav class="d-flex mt-2">
+      <div class="flex-grow-1">
+        <ul class="admin-pagination pagination pagination-sm justify-content-center mb-0">
+          <li class="page-item" th:classappend="${pagingHandler.prevBtnActive eq false ? 'disabled' : '' }">
+            <button class="page-link" name="pageIdx" th:value="${pagingHandler.pageIdx - 1}" type="submit">←</button>
+          </li>
+          <li class="page-item"
+              th:classappend="${i == pagingHandler.pageIdx} ? 'active'"
+              th:each="i : ${#numbers.sequence(pagingHandler.startPageIdx, pagingHandler.endPageIdx)}">
+            <button class="page-link" name="pageIdx" th:value="${i}" type="submit">[[${i}]]</button>
+          </li>
+          <li class="page-item" th:classappend="${pagingHandler.nextBtnActive eq false ? 'disabled' : '' }">
+            <button class="page-link" name="pageIdx" th:value="${pagingHandler.pageIdx + 1}" type="submit">→</button>
+          </li>
+        </ul>
+      </div>
+      <div class="page-size-selector">
+        <div class="d-flex justify-content-end input-group input-group-sm">
+          <button class="btn btn-light dropdown-btn-left" id="currentPageSize" type="button"></button>
+          <button aria-expanded="false"
+                  class="btn btn-light dropdown-btn-right dropdown-toggle dropdown-toggle-split border-radius-end"
+                  data-bs-toggle="dropdown" type="button"></button>
+          <ul class="dropdown-menu dropdown-menu-end" id="pageSizeDropdownList">
+            <li th:each="value: ${pageSizeOptions}">
+              <button class="dropdown-item page-size-li" th:text="${value + '개씩'}" th:value="${value}"
+                      type="submit"></button>
+            </li>
+          </ul>
+          <input id="pageSize" name="pageSize" th:value="${pageSize}" type="hidden"/>
+        </div>
+      </div>
+      <input id="pageIdx" name="pageIdx" th:value="${pagingHandler.pageIdx}" type="hidden"/>
+    </nav>
+  </div>
+</th:block>
