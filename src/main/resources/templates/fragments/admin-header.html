@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      xmlns:th="http://www.thymeleaf.org"
+>
+<div style="z-index: 999" th:fragment="admin-header">
+  <!--    style="position: sticky; top: 0; z-index: 1000;"-->
+  <nav class="navbar" data-bs-theme="dark">
+    <div class="dropdown-bg"></div>
+    <div class="container inner">
+      <div class="c-container">
+        <a class="logo" href="/">축!!</a>
+        <div class="header-bar">
+          <ul class="header-nav">
+            <li class="nav-item">
+              <a class="nav-link" href="/festival/list">사용자</a>
+              <div class="dropdown-menu-box">
+                <ul class="submenu">
+                  <li><a href="/admin/member/job-seeker">일반 구직자</a></li>
+                  <li><a href="/admin/member/job-equip">전문 구직자</a></li>
+                  <li><a href="/admin/member/recruiter">행사 구인자</a></li>
+                </ul>
+              </div>
+            </li>
+          </ul>
+        </div>
+        <div class="user-box">
+          <ul class="user-sub">
+            <li sec:authorize="isAnonymous()"><a class="nav-link" th:href="@{/member/signup}">회원가입 ↗ </a></li>
+            <li sec:authorize="isAnonymous()"><a class="nav-link" th:href="@{/member/login}">로그인 ↗ </a></li>
+            <li sec:authorize="isAuthenticated()"><a class="nav-link" href="/"
+                                                     th:text="${#authentication.principal.name}"></a></li>
+            <li sec:authorize="isAuthenticated()"><a class="nav-link" th:href="@{/member/logout}">로그아웃</a></li>
+
+            <li sec:authorize="isAuthenticated()">
+              <a class="nav-link"
+                 th:href="@{/mypage}">
+                마이페이지
+              </a>
+            </li>
+
+          </ul>
+        </div>
+      </div>
+    </div>
+  </nav>
+</div>

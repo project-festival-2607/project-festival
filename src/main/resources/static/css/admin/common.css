@@ -1,3 +1,9 @@
+:root {
+  --theme-main-color: var(--bs-dark);
+  --theme-main-color-rgb: var(--bs-dark-rgb);
+  --theme-main-color-subtle: var(--bs-dark-text-emphasis);
+}
+
 .member-gender-filter,
 .member-provider-filter,
 .member-status-clear-filter {
