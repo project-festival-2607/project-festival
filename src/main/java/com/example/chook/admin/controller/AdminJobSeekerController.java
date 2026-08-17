@@ -49,6 +49,7 @@ public class AdminJobSeekerController {
     model.addAttribute("unsuspendMemberInfo", infoFieldProvider.unsuspend());
     model.addAttribute("removePhoneVerificationInfo", infoFieldProvider.removePhoneVerification());
     model.addAttribute("addPhoneWithVerificationInfo", infoFieldProvider.addPhoneWithVerification());
+    model.addAttribute("addBusinessRegistrationInfo", infoFieldProvider.addBusinessRegistration());
   }
 
   @GetMapping("/result")

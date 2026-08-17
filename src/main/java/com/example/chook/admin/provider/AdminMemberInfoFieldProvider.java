@@ -63,6 +63,13 @@ public class AdminMemberInfoFieldProvider {
     );
   }
 
+  public List<MemberInfoField> addBusinessRegistration() {
+    return List.of(
+      new MemberInfoField("아이디", "username"),
+      new MemberInfoField("이름", "name")
+    );
+  }
+
   public List<MemberInfoField> addBusinessRegistrationWithCompanyInfo() {
     return List.of(
       new MemberInfoField("아이디", "username"),

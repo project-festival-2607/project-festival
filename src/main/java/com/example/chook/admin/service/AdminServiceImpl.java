@@ -175,6 +175,7 @@ public class AdminServiceImpl implements AdminService {
       .verified(true)
       .verifiedAt(LocalDateTime.now())
       .build());
+    if (member.getRole() == MemberRole.JOB_SEEKER) member.setRole(MemberRole.JOB_EQUIP);
     return true;
   }
 

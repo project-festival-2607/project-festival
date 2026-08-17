@@ -113,6 +113,44 @@
       </div>
     </div>
   </div>
+  <!-- addBusinessRegistrationModal -->
+  <div aria-hidden="true" class="modal fade"
+       data-role="addBusinessRegistration" id="addBusinessRegistrationModal"
+       tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div th:replace="~{admin/member/fragments/modal :: modal-header('사업자등록번호 인증 추가')}"></div>
+        <div class="modal-body">
+          <div
+            th:replace="~{admin/member/fragments/modal :: modal-member-info(${addBusinessRegistrationInfo})}"></div>
+          <div class="mb-3">
+            <label class="form-label" for="addPhoneWithVerificationPhone">새 사업자등록번호</label>
+            <div class="input-group">
+              <input class="form-control form-control-sm" id="addBusinessRegistrationBusinessNumber" type="text">
+            </div>
+          </div>
+          <div class="mb-3">
+            <label class="form-label" for="addPhoneWithVerificationPhoneVerify">새 사업자등록번호 확인</label>
+            <div class="input-group">
+              <input class="form-control form-control-sm" id="addBusinessRegistrationBusinessNumberVerify" type="text">
+            </div>
+          </div>
+          <div class="alert alert-light d-flex align-items-start" role="alert">
+            <div th:replace="~{admin/fragments/svg :: notification('alert-icon')}"></div>
+            <div>
+              "인증 추가" 버튼을 누르면 <strong>인증 과정 없이</strong> 등록되며,<br/>
+              등록 성공 시 <strong>사용자의 역할이 "JOB_EQUIP"로 변경</strong>됩니다.<br/>
+              사업자등록번호 인증 등록 후에는 <a
+              class="link-danger link-offset-2 fw-semibold
+                   link-underline link-underline-opacity-0 link-underline-opacity-100"
+              href="/admin/member/job-equip">JOB_EQUIP 조회 페이지</a>에서 해당 사용자를 관리할 수 있습니다.
+            </div>
+          </div>
+        </div>
+        <div th:replace="~{admin/member/fragments/modal :: modal-footer('success', '인증 추가')}"></div>
+      </div>
+    </div>
+  </div>
   <script th:src="@{/js/admin/member/member.js}"></script>
   <script th:src="@{/js/admin/member/get-result.js}"></script>
   <script th:src="@{/js/admin/member/table-th-filter.js}"></script>
