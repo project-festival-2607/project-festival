@@ -38,6 +38,12 @@ button:has(.filter-idle-icon) {
 
 .result-table-wrapper table thead th .dropdown-menu {
   --bs-dropdown-link-active-bg: rgba(var(--bs-primary-rgb), 0.1);
+  --bs-dropdown-item-padding-y: .25rem;
+}
+
+.result-table-wrapper table thead th .dropdown-menu .badge {
+  --bs-badge-font-size: 1em;
+  font-size: 12px;
 }
 
 .result-table-wrapper table thead th .dropdown-menu .active .badge {
@@ -86,6 +92,11 @@ button:has(.filter-idle-icon) {
   padding-right: 8px;
   letter-spacing: -0.03em;
   vertical-align: middle;
+}
+
+.result-table-wrapper table td .badge {
+  --bs-badge-font-size: 1em;
+  font-size: 12px;
 }
 
 .result-table-wrapper table td:not(:last-child) {

@@ -57,15 +57,10 @@ a[data-bs-toggle="tooltip"] {
   max-width: 400px;
 }
 
-.dropdown-menu * {
+.dropdown-menu{
   --bs-dropdown-padding-y: .25rem;
   --bs-dropdown-item-padding-y: .15rem;
   font-size: 13px;
-}
-
-.dropdown-item:has(span.badge) {
-  --bs-dropdown-item-padding-y: .25rem;
-  font-size: 12px;
 }
 
 .dropdown-btn-left {
