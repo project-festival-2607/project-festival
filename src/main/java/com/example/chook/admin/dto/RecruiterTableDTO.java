@@ -1,5 +1,6 @@
 package com.example.chook.admin.dto;
 
+import com.example.chook.common.util.CustomStringUtils;
 import com.example.chook.member.entity.enums.MemberRole;
 import com.example.chook.member.entity.enums.MemberStatus;
 import lombok.*;
@@ -43,9 +44,11 @@ public class RecruiterTableDTO {
   LocalDateTime businessNumberVerifiedAt;
 
   public String getFormattedPhone() {
-    return phone.length() == 11
-      ? String.format("%s-%s-%s", phone.substring(0, 3), phone.substring(3, 7), phone.substring(7))
-      : phone;
+    return CustomStringUtils.getFormattedPhone(phone);
+  }
+
+  public String getFormattedBusinessNumber() {
+    return CustomStringUtils.getFormattedBusinessNumber(businessNumber);
   }
 
 }

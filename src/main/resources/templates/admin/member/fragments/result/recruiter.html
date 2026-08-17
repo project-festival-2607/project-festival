@@ -176,7 +176,7 @@
         <td data-field="foundedAt" th:text="${#temporals.format(recruiter.foundedAt, 'yyyy.MM.dd.')}"></td>
         <td data-field="streetAddress" th:text="${recruiter.streetAddress}"></td>
         <td data-field="detailAddress" th:text="${recruiter.detailAddress}"></td>
-        <td data-field="businessNumber" th:text="${recruiter.businessNumber}"></td>
+        <td data-field="businessNumber" th:text="${recruiter.formattedBusinessNumber}"></td>
         <td data-field="businessNumberVerifiedAt" th:text="${#temporals.format(recruiter.businessNumberVerifiedAt, 'yyyy.MM.dd. HH:mm')}"></td>
         <td class="center bg-body-secondary">
           <button class="btn btn-reset dropdown-toggle dropdown-no-caret moderation-btn" data-bs-toggle="dropdown"
