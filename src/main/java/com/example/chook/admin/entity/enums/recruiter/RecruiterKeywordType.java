@@ -1,7 +1,11 @@
 package com.example.chook.admin.entity.enums.recruiter;
 
+import com.example.chook.admin.entity.enums.KeywordCriteria;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+
+import java.util.EnumSet;
+import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @Getter
@@ -14,13 +18,26 @@ public enum RecruiterKeywordType {
   COMPANY_NAME("상호명"),
   CEO_NAME("대표자명"),
   BUSINESS_NUMBER("사업자등록번호"),
-  ADDRESS("주소", false);
+  ADDRESS("주소", EnumSet.of(
+    KeywordCriteria.ALL_WORDS_CONTAINS,
+    KeywordCriteria.PHRASE_CONTAINS
+  ));
 
   private final String label;
-  private final boolean exactMatchSupported;
+  private final EnumSet<KeywordCriteria> supportedCriteria;
 
   RecruiterKeywordType(String label) {
-    this(label, true);
+    this(label, EnumSet.of(
+      KeywordCriteria.ALL_WORDS_CONTAINS,
+      KeywordCriteria.PHRASE_CONTAINS,
+      KeywordCriteria.EXACT
+    ));
+  }
+
+  public String getSupportedCriteriaData() {
+    return supportedCriteria.stream()
+      .map(Enum::name)
+      .collect(Collectors.joining(","));
   }
 
 }

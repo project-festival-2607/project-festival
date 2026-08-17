@@ -16,20 +16,28 @@
         </a>
       </label>
       <div class="search-criteria" role="group">
-        <div class="form-check">
+        <div class="form-check" id="keywordCriteriaAllWordsContainsGroup">
           <input class="form-check-input" data-type="keywordCriteria" id="keywordCriteriaAllWordsContains"
                  name="keywordCriteria"
                  th:checked="${form.keywordCriteria == null or form.keywordCriteria == 'ALL_WORDS_CONTAINS'}"
                  type="radio"
-                 value="CONTAINS">
+                 value="ALL_WORDS_CONTAINS">
           <label class="form-check-label" for="keywordCriteriaAllWordsContains">모든 키워드 포함</label>
+        </div>
+        <div class="form-check" id="keywordCriteriaPhraseContainsGroup">
+          <input class="form-check-input" data-type="keywordCriteria" id="keywordCriteriaPhraseContains"
+                 name="keywordCriteria"
+                 th:checked="${form.keywordCriteria != null or form.keywordCriteria == 'PHRASE_CONTAINS'}"
+                 type="radio"
+                 value="PHRASE_CONTAINS">
+          <label class="form-check-label" for="keywordCriteriaPhraseContains">전체 문자열 포함</label>
         </div>
         <div class="form-check" id="keywordCriteriaExactGroup">
           <input class="form-check-input" data-type="keywordCriteria" id="keywordCriteriaExact"
                  name="keywordCriteria"
                  th:checked="${form.keywordCriteria != null and form.keywordCriteria == 'EXACT'}"
                  type="radio"
-                 value="EQUALS">
+                 value="EXACT">
           <label class="form-check-label" for="keywordCriteriaExact">전체 문자열 일치</label>
         </div>
       </div>
@@ -42,14 +50,14 @@
         <ul class="dropdown-menu" id="keywordTypeDropdownList">
           <li>
             <button class="dropdown-item keyword-type-li"
-                    data-exact-match-supported="false"
+                    data-supported-criteria="ALL_WORDS_CONTAINS,PHRASE_CONTAINS"
                     data-value="ALL"
                     type="button">전체
             </button>
           </li>
           <li th:each="option: ${keywordOptions}">
             <button class="dropdown-item keyword-type-li"
-                    th:data-exact-match-supported="${option.exactMatchSupported}"
+                    th:data-supported-criteria="${option.supportedCriteriaData}"
                     th:data-value="${option.name}"
                     th:text="${option.label}"
                     type="button"></button>

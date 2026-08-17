@@ -1,7 +1,12 @@
 package com.example.chook.admin.entity.enums.jobequip;
 
+import com.example.chook.admin.entity.enums.KeywordCriteria;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+
+import java.util.Comparator;
+import java.util.EnumSet;
+import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @Getter
@@ -12,13 +17,27 @@ public enum JobEquipKeywordType {
   PHONE("전화번호"),
   EMAIL("이메일"),
   BUSINESS_NUMBER("사업자등록번호"),
-  ADDRESS("주소", false);
+  ADDRESS("주소", EnumSet.of(
+    KeywordCriteria.ALL_WORDS_CONTAINS,
+    KeywordCriteria.PHRASE_CONTAINS
+  ));
 
   private final String label;
-  private final boolean exactMatchSupported;
+  private final EnumSet<KeywordCriteria> supportedCriteria;
 
   JobEquipKeywordType(String label) {
-    this(label, true);
+    this(label, EnumSet.of(
+      KeywordCriteria.ALL_WORDS_CONTAINS,
+      KeywordCriteria.PHRASE_CONTAINS,
+      KeywordCriteria.EXACT
+    ));
+  }
+
+  public String getSupportedCriteriaData() {
+    return supportedCriteria.stream()
+      .sorted(Comparator.comparingInt(KeywordCriteria::getPriority).reversed())
+      .map(Enum::name)
+      .collect(Collectors.joining(","));
   }
 
 }
