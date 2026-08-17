@@ -1,4 +1,5 @@
 package com.example.chook.payment.service;
+
 // 토스에서 실제로 취소 성공한 결과를 DB에 반영하는 부분만 따로 분리.
 import com.example.chook.member.entity.Member;
 import com.example.chook.member.repository.MemberRepository;
@@ -8,12 +9,15 @@ import com.example.chook.payment.entity.Refund;
 import com.example.chook.payment.repository.PointCalcUseRepository;
 import com.example.chook.payment.repository.PointHistoryRepository;
 import com.example.chook.payment.repository.RefundRepository;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.NoSuchElementException;
 
 @Slf4j
@@ -26,57 +30,184 @@ public class RefundLedgerService {
     private final PointHistoryRepository pointHistoryRepository;
     private final RefundRepository refundRepository;
 
-    // 토스 취소 API가 이미 "성공"을 돌려준 뒤 호출됨 -> 이 저장은 반드시 되어야 함
+    // PointCalcUse / PointHistory / Member 반영
+    /**
+     * Toss 결제취소가 성공한 뒤 호출된다.
+     *
+     * 해당 결제에서 환불된 포인트를
+     *
+     * 1. PointCalcUse
+     * 2. PointHistory
+     * 3. Member
+     *
+     * 에 반영한다.
+     */
     @Transactional
-    public void applyRefundToLot(Integer cuId, int amount, Long memberId) {
-        //매개변수 3개를 받음.
-        PointCalcUse calcUse = pointCalcUseRepository.findById(cuId)
-                .orElseThrow(() -> new NoSuchElementException("포인트 기록을 찾을 수 없습니다: " + cuId));
-        //DB에서 cuId에 해당하는 PointCalcUse
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new NoSuchElementException("회원을 찾을 수 없습니다: " + memberId));
-        //회원을 DB에서
+    public void applyRefundToLot(
+            Integer cuId,
+            int amount,
+            Long memberId
+    ) {
 
-        calcUse.setPointUsed(calcUse.getPointUsed() + amount);
-        //환불한만큼 해당 결제 남아있던 포인트 줄이기.  이 amount만큼 사용한것으로 기록
+        // 환불 대상 포인트 기록 조회
+        PointCalcUse calcUse =
+                pointCalcUseRepository.findById(cuId)
+                        .orElseThrow(() ->
+                                new NoSuchElementException(
+                                        "포인트 기록을 찾을 수 없습니다: "
+                                                + cuId
+                                )
+                        );
 
-        calcUse.setLeftPoint(calcUse.getLeftPoint() - amount);
-        //환불이력 남기기.
+        // 회원 조회
+        Member member =
+                memberRepository.findById(memberId)
+                        .orElseThrow(() ->
+                                new NoSuchElementException(
+                                        "회원을 찾을 수 없습니다: "
+                                                + memberId
+                                )
+                        );
 
-        pointCalcUseRepository.save(calcUse); //변경된걸 db로
+        // 환불한 만큼 PointCalcUse 반영
+        calcUse.setPointUsed(
+                calcUse.getPointUsed() + amount
+        );
 
-        PointHistory history = PointHistory.builder() //새로운 환불 이력 객체 생성
-                .member(member)
-                .payment(calcUse.getPayment())
-                .pType("refund")
-                .pointChanging(-amount)
-                .build(); //refund로 기록
-        pointHistoryRepository.save(history);//db에 저장
 
-        member.setPoint(member.getPoint() - amount);
+        calcUse.setLeftPoint(
+                calcUse.getLeftPoint() - amount
+        );
+
+        pointCalcUseRepository.save(calcUse);
+
+        // PointHistory 환불 이력 생성
+        PointHistory history =
+                PointHistory.builder()
+                        .member(member)
+                        .payment(calcUse.getPayment())
+                        .pType("refund")
+                        .pointChanging(-amount)
+                        .build();
+
+
+        pointHistoryRepository.save(history);
+
+        // 회원 보유 포인트 차감
+        member.setPoint(
+                member.getPoint() - amount
+        );
+
         memberRepository.save(member);
-        //이 회원의 현재 보유 포인트에서 환불 처리한 3,000포인트를 차감
 
-        log.info("포인트 환불 반영 - memberId={}, paymentId={}, 환불={}, 잔여={}",
-                memberId, calcUse.getPayment().getPaymentId(), amount, calcUse.getLeftPoint());
+
+        log.info(
+                "포인트 환불 반영 - memberId={}, paymentId={}, 환불={}, 잔여={}",
+                memberId,
+                calcUse.getPayment().getPaymentId(),
+                amount,
+                calcUse.getLeftPoint()
+        );
     }
 
-    // 환불 전체가 끝난 뒤, refund 테이블에 이력 한 줄 남김
+    // Refund 테이블 저장
+    /**
+     * Toss의 실제 취소 응답을 Refund 테이블에 저장한다.
+     *
+     * 이 메서드는 "한 결제의 한 번의 취소"에 대해 호출된다.
+     *
+     * 예:
+     *
+     * 결제 A → 3,000원 취소 → Refund 1줄
+     * 결제 B → 7,000원 취소 → Refund 1줄
+     */
     @Transactional
-    public void finalizeRefund(Long memberId, int requestedAmount, int actuallyRefunded) {
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new NoSuchElementException("회원을 찾을 수 없습니다: " + memberId));
+    public void finalizeRefund(
+            Long memberId,
+            int requestedAmount,
+            int cancelAmount,
+            String canceledAt,
+            String transactionKey
+    ) {
 
-        Refund refund = Refund.builder()
-                .member(member)
-                .refundStatus(actuallyRefunded == requestedAmount ? "completed" : "partially_failed")
-                .refundAmount(actuallyRefunded)
-                .refundReal(actuallyRefunded) // 1포인트 = 1원
-                .refundComplete(LocalDateTime.now())
-                .build();
+        // 회원 조회
+        Member member =
+                memberRepository.findById(memberId)
+                        .orElseThrow(() ->
+                                new NoSuchElementException(
+                                        "회원을 찾을 수 없습니다: " + memberId
+                                )
+                        );
+        // Toss canceledAt 변환
+        LocalDateTime canceledDateTime = null;
+
+        if (canceledAt != null && !canceledAt.isBlank()) {
+
+            /*
+             * Toss:
+             *
+             * 2022-01-01T00:00:00+09:00
+             *
+             * Entity:
+             *
+             * LocalDateTime
+             *
+             * 따라서 OffsetDateTime으로 읽은 뒤
+             * LocalDateTime으로 변환한다.
+             */
+
+            canceledDateTime =
+                    OffsetDateTime
+                            .parse(canceledAt)
+                            .toLocalDateTime();
+        }
+
+        // 환불 상태
+        String refundStatus =
+                cancelAmount == requestedAmount
+                        ? "completed"
+                        : "partially_failed";
+
+        // Refund 객체 생성
+        Refund refund =
+                Refund.builder()
+                        .member(member)
+                        // 이번 결제에서 요청한 환불 금액
+                        .refundAmount(cancelAmount)
+
+                        // 실제 Toss 취소 금액
+                        .refundReal(cancelAmount)
+
+                        // Toss가 알려준 취소 완료 시간
+                        .refundComplete(canceledDateTime)
+
+                        // Toss가 알려준 transactionKey
+                        .transactionKey(transactionKey)
+
+                        // 환불 상태
+                        .refundStatus(refundStatus)
+
+                        .build();
+
+
+        // DB 저장
         refundRepository.save(refund);
 
-        log.info("환불 이력 저장 - memberId={}, 요청={}, 실제환불={}, 상태={}",
-                memberId, requestedAmount, actuallyRefunded, refund.getRefundStatus());
+        log.info(
+                "환불 이력 저장 - " +
+                        "memberId={}, " +
+                        "요청={}, " +
+                        "Toss취소금액={}, " +
+                        "canceledAt={}, " +
+                        "transactionKey={}, " +
+                        "상태={}",
+
+                memberId,
+                requestedAmount,
+                cancelAmount,
+                canceledAt,
+                transactionKey,
+                refundStatus
+        );
     }
 }

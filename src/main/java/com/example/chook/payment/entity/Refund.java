@@ -44,24 +44,14 @@ public class Refund {
     @Column(name = "refund_complete")
     private LocalDateTime refundComplete;
 
-    //생성일
-    @Column(name = "created_at", updatable = false)
-    private LocalDateTime createdAt;
-
-    //수정일
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
-
-    @PrePersist
-    protected void onCreate() {
-        this.createdAt = LocalDateTime.now();
-        this.updatedAt = LocalDateTime.now();
-    }
 
 
+    // 토스 취소 거래 키
+    @Column(name = "transaction_key", length = 64)
+    private String transactionKey;
 
-    @PreUpdate
-    protected void onUpdate() {
-        this.updatedAt = LocalDateTime.now();
-    }
+    // 토스에서 실제 결제가 취소된 시간
+    @Column(name = "canceled_at")
+    private LocalDateTime canceledAt;
+
 }
