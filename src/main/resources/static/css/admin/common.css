@@ -4,6 +4,10 @@
   --theme-main-color-subtle: var(--bs-dark-text-emphasis);
 }
 
+.navbar .nav-link {
+  font-size: 15px;
+}
+
 .member-gender-filter,
 .member-provider-filter,
 .member-status-clear-filter {
