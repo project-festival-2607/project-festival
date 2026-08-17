@@ -50,31 +50,7 @@ public class AdminServiceImpl implements AdminService {
   public Page<JobSeekerTableDTO> getJobSeekerPage(int pageIdx, int pageSize, JobSeekerSearchCondition condition) {
     Pageable pageable = PageRequest.of(pageIdx - 1, pageSize);
     Page<JobSeekerTableDTO> result = adminMemberRepository.getJobSeekerPage(pageable, condition);
-
-    // SocialLogins 객체 연결
-    List<Long> memberIdList = result.stream().map(JobSeekerTableDTO::getId).toList();
-    List<SocialLogin> socialLoginList = socialLoginRepository.findAllByMember_IdIn(memberIdList);
-
-    log.info("socialLoginList={}", socialLoginList);
-
-    Map<Long, List<SocialLogin>> socialLoginListGroupedByMemberId =
-      socialLoginList.stream().collect(
-        Collectors.groupingBy(SocialLogin -> SocialLogin.getMember().getId()));
-
-    log.info("socialLoginListGroupedByMemberId: {}", socialLoginListGroupedByMemberId);
-
-    result.forEach(dto -> {
-      dto.setSocialLoginDtoList(
-        socialLoginListGroupedByMemberId
-          .getOrDefault(dto.getId(), List.of())
-          .stream()
-          .sorted(Comparator.comparing(SocialLogin::getProvider))
-          .map(adminMapper::toDto)
-          .toList()
-      );
-    });
-
-    return result;
+    return getDtoWithSocialLogins(result);
   }
 
   @Override
@@ -186,6 +162,29 @@ public class AdminServiceImpl implements AdminService {
       .verifiedAt(LocalDateTime.now())
       .build());
     return true;
+  }
+
+  private <T extends JobSeekerTableDTOBase> Page<T> getDtoWithSocialLogins(Page<T> result) {
+
+    List<Long> memberIdList = result.stream().map(T::getId).toList();
+    List<SocialLogin> socialLoginList = socialLoginRepository.findAllByMember_IdIn(memberIdList);
+
+    Map<Long, List<SocialLogin>> socialLoginListGroupedByMemberId =
+      socialLoginList.stream().collect(
+        Collectors.groupingBy(SocialLogin -> SocialLogin.getMember().getId()));
+
+    result.forEach(dto -> {
+      dto.setSocialLoginDtoList(
+        socialLoginListGroupedByMemberId
+          .getOrDefault(dto.getId(), List.of())
+          .stream()
+          .sorted(Comparator.comparing(SocialLogin::getProvider))
+          .map(adminMapper::toDto)
+          .toList()
+      );
+    });
+
+    return result;
   }
 
 }

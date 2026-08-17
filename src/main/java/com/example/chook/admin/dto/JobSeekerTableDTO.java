@@ -17,7 +17,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class JobSeekerTableDTO {
+public class JobSeekerTableDTO implements JobSeekerTableDTOBase {
 
   // Member 공통 필드
   Long id;
