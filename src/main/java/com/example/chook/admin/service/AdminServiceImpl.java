@@ -1,13 +1,16 @@
 package com.example.chook.admin.service;
 
 import com.example.chook.admin.condition.JobSeekerSearchCondition;
+import com.example.chook.admin.condition.RecruiterSearchCondition;
 import com.example.chook.admin.dto.JobSeekerTableDTO;
+import com.example.chook.admin.dto.RecruiterTableDTO;
 import com.example.chook.admin.mapper.AdminMapper;
 import com.example.chook.admin.repository.AdminMemberRepository;
 import com.example.chook.member.entity.BusinessRegistration;
 import com.example.chook.member.entity.Member;
 import com.example.chook.member.entity.MemberSuspension;
 import com.example.chook.member.entity.SocialLogin;
+import com.example.chook.member.entity.enums.MemberRole;
 import com.example.chook.member.entity.enums.MemberStatus;
 import com.example.chook.member.repository.BusinessRegistrationRepository;
 import com.example.chook.member.repository.MemberRepository;
@@ -47,6 +50,8 @@ public class AdminServiceImpl implements AdminService {
   public Page<JobSeekerTableDTO> getJobSeekerPage(int pageIdx, int pageSize, JobSeekerSearchCondition condition) {
     Pageable pageable = PageRequest.of(pageIdx - 1, pageSize);
     Page<JobSeekerTableDTO> result = adminMemberRepository.getJobSeekerPage(pageable, condition);
+
+    // SocialLogins 객체 연결
     List<Long> memberIdList = result.stream().map(JobSeekerTableDTO::getId).toList();
     List<SocialLogin> socialLoginList = socialLoginRepository.findAllByMember_IdIn(memberIdList);
 
@@ -70,6 +75,12 @@ public class AdminServiceImpl implements AdminService {
     });
 
     return result;
+  }
+
+  @Override
+  public Page<RecruiterTableDTO> getRecruiterPage(int pageIdx, int pageSize, RecruiterSearchCondition condition) {
+    Pageable pageable = PageRequest.of(pageIdx - 1, pageSize);
+    return adminMemberRepository.getRecruiterPage(pageable, condition);
   }
 
   @Transactional
@@ -141,7 +152,7 @@ public class AdminServiceImpl implements AdminService {
 
   @Transactional
   @Override
-  public void removeBusinessRegistration(Long memberId) {
+  public boolean removeBusinessRegistration(Long memberId) {
     Member member = memberRepository.findById(memberId).orElseThrow(() ->
       new EntityNotFoundException("Member with id: " + memberId + " not found")
     );
@@ -149,7 +160,11 @@ public class AdminServiceImpl implements AdminService {
       throw new IllegalArgumentException("Member with id: " + memberId + " doesn't have business registration");
     }
     businessRegistrationRepository.deleteById(memberId);
-    suspendMember(memberId, "사업자등록번호 인증이 유효하지 않음");
+    if (member.getRole() == MemberRole.RECRUITER) {
+      suspendMember(memberId, "사업자등록번호 인증이 유효하지 않음");
+      return true;
+    }
+    return false;
   }
 
   @Transactional
