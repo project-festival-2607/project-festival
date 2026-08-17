@@ -1,4 +1,4 @@
-package com.example.chook.admin.dto;
+package com.example.chook.admin.dto.member;
 
 import com.example.chook.common.util.CustomStringUtils;
 import com.example.chook.member.entity.enums.MemberRole;

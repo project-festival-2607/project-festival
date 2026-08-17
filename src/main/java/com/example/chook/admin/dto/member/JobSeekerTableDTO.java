@@ -1,4 +1,4 @@
-package com.example.chook.admin.dto;
+package com.example.chook.admin.dto.member;
 
 import com.example.chook.common.util.CustomStringUtils;
 import com.example.chook.member.entity.enums.Gender;
@@ -17,7 +17,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class JobEquipTableDTO implements JobSeekerTableDTOBase {
+public class JobSeekerTableDTO implements JobSeekerTableDTOBase {
 
   // Member 공통 필드
   Long id;
@@ -36,7 +36,7 @@ public class JobEquipTableDTO implements JobSeekerTableDTOBase {
   LocalDateTime suspendedAt;
   String suspendedReason;
 
-  // JOB_EQUIP 전용 필드
+  // JOB_SEEKER 전용 필드
   @Builder.Default
   List<SocialLoginDTO> socialLoginDtoList = new ArrayList<>();
   Gender gender;
@@ -44,15 +44,8 @@ public class JobEquipTableDTO implements JobSeekerTableDTOBase {
   String streetAddress;
   String detailAddress;
 
-  // RECRUITER 사업자등록번호 정보
-  String businessNumber;
-  LocalDateTime businessNumberVerifiedAt;
-
   public String getFormattedPhone() {
     return CustomStringUtils.getFormattedPhone(phone);
   }
 
-  public String getFormattedBusinessNumber() {
-    return CustomStringUtils.getFormattedBusinessNumber(businessNumber);
-  }
 }

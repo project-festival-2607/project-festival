@@ -3,9 +3,9 @@ package com.example.chook.admin.service;
 import com.example.chook.admin.condition.member.JobEquipSearchCondition;
 import com.example.chook.admin.condition.member.JobSeekerSearchCondition;
 import com.example.chook.admin.condition.member.RecruiterSearchCondition;
-import com.example.chook.admin.dto.JobEquipTableDTO;
-import com.example.chook.admin.dto.JobSeekerTableDTO;
-import com.example.chook.admin.dto.RecruiterTableDTO;
+import com.example.chook.admin.dto.member.JobEquipTableDTO;
+import com.example.chook.admin.dto.member.JobSeekerTableDTO;
+import com.example.chook.admin.dto.member.RecruiterTableDTO;
 import org.springframework.data.domain.Page;
 
 public interface AdminMemberService {

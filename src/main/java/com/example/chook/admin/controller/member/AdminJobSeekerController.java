@@ -1,7 +1,7 @@
 package com.example.chook.admin.controller.member;
 
 import com.example.chook.admin.condition.member.JobSeekerSearchCondition;
-import com.example.chook.admin.dto.JobSeekerTableDTO;
+import com.example.chook.admin.dto.member.JobSeekerTableDTO;
 import com.example.chook.admin.entity.enums.DateRangeAutofillOption;
 import com.example.chook.admin.entity.enums.jobseeker.JobSeekerDateRangeType;
 import com.example.chook.admin.entity.enums.jobseeker.JobSeekerKeywordType;
