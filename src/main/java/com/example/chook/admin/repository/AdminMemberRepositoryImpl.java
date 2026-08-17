@@ -6,10 +6,10 @@ import com.example.chook.admin.dto.JobSeekerTableDTO;
 import com.example.chook.admin.dto.RecruiterTableDTO;
 import com.example.chook.admin.entity.enums.KeywordCriteria;
 import com.example.chook.admin.entity.enums.MemberStatusFilter;
-import com.example.chook.admin.entity.enums.jobseeker.JobSeekerDateCriteria;
+import com.example.chook.admin.entity.enums.jobseeker.JobSeekerDateRangeType;
 import com.example.chook.admin.entity.enums.jobseeker.JobSeekerKeywordType;
 import com.example.chook.admin.entity.enums.jobseeker.JobSeekerSortCriteria;
-import com.example.chook.admin.entity.enums.recruiter.RecruiterDateCriteria;
+import com.example.chook.admin.entity.enums.recruiter.RecruiterDateRangeType;
 import com.example.chook.admin.entity.enums.recruiter.RecruiterKeywordType;
 import com.example.chook.admin.entity.enums.recruiter.RecruiterSortCriteria;
 import com.example.chook.common.util.QuerydslUtils;
@@ -101,7 +101,7 @@ public class AdminMemberRepositoryImpl implements AdminMemberRepository {
       .and(applyJobSeekerKeywordFilter(condition.keywordList(), condition.keywordType(), condition.keywordCriteria()))
       .and(applyStatusFilter(condition.status()))
       .and(applyJobSeekerDateCriteriaFilter(
-        condition.dateRangeCriteria(),
+        condition.dateRangeType(),
         condition.startDateTime(),
         condition.endDateTime(),
         condition.startDate(),
@@ -179,7 +179,7 @@ public class AdminMemberRepositoryImpl implements AdminMemberRepository {
       .and(applyRecruiterKeywordFilter(condition.keywordList(), condition.keywordType(), condition.keywordCriteria()))
       .and(applyStatusFilter(condition.status()))
       .and(applyRecruiterDateCriteriaFilter(
-        condition.dateRangeCriteria(),
+        condition.dateRangeType(),
         condition.startDateTime(),
         condition.endDateTime(),
         condition.startDate(),
@@ -308,7 +308,7 @@ public class AdminMemberRepositoryImpl implements AdminMemberRepository {
 
   // #################### DATE CRITERIA FILTER 적용 메서드 ####################
 
-  private BooleanBuilder applyJobSeekerDateCriteriaFilter(JobSeekerDateCriteria criteria,
+  private BooleanBuilder applyJobSeekerDateCriteriaFilter(JobSeekerDateRangeType criteria,
                                                           LocalDateTime startDateTime,
                                                           LocalDateTime endDateTime,
                                                           LocalDate startDate,
@@ -346,7 +346,7 @@ public class AdminMemberRepositoryImpl implements AdminMemberRepository {
     return result;
   }
 
-  private BooleanBuilder applyRecruiterDateCriteriaFilter(RecruiterDateCriteria criteria,
+  private BooleanBuilder applyRecruiterDateCriteriaFilter(RecruiterDateRangeType criteria,
                                                           LocalDateTime startDateTime,
                                                           LocalDateTime endDateTime,
                                                           LocalDate startDate,

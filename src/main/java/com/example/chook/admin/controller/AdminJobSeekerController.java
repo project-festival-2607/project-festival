@@ -3,7 +3,7 @@ package com.example.chook.admin.controller;
 import com.example.chook.admin.condition.JobSeekerSearchCondition;
 import com.example.chook.admin.dto.JobSeekerTableDTO;
 import com.example.chook.admin.entity.enums.DateRangeAutofillOption;
-import com.example.chook.admin.entity.enums.jobseeker.JobSeekerDateCriteria;
+import com.example.chook.admin.entity.enums.jobseeker.JobSeekerDateRangeType;
 import com.example.chook.admin.entity.enums.jobseeker.JobSeekerKeywordType;
 import com.example.chook.admin.form.JobSeekerSearchForm;
 import com.example.chook.admin.provider.AdminMemberInfoFieldProvider;
@@ -42,7 +42,7 @@ public class AdminJobSeekerController {
   ) {
     model.addAttribute("form", form);
     model.addAttribute("keywordOptions", List.of(JobSeekerKeywordType.values()));
-    model.addAttribute("dateRangeOptions", List.of(JobSeekerDateCriteria.values()));
+    model.addAttribute("dateRangeOptions", List.of(JobSeekerDateRangeType.values()));
     model.addAttribute("dateRangeAutofillOptions", List.of(DateRangeAutofillOption.values()));
 
     model.addAttribute("suspendMemberInfo", infoFieldProvider.suspend());

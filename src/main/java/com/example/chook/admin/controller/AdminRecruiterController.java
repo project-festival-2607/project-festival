@@ -3,7 +3,7 @@ package com.example.chook.admin.controller;
 import com.example.chook.admin.condition.RecruiterSearchCondition;
 import com.example.chook.admin.dto.RecruiterTableDTO;
 import com.example.chook.admin.entity.enums.DateRangeAutofillOption;
-import com.example.chook.admin.entity.enums.recruiter.RecruiterDateCriteria;
+import com.example.chook.admin.entity.enums.recruiter.RecruiterDateRangeType;
 import com.example.chook.admin.entity.enums.recruiter.RecruiterKeywordType;
 import com.example.chook.admin.form.RecruiterSearchForm;
 import com.example.chook.admin.provider.AdminMemberInfoFieldProvider;
@@ -40,7 +40,7 @@ public class AdminRecruiterController {
   ) {
     model.addAttribute("form", form);
     model.addAttribute("keywordOptions", List.of(RecruiterKeywordType.values()));
-    model.addAttribute("dateRangeOptions", List.of(RecruiterDateCriteria.values()));
+    model.addAttribute("dateRangeOptions", List.of(RecruiterDateRangeType.values()));
     model.addAttribute("dateRangeAutofillOptions", List.of(DateRangeAutofillOption.values()));
 
     model.addAttribute("suspendMemberInfo", infoFieldProvider.suspend());

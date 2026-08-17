@@ -11,7 +11,7 @@ public record RecruiterSearchForm(
   String keywordType,
   String keywords,
   String keywordCriteria,
-  String dateRangeCriteria,
+  String dateRangeType,
   LocalDateTime startDateTime,
   LocalDateTime endDateTime,
   LocalDate startDate,
@@ -31,7 +31,7 @@ public record RecruiterSearchForm(
     keywordType = blankToNull(keywordType);
     keywords = blankToNull(keywords);
     keywordCriteria = blankToNull(keywordCriteria);
-    dateRangeCriteria = blankToNull(dateRangeCriteria);
+    dateRangeType = blankToNull(dateRangeType);
     status = blankToNull(status);
     sortCriteria = blankToNull(sortCriteria);
 

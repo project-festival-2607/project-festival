@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
-public enum JobEquipDateCriteria {
+public enum JobEquipDateRangeType {
 
   CREATED_AT("생성일시"),
   UPDATED_AT("수정일시"),
@@ -17,7 +17,7 @@ public enum JobEquipDateCriteria {
   private final String label;
   private final boolean dateOnly;
 
-  JobEquipDateCriteria(String label) {
+  JobEquipDateRangeType(String label) {
     this(label, false);
   }
 

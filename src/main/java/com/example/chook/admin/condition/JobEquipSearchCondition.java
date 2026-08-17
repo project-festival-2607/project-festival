@@ -2,7 +2,7 @@ package com.example.chook.admin.condition;
 
 import com.example.chook.admin.entity.enums.KeywordCriteria;
 import com.example.chook.admin.entity.enums.MemberStatusFilter;
-import com.example.chook.admin.entity.enums.jobequip.JobEquipDateCriteria;
+import com.example.chook.admin.entity.enums.jobequip.JobEquipDateRangeType;
 import com.example.chook.admin.entity.enums.jobequip.JobEquipKeywordType;
 import com.example.chook.admin.entity.enums.jobequip.JobEquipSortCriteria;
 import com.example.chook.admin.form.JobSeekerSearchForm;
@@ -25,7 +25,7 @@ public record JobEquipSearchCondition(
   JobEquipKeywordType keywordType,
   List<String> keywordList,
   KeywordCriteria keywordCriteria,
-  JobEquipDateCriteria dateRangeCriteria,
+  JobEquipDateRangeType dateRangeType,
   LocalDateTime startDateTime,
   LocalDateTime endDateTime,
   LocalDate startDate,
@@ -48,7 +48,7 @@ public record JobEquipSearchCondition(
       .keywordType(toEnum(form.keywordType(), JobEquipKeywordType.class, null))
       .keywordList(getKeywordList(form.keywords(), form.keywordCriteria()))
       .keywordCriteria(getKeywordCriteria(form.keywordType(), form.keywordCriteria()))
-      .dateRangeCriteria(toEnum(form.dateRangeCriteria(), JobEquipDateCriteria.class, null))
+      .dateRangeType(toEnum(form.dateRangeType(), JobEquipDateRangeType.class, null))
       .startDateTime(form.startDateTime())
       .endDateTime(form.endDateTime())
       .startDate(form.startDate())

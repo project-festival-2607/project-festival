@@ -68,7 +68,7 @@
       <label class="search-field-label"
       >날짜 범위
       </label>
-      <div id="dateRangeCriteriaAutofill">
+      <div id="dateRangeTypeAutofill">
         <button th:each="option: ${dateRangeAutofillOptions}" class="btn btn-outline-danger date-range-criteria-autofill"
                 th:data-value="${option.value}"
                 th:data-unit="${option.unit}"
@@ -78,10 +78,10 @@
     </div>
     <div class="search-field-main">
       <div class="input-group input-group-sm">
-        <button class="btn btn-light dropdown-btn-left" id="currentDateRangeCriteria" type="button">선택</button>
+        <button class="btn btn-light dropdown-btn-left" id="currentDateRangeType" type="button">선택</button>
         <button aria-expanded="false" class="btn btn-light dropdown-btn-right dropdown-toggle dropdown-toggle-split"
                 data-bs-toggle="dropdown" type="button"></button>
-        <ul class="dropdown-menu" id="dateRangeCriteriaDropdownList">
+        <ul class="dropdown-menu" id="dateRangeTypeDropdownList">
           <li>
             <button class="dropdown-item date-range-criteria-li"
                     data-date-only="false"
@@ -109,7 +109,7 @@
         <input class="form-control border-radius-end border-start-0" id="endDate" name="endDate"
                th:value="${form.endDate}"
                type="date">
-        <input id="dateRangeCriteria" name="dateRangeCriteria" th:value="${form.dateRangeCriteria}" type="hidden"/>
+        <input id="dateRangeType" name="dateRangeType" th:value="${form.dateRangeType}" type="hidden"/>
       </div>
     </div>
   </div>
