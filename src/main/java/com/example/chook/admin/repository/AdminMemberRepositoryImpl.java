@@ -281,6 +281,9 @@ public class AdminMemberRepositoryImpl implements AdminMemberRepository {
       for (RecruiterKeywordType type : types) {
         switch (type) {
           case USERNAME -> keywordResult.or(keywordCheck.apply(member.username, keyword));
+          case NAME -> keywordResult.or(keywordCheck.apply(member.name, keyword));
+          case PHONE -> keywordResult.or(keywordCheck.apply(member.phone, keyword));
+          case EMAIL -> keywordResult.or(keywordCheck.apply(member.email, keyword));
           case COMPANY_NAME -> keywordResult.or(keywordCheck.apply(employerProfile.companyName, keyword));
           case CEO_NAME -> keywordResult.or(keywordCheck.apply(employerProfile.ceoName, keyword));
           case BUSINESS_NUMBER ->
