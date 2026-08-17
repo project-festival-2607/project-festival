@@ -1,11 +1,11 @@
 package com.example.chook.admin.controller.member;
 
-import com.example.chook.admin.condition.RecruiterSearchCondition;
+import com.example.chook.admin.condition.member.RecruiterSearchCondition;
 import com.example.chook.admin.dto.RecruiterTableDTO;
 import com.example.chook.admin.entity.enums.DateRangeAutofillOption;
 import com.example.chook.admin.entity.enums.recruiter.RecruiterDateRangeType;
 import com.example.chook.admin.entity.enums.recruiter.RecruiterKeywordType;
-import com.example.chook.admin.form.RecruiterSearchForm;
+import com.example.chook.admin.form.member.RecruiterSearchForm;
 import com.example.chook.admin.provider.AdminMemberInfoFieldProvider;
 import com.example.chook.admin.service.AdminMemberService;
 import com.example.chook.common.handler.PagingHandler;

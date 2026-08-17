@@ -1,11 +1,13 @@
-package com.example.chook.admin.condition;
+package com.example.chook.admin.condition.member;
 
 import com.example.chook.admin.entity.enums.KeywordCriteria;
 import com.example.chook.admin.entity.enums.MemberStatusFilter;
-import com.example.chook.admin.entity.enums.recruiter.RecruiterDateRangeType;
-import com.example.chook.admin.entity.enums.recruiter.RecruiterKeywordType;
-import com.example.chook.admin.entity.enums.recruiter.RecruiterSortCriteria;
-import com.example.chook.admin.form.RecruiterSearchForm;
+import com.example.chook.admin.entity.enums.jobequip.JobEquipDateRangeType;
+import com.example.chook.admin.entity.enums.jobequip.JobEquipKeywordType;
+import com.example.chook.admin.entity.enums.jobequip.JobEquipSortCriteria;
+import com.example.chook.admin.form.member.JobSeekerSearchForm;
+import com.example.chook.member.entity.enums.Gender;
+import com.example.chook.member.entity.enums.Provider;
 import lombok.Builder;
 
 import java.time.LocalDate;
@@ -17,13 +19,13 @@ import static com.example.chook.admin.util.KeywordUtils.getKeywordList;
 import static com.example.chook.common.util.CustomStringUtils.toEnum;
 
 @Builder
-public record RecruiterSearchCondition(
+public record JobEquipSearchCondition(
 
   // 공통 검색 폼
-  RecruiterKeywordType keywordType,
+  JobEquipKeywordType keywordType,
   List<String> keywordList,
   KeywordCriteria keywordCriteria,
-  RecruiterDateRangeType dateRangeType,
+  JobEquipDateRangeType dateRangeType,
   LocalDateTime startDateTime,
   LocalDateTime endDateTime,
   LocalDate startDate,
@@ -31,26 +33,30 @@ public record RecruiterSearchCondition(
 
   // 테이블 상단 필터
   MemberStatusFilter status,
+  Gender gender,
+  Provider provider,
 
   // 테이블 상단 정렬
-  RecruiterSortCriteria sortCriteria,
+  JobEquipSortCriteria sortCriteria,
   Boolean ascending
 
 ) {
 
-  public static RecruiterSearchCondition from(RecruiterSearchForm form) {
+  public static JobEquipSearchCondition from(JobSeekerSearchForm form) {
 
-    return RecruiterSearchCondition.builder()
-      .keywordType(toEnum(form.keywordType(), RecruiterKeywordType.class, null))
+    return JobEquipSearchCondition.builder()
+      .keywordType(toEnum(form.keywordType(), JobEquipKeywordType.class, null))
       .keywordList(getKeywordList(form.keywords(), form.keywordCriteria()))
       .keywordCriteria(getKeywordCriteria(form.keywordType(), form.keywordCriteria()))
-      .dateRangeType(toEnum(form.dateRangeType(), RecruiterDateRangeType.class, null))
+      .dateRangeType(toEnum(form.dateRangeType(), JobEquipDateRangeType.class, null))
       .startDateTime(form.startDateTime())
       .endDateTime(form.endDateTime())
       .startDate(form.startDate())
       .endDate(form.endDate())
       .status(toEnum(form.status(), MemberStatusFilter.class, null))
-      .sortCriteria(toEnum(form.sortCriteria(), RecruiterSortCriteria.class, null))
+      .gender(toEnum(form.gender(), Gender.class, null))
+      .provider(toEnum(form.provider(), Provider.class, null))
+      .sortCriteria(toEnum(form.sortCriteria(), JobEquipSortCriteria.class, null))
       .ascending(form.ascending())
       .build();
 

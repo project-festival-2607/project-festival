@@ -1,8 +1,8 @@
 package com.example.chook.admin.service;
 
-import com.example.chook.admin.condition.JobEquipSearchCondition;
-import com.example.chook.admin.condition.JobSeekerSearchCondition;
-import com.example.chook.admin.condition.RecruiterSearchCondition;
+import com.example.chook.admin.condition.member.JobEquipSearchCondition;
+import com.example.chook.admin.condition.member.JobSeekerSearchCondition;
+import com.example.chook.admin.condition.member.RecruiterSearchCondition;
 import com.example.chook.admin.dto.JobEquipTableDTO;
 import com.example.chook.admin.dto.JobSeekerTableDTO;
 import com.example.chook.admin.dto.JobSeekerTableDTOBase;
