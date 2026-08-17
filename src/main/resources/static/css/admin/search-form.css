@@ -61,6 +61,7 @@
 
 .admin-search-form .search-criteria {
   font-size: 13px;
+  letter-spacing: -0.03em;
   display: flex;
   gap: 10px;
   align-items: center;
