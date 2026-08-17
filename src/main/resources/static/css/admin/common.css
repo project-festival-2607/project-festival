@@ -8,6 +8,10 @@
   font-size: 15px;
 }
 
+ul.submenu {
+  gap: 4px;
+}
+
 .member-gender-filter,
 .member-provider-filter,
 .member-status-clear-filter {

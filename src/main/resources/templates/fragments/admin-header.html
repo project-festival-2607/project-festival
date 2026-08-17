@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="ko"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
       xmlns:th="http://www.thymeleaf.org"
 >
 <div style="z-index: 999" th:fragment="admin-header">
@@ -12,8 +11,9 @@
         <a class="logo" href="/">축!!</a>
         <div class="header-bar">
           <ul class="header-nav">
+
             <li class="nav-item">
-              <a class="nav-link">사용자 관리</a>
+              <a class="nav-link">회원 관리</a>
               <div class="dropdown-menu-box">
                 <ul class="submenu">
                   <li><a href="/admin/member/job-seeker">일반 구직자</a></li>
@@ -22,24 +22,42 @@
                 </ul>
               </div>
             </li>
+
+            <li class="nav-item">
+              <a class="nav-link">결제 및 상품</a>
+              <div class="dropdown-menu-box">
+                <ul class="submenu">
+                  <li><a href="/admin/payment/payment">결제 내역</a></li>
+                  <li><a href="/admin/payment/refund">환불 내역</a></li>
+                  <li><a href="/admin/payment/point">포인트 내역</a></li>
+                  <li><a href="/admin/payment/product-manage">상품 관리</a></li>
+                </ul>
+              </div>
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link">공지 및 문의</a>
+              <div class="dropdown-menu-box">
+                <ul class="submenu">
+                  <li><a href="/admin/board/notice">공지 관리</a></li>
+                  <li><a href="/admin/board/inquiry">문의 관리</a></li>
+                </ul>
+              </div>
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link">행사 및 공고</a>
+              <div class="dropdown-menu-box">
+                <ul class="submenu">
+                  <li><a href="/admin/festival">행사 관리</a></li>
+                  <li><a href="/admin/recruitment">공고 관리</a></li>
+                  <li><a href="/admin/application">지원 내역</a></li>
+                </ul>
+              </div>
+            </li>
           </ul>
         </div>
         <div class="user-box">
-          <ul class="user-sub">
-            <li sec:authorize="isAnonymous()"><a class="nav-link" th:href="@{/member/signup}">회원가입 ↗ </a></li>
-            <li sec:authorize="isAnonymous()"><a class="nav-link" th:href="@{/member/login}">로그인 ↗ </a></li>
-            <li sec:authorize="isAuthenticated()"><a class="nav-link" href="/"
-                                                     th:text="${#authentication.principal.name}"></a></li>
-            <li sec:authorize="isAuthenticated()"><a class="nav-link" th:href="@{/member/logout}">로그아웃</a></li>
-
-            <li sec:authorize="isAuthenticated()">
-              <a class="nav-link"
-                 th:href="@{/mypage}">
-                마이페이지
-              </a>
-            </li>
-
-          </ul>
         </div>
       </div>
     </div>
