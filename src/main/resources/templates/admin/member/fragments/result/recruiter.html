@@ -23,7 +23,7 @@
         <col style="width: 135px;"> <!-- 최근접속일시 -->
         <col style="width: 135px;"> <!-- 삭제일시 -->
         <col style="width: 90px;">  <!-- 포인트 -->
-        <col style="width: 115px;"> <!-- 상호명 -->
+        <col style="width: 200px;"> <!-- 상호명 -->
         <col style="width: 115px;"> <!-- 대표자명 -->
         <col style="width: 100px;"> <!-- 설립일 -->
         <col style="width: 300px;"> <!-- 도로명주소 -->
@@ -177,7 +177,7 @@
         <td data-field="streetAddress" th:text="${recruiter.streetAddress}"></td>
         <td data-field="detailAddress" th:text="${recruiter.detailAddress}"></td>
         <td data-field="businessNumber" th:text="${recruiter.businessNumber}"></td>
-        <td data-field="businessNumberVerifiedAt" th:text="${#temporals.format(recruiter.businessNumberVerifiedAt, 'yyyy.MM.dd.')}"></td>
+        <td data-field="businessNumberVerifiedAt" th:text="${#temporals.format(recruiter.businessNumberVerifiedAt, 'yyyy.MM.dd. HH:mm')}"></td>
         <td class="center bg-body-secondary">
           <button class="btn btn-reset dropdown-toggle dropdown-no-caret moderation-btn" data-bs-toggle="dropdown"
                   type="button">

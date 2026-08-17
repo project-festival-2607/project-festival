@@ -91,3 +91,14 @@ a[data-bs-toggle="tooltip"] {
 .page-size-selector .dropdown-btn-left {
   width: 60px;
 }
+
+.btn-reset {
+  background: transparent;
+  border: none;
+  padding: 0;
+  outline: none;
+  box-shadow: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
