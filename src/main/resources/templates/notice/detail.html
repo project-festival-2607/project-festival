@@ -16,7 +16,7 @@
         <!--        이 안에서 작업        -->
         <h1>공지사항</h1>
 
-        <form th:action="@{/adminBoard/modify/{bno}(bno=${board.bno})}" method="post" id="modifyForm">
+        <form th:action="@{/notice/modify/{bno}(bno=${board.bno})}" method="post" id="modifyForm">
             <div class="mb-3">
                 <input type="text" class="form-control" name="title" id="title" th:value="${board.title}" th:readonly="${!isAdmin}">
             </div>
@@ -42,13 +42,13 @@
             <div id="editor" th:attr="data-admin=${isAdmin}"></div>
 
             <div class="d-flex justify-content-end gap-2 mt-3">
-                <a th:href="@{/adminBoard/list}" class="btn btn-outline-secondary">목록</a>
+                <a th:href="@{/notice/list}" class="btn btn-outline-secondary">목록</a>
                 <button type="button" id="deleteBtn" th:if="${isAdmin}" class="btn btn-danger">삭제</button>
                 <button type="submit" id="modifyBtn" th:if="${isAdmin}" class="btn btn-primary">수정완료</button>
             </div>
         </form>
 
-        <form th:action="@{/adminBoard/delete/{bno}(bno=${board.bno})}" method="post" id="deleteForm" style="display:none"></form>
+        <form th:action="@{/notice/delete/{bno}(bno=${board.bno})}" method="post" id="deleteForm" style="display:none"></form>
 
         <script th:src="@{/libs/toastui-editor-3.2.2/js/toastui-editor-all.min.js}"></script>
 

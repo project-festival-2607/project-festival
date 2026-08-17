@@ -1,6 +1,6 @@
 package com.example.chook.support.repository;
 
-import com.example.chook.support.entity.AdminBoard;
+import com.example.chook.support.entity.Notice;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
@@ -10,31 +10,31 @@ import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
-import static com.example.chook.support.entity.QAdminBoard.adminBoard;
+import static com.example.chook.support.entity.QNotice.notice;
 
-public class AdminBoardRepositoryCustomImpl implements AdminBoardRepositoryCustom {
+public class NoticeRepositoryCustomImpl implements NoticeRepositoryCustom {
 
   private final JPAQueryFactory jpaQueryFactory;
 
-  public AdminBoardRepositoryCustomImpl(EntityManager em) {
+  public NoticeRepositoryCustomImpl(EntityManager em) {
     this.jpaQueryFactory = new JPAQueryFactory(em);
   }
 
   @Override
-  public Page<AdminBoard> search(String searchType, String keyword, Pageable pageable) {
+  public Page<Notice> search(String searchType, String keyword, Pageable pageable) {
     BooleanExpression condition = keywordCondition(searchType, keyword);
 
-    List<AdminBoard> content = jpaQueryFactory
-      .selectFrom(adminBoard)
+    List<Notice> content = jpaQueryFactory
+      .selectFrom(notice)
       .where(condition)
-      .orderBy(adminBoard.highlight.desc(), adminBoard.bno.desc())
+      .orderBy(notice.highlight.desc(), notice.bno.desc())
       .offset(pageable.getOffset())
       .limit(pageable.getPageSize())
       .fetch();
 
     Long total = jpaQueryFactory
-      .select(adminBoard.count())
-      .from(adminBoard)
+      .select(notice.count())
+      .from(notice)
       .where(condition)
       .fetchOne();
 
@@ -45,8 +45,8 @@ public class AdminBoardRepositoryCustomImpl implements AdminBoardRepositoryCusto
   private BooleanExpression keywordCondition(String searchType, String keyword) {
     if (keyword == null || keyword.isBlank()) return null;
     return "content".equals(searchType)
-      ? adminBoard.content.contains(keyword)
-      : adminBoard.title.contains(keyword);
+      ? notice.content.contains(keyword)
+      : notice.title.contains(keyword);
   }
 
 }
