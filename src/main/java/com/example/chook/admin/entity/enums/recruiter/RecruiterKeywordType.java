@@ -6,7 +6,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import java.util.EnumSet;
-import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @Getter

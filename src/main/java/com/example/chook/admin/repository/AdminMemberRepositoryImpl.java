@@ -611,7 +611,8 @@ public class AdminMemberRepositoryImpl implements AdminMemberRepository {
         case DELETED_AT -> orderSpecifiers.addAll(getOrderSpecifier(order, member.deletedAt));
         case POINT -> orderSpecifiers.addAll(getOrderSpecifier(order, member.point));
         case BIRTH_DATE -> orderSpecifiers.addAll(getOrderSpecifier(order, jobSeekerProfile.birthDate));
-        case BUSINESS_NUMBER_VERIFIED_AT -> orderSpecifiers.addAll(getOrderSpecifier(order, businessRegistration.verifiedAt));
+        case BUSINESS_NUMBER_VERIFIED_AT ->
+          orderSpecifiers.addAll(getOrderSpecifier(order, businessRegistration.verifiedAt));
       }
     }
     orderSpecifiers.add(new OrderSpecifier<>(Order.ASC, member.id));
