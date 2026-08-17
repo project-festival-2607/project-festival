@@ -1,8 +1,11 @@
 package com.example.chook.admin.service;
 
+import com.example.chook.admin.condition.JobEquipSearchCondition;
 import com.example.chook.admin.condition.JobSeekerSearchCondition;
 import com.example.chook.admin.condition.RecruiterSearchCondition;
+import com.example.chook.admin.dto.JobEquipTableDTO;
 import com.example.chook.admin.dto.JobSeekerTableDTO;
+import com.example.chook.admin.dto.JobSeekerTableDTOBase;
 import com.example.chook.admin.dto.RecruiterTableDTO;
 import com.example.chook.admin.mapper.AdminMapper;
 import com.example.chook.admin.repository.AdminMemberRepository;
@@ -50,6 +53,13 @@ public class AdminServiceImpl implements AdminService {
   public Page<JobSeekerTableDTO> getJobSeekerPage(int pageIdx, int pageSize, JobSeekerSearchCondition condition) {
     Pageable pageable = PageRequest.of(pageIdx - 1, pageSize);
     Page<JobSeekerTableDTO> result = adminMemberRepository.getJobSeekerPage(pageable, condition);
+    return getDtoWithSocialLogins(result);
+  }
+
+  @Override
+  public Page<JobEquipTableDTO> getJobEquipPage(int pageIdx, int pageSize, JobEquipSearchCondition condition) {
+    Pageable pageable = PageRequest.of(pageIdx - 1, pageSize);
+    Page<JobEquipTableDTO> result = adminMemberRepository.getJobEquipPage(pageable, condition);
     return getDtoWithSocialLogins(result);
   }
 
@@ -141,11 +151,15 @@ public class AdminServiceImpl implements AdminService {
       throw new IllegalArgumentException("Member with id: " + memberId + " doesn't have business registration");
     }
     businessRegistrationRepository.deleteById(memberId);
+    // RECRUITER의 경우 반드시 사업자등록번호를 가져야하므로 정지
+    // JOB_EQUIP의 경우 역할만 JOB_SEEKER로 변경
     if (member.getRole() == MemberRole.RECRUITER) {
       suspendMember(memberId, "사업자등록번호 인증이 유효하지 않음");
       return true;
+    } else {
+      member.setRole(MemberRole.JOB_SEEKER);
+      return false;
     }
-    return false;
   }
 
   @Transactional
