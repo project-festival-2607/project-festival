@@ -129,3 +129,8 @@
   flex-grow: 1;
   text-align: center;
 }
+
+.admin-search-form input[type="datetime-local"],
+.admin-search-form input[type="datetime"] {
+  letter-spacing: -0.03em;
+}
