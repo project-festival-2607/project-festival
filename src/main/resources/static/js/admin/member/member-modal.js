@@ -33,7 +33,7 @@ document.querySelectorAll('.modal-footer').forEach(element => {
         alert(response.message);
         if (response.result === true) {
           modal.querySelector('.btn-close').click();
-          loadResult('/admin/member/job-seeker');
+          loadResult(window.location.pathname);
         }
       })
     }
@@ -43,7 +43,7 @@ document.querySelectorAll('.modal-footer').forEach(element => {
         alert(response.message);
         if (response.result === true) {
           modal.querySelector('.btn-close').click();
-          loadResult('/admin/member/job-seeker');
+          loadResult(window.location.pathname);
         }
       })
     }
@@ -53,7 +53,7 @@ document.querySelectorAll('.modal-footer').forEach(element => {
         alert(response.message);
         if (response.result === true) {
           modal.querySelector('.btn-close').click();
-          loadResult('/admin/member/job-seeker');
+          loadResult(window.location.pathname);
         }
       })
     }
@@ -65,7 +65,29 @@ document.querySelectorAll('.modal-footer').forEach(element => {
         alert(response.message);
         if (response.result === true) {
           modal.querySelector('.btn-close').click();
-          loadResult('/admin/member/job-seeker');
+          loadResult(window.location.pathname);
+        }
+      })
+    }
+    if (modal.dataset.role === 'removeBusinessRegistration') {
+      const memberId = event.target.dataset.id;
+      removeBusinessRegistrationRequest(memberId).then(response => {
+        alert(response.message);
+        if (response.result === true) {
+          modal.querySelector('.btn-close').click();
+          loadResult(window.location.pathname);
+        }
+      })
+    }
+    if (modal.dataset.role === 'addBusinessRegistration') {
+      const memberId = event.target.dataset.id;
+      const newBusinessNumber = document.getElementById('addBusinessRegistrationBusinessNumber').value;
+      const newBusinessNumberVerify = document.getElementById('addBusinessRegistrationBusinessNumberVerify').value;
+      addBusinessRegistrationRequest(memberId, newBusinessNumber, newBusinessNumberVerify).then(response => {
+        alert(response.message);
+        if (response.result === true) {
+          modal.querySelector('.btn-close').click();
+          loadResult(window.location.pathname);
         }
       })
     }
@@ -140,6 +162,46 @@ async function addPhoneWithVerificationRequest(memberId, newPhone, newPhoneVerif
         body: JSON.stringify({
           phone: newPhone,
           phoneVerify: newPhoneVerify
+        })
+      }
+    );
+    return await response.json();
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+async function removeBusinessRegistrationRequest(memberId) {
+  console.log('removeBusinessRegistrationRequest');
+  try {
+    const response = await fetch(
+      `/admin/member/${memberId}/remove-business-registration`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+      }
+    );
+    return await response.json();
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+async function addBusinessRegistrationRequest(memberId, newBusinessNumber, newBusinessNumberVerify) {
+  console.log('addBusinessRegistrationRequest');
+  try {
+    const response = await fetch(
+      `/admin/member/${memberId}/add-business-registration`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: JSON.stringify({
+          businessNumber: newBusinessNumber,
+          businessNumberVerify: newBusinessNumberVerify
         })
       }
     );
