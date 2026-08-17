@@ -426,7 +426,7 @@ public class AdminMemberRepositoryImpl implements AdminMemberRepository {
   }
 
   private BiFunction<StringPath, String, BooleanExpression> getKeywordCheckFunction(KeywordCriteria keywordCriteria) {
-    return (keywordCriteria == KeywordCriteria.EQUALS)
+    return (keywordCriteria == KeywordCriteria.EXACT)
       ? QuerydslUtils::eq
       : QuerydslUtils::contains;
   }

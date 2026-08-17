@@ -17,20 +17,20 @@
       </label>
       <div class="search-criteria" role="group">
         <div class="form-check">
-          <input class="form-check-input" data-type="keywordCriteria" id="keywordCriteriaContains"
+          <input class="form-check-input" data-type="keywordCriteria" id="keywordCriteriaAllWordsContains"
                  name="keywordCriteria"
-                 th:checked="${form.keywordCriteria == null or form.keywordCriteria == 'CONTAINS'}"
+                 th:checked="${form.keywordCriteria == null or form.keywordCriteria == 'ALL_WORDS_CONTAINS'}"
                  type="radio"
                  value="CONTAINS">
-          <label class="form-check-label" for="keywordCriteriaContains">키워드 포함</label>
+          <label class="form-check-label" for="keywordCriteriaAllWordsContains">모든 키워드 포함</label>
         </div>
-        <div class="form-check" id="keywordCriteriaEqualsGroup">
-          <input class="form-check-input" data-type="keywordCriteria" id="keywordCriteriaEquals"
+        <div class="form-check" id="keywordCriteriaExactGroup">
+          <input class="form-check-input" data-type="keywordCriteria" id="keywordCriteriaExact"
                  name="keywordCriteria"
-                 th:checked="${form.keywordCriteria != null and form.keywordCriteria == 'EQUALS'}"
+                 th:checked="${form.keywordCriteria != null and form.keywordCriteria == 'EXACT'}"
                  type="radio"
                  value="EQUALS">
-          <label class="form-check-label" for="keywordCriteriaEquals">정확히 일치</label>
+          <label class="form-check-label" for="keywordCriteriaExact">전체 문자열 일치</label>
         </div>
       </div>
     </div>

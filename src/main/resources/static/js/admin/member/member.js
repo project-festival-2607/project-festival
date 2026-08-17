@@ -4,7 +4,7 @@
 
 const currentKeywordType = document.getElementById('currentKeywordType');
 const keywordType = document.getElementById('keywordType');
-const keywordCriteriaEqualsGroup = document.getElementById('keywordCriteriaEqualsGroup');
+const keywordCriteriaExactGroup = document.getElementById('keywordCriteriaExactGroup');
 
 function updateCurrentKeywordType() {
 
@@ -14,8 +14,8 @@ function updateCurrentKeywordType() {
   const selected = document.querySelector(`.keyword-type-li[data-value="${keywordTypeValue}"]`);
   currentKeywordType.textContent = selected.textContent;
   const exactMatchSupported = selected.dataset.exactMatchSupported === 'true';
-  if (!exactMatchSupported) document.getElementById('keywordCriteriaContains').click();
-  keywordCriteriaEqualsGroup.classList.toggle('d-none', !exactMatchSupported);
+  if (!exactMatchSupported) document.getElementById('keywordCriteriaAllWordsContains').click();
+  keywordCriteriaExactGroup.classList.toggle('d-none', !exactMatchSupported);
 }
 
 document.getElementById('keywordTypeDropdownList').addEventListener('click', (event) => {

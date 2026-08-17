@@ -2,7 +2,8 @@ package com.example.chook.admin.entity.enums;
 
 public enum KeywordCriteria {
 
-  CONTAINS,
-  EQUALS
+  ALL_WORDS_CONTAINS,
+  PHRASE_CONTAINS,
+  EXACT
 
 }
