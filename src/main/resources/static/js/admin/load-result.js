@@ -3,11 +3,12 @@ document.querySelector('#form').addEventListener('submit', event => {
 
   if (event.submitter?.classList.contains('page-link')) {
     document.getElementById('pageIdx').value = event.submitter.value;
+  } else {
+    document.getElementById('pageIdx').value = 1;
   }
 
   if (event.submitter?.classList.contains('page-size-li')) {
     console.log("PAGE SIZE LI");
-    document.getElementById('pageIdx').value = 1;
     document.getElementById('pageSize').value = event.submitter.value;
   }
 

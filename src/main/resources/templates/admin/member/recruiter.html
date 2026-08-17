@@ -16,12 +16,12 @@
           th:action="@{/admin/member/recruiter}">
       <div class="mb-3">
         <div class="admin-search-form">
-          <th:block th:replace="~{admin/member/fragments/search-form :: keyword(
+          <th:block th:replace="~{admin/fragments/search-form :: keyword(
             ${keywordOptions}, ${form})}"></th:block>
-          <th:block th:replace="~{admin/member/fragments/search-form ::date-range(
+          <th:block th:replace="~{admin/fragments/search-form ::date-range(
             ${dateRangeOptions}, ${dateRangeAutofillOptions}, ${form})}"></th:block>
         </div>
-        <th:block th:replace="~{admin/member/fragments/search-form :: search-buttons}"></th:block>
+        <th:block th:replace="~{admin/fragments/search-form :: search-buttons}"></th:block>
       </div>
       <div id="result">
       </div>
