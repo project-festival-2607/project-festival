@@ -26,4 +26,16 @@ public final class CustomStringUtils {
       return defaultValue;
     }
   }
+
+  public static String getFormattedPhone(String phone) {
+    return phone.length() == 11
+      ? String.format("%s-%s-%s", phone.substring(0, 3), phone.substring(3, 7), phone.substring(7))
+      : phone;
+  }
+
+  public static String getFormattedBusinessNumber(String businessNumber) {
+    return businessNumber.length() == 10
+      ? String.format("%s-%s-%s", businessNumber.substring(0, 3), businessNumber.substring(3, 5), businessNumber.substring(5))
+      : businessNumber;
+  }
 }

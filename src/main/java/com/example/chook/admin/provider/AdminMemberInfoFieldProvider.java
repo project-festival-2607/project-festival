@@ -1,4 +1,4 @@
-package com.example.chook;
+package com.example.chook.admin.provider;
 
 import com.example.chook.admin.record.MemberInfoField;
 import org.springframework.stereotype.Component;
@@ -47,6 +47,15 @@ public class AdminMemberInfoFieldProvider {
     return List.of(
       new MemberInfoField("아이디", "username"),
       new MemberInfoField("이름", "name"),
+      new MemberInfoField("사업자등록번호", "businessNumber"),
+      new MemberInfoField("인증 일시", "businessNumberVerifiedAt")
+    );
+  }
+
+  public List<MemberInfoField> removeBusinessRegistrationWithCompanyInfo() {
+    return List.of(
+      new MemberInfoField("아이디", "username"),
+      new MemberInfoField("이름", "name"),
       new MemberInfoField("상호명", "companyName"),
       new MemberInfoField("대표자명", "ceoName"),
       new MemberInfoField("사업자등록번호", "businessNumber"),
@@ -55,6 +64,13 @@ public class AdminMemberInfoFieldProvider {
   }
 
   public List<MemberInfoField> addBusinessRegistration() {
+    return List.of(
+      new MemberInfoField("아이디", "username"),
+      new MemberInfoField("이름", "name")
+    );
+  }
+
+  public List<MemberInfoField> addBusinessRegistrationWithCompanyInfo() {
     return List.of(
       new MemberInfoField("아이디", "username"),
       new MemberInfoField("이름", "name"),

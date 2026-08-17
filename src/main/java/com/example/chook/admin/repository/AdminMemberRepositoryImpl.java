@@ -1,15 +1,20 @@
 package com.example.chook.admin.repository;
 
+import com.example.chook.admin.condition.JobEquipSearchCondition;
 import com.example.chook.admin.condition.JobSeekerSearchCondition;
 import com.example.chook.admin.condition.RecruiterSearchCondition;
+import com.example.chook.admin.dto.JobEquipTableDTO;
 import com.example.chook.admin.dto.JobSeekerTableDTO;
 import com.example.chook.admin.dto.RecruiterTableDTO;
 import com.example.chook.admin.entity.enums.KeywordCriteria;
 import com.example.chook.admin.entity.enums.MemberStatusFilter;
-import com.example.chook.admin.entity.enums.jobseeker.JobSeekerDateCriteria;
+import com.example.chook.admin.entity.enums.jobequip.JobEquipDateRangeType;
+import com.example.chook.admin.entity.enums.jobequip.JobEquipKeywordType;
+import com.example.chook.admin.entity.enums.jobequip.JobEquipSortCriteria;
+import com.example.chook.admin.entity.enums.jobseeker.JobSeekerDateRangeType;
 import com.example.chook.admin.entity.enums.jobseeker.JobSeekerKeywordType;
 import com.example.chook.admin.entity.enums.jobseeker.JobSeekerSortCriteria;
-import com.example.chook.admin.entity.enums.recruiter.RecruiterDateCriteria;
+import com.example.chook.admin.entity.enums.recruiter.RecruiterDateRangeType;
 import com.example.chook.admin.entity.enums.recruiter.RecruiterKeywordType;
 import com.example.chook.admin.entity.enums.recruiter.RecruiterSortCriteria;
 import com.example.chook.common.util.QuerydslUtils;
@@ -100,8 +105,8 @@ public class AdminMemberRepositoryImpl implements AdminMemberRepository {
       .and(member.role.eq(MemberRole.JOB_SEEKER))
       .and(applyJobSeekerKeywordFilter(condition.keywordList(), condition.keywordType(), condition.keywordCriteria()))
       .and(applyStatusFilter(condition.status()))
-      .and(applyJobSeekerDateCriteriaFilter(
-        condition.dateRangeCriteria(),
+      .and(applyJobSeekerDateRangeFilter(
+        condition.dateRangeType(),
         condition.startDateTime(),
         condition.endDateTime(),
         condition.startDate(),
@@ -113,6 +118,82 @@ public class AdminMemberRepositoryImpl implements AdminMemberRepository {
     List<JobSeekerTableDTO> content = resultQuery
       .where(whereCondition)
       .orderBy(getJobSeekerOrderSpecifierArray(condition.sortCriteria(), condition.ascending()))
+      .offset(pageable.getOffset())
+      .limit(pageable.getPageSize())
+      .fetch();
+
+    Long total = countQuery
+      .where(whereCondition)
+      .fetchOne();
+
+    return new PageImpl<>(
+      content,
+      pageable,
+      total != null ? total : 0
+    );
+
+  }
+
+  @Override
+  public Page<JobEquipTableDTO> getJobEquipPage(Pageable pageable, JobEquipSearchCondition condition) {
+
+    JPAQuery<JobEquipTableDTO> resultQuery = this.jpaQueryFactory.select(Projections.fields(
+
+        JobEquipTableDTO.class,
+
+        member.id,
+        member.username,
+        member.name,
+        member.phone,
+        member.phoneVerified,
+        member.email,
+        member.role,
+        member.status,
+        member.createdAt,
+        member.updatedAt,
+        member.lastLoginAt,
+        member.deletedAt,
+        member.point,
+        memberSuspension.updatedAt.as("suspendedAt"),
+        memberSuspension.reason.as("suspendedReason"),
+
+        jobSeekerProfile.gender,
+        jobSeekerProfile.birthDate,
+        jobSeekerProfile.streetAddress,
+        jobSeekerProfile.detailAddress,
+
+        businessRegistration.businessNumber,
+        businessRegistration.verifiedAt.as("businessNumberVerifiedAt")
+
+      ))
+      .from(member);
+
+    JPAQuery<Long> countQuery = jpaQueryFactory
+      .select(member.count())
+      .from(member);
+
+    resultQuery = applyJobEquipJoin(resultQuery);
+    countQuery = applyJobEquipJoin(countQuery);
+
+    BooleanBuilder whereCondition = new BooleanBuilder();
+
+    whereCondition
+      .and(member.role.eq(MemberRole.JOB_EQUIP))
+      .and(applyJobEquipKeywordFilter(condition.keywordList(), condition.keywordType(), condition.keywordCriteria()))
+      .and(applyStatusFilter(condition.status()))
+      .and(applyJobEquipDateRangeFilter(
+        condition.dateRangeType(),
+        condition.startDateTime(),
+        condition.endDateTime(),
+        condition.startDate(),
+        condition.endDate()
+      ))
+      .and(eq(jobSeekerProfile.gender, condition.gender()))
+      .and(applyProviderFilter(condition.provider()));
+
+    List<JobEquipTableDTO> content = resultQuery
+      .where(whereCondition)
+      .orderBy(getJobEquipOrderSpecifierArray(condition.sortCriteria(), condition.ascending()))
       .offset(pageable.getOffset())
       .limit(pageable.getPageSize())
       .fetch();
@@ -161,7 +242,6 @@ public class AdminMemberRepositoryImpl implements AdminMemberRepository {
         businessRegistration.businessNumber,
         businessRegistration.verifiedAt.as("businessNumberVerifiedAt")
 
-
       ))
       .from(member);
 
@@ -178,8 +258,8 @@ public class AdminMemberRepositoryImpl implements AdminMemberRepository {
       .and(member.role.eq(MemberRole.RECRUITER))
       .and(applyRecruiterKeywordFilter(condition.keywordList(), condition.keywordType(), condition.keywordCriteria()))
       .and(applyStatusFilter(condition.status()))
-      .and(applyRecruiterDateCriteriaFilter(
-        condition.dateRangeCriteria(),
+      .and(applyRecruiterDateRangeFilter(
+        condition.dateRangeType(),
         condition.startDateTime(),
         condition.endDateTime(),
         condition.startDate(),
@@ -202,6 +282,7 @@ public class AdminMemberRepositoryImpl implements AdminMemberRepository {
       pageable,
       total != null ? total : 0
     );
+
   }
 
   // #################### JOIN 적용 메서드 ####################
@@ -212,6 +293,16 @@ public class AdminMemberRepositoryImpl implements AdminMemberRepository {
       .on(memberSuspension.memberId.eq(member.id))
       .join(jobSeekerProfile)
       .on(jobSeekerProfile.memberId.eq(member.id));
+  }
+
+  private <T> JPAQuery<T> applyJobEquipJoin(JPAQuery<T> query) {
+    return query
+      .leftJoin(memberSuspension)
+      .on(memberSuspension.memberId.eq(member.id))
+      .join(jobSeekerProfile)
+      .on(jobSeekerProfile.memberId.eq(member.id))
+      .leftJoin(businessRegistration)
+      .on(businessRegistration.memberId.eq(member.id));
   }
 
   private <T> JPAQuery<T> applyRecruiterJoin(JPAQuery<T> query) {
@@ -250,6 +341,41 @@ public class AdminMemberRepositoryImpl implements AdminMemberRepository {
           case NAME -> keywordResult.or(keywordCheck.apply(member.name, keyword));
           case PHONE -> keywordResult.or(keywordCheck.apply(member.phone, keyword.replace("-", "")));
           case EMAIL -> keywordResult.or(keywordCheck.apply(member.email, keyword));
+          case ADDRESS -> {
+            keywordResult.or(contains(jobSeekerProfile.streetAddress, keyword));
+            keywordResult.or(contains(jobSeekerProfile.detailAddress, keyword));
+          }
+        }
+      }
+      result.and(keywordResult);
+    }
+    return result;
+  }
+
+  private BooleanBuilder applyJobEquipKeywordFilter(List<String> keywordList,
+                                                    JobEquipKeywordType keywordType,
+                                                    KeywordCriteria keywordCriteria) {
+
+    if (keywordList == null || keywordList.isEmpty()) return null;
+    List<JobEquipKeywordType> types =
+      keywordType == null
+        ? List.of(JobEquipKeywordType.values())
+        : List.of(keywordType);
+
+    BooleanBuilder result = new BooleanBuilder();
+
+    BiFunction<StringPath, String, BooleanExpression> keywordCheck =
+      getKeywordCheckFunction(keywordCriteria);
+
+    for (String keyword : keywordList) {
+      BooleanBuilder keywordResult = new BooleanBuilder();
+      for (JobEquipKeywordType type : types) {
+        switch (type) {
+          case USERNAME -> keywordResult.or(keywordCheck.apply(member.username, keyword));
+          case NAME -> keywordResult.or(keywordCheck.apply(member.name, keyword));
+          case PHONE -> keywordResult.or(keywordCheck.apply(member.phone, keyword.replace("-", "")));
+          case EMAIL -> keywordResult.or(keywordCheck.apply(member.email, keyword));
+          case BUSINESS_NUMBER -> keywordResult.or(keywordCheck.apply(businessRegistration.businessNumber, keyword));
           case ADDRESS -> {
             keywordResult.or(contains(jobSeekerProfile.streetAddress, keyword));
             keywordResult.or(contains(jobSeekerProfile.detailAddress, keyword));
@@ -306,19 +432,19 @@ public class AdminMemberRepositoryImpl implements AdminMemberRepository {
   }
 
 
-  // #################### DATE CRITERIA FILTER 적용 메서드 ####################
+  // #################### DATE RANGE FILTER 적용 메서드 ####################
 
-  private BooleanBuilder applyJobSeekerDateCriteriaFilter(JobSeekerDateCriteria criteria,
-                                                          LocalDateTime startDateTime,
-                                                          LocalDateTime endDateTime,
-                                                          LocalDate startDate,
-                                                          LocalDate endDate) {
+  private BooleanBuilder applyJobSeekerDateRangeFilter(JobSeekerDateRangeType dateRangeType,
+                                                       LocalDateTime startDateTime,
+                                                       LocalDateTime endDateTime,
+                                                       LocalDate startDate,
+                                                       LocalDate endDate) {
 
-    if (criteria == null) return null;
+    if (dateRangeType == null) return null;
 
     BooleanBuilder result = new BooleanBuilder();
 
-    switch (criteria) {
+    switch (dateRangeType) {
       case CREATED_AT -> {
         result.and(goe(member.createdAt, startDateTime));
         result.and(loe(member.createdAt, endDateTime));
@@ -346,17 +472,59 @@ public class AdminMemberRepositoryImpl implements AdminMemberRepository {
     return result;
   }
 
-  private BooleanBuilder applyRecruiterDateCriteriaFilter(RecruiterDateCriteria criteria,
-                                                          LocalDateTime startDateTime,
-                                                          LocalDateTime endDateTime,
-                                                          LocalDate startDate,
-                                                          LocalDate endDate) {
+  private BooleanBuilder applyJobEquipDateRangeFilter(JobEquipDateRangeType dateRangeType,
+                                                      LocalDateTime startDateTime,
+                                                      LocalDateTime endDateTime,
+                                                      LocalDate startDate,
+                                                      LocalDate endDate) {
 
-    if (criteria == null) return null;
+    if (dateRangeType == null) return null;
 
     BooleanBuilder result = new BooleanBuilder();
 
-    switch (criteria) {
+    switch (dateRangeType) {
+      case CREATED_AT -> {
+        result.and(goe(member.createdAt, startDateTime));
+        result.and(loe(member.createdAt, endDateTime));
+      }
+      case UPDATED_AT -> {
+        result.and(goe(member.updatedAt, startDateTime));
+        result.and(loe(member.updatedAt, endDateTime));
+      }
+      case LAST_LOGIN_AT -> {
+        result.and(goe(member.lastLoginAt, startDateTime));
+        result.and(loe(member.lastLoginAt, endDateTime));
+      }
+      case DELETED_AT -> {
+        result.and(member.deletedAt.isNotNull());
+        result.and(goe(member.deletedAt, startDateTime));
+        result.and(loe(member.deletedAt, endDateTime));
+      }
+      case BIRTH_DATE -> {
+        result.and(goe(jobSeekerProfile.birthDate, startDate));
+        result.and(loe(jobSeekerProfile.birthDate, endDate));
+      }
+      case BUSINESS_NUMBER_VERIFIED_AT -> {
+        result.and(goe(businessRegistration.verifiedAt, startDateTime));
+        result.and(loe(businessRegistration.verifiedAt, startDateTime));
+      }
+      // 이 경우에 속하지 않는 경우 날짜 기준 필터를 사용하지 않음
+    }
+
+    return result;
+  }
+
+  private BooleanBuilder applyRecruiterDateRangeFilter(RecruiterDateRangeType dateRangeType,
+                                                       LocalDateTime startDateTime,
+                                                       LocalDateTime endDateTime,
+                                                       LocalDate startDate,
+                                                       LocalDate endDate) {
+
+    if (dateRangeType == null) return null;
+
+    BooleanBuilder result = new BooleanBuilder();
+
+    switch (dateRangeType) {
       case CREATED_AT -> {
         result.and(goe(member.createdAt, startDateTime));
         result.and(loe(member.createdAt, endDateTime));
@@ -425,6 +593,25 @@ public class AdminMemberRepositoryImpl implements AdminMemberRepository {
         case DELETED_AT -> orderSpecifiers.addAll(getOrderSpecifier(order, member.deletedAt));
         case POINT -> orderSpecifiers.addAll(getOrderSpecifier(order, member.point));
         case BIRTH_DATE -> orderSpecifiers.addAll(getOrderSpecifier(order, jobSeekerProfile.birthDate));
+      }
+    }
+    orderSpecifiers.add(new OrderSpecifier<>(Order.ASC, member.id));
+    return orderSpecifiers.toArray(new OrderSpecifier[0]);
+  }
+
+  private OrderSpecifier<?>[] getJobEquipOrderSpecifierArray(JobEquipSortCriteria sortCriteria,
+                                                             Boolean ascending) {
+    List<OrderSpecifier<?>> orderSpecifiers = new ArrayList<>();
+    if (sortCriteria != null) {
+      Order order = ascending ? Order.ASC : Order.DESC;
+      switch (sortCriteria) {
+        case CREATED_AT -> orderSpecifiers.addAll(getOrderSpecifier(order, member.createdAt));
+        case UPDATED_AT -> orderSpecifiers.addAll(getOrderSpecifier(order, member.updatedAt));
+        case LAST_LOGIN_AT -> orderSpecifiers.addAll(getOrderSpecifier(order, member.lastLoginAt));
+        case DELETED_AT -> orderSpecifiers.addAll(getOrderSpecifier(order, member.deletedAt));
+        case POINT -> orderSpecifiers.addAll(getOrderSpecifier(order, member.point));
+        case BIRTH_DATE -> orderSpecifiers.addAll(getOrderSpecifier(order, jobSeekerProfile.birthDate));
+        case BUSINESS_NUMBER_VERIFIED_AT -> orderSpecifiers.addAll(getOrderSpecifier(order, businessRegistration.verifiedAt));
       }
     }
     orderSpecifiers.add(new OrderSpecifier<>(Order.ASC, member.id));

@@ -1,12 +1,12 @@
 package com.example.chook.admin.controller;
 
-import com.example.chook.AdminMemberInfoFieldProvider;
 import com.example.chook.admin.condition.JobSeekerSearchCondition;
 import com.example.chook.admin.dto.JobSeekerTableDTO;
 import com.example.chook.admin.entity.enums.DateRangeAutofillOption;
-import com.example.chook.admin.entity.enums.jobseeker.JobSeekerDateCriteria;
+import com.example.chook.admin.entity.enums.jobseeker.JobSeekerDateRangeType;
 import com.example.chook.admin.entity.enums.jobseeker.JobSeekerKeywordType;
 import com.example.chook.admin.form.JobSeekerSearchForm;
+import com.example.chook.admin.provider.AdminMemberInfoFieldProvider;
 import com.example.chook.admin.service.AdminService;
 import com.example.chook.common.handler.PagingHandler;
 import com.example.chook.member.entity.enums.Gender;
@@ -42,13 +42,14 @@ public class AdminJobSeekerController {
   ) {
     model.addAttribute("form", form);
     model.addAttribute("keywordOptions", List.of(JobSeekerKeywordType.values()));
-    model.addAttribute("dateRangeOptions", List.of(JobSeekerDateCriteria.values()));
+    model.addAttribute("dateRangeOptions", List.of(JobSeekerDateRangeType.values()));
     model.addAttribute("dateRangeAutofillOptions", List.of(DateRangeAutofillOption.values()));
 
     model.addAttribute("suspendMemberInfo", infoFieldProvider.suspend());
     model.addAttribute("unsuspendMemberInfo", infoFieldProvider.unsuspend());
     model.addAttribute("removePhoneVerificationInfo", infoFieldProvider.removePhoneVerification());
     model.addAttribute("addPhoneWithVerificationInfo", infoFieldProvider.addPhoneWithVerification());
+    model.addAttribute("addBusinessRegistrationInfo", infoFieldProvider.addBusinessRegistration());
   }
 
   @GetMapping("/result")

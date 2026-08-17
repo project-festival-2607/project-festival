@@ -15,38 +15,38 @@ document.querySelector('#form').addEventListener('submit', event => {
 });
 
 document.querySelector('button[data-role="reset-search-form"]').addEventListener('click', event => {
-  loadResult(window.location.pathname, true);
+  loadResult(window.location.pathname, {reset: true});
   document.querySelector('#form').querySelectorAll('input[type="hidden"]').forEach(element => {
     element.value = '';
   })
 })
 
-function getPageUrl(baseUrl, reset = false) {
+function getPageUrl(baseUrl, {reset=false, forceParams} = {}) {
 
   if (reset) return `${baseUrl}`;
 
   const form = document.getElementById('form');
-  const params = new URLSearchParams(new FormData(form));
+  const params = (forceParams) ? forceParams : new URLSearchParams(new FormData(form));
 
   return `${baseUrl}?${params}`;
 
 }
 
-function getResultRequestUrl(baseUrl, reset = false) {
+function getResultRequestUrl(baseUrl, {reset=false, forceParams} = {}) {
 
   if (reset) return `${baseUrl}/result`;
 
   const form = document.getElementById('form');
-  const params = new URLSearchParams(new FormData(form));
+  const params = (forceParams) ? forceParams : new URLSearchParams(new FormData(form));
 
   return `${baseUrl}/result?${params}`;
 
 }
 
-function loadResult(baseUrl, reset = false) {
+function loadResult(baseUrl, {reset=false, forceParams} = {}) {
   
-  const pageUrl = getPageUrl(baseUrl, reset);
-  const resultUrl = getResultRequestUrl(baseUrl, reset);
+  const pageUrl = getPageUrl(baseUrl, {reset, forceParams});
+  const resultUrl = getResultRequestUrl(baseUrl, {reset, forceParams});
 
   console.log('resultUrl: ', resultUrl);
 

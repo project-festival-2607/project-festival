@@ -26,7 +26,7 @@ document.getElementById('keywordTypeDropdownList').addEventListener('click', (ev
 });
 
 //  ###############################################
-//  DateRangeCriteria 초기화 및 드롭다운 설정
+//  DateRangeType 초기화 및 드롭다운 설정
 //  ###############################################
 
 const startDateTime = document.getElementById('startDateTime');
@@ -34,33 +34,33 @@ const endDateTime = document.getElementById('endDateTime');
 const startDate = document.getElementById('startDate');
 const endDate = document.getElementById('endDate');
 const dateRangeBetween = document.getElementById('dateRangeBetween');
-const currentDateRangeCriteria = document.getElementById('currentDateRangeCriteria');
-const dateRangeCriteria = document.getElementById('dateRangeCriteria');
-const dateRangeCriteriaAutofill = document.getElementById('dateRangeCriteriaAutofill');
+const currentDateRangeType = document.getElementById('currentDateRangeType');
+const dateRangeType = document.getElementById('dateRangeType');
+const dateRangeTypeAutofill = document.getElementById('dateRangeTypeAutofill');
 
-function updateDateRangeCriteriaAndToggleInputType() {
+function updateDateRangeTypeAndToggleInputType() {
   const selected = document.querySelector(
-    `.date-range-criteria-li[data-value="${dateRangeCriteria.value}"]`
+    `.date-range-criteria-li[data-value="${dateRangeType.value}"]`
   );
-  currentDateRangeCriteria.textContent = selected?.textContent ?? '선택';
+  currentDateRangeType.textContent = selected?.textContent ?? '선택';
   const isDateOnly = selected?.dataset.dateOnly === 'true';
-  const isNotSelected = [undefined, '', 'NONE'].includes(dateRangeCriteria.value);
+  const isNotSelected = [undefined, '', 'NONE'].includes(dateRangeType.value);
   startDateTime.classList.toggle('d-none', isDateOnly);
   endDateTime.classList.toggle('d-none', isDateOnly);
   startDate.classList.toggle('d-none', !isDateOnly);
   endDate.classList.toggle('d-none', !isDateOnly);
   dateRangeBetween.classList.toggle('disabled', isNotSelected);
-  dateRangeCriteriaAutofill.classList.toggle('d-none', isDateOnly);
+  dateRangeTypeAutofill.classList.toggle('d-none', isDateOnly);
 
   [startDateTime, endDateTime, startDate, endDate].forEach(element => {
     element.disabled = isNotSelected;
   })
 }
 
-document.getElementById('dateRangeCriteriaDropdownList').addEventListener('click', (e) => {
+document.getElementById('dateRangeTypeDropdownList').addEventListener('click', (e) => {
   if (e.target.classList.contains('date-range-criteria-li')) {
-    dateRangeCriteria.value = e.target.dataset.value;
-    updateDateRangeCriteriaAndToggleInputType();
+    dateRangeType.value = e.target.dataset.value;
+    updateDateRangeTypeAndToggleInputType();
   }
 })
 
@@ -78,7 +78,7 @@ endDate.addEventListener('change', () => {
 })
 
 //  ###############################################
-//  DateRangeCriteria 빠른 입력 기능
+//  DateRangeType 빠른 입력 기능
 //  ###############################################
 
 function toDateTimeLocal(date) {
@@ -104,7 +104,7 @@ document.querySelectorAll('.date-range-criteria-autofill').forEach((element) => 
 })
 
 updateCurrentKeywordType();
-updateDateRangeCriteriaAndToggleInputType();
+updateDateRangeTypeAndToggleInputType();
 
 const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
 [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));

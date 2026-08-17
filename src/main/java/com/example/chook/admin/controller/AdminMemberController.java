@@ -82,9 +82,11 @@ public class AdminMemberController {
     return AdminActionResponse.builder()
       .result(true)
       .message(String.format(
-        "id가 %d인 사용자의 사업자등록번호 인증을 삭제%s했습니다.",
+        "id가 %d인 사용자의 사업자등록번호 인증을 삭제했으며, %s",
         memberId,
-        suspended ? "했으며,\n\"사업자등록번호 인증이 유효하지 않음\" 사유로 정지" : ""))
+        suspended
+          ? "\"사업자등록번호 인증이 유효하지 않음\" 사유로 정지했습니다."
+          : "해당 사용자의 역할을 [JOB_SEEKER]로 변경했습니다."))
       .build();
   }
 
