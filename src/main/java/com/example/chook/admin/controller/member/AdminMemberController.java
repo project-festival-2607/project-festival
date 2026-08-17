@@ -1,4 +1,4 @@
-package com.example.chook.admin.controller;
+package com.example.chook.admin.controller.member;
 
 import com.example.chook.admin.record.AdminActionResponse;
 import com.example.chook.admin.record.BusinessRegistrationRequest;

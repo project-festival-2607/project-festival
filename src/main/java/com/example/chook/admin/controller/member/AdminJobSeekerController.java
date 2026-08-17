@@ -1,12 +1,11 @@
-package com.example.chook.admin.controller;
+package com.example.chook.admin.controller.member;
 
-import com.example.chook.admin.condition.JobEquipSearchCondition;
-import com.example.chook.admin.dto.JobEquipTableDTO;
+import com.example.chook.admin.condition.JobSeekerSearchCondition;
+import com.example.chook.admin.dto.JobSeekerTableDTO;
 import com.example.chook.admin.entity.enums.DateRangeAutofillOption;
-import com.example.chook.admin.entity.enums.jobequip.JobEquipDateRangeType;
-import com.example.chook.admin.entity.enums.jobequip.JobEquipKeywordType;
+import com.example.chook.admin.entity.enums.jobseeker.JobSeekerDateRangeType;
+import com.example.chook.admin.entity.enums.jobseeker.JobSeekerKeywordType;
 import com.example.chook.admin.form.JobSeekerSearchForm;
-import com.example.chook.admin.form.RecruiterSearchForm;
 import com.example.chook.admin.provider.AdminMemberInfoFieldProvider;
 import com.example.chook.admin.service.AdminService;
 import com.example.chook.common.handler.PagingHandler;
@@ -27,47 +26,47 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.util.List;
 
 @Controller
-@RequestMapping("/admin/member/job-equip")
+@RequestMapping("/admin/member/job-seeker")
 @RequiredArgsConstructor
 @Slf4j
-public class AdminJobEquipController {
+public class AdminJobSeekerController {
 
   private static final int PAGINATION_SIZE = 10;
   private final AdminService adminService;
   private final AdminMemberInfoFieldProvider infoFieldProvider;
 
   @GetMapping
-  public void loadJobEquipPage(
+  public void loadJobSeekerPage(
     Model model,
-    @Valid @ModelAttribute RecruiterSearchForm form
+    @Valid @ModelAttribute JobSeekerSearchForm form
   ) {
     model.addAttribute("form", form);
-    model.addAttribute("keywordOptions", List.of(JobEquipKeywordType.values()));
-    model.addAttribute("dateRangeOptions", List.of(JobEquipDateRangeType.values()));
+    model.addAttribute("keywordOptions", List.of(JobSeekerKeywordType.values()));
+    model.addAttribute("dateRangeOptions", List.of(JobSeekerDateRangeType.values()));
     model.addAttribute("dateRangeAutofillOptions", List.of(DateRangeAutofillOption.values()));
 
     model.addAttribute("suspendMemberInfo", infoFieldProvider.suspend());
     model.addAttribute("unsuspendMemberInfo", infoFieldProvider.unsuspend());
     model.addAttribute("removePhoneVerificationInfo", infoFieldProvider.removePhoneVerification());
     model.addAttribute("addPhoneWithVerificationInfo", infoFieldProvider.addPhoneWithVerification());
-    model.addAttribute("removeBusinessRegistrationInfo", infoFieldProvider.removeBusinessRegistration());
+    model.addAttribute("addBusinessRegistrationInfo", infoFieldProvider.addBusinessRegistration());
   }
 
   @GetMapping("/result")
-  public String getJobEquipResultFragment(
+  public String getJobSeekerResultFragment(
     Model model,
     @RequestParam(name = "pageIdx", required = false, defaultValue = "1") int pageIdx,
     @RequestParam(name = "pageSize", required = false, defaultValue = "10") int pageSize,
     @Valid @ModelAttribute JobSeekerSearchForm form
   ) {
 
-    JobEquipSearchCondition condition = JobEquipSearchCondition.from(form);
+    JobSeekerSearchCondition condition = JobSeekerSearchCondition.from(form);
     log.info("condition: {}", condition);
-    Page<JobEquipTableDTO> page = adminService.getJobEquipPage(pageIdx, pageSize, condition);
+    Page<JobSeekerTableDTO> page = adminService.getJobSeekerPage(pageIdx, pageSize, condition);
 
     model.addAttribute("page", page);
     model.addAttribute("pageSize", pageSize);
-    PagingHandler<JobEquipTableDTO, JobSeekerSearchForm> pagingHandler =
+    PagingHandler<JobSeekerTableDTO, JobSeekerSearchForm> pagingHandler =
       new PagingHandler<>(page, form, PAGINATION_SIZE, pageIdx);
     model.addAttribute("pagingHandler", pagingHandler);
     model.addAttribute("pageSizeOptions", List.of(10, 30, 50));
@@ -79,7 +78,7 @@ public class AdminJobEquipController {
 
     log.info("form: {}", form);
     log.info("model: {}", model);
-    return "admin/member/fragments/result/job-equip";
+    return "admin/member/fragments/result/job-seeker";
   }
 
 }
