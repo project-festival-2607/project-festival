@@ -29,7 +29,7 @@ async function uploadPendingImages(markdown) {
         formData.append("image", blob);
         formData.append("title", titleInput.value);
 
-        const res = await fetch("/adminBoard/uploadImage", {
+        const res = await fetch("/notice/uploadImage", {
             method: "POST",
             body: formData
         });
@@ -37,7 +37,7 @@ async function uploadPendingImages(markdown) {
 
         const fileDto = await res.json();
         console.log("image uploaded:", fileDto);
-        result = result.split(previewUrl).join("/adminBoard/image/" + fileDto.uuid);
+        result = result.split(previewUrl).join("/notice/image/" + fileDto.uuid);
     }
     return result;
 }

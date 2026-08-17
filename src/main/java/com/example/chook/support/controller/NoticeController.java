@@ -6,8 +6,8 @@ import com.example.chook.file.service.FileService;
 import com.example.chook.member.entity.enums.MemberRole;
 import com.example.chook.member.security.CustomUserDetails;
 import com.example.chook.support.dto.AdminBoardDTO;
-import com.example.chook.support.entity.AdminBoard;
-import com.example.chook.support.service.AdminBoardService;
+import com.example.chook.support.entity.Notice;
+import com.example.chook.support.service.NoticeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.Resource;
@@ -25,16 +25,16 @@ import java.util.UUID;
 import java.util.regex.Pattern;
 
 @Controller
-@RequestMapping("/adminBoard/*")
+@RequestMapping("/notice/*")
 @RequiredArgsConstructor
 @Slf4j
-public class AdminBoardController {
+public class NoticeController {
 
     // ponytail: 폴더명으로 못 쓰는 문자만 제거, OS별 세밀한 검증은 필요해지면 추가
     private static final Pattern INVALID_FOLDER_CHARS = Pattern.compile("[\\\\/:*?\"<>|]");
 
     private final FileService fileService;
-    private final AdminBoardService adminBoardService;
+    private final NoticeService noticeService;
 
     @GetMapping("/list")
     public String list(
@@ -44,18 +44,18 @@ public class AdminBoardController {
         @AuthenticationPrincipal CustomUserDetails user,
         Model model
     ) {
-        Page<AdminBoardDTO> boardPage = adminBoardService.getList(page, searchType, keyword);
+        Page<AdminBoardDTO> boardPage = noticeService.getList(page, searchType, keyword);
         model.addAttribute("boardPage", boardPage);
         model.addAttribute("searchType", searchType);
         model.addAttribute("keyword", keyword);
         model.addAttribute("isAdmin", isAdmin(user));
-        return "adminBoard/list";
+        return "notice/list";
     }
 
     @GetMapping("/register")
     public String register(@AuthenticationPrincipal CustomUserDetails user) {
         requireAdmin(user);
-        return "adminBoard/register";
+        return "notice/register";
     }
 
     @GetMapping("/detail/{bno}")
@@ -64,17 +64,17 @@ public class AdminBoardController {
         @AuthenticationPrincipal CustomUserDetails user,
         Model model
     ) {
-        model.addAttribute("board", adminBoardService.getDetail(bno));
+        model.addAttribute("board", noticeService.getDetail(bno));
         model.addAttribute("isAdmin", isAdmin(user));
-        return "adminBoard/detail";
+        return "notice/detail";
     }
 
     @PostMapping("/register")
     public String register(@AuthenticationPrincipal CustomUserDetails user, AdminBoardDTO dto) {
         requireAdmin(user);
-        AdminBoard saved = adminBoardService.register(dto);
+        Notice saved = noticeService.register(dto);
         log.info("admin board saved: {}", saved);
-        return "redirect:/adminBoard/list";
+        return "redirect:/notice/list";
     }
 
     @PostMapping("/modify/{bno}")
@@ -84,9 +84,9 @@ public class AdminBoardController {
         AdminBoardDTO dto
     ) {
         requireAdmin(user);
-        AdminBoard modified = adminBoardService.modify(bno, dto);
+        Notice modified = noticeService.modify(bno, dto);
         log.info("admin board modified: {}", modified);
-        return "redirect:/adminBoard/detail/" + bno;
+        return "redirect:/notice/detail/" + bno;
     }
 
     @PostMapping("/delete/{bno}")
@@ -95,9 +95,9 @@ public class AdminBoardController {
         @AuthenticationPrincipal CustomUserDetails user
     ) {
         requireAdmin(user);
-        adminBoardService.delete(bno);
+        noticeService.delete(bno);
         log.info("admin board deleted: {}", bno);
-        return "redirect:/adminBoard/list";
+        return "redirect:/notice/list";
     }
 
     private boolean isAdmin(CustomUserDetails user) {
@@ -117,9 +117,9 @@ public class AdminBoardController {
         @RequestParam("image") MultipartFile image,
         @RequestParam("title") String title
     ) {
-        String relativePath = "adminBoard/" + toFolderName(title); // 파일 저장 경로
+        String relativePath = "notice/" + toFolderName(title); // 파일 저장 경로
         FileDTO fileDto = fileService.toDto(fileService.upload(image, relativePath));
-        log.info("adminBoard image uploaded: {}", fileDto);
+        log.info("notice image uploaded: {}", fileDto);
         return ResponseEntity.ok(fileDto);
     }
 

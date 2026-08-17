@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @Builder
 @Entity
 @Table(name="admin_board")
-public class AdminBoard {
+public class Notice {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long bno;

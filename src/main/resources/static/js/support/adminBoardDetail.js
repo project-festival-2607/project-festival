@@ -43,14 +43,14 @@ if (isAdmin) {
             formData.append("image", blob);
             formData.append("title", titleInput.value);
 
-            const res = await fetch("/adminBoard/uploadImage", {
+            const res = await fetch("/notice/uploadImage", {
                 method: "POST",
                 body: formData
             });
             if (!res.ok) throw new Error("이미지 업로드 실패: " + res.status);
 
             const fileDto = await res.json();
-            result = result.split(previewUrl).join("/adminBoard/image/" + fileDto.uuid);
+            result = result.split(previewUrl).join("/notice/image/" + fileDto.uuid);
         }
         return result;
     }

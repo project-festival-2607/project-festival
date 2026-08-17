@@ -13,7 +13,7 @@ import lombok.*;
 @Builder
 @Entity
 @Table(name="admin_board_file")
-public class AdminBoardFile {
+public class NoticeFile {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="admin_board_file_pair_id")
@@ -25,7 +25,7 @@ public class AdminBoardFile {
       nullable = false,
       foreignKey = @ForeignKey(name = "fk_admin_board_file_bno")
     )
-    private AdminBoard adminBoard; //admin_board 테이블에서 bno 외래키
+    private Notice notice; //admin_board 테이블에서 bno 외래키
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(
