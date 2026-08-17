@@ -4,7 +4,7 @@
 :root {
   --theme-main-color: var(--bs-danger);
   --theme-main-color-rgb: var(--bs-danger-rgb);
-  --theme-main-color-subtle: var(--bs-danger-border-subtle);
+  --theme-main-color-subtle: var(--bs-danger-text-emphasis);
 }
 
 .admin-search-form a[data-bs-toggle="tooltip"] {

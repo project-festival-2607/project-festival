@@ -79,6 +79,10 @@ a[data-bs-toggle="tooltip"] {
   border-left: 0 none;
 }
 
+.dropdown-no-caret::after {
+  display: none;
+}
+
 .border-radius-end {
   border-top-right-radius: var(--bs-border-radius-sm) !important;
   border-bottom-right-radius: var(--bs-border-radius-sm) !important;

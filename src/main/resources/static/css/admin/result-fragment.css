@@ -1,0 +1,39 @@
+/* TABLE */
+
+/* PAGINATION */
+
+.admin-pagination {
+  --bs-pagination-disabled-bg: transparent;
+  --bs-pagination-disabled-color: rgba(var(--bs-dark-rgb), 0.25);
+  --bs-pagination-disabled-border-color: rgba(var(--bs-dark-rgb), 0.15);
+  --bs-pagination-color: var(--theme-main-color);
+  --bs-pagination-hover-color: var(--theme-main-color-subtle);
+  --bs-pagination-focus-color: var(--theme-main-color-subtle);
+  --bs-pagination-focus-box-shadow: 0 0 0 0.25rem rgba(var(--theme-main-color-rgb), 0.25);
+}
+
+.admin-pagination .active>.page-link {
+  background-color: var(--theme-main-color);
+  border-color: var(--theme-main-color);
+}
+
+.admin-pagination .active>.page-link:focus {
+  box-shadow: 0 0 0 0.25rem rgba(var(--theme-main-color-rgb), 0.25);
+}
+
+/* MODAL */
+
+.modal-body table th,
+.modal-body table td {
+  font-size: 13px;
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+.modal-body table td {
+  font-weight: 400;
+}
+
+.modal-member-info-th {
+  width: 120px;
+}
