@@ -1,6 +1,7 @@
 package com.example.chook.admin.entity.enums.recruiter;
 
 import com.example.chook.admin.entity.enums.KeywordCriteria;
+import com.example.chook.admin.entity.enums.KeywordType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -9,7 +10,7 @@ import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @Getter
-public enum RecruiterKeywordType {
+public enum RecruiterKeywordType implements KeywordType {
 
   USERNAME("아이디"),
   NAME("이름"),
@@ -32,12 +33,6 @@ public enum RecruiterKeywordType {
       KeywordCriteria.PHRASE_CONTAINS,
       KeywordCriteria.EXACT
     ));
-  }
-
-  public String getSupportedCriteriaData() {
-    return supportedCriteria.stream()
-      .map(Enum::name)
-      .collect(Collectors.joining(","));
   }
 
 }
