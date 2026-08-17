@@ -1,6 +1,6 @@
 package com.example.chook.admin.controller;
 
-import com.example.chook.AdminMemberInfoFieldProvider;
+import com.example.chook.admin.provider.AdminMemberInfoFieldProvider;
 import com.example.chook.admin.condition.RecruiterSearchCondition;
 import com.example.chook.admin.dto.RecruiterTableDTO;
 import com.example.chook.admin.entity.enums.DateRangeAutofillOption;

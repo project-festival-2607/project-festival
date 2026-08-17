@@ -1,4 +1,4 @@
-package com.example.chook;
+package com.example.chook.admin.provider;
 
 import com.example.chook.admin.record.MemberInfoField;
 import org.springframework.stereotype.Component;
