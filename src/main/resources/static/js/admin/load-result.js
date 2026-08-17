@@ -20,6 +20,11 @@ document.querySelector('button[data-role="reset-search-form"]').addEventListener
   document.querySelector('#form').querySelectorAll('input[type="hidden"]').forEach(element => {
     element.value = '';
   })
+  document.querySelector('.admin-search-form').querySelectorAll('input').forEach(element => {
+    element.value = '';
+  })
+  updateCurrentKeywordType();
+  updateDateRangeTypeAndToggleInputType();
 })
 
 function getPageUrl(baseUrl, {reset=false, forceParams} = {}) {

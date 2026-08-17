@@ -127,6 +127,6 @@
 }
 
 .admin-search-form input[type="datetime-local"],
-.admin-search-form input[type="datetime"] {
+.admin-search-form input[type="date"] {
   letter-spacing: -0.03em;
 }
