@@ -22,12 +22,8 @@ function updateCurrentKeywordType() {
     group.classList.add('d-none');
     if (group.querySelector('input').checked) previousGroup = group;
   })
-
-  console.log(selectedKeywordElem);
   console.log(selectedKeywordElem.dataset.supportedCriteria);
-
   let lastVisibleGroup;
-
   const supportedCriteria = selectedKeywordElem.dataset.supportedCriteria.split(',');
   supportedCriteria.forEach(criteria => {
     switch (criteria) {
@@ -44,8 +40,8 @@ function updateCurrentKeywordType() {
         lastVisibleGroup = keywordCriteriaExactGroup;
         break;
     }
-  })
-  if (previousGroup.classList.contains('d-none')) {
+  });
+  if (previousGroup !== null && previousGroup.classList.contains('d-none')) {
     lastVisibleGroup.querySelector('input').click();
   }
 
