@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<th:block th:fragment="inquiry-result">
+  <div class="result-table-wrapper"
+       id="tableWrapper"
+       th:with="form=${pagingHandler.form}">
+    <input id="sortCriteria" name="sortCriteria" th:value="${form.sortCriteria}" type="hidden"/>
+    <input id="ascending" name="ascending" th:value="${form.ascending}" type="hidden"/>
+    <table class="table">
+      <colgroup>
+        <col style="width: 340px">  <!-- 제목 -->
+        <col style="width: 300px;"> <!-- 상세주소 -->
+        <col style="width: 300px;"> <!-- 장소 -->
+        <col style="width: 90px;">  <!-- 우편번호 -->
+        <col style="width: 135px;"> <!-- 시작일 -->
+        <col style="width: 135px;"> <!-- 종료일 -->
+        <col style="width: 200px;"> <!-- 담당자 [이름 (아이디)]-->
+        <col style="width: 95px;">  <!-- 공고 개수 -->
+        <col style="width: 45px;">  <!-- 관리 -->
+      </colgroup>
+      <thead>
+      <tr>
+        <th scope="col">제목</th>
+        <th scope="col">상세주소</th>
+        <th scope="col">장소</th>
+        <th scope="col">우편번호</th>
+        <th scope="col">
+          <span class="d-flex gap-3 justify-content-between">
+            <span>시작일</span>
+            <th:block th:replace="~{admin/fragments/sort-button :: sort-button(
+            'START_DATE', ${form.sortCriteria}, ${form.ascending}
+            )}"></th:block>
+          </span>
+        </th>
+        <th scope="col">
+          <span class="d-flex gap-3 justify-content-between">
+            <span>종료일</span>
+            <th:block th:replace="~{admin/fragments/sort-button :: sort-button(
+            'END_DATE', ${form.sortCriteria}, ${form.ascending}
+            )}"></th:block>
+          </span>
+        </th>
+        <th>담당자</th>
+        <th>
+          <span class="d-flex gap-3 justify-content-between">
+            <span>공고 개수</span>
+            <th:block th:replace="~{admin/fragments/sort-button :: sort-button(
+            'RECRUITMENT_COUNT', ${form.sortCriteria}, ${form.ascending}
+            )}"></th:block>
+          </span>
+        </th>
+        <th class="text-center bg-body-secondary" scope="col">관리</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="festival: ${page}">
+        <td>
+          <div class="text-ellipsis-with-suffix">
+            <span class="ellipsis-main">
+              <span data-field="title" th:text="${festival.title}"></span>
+            </span>
+            <span class="d-none" data-field="contentId" th:text="${festival.contentId}"></span>
+            <span class="ellipsis-suffix">
+              <span>
+                <a class="link-secondary link-underline-opacity-0"
+                   data-bs-html="true"
+                   data-bs-toggle="tooltip"
+                   href="#"
+                   th:data-bs-title="${festival.contentId}">
+                  <span th:replace="~{admin/fragments/svg :: unique-id('unique-id-icon')}"></span>
+                </a>
+              </span>
+            </span>
+          </div>
+        </td>
+        <td data-field="address" th:text="${festival.address}"></td>
+        <td data-field="eventPlace" th:text="${festival.eventPlace}"></td>
+        <td data-field="zipCode" th:text="${festival.zipCode}"></td>
+        <td data-field="startDate" th:text="${#temporals.format(festival.startDate, 'yyyy.MM.dd.')}"></td>
+        <td data-field="endDate" th:text="${#temporals.format(festival.endDate, 'yyyy.MM.dd.')}"></td>
+        <td>
+          <span class="d-none" data-field="memberId" th:text="${festival.memberId}"></span>
+          <th:block th:if="${festival.memberId ne null}">
+            <span data-field="memberName" th:text="${festival.memberName}"></span>
+            <span data-field="memberUsername" th:text="'('+${festival.memberUsername}+')'"></span>
+          </th:block>
+          <th:block th:if="${festival.memberId eq null}">
+            <span class="text-body-tertiary">(담당자 없음)</span>
+          </th:block>
+        </td>
+        <td class="text-end" th:text="${festival.recruitmentCount}"></td>
+        <td class="center bg-body-secondary">
+          <button class="btn btn-reset dropdown-toggle dropdown-no-caret moderation-btn" data-bs-toggle="dropdown"
+                  type="button">
+            <th:block th:replace="~{admin/fragments/svg :: moderation('moderation-icon')}"></th:block>
+          </button>
+          <ul class="dropdown-menu moderation-menu">
+            <li>
+              <button class="dropdown-item" data-bs-target="#assignFestivalManagerModal"
+                      data-bs-toggle="modal"
+                      data-role="assignFestivalManager"
+                      type="button">담당자 정보 추가
+              </button>
+            </li>
+          </ul>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+  <div>
+    <th:block th:replace="~{admin/fragments/pagination :: pagination(
+      ${pagingHandler},
+      ${pageSize},
+      ${pageSizeOptions}
+    )}"></th:block>
+  </div>
+</th:block>

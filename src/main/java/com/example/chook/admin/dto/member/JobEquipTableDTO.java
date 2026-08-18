@@ -20,33 +20,33 @@ import java.util.List;
 public class JobEquipTableDTO implements JobSeekerTableDTOBase {
 
   // Member 공통 필드
-  Long id;
-  String username;
-  String name;
-  String phone;
-  Boolean phoneVerified;
-  String email;
-  MemberRole role;
-  MemberStatus status;
-  LocalDateTime createdAt;
-  LocalDateTime updatedAt;
-  LocalDateTime lastLoginAt;
-  LocalDateTime deletedAt;
-  Long point;
-  LocalDateTime suspendedAt;
-  String suspendedReason;
+  private Long id;
+  private String username;
+  private String name;
+  private String phone;
+  private Boolean phoneVerified;
+  private String email;
+  private MemberRole role;
+  private MemberStatus status;
+  private LocalDateTime createdAt;
+  private LocalDateTime updatedAt;
+  private LocalDateTime lastLoginAt;
+  private LocalDateTime deletedAt;
+  private Long point;
+  private LocalDateTime suspendedAt;
+  private String suspendedReason;
 
   // JOB_EQUIP 전용 필드
   @Builder.Default
-  List<SocialLoginDTO> socialLoginDtoList = new ArrayList<>();
-  Gender gender;
-  LocalDate birthDate;
-  String streetAddress;
-  String detailAddress;
+  private List<SocialLoginDTO> socialLoginDtoList = new ArrayList<>();
+  private Gender gender;
+  private LocalDate birthDate;
+  private String streetAddress;
+  private String detailAddress;
 
   // RECRUITER 사업자등록번호 정보
-  String businessNumber;
-  LocalDateTime businessNumberVerifiedAt;
+  private String businessNumber;
+  private LocalDateTime businessNumberVerifiedAt;
 
   public String getFormattedPhone() {
     return CustomStringUtils.getFormattedPhone(phone);

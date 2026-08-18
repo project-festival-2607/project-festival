@@ -91,7 +91,7 @@ public class InquiryController {
     @GetMapping("/admin/detail/{ino}")
     public String adminDetail(@PathVariable Long ino, Model model) {
         model.addAttribute("inquiry", inquiryService.getDetail(ino));
-        return "admin/board/adminDetail";
+        return "admin/board/inquiry-detail";
     }
 
     @PostMapping("/admin/answer/{ino}")

@@ -22,6 +22,11 @@
   height: 24px;
 }
 
+.unique-id-icon {
+  width: 14px;
+  height: 14px;
+}
+
 /* ==================== TABLE BUTTON ==================== */
 
 .moderation-btn {
@@ -85,8 +90,12 @@ button:has(.filter-idle-icon) {
   padding-right: 1px;
 }
 
-.result-table-wrapper table td {
+.result-table-wrapper table td,
+.result-table-wrapper table td * {
   font-weight: 400;
+}
+
+.result-table-wrapper table td {
   white-space: nowrap;
   padding-left: 8px;
   padding-right: 8px;
@@ -194,6 +203,15 @@ button:has(.filter-idle-icon) {
   font-weight: 400;
 }
 
-.modal-member-info-th {
+.modal-info-th {
   width: 120px;
+}
+
+
+/* ==================== MISCELLANEOUS ==================== */
+
+.result-table-wrapper table td [data-field="memberUsername"] {
+  font-size: 12px;
+  font-weight: 400;
+  opacity: 50%;
 }

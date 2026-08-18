@@ -1,6 +1,6 @@
 package com.example.chook.admin.record;
 
-public record MemberInfoField(
+public record ModalInfoField(
   String label,
   String field
 ) {

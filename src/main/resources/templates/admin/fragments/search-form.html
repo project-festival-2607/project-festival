@@ -27,7 +27,7 @@
         <div class="form-check" id="keywordCriteriaPhraseContainsGroup">
           <input class="form-check-input" data-type="keywordCriteria" id="keywordCriteriaPhraseContains"
                  name="keywordCriteria"
-                 th:checked="${form.keywordCriteria != null or form.keywordCriteria == 'PHRASE_CONTAINS'}"
+                 th:checked="${form.keywordCriteria != null and form.keywordCriteria == 'PHRASE_CONTAINS'}"
                  type="radio"
                  value="PHRASE_CONTAINS">
           <label class="form-check-label" for="keywordCriteriaPhraseContains">전체 문자열 포함</label>
@@ -92,7 +92,7 @@
         <ul class="dropdown-menu" id="dateRangeTypeDropdownList">
           <li>
             <button class="dropdown-item date-range-criteria-li"
-                    data-date-only="false"
+                    th:data-date-only="${#lists.isEmpty(dateRangeOptions.?[dateOnly == false])}"
                     data-value="NONE"
                     type="button">선택
             </button>

@@ -7,6 +7,7 @@ import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Getter
 @Setter
@@ -16,32 +17,32 @@ import java.time.LocalDateTime;
 @Builder
 public class RecruiterTableDTO {
 
-  Long id;
-  String username;
-  String name;
-  String phone;
-  Boolean phoneVerified;
-  String email;
-  MemberRole role;
-  MemberStatus status;
-  LocalDateTime createdAt;
-  LocalDateTime updatedAt;
-  LocalDateTime lastLoginAt;
-  LocalDateTime deletedAt;
-  Long point;
-  LocalDateTime suspendedAt;
-  String suspendedReason;
+  private Long id;
+  private String username;
+  private String name;
+  private String phone;
+  private Boolean phoneVerified;
+  private String email;
+  private MemberRole role;
+  private MemberStatus status;
+  private LocalDateTime createdAt;
+  private LocalDateTime updatedAt;
+  private LocalDateTime lastLoginAt;
+  private LocalDateTime deletedAt;
+  private Long point;
+  private LocalDateTime suspendedAt;
+  private String suspendedReason;
 
   // RECRUITER 전용 필드
-  String companyName;
-  String ceoName;
-  LocalDate foundedAt;
-  String streetAddress;
-  String detailAddress;
+  private String companyName;
+  private String ceoName;
+  private LocalDate foundedAt;
+  private String streetAddress;
+  private String detailAddress;
 
   // RECRUITER 사업자등록번호 정보
-  String businessNumber;
-  LocalDateTime businessNumberVerifiedAt;
+  private String businessNumber;
+  private LocalDateTime businessNumberVerifiedAt;
 
   public String getFormattedPhone() {
     return CustomStringUtils.getFormattedPhone(phone);
@@ -49,6 +50,10 @@ public class RecruiterTableDTO {
 
   public String getFormattedBusinessNumber() {
     return CustomStringUtils.getFormattedBusinessNumber(businessNumber);
+  }
+
+  public String getFormattedBusinessNumberVerifiedAt() {
+    return businessNumberVerifiedAt.format(DateTimeFormatter.ofPattern("yyyy.MM.dd. HH:mm:ss"));
   }
 
 }
