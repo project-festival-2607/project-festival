@@ -58,6 +58,12 @@ ul.submenu {
   font-weight: 500;
 }
 
+.badge.notice-highlight {
+  background-color: var(--bs-danger);
+  color: #fff;
+  font-weight: 500;
+}
+
 /* ==================== MISCELLANEOUS ==================== */
 
 .alert-icon {
