@@ -136,7 +136,7 @@
                           data-target-element="filterProvider"
                           data-value="" th:classappend="${form.provider == null} ? 'active'"
                           type="button">
-                    <th:block th:replace="~{admin/fragments/badge :: member-provider('전체')}"></th:block>
+                    <th:block th:replace="~{admin/fragments/badge :: general('전체')}"></th:block>
                   </button>
                 </li>
                 <li th:each="provider: ${memberProviderList}">
@@ -145,7 +145,7 @@
                           th:classappend="${form.provider != null and form.provider == provider.name} ? 'active'"
                           th:data-value="${provider.name}"
                           type="button">
-                    <th:block th:replace="~{admin/fragments/badge :: member-provider(${provider.label})}"></th:block>
+                    <th:block th:replace="~{admin/fragments/badge :: general(${provider.label})}"></th:block>
                   </button>
                 </li>
               </ul>
@@ -169,7 +169,7 @@
                           data-target-element="filterGender"
                           th:classappend="${form.gender == null} ? 'active'"
                           type="button">
-                    <th:block th:replace="~{admin/fragments/badge :: member-gender('전체')}"></th:block>
+                    <th:block th:replace="~{admin/fragments/badge :: general('전체')}"></th:block>
                   </button>
                 </li>
                 <li th:each="gender: ${memberGenderList}">
@@ -178,7 +178,7 @@
                           th:classappend="${form.gender != null and form.gender == gender.name} ? 'active'"
                           th:data-value="${gender.name}"
                           type="button">
-                    <th:block th:replace="~{admin/fragments/badge :: member-gender(${gender.label})}"></th:block>
+                    <th:block th:replace="~{admin/fragments/badge :: general(${gender.label})}"></th:block>
                   </button>
                 </li>
               </ul>

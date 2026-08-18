@@ -59,9 +59,9 @@ public class AdminBoardRepositoryImpl implements AdminBoardRepository {
         inquiry.updatedAt,
         inquiry.commentTime.as("repliedAt"),
 
-        member.id,
-        member.username,
-        member.name
+        member.id.as("memberId"),
+        member.username.as("memberUsername"),
+        member.name.as("memberName")
 
       ))
       .from(inquiry)

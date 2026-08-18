@@ -12,5 +12,10 @@ public enum InquiryDateRangeType {
   REPLIED_AT("답변일시");
 
   private final String label;
+  private final boolean dateOnly;
+
+  InquiryDateRangeType(String label) {
+    this(label, false);
+  }
 
 }

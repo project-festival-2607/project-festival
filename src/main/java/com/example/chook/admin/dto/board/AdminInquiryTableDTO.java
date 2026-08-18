@@ -23,7 +23,7 @@ public class AdminInquiryTableDTO {
 
   LocalDateTime createdAt;
   LocalDateTime updatedAt;
-  InquiryReplyStatus inquiryStatus;
+  InquiryReplyStatus replyStatus;
   LocalDateTime repliedAt;
 
 }

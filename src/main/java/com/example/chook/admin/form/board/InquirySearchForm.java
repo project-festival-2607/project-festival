@@ -1,5 +1,6 @@
 package com.example.chook.admin.form.board;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import static com.example.chook.common.util.CustomStringUtils.blankToNull;
@@ -13,6 +14,8 @@ public record InquirySearchForm(
   String dateRangeType,
   LocalDateTime startDateTime,
   LocalDateTime endDateTime,
+  LocalDate startDate,    // 여기에서는 사용되지 않으나 호환을 위해 삽입
+  LocalDate endDate,      // 여기에서는 사용되지 않으나 호환을 위해 삽입
 
   // 테이블 상단 필터
   String replyStatus,
