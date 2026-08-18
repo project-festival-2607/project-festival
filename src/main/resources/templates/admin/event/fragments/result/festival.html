@@ -62,8 +62,9 @@
             <span class="ellipsis-main">
               <span data-field="title" th:text="${festival.title}"></span>
             </span>
+            <span class="d-none" data-field="contentId" th:text="${festival.contentId}"></span>
             <span class="ellipsis-suffix">
-              <span data-field="content-id">
+              <span>
                 <a class="link-secondary link-underline-opacity-0"
                    data-bs-html="true"
                    data-bs-toggle="tooltip"
@@ -81,7 +82,7 @@
         <td data-field="startDate" th:text="${#temporals.format(festival.startDate, 'yyyy.MM.dd.')}"></td>
         <td data-field="endDate" th:text="${#temporals.format(festival.endDate, 'yyyy.MM.dd.')}"></td>
         <td>
-          <span data-field="memberId" class="d-none" th:text="${festival.memberId}"></span>
+          <span class="d-none" data-field="memberId" th:text="${festival.memberId}"></span>
           <th:block th:if="${festival.memberId ne null}">
             <span data-field="memberName" th:text="${festival.memberName}"></span>
             <span data-field="memberUsername" th:text="'('+${festival.memberUsername}+')'"></span>
@@ -97,6 +98,13 @@
             <th:block th:replace="~{admin/fragments/svg :: moderation('moderation-icon')}"></th:block>
           </button>
           <ul class="dropdown-menu moderation-menu">
+            <li>
+              <button class="dropdown-item" data-bs-target="#assignFestivalManagerModal"
+                      data-bs-toggle="modal"
+                      data-role="assignFestivalManager"
+                      type="button">담당자 정보 추가
+              </button>
+            </li>
           </ul>
         </td>
       </tr>

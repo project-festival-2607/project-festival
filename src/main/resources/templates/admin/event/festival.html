@@ -27,9 +27,33 @@
       </div>
     </form>
   </div>
+  <!-- assignFestivalManagerModal -->
+  <div aria-hidden="true" class="modal fade"
+       data-role="assignFestivalManager" id="assignFestivalManagerModal"
+       tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div th:replace="~{admin/fragments/modal :: modal-header('행사 담당자 정보 추가')}"></div>
+        <div class="modal-body">
+          <div th:replace="~{admin/fragments/modal :: modal-festival-info(${assignFestivalManagerFestival})}"></div>
+          <div class="mb-3">
+            <label class="form-label" for="assignFestivalManagerMemberId">담당자 고유 아이디</label>
+            <div class="input-group">
+              <input class="form-control form-control-sm" id="assignFestivalManagerMemberId" type="text">
+              <button class="btn btn-dark" type="button" id="loadMemberPreview">조회</button>
+            </div>
+          </div>
+          <div data-role="memberPreview">
+          </div>
+        </div>
+        <div th:replace="~{admin/fragments/modal :: modal-footer('success', '정보 추가')}"></div>
+      </div>
+    </div>
+  </div>
   <script th:src="@{/js/admin/initialize-search-form.js}"></script>
   <script th:src="@{/js/admin/load-result.js}"></script>
   <script th:src="@{/js/admin/table-th-filter.js}"></script>
+  <script th:src="@{/js/admin/festival/modal.js}"></script>
   <script>
     const params = new URLSearchParams(window.location.search);
     loadResult(window.location.pathname, {forceParams: params});

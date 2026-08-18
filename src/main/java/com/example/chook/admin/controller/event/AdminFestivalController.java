@@ -6,8 +6,10 @@ import com.example.chook.admin.entity.enums.DateRangeAutofillOption;
 import com.example.chook.admin.entity.enums.festival.FestivalDateRangeType;
 import com.example.chook.admin.entity.enums.festival.FestivalKeywordType;
 import com.example.chook.admin.form.event.FestivalSearchForm;
-import com.example.chook.admin.provider.AdminMemberInfoFieldProvider;
+import com.example.chook.admin.provider.AdminInfoFieldProvider;
+import com.example.chook.admin.record.AdminActionResponse;
 import com.example.chook.admin.service.AdminEventService;
+import com.example.chook.admin.service.AdminMemberService;
 import com.example.chook.common.handler.PagingHandler;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -15,10 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -30,7 +29,8 @@ public class AdminFestivalController {
 
   private static final int PAGINATION_SIZE = 10;
   private final AdminEventService adminEventService;
-  private final AdminMemberInfoFieldProvider infoFieldProvider;
+  private final AdminMemberService adminMemberService;
+  private final AdminInfoFieldProvider infoFieldProvider;
 
   @GetMapping
   public void loadFestivalPage(
@@ -44,7 +44,6 @@ public class AdminFestivalController {
 
     // MODAL에 표시할 정보 특정용 attribute
     model.addAttribute("assignFestivalManagerFestival", infoFieldProvider.assignFestivalManagerFestival());
-    model.addAttribute("assignFestivalManagerMember", infoFieldProvider.assignFestivalManagerMember());
   }
 
   @GetMapping("/result")
@@ -69,6 +68,22 @@ public class AdminFestivalController {
     log.info("form: {}", form);
     log.info("model: {}", model);
     return "admin/event/fragments/result/festival";
+  }
+
+  @PostMapping("/{contentId}/assign-manager/{memberId}")
+  @ResponseBody
+  public AdminActionResponse assignFestivalMember(@PathVariable String contentId,
+                                                  @PathVariable Long memberId) {
+
+    boolean isChanged = adminEventService.assignFestivalMember(contentId, memberId);
+    return AdminActionResponse.builder()
+      .result(isChanged)
+      .message(isChanged
+        ? String.format("id가 [%d]인 사용자를 contentId가 [%s]인 행사의 담당자로 지정했습니다.", memberId, contentId)
+        : "이미 해당 사용자가 해당 행사의 담당자로 지정되어 있습니다.")
+      .build()
+      ;
+
   }
 
 }

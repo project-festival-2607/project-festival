@@ -7,6 +7,7 @@ import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Getter
 @Setter
@@ -49,6 +50,10 @@ public class RecruiterTableDTO {
 
   public String getFormattedBusinessNumber() {
     return CustomStringUtils.getFormattedBusinessNumber(businessNumber);
+  }
+
+  public String getFormattedBusinessNumberVerifiedAt() {
+    return businessNumberVerifiedAt.format(DateTimeFormatter.ofPattern("yyyy.MM.dd. HH:mm:ss"));
   }
 
 }

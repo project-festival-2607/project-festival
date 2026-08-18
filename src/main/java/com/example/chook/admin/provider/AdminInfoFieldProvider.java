@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
-public class AdminMemberInfoFieldProvider {
+public class AdminInfoFieldProvider {
 
   public List<ModalInfoField> suspendMember() {
     return List.of(
@@ -96,8 +96,8 @@ public class AdminMemberInfoFieldProvider {
       new ModalInfoField("이름", "name"),
       new ModalInfoField("상호명", "companyName"),
       new ModalInfoField("대표자명", "ceoName"),
-      new ModalInfoField("사업자등록번호", "businessNumber"),
-      new ModalInfoField("인증 일시", "businessNumberVerifiedAt")
+      new ModalInfoField("사업자등록번호", "formattedBusinessNumber"),
+      new ModalInfoField("인증 일시", "formattedBusinessNumberVerifiedAt")
     );
   }
 }

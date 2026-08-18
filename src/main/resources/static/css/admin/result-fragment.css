@@ -206,3 +206,12 @@ button:has(.filter-idle-icon) {
 .modal-info-th {
   width: 120px;
 }
+
+
+/* ==================== MISCELLANEOUS ==================== */
+
+.result-table-wrapper table td [data-field="memberUsername"] {
+  font-size: 12px;
+  font-weight: 400;
+  opacity: 50%;
+}

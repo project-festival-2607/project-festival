@@ -7,7 +7,7 @@ import com.example.chook.admin.entity.enums.jobequip.JobEquipDateRangeType;
 import com.example.chook.admin.entity.enums.jobequip.JobEquipKeywordType;
 import com.example.chook.admin.form.member.JobSeekerSearchForm;
 import com.example.chook.admin.form.member.RecruiterSearchForm;
-import com.example.chook.admin.provider.AdminMemberInfoFieldProvider;
+import com.example.chook.admin.provider.AdminInfoFieldProvider;
 import com.example.chook.admin.service.AdminMemberService;
 import com.example.chook.common.handler.PagingHandler;
 import com.example.chook.member.entity.enums.Gender;
@@ -34,7 +34,7 @@ public class AdminJobEquipController {
 
   private static final int PAGINATION_SIZE = 10;
   private final AdminMemberService adminMemberService;
-  private final AdminMemberInfoFieldProvider infoFieldProvider;
+  private final AdminInfoFieldProvider infoFieldProvider;
 
   @GetMapping
   public void loadJobEquipPage(

@@ -77,9 +77,9 @@ public class AdminEventRepositoryImpl implements AdminEventRepository {
         festival.zipCode,
         festival.startDate,
         festival.endDate,
-        member.id,
-        member.username,
-        member.name,
+        member.id.as("memberId"),
+        member.username.as("memberUsername"),
+        member.name.as("memberName"),
         ExpressionUtils.as(recruitmentCount, "recruitmentCount")
 
       ))

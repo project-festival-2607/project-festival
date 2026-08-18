@@ -8,4 +8,5 @@ public interface AdminEventService {
 
   Page<FestivalTableDTO> getFestivalPage(int pageIdx, int pageSize, FestivalSearchCondition condition);
 
+  boolean assignFestivalMember(String contentId, Long memberId);
 }
