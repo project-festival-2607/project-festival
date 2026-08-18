@@ -71,14 +71,16 @@ const dateRangeBetween = document.getElementById('dateRangeBetween');
 const currentDateRangeType = document.getElementById('currentDateRangeType');
 const dateRangeType = document.getElementById('dateRangeType');
 const dateRangeTypeAutofill = document.getElementById('dateRangeTypeAutofill');
+const dateRangeTypeNotSelected = document.querySelector('.date-range-criteria-li[data-value="NONE"]');
 
 function updateDateRangeTypeAndToggleInputType() {
   const selected = document.querySelector(
     `.date-range-criteria-li[data-value="${dateRangeType.value}"]`
-  );
-  currentDateRangeType.textContent = selected?.textContent ?? '선택';
-  const isDateOnly = selected?.dataset.dateOnly === 'true';
-  const isNotSelected = [undefined, '', 'NONE'].includes(dateRangeType.value);
+  ) ?? dateRangeTypeNotSelected;
+  console.log(selected);
+  currentDateRangeType.textContent = selected.textContent;
+  const isNotSelected = selected.dataset.value === 'NONE';
+  const isDateOnly = selected.dataset.dateOnly === 'true';
   startDateTime.classList.toggle('d-none', isDateOnly);
   endDateTime.classList.toggle('d-none', isDateOnly);
   startDate.classList.toggle('d-none', !isDateOnly);

@@ -92,7 +92,7 @@
         <ul class="dropdown-menu" id="dateRangeTypeDropdownList">
           <li>
             <button class="dropdown-item date-range-criteria-li"
-                    data-date-only="false"
+                    th:data-date-only="${#lists.isEmpty(dateRangeOptions.?[dateOnly == false])}"
                     data-value="NONE"
                     type="button">선택
             </button>
