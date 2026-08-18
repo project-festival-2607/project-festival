@@ -42,4 +42,13 @@ public class AdminEventServiceImpl implements AdminEventService {
     return true;
   }
 
+  @Transactional
+  @Override
+  public boolean unassignFestivalMember(String contentId) {
+    Festival festival = festivalRepository.findById(contentId).orElseThrow(EntityNotFoundException::new);
+    if (festival.getMember() == null) return false;
+    festival.setMember(null);
+    return true;
+  }
+
 }

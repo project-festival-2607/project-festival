@@ -86,4 +86,19 @@ public class AdminFestivalController {
 
   }
 
+  @PostMapping("/{contentId}/unassign-manager")
+  @ResponseBody
+  public AdminActionResponse unassignFestivalMember(@PathVariable String contentId) {
+
+    boolean isChanged = adminEventService.unassignFestivalMember(contentId);
+    return AdminActionResponse.builder()
+      .result(isChanged)
+      .message(isChanged
+        ? String.format("contentId가 [%s]인 행사의 담당자 정보를 삭제했습니다.", contentId)
+        : "해당 행사의 담당자가 지정되어있지 않습니다.")
+      .build()
+      ;
+
+  }
+
 }

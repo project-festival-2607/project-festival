@@ -100,4 +100,5 @@ public class AdminInfoFieldProvider {
       new ModalInfoField("인증 일시", "formattedBusinessNumberVerifiedAt")
     );
   }
+
 }

@@ -102,7 +102,15 @@
               <button class="dropdown-item" data-bs-target="#assignFestivalManagerModal"
                       data-bs-toggle="modal"
                       data-role="assignFestivalManager"
-                      type="button">담당자 정보 추가
+                      th:text="${'담당자 정보 ' + ((festival.memberId ne null) ? '변경' : '추가')}"
+                      type="button">
+              </button>
+            </li>
+            <li th:if="${festival.memberId ne null}">
+              <button class="dropdown-item" data-bs-target="#unassignFestivalManagerModal"
+                      data-bs-toggle="modal"
+                      data-role="assignFestivalManager"
+                      type="button">담당자 정보 삭제
               </button>
             </li>
           </ul>
