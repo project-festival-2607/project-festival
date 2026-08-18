@@ -19,6 +19,7 @@ public record InquirySearchForm(
 
   // 테이블 상단 필터
   String replyStatus,
+  String memberRole,
 
   // 테이블 상단 정렬
   String sortCriteria,

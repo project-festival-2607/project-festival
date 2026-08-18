@@ -6,9 +6,11 @@ import com.example.chook.admin.entity.enums.DateRangeAutofillOption;
 import com.example.chook.admin.entity.enums.inquiry.InquiryDateRangeType;
 import com.example.chook.admin.entity.enums.inquiry.InquiryKeywordType;
 import com.example.chook.admin.entity.enums.inquiry.InquiryReplyStatus;
+import com.example.chook.admin.entity.enums.jobequip.JobEquipKeywordType;
 import com.example.chook.admin.form.board.InquirySearchForm;
 import com.example.chook.admin.service.AdminBoardService;
 import com.example.chook.common.handler.PagingHandler;
+import com.example.chook.member.entity.enums.MemberRole;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -62,6 +64,7 @@ public class AdminInquiryController {
 
     // thead status dropdown용
     model.addAttribute("inquiryReplyStatusList", List.of(InquiryReplyStatus.values()));
+    model.addAttribute("memberRoleList", List.of(MemberRole.values()));
 
     log.info("form: {}", form);
     log.info("model: {}", model);
