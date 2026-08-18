@@ -17,7 +17,7 @@ public enum InquiryKeywordType implements KeywordType {
     KeywordCriteria.ALL_WORDS_CONTAINS,
     KeywordCriteria.PHRASE_CONTAINS
   )),
-  COMMENT("문의 답변", EnumSet.of(
+  REPLY("문의 답변", EnumSet.of(
     KeywordCriteria.ALL_WORDS_CONTAINS,
     KeywordCriteria.PHRASE_CONTAINS
   )),

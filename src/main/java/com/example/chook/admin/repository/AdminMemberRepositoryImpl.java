@@ -17,7 +17,6 @@ import com.example.chook.admin.entity.enums.jobseeker.JobSeekerSortCriteria;
 import com.example.chook.admin.entity.enums.recruiter.RecruiterDateRangeType;
 import com.example.chook.admin.entity.enums.recruiter.RecruiterKeywordType;
 import com.example.chook.admin.entity.enums.recruiter.RecruiterSortCriteria;
-import com.example.chook.common.util.QuerydslUtils;
 import com.example.chook.member.entity.enums.MemberRole;
 import com.example.chook.member.entity.enums.MemberStatus;
 import com.example.chook.member.entity.enums.Provider;
@@ -26,9 +25,7 @@ import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.core.types.dsl.CaseBuilder;
-import com.querydsl.core.types.dsl.ComparableExpressionBase;
-import com.querydsl.core.types.dsl.StringPath;
+import com.querydsl.core.types.dsl.StringExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
@@ -44,6 +41,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiFunction;
 
+import static com.example.chook.admin.util.KeywordUtils.getKeywordCheckFunction;
+import static com.example.chook.admin.util.KeywordUtils.getOrderSpecifier;
 import static com.example.chook.common.util.QuerydslUtils.*;
 import static com.example.chook.member.entity.QBusinessRegistration.businessRegistration;
 import static com.example.chook.member.entity.QEmployerProfile.employerProfile;
@@ -330,7 +329,7 @@ public class AdminMemberRepositoryImpl implements AdminMemberRepository {
 
     BooleanBuilder result = new BooleanBuilder();
 
-    BiFunction<StringPath, String, BooleanExpression> keywordCheck =
+    BiFunction<StringExpression, String, BooleanExpression> keywordCheck =
       getKeywordCheckFunction(keywordCriteria);
 
     for (String keyword : keywordList) {
@@ -364,7 +363,7 @@ public class AdminMemberRepositoryImpl implements AdminMemberRepository {
 
     BooleanBuilder result = new BooleanBuilder();
 
-    BiFunction<StringPath, String, BooleanExpression> keywordCheck =
+    BiFunction<StringExpression, String, BooleanExpression> keywordCheck =
       getKeywordCheckFunction(keywordCriteria);
 
     for (String keyword : keywordList) {
@@ -399,7 +398,7 @@ public class AdminMemberRepositoryImpl implements AdminMemberRepository {
 
     BooleanBuilder result = new BooleanBuilder();
 
-    BiFunction<StringPath, String, BooleanExpression> keywordCheck =
+    BiFunction<StringExpression, String, BooleanExpression> keywordCheck =
       getKeywordCheckFunction(keywordCriteria);
 
     for (String keyword : keywordList) {
@@ -423,12 +422,6 @@ public class AdminMemberRepositoryImpl implements AdminMemberRepository {
       result.and(keywordResult);
     }
     return result;
-  }
-
-  private BiFunction<StringPath, String, BooleanExpression> getKeywordCheckFunction(KeywordCriteria keywordCriteria) {
-    return (keywordCriteria == KeywordCriteria.EXACT)
-      ? QuerydslUtils::eq
-      : QuerydslUtils::contains;
   }
 
 
@@ -637,23 +630,5 @@ public class AdminMemberRepositoryImpl implements AdminMemberRepository {
     }
     orderSpecifiers.add(new OrderSpecifier<>(Order.ASC, member.id));
     return orderSpecifiers.toArray(new OrderSpecifier[0]);
-  }
-
-  private <T extends Comparable<? super T>> List<OrderSpecifier<?>> getOrderSpecifier(
-    Order order,
-    ComparableExpressionBase<T> expression) {
-
-    List<OrderSpecifier<?>> orderSpecifiers = new ArrayList<>();
-    orderSpecifiers.add(
-      new OrderSpecifier<>(
-        Order.ASC,
-        new CaseBuilder()
-          .when(expression.isNull()).then(1)
-          .otherwise(0)
-      )
-    );
-    orderSpecifiers.add(new OrderSpecifier<>(order, expression));
-    return orderSpecifiers;
-
   }
 }
