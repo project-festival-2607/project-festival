@@ -88,7 +88,10 @@
       <tbody>
       <tr th:each="inquiry : ${page}">
         <td class="text-end" data-field="ino" th:text="${inquiry.ino}"></td>
-        <td data-field="title" th:text="${inquiry.title}"></td>
+<!--        태그 달아서 답변 작성 페이지로  -->
+        <td data-field="title">
+          <a th:href="@{/inquiry/admin/detail/{ino}(ino=${inquiry.ino})}" th:text="${inquiry.title}"></a>
+        </td>
         <td>
           <span data-field="memberName" th:text="${inquiry.memberName}"></span>
           <span data-field="memberUsername" th:text="'('+${inquiry.memberUsername}+')'"></span>

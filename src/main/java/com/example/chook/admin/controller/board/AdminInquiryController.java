@@ -9,6 +9,7 @@ import com.example.chook.admin.entity.enums.inquiry.InquiryReplyStatus;
 import com.example.chook.admin.form.board.InquirySearchForm;
 import com.example.chook.admin.service.AdminBoardService;
 import com.example.chook.common.handler.PagingHandler;
+import com.example.chook.support.service.InquiryService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,6 +31,10 @@ public class AdminInquiryController {
 
   private static final int PAGINATION_SIZE = 10;
   private final AdminBoardService adminBoardService;
+  private final InquiryService inquiryService;
+
+
+
 
   @GetMapping
   public void loadInquiryListPage(
