@@ -1,3 +1,19 @@
+.container h1 {
+    font-size: 28px;
+    font-weight: 800;
+    color: #2c2c2c;
+}
+
+.container .btn-primary {
+    background-color: var(--theme-main-color);
+    border-color: var(--theme-main-color);
+}
+
+.container .btn-primary:hover {
+    background-color: #b02a37;
+    border-color: #b02a37;
+}
+
 .mz-search {
     display: flex;
     align-items: center;
@@ -93,7 +109,7 @@
 }
 
 .mz-dropdown-menu li.active {
-    background: #212529;
+    background: var(--theme-main-color);
     color: #fff;
 }
 
@@ -104,10 +120,36 @@
     padding: 10px 22px;
     font-weight: 700;
     color: #fff;
-    background: #212529;
+    background: var(--theme-main-color);
 }
 
 .mz-search-btn:hover {
-    background: #000;
+    background: #b02a37;
     color: #fff;
+}
+
+.container table.table a {
+    color: #2c2c2c;
+    font-weight: 600;
+}
+
+.container table.table a:hover {
+    color: var(--theme-main-color);
+}
+
+.container table.table thead {
+    border-bottom: 2px solid #2c2c2c;
+}
+
+.container table.table tbody tr:hover {
+    background-color: #F6F6F9;
+}
+
+.container .pagination .page-item.active .page-link {
+    background-color: var(--theme-main-color);
+    border-color: var(--theme-main-color);
+}
+
+.container .pagination .page-link {
+    color: #2c2c2c;
 }
