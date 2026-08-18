@@ -30,7 +30,7 @@ public class AdminEventController {
   @GetMapping("/recruiter/{id}")
   @ResponseBody
   public RecruiterTableDTO getRecruiter(@PathVariable Long id) {
-    return  adminMemberService.getRecruiterDto(id);
+    return adminMemberService.getRecruiterDto(id);
   }
 
 }

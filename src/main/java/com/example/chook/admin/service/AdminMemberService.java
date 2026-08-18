@@ -6,7 +6,6 @@ import com.example.chook.admin.condition.member.RecruiterSearchCondition;
 import com.example.chook.admin.dto.member.JobEquipTableDTO;
 import com.example.chook.admin.dto.member.JobSeekerTableDTO;
 import com.example.chook.admin.dto.member.RecruiterTableDTO;
-import com.example.chook.member.entity.Member;
 import org.springframework.data.domain.Page;
 
 public interface AdminMemberService {
