@@ -34,8 +34,8 @@ public class AdminEventServiceImpl implements AdminEventService {
   @Transactional
   @Override
   public boolean assignFestivalMember(String contentId, Long memberId) {
-    Festival festival = festivalRepository.findById(contentId).orElseThrow(EntityNotFoundException::new);
-    Member member = memberRepository.findById(memberId).orElseThrow(EntityNotFoundException::new);
+    Festival festival = festivalRepository.findById(contentId).orElseThrow(() -> new EntityNotFoundException("존재하지 않는 행사입니다."));
+    Member member = memberRepository.findById(memberId).orElseThrow(() -> new EntityNotFoundException("존재하지 않는 사용자입니다."));
 
     if (festival.getMember() == member) return false;
     festival.setMember(member);
@@ -45,7 +45,7 @@ public class AdminEventServiceImpl implements AdminEventService {
   @Transactional
   @Override
   public boolean unassignFestivalMember(String contentId) {
-    Festival festival = festivalRepository.findById(contentId).orElseThrow(EntityNotFoundException::new);
+    Festival festival = festivalRepository.findById(contentId).orElseThrow(() -> new EntityNotFoundException("존재하지 않는 행사입니다."));
     if (festival.getMember() == null) return false;
     festival.setMember(null);
     return true;

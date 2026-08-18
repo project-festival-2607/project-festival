@@ -37,6 +37,10 @@ document.querySelectorAll('.modal-footer').forEach(element => {
     if (modal.dataset.role === 'assignFestivalManager') {
       const contentId = event.target.dataset.contentId;
       const memberId = document.getElementById('assignFestivalManagerMemberId').value;
+      if (memberId === '' || /[^0-9]/.test(memberId)) {
+        alert("유효하지 않은 사용자 고유 아이디입니다.");
+        return;
+      }
       assignFestivalManagerRequest(contentId, memberId).then(response => {
         alert(response.message);
         if (response.result === true) {
