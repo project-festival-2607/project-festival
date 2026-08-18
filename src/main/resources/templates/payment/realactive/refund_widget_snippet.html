@@ -28,6 +28,34 @@
         <div class="modal-footer">
             <button id="confirmRefundBtn">환불 요청</button>
         </div>
+
+        <!-- 토스 환불 응답 전체 출력 -->
+        <div id="tossResponseSection"
+             style="
+        width: 600px;
+        margin: 30px auto;
+        padding: 20px;
+        background: #f5f7fa;
+        border-radius: 12px;
+        display: none;
+     ">
+
+            <h3 style="margin-top:0;">토스 결제 취소 응답 전체</h3>
+
+            <pre id="tossResponse"
+                 style="
+            white-space: pre-wrap;
+            word-break: break-all;
+            background: #ffffff;
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-size: 13px;
+            line-height: 1.5;
+         "></pre>
+
+        </div>
+
     </div>
 </div>
 
@@ -73,44 +101,130 @@
 
     //환불 신청
     document.getElementById("confirmRefundBtn").addEventListener("click", async () => {
-        const errorEl = document.getElementById("refundErrorMsg");
+
+        const errorEl =
+            document.getElementById("refundErrorMsg");
+
         errorEl.style.display = "none";
 
-        const amount = parseInt(document.getElementById("refundAmountInput").value, 10);
+
+        const amount =
+            parseInt(
+                document.getElementById("refundAmountInput").value,
+                10
+            );
+
 
         if (!amount || amount <= 0) {
-            errorEl.textContent = "환불할 포인트를 입력해주세요.";
+
+            errorEl.textContent =
+                "환불할 포인트를 입력해주세요.";
+
             errorEl.style.display = "block";
+
             return;
         }
 
-        // 화면단 1차 방어 (진짜 검증은 서버에서 다시 함)
+
+        // 화면단 1차 방어
         if (amount > maxRefundable) {
-            errorEl.textContent = "환불 가능한 포인트(" + maxRefundable.toLocaleString() + "P)를 초과했습니다.";
+
+            errorEl.textContent =
+                "환불 가능한 포인트("
+                + maxRefundable.toLocaleString()
+                + "P)를 초과했습니다.";
+
             errorEl.style.display = "block";
+
             return;
         }
+
 
         try {
-            const res = await fetch("/point/refund", { //refundController로
-                method: "POST",
-                headers: { "Content-Type": "application/x-www-form-urlencoded" },
-                body: "refundAmount=" + amount,
-            });
 
-            const data = await res.json();
+            const res =
+                await fetch("/point/refund", {
+
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type":
+                            "application/x-www-form-urlencoded"
+                    },
+
+                    body:
+                        "refundAmount=" + amount
+                });
+
+
+            const data =
+                await res.json();
+
+
+            // =========================================
+            // 환불 실패
+            // =========================================
 
             if (!res.ok || !data.success) {
-                errorEl.textContent = data;
-                message || "환불에 실패했습니다.";
+
+                errorEl.textContent =
+                    data.message || "환불에 실패했습니다.";
+
                 errorEl.style.display = "block";
+
                 return;
             }
 
-            alert(data.message + " (" + data.refundedAmount.toLocaleString() + "P)");
+
+            // =========================================
+            // 여기부터 환불 성공
+            // =========================================
+
+
+            // 토스 응답 전체를 받을 영역
+            const responseSection =
+                document.getElementById(
+                    "tossResponseSection"
+                );
+
+
+            const responseElement =
+                document.getElementById(
+                    "tossResponse"
+                );
+
+
+            // 화면에 표시
+            responseSection.style.display = "block";
+
+
+            // ★ Controller가 내려준 tossResponses
+            // ★ 토스 응답 전체를 JSON 형태로 출력
+            responseElement.textContent =
+                JSON.stringify(
+                    data.tossResponses,
+                    null,
+                    2
+                );
+
+
+            // ★ Controller가 내려준 refundedAmount
+            alert(
+                data.message
+                + " ("
+                + data.refundedAmount.toLocaleString()
+                + "P)"
+            );
+
+
             refundBackdrop.style.display = "none";
+
+
         } catch (e) {
-            errorEl.textContent = "환불 요청 중 오류가 발생했습니다.";
+
+            errorEl.textContent =
+                "환불 요청 중 오류가 발생했습니다.";
+
             errorEl.style.display = "block";
         }
     });
