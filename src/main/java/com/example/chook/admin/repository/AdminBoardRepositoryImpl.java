@@ -7,7 +7,6 @@ import com.example.chook.admin.entity.enums.inquiry.InquiryDateRangeType;
 import com.example.chook.admin.entity.enums.inquiry.InquiryKeywordType;
 import com.example.chook.admin.entity.enums.inquiry.InquiryReplyStatus;
 import com.example.chook.admin.entity.enums.inquiry.InquirySortCriteria;
-import com.example.chook.member.entity.enums.MemberRole;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
