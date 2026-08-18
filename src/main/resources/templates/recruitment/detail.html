@@ -168,7 +168,7 @@
                     </a>
 
                     <div th:if="${isOwner}" class="recruit-detail-owner-actions">
-                        <a id="editBtn"
+                        <a id="editBtn" th:unless="${recruitment.isPastDeadline()}"
                            th:href="@{/recruitment/modify/{id}(id=${recruitment.recruitmentId}, from=${from})}"
                            class="btn btn-outline-secondary">수정</a>
                         <form th:action="@{/recruitment/delete/{id}(id=${recruitment.recruitmentId}, from=${from})}" method="post"

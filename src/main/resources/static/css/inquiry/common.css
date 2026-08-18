@@ -1,7 +1,46 @@
+.container h1 {
+    font-size: 28px;
+    font-weight: 800;
+    color: #2c2c2c;
+}
+
 .nav-tabs .nav-link {
     color: #6c757d;
 }
 
 .nav-tabs .nav-link:hover {
-    color: #FEFEFE;
+    color: var(--theme-main-color);
+}
+
+.nav-tabs .nav-link.active {
+    color: var(--theme-main-color);
+    font-weight: 700;
+    border-color: #dee2e6 #dee2e6 #fff;
+}
+
+.container .btn-primary {
+    background-color: var(--theme-main-color);
+    border-color: var(--theme-main-color);
+}
+
+.container .btn-primary:hover {
+    background-color: #b02a37;
+    border-color: #b02a37;
+}
+
+.container table.table a {
+    color: #2c2c2c;
+    font-weight: 600;
+}
+
+.container table.table a:hover {
+    color: var(--theme-main-color);
+}
+
+.container table.table thead {
+    border-bottom: 2px solid #2c2c2c;
+}
+
+.container table.table tbody tr:hover {
+    background-color: #F6F6F9;
 }

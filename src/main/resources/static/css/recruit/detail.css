@@ -93,8 +93,8 @@
     width: 100% !important;
     font-size: 22px !important;
     font-weight: 700 !important;
-    color: #ccc2a4 !important;
-    border-bottom: 2px solid #ccc2a4 !important;
+    color: var(--theme-main-color) !important;
+    border-bottom: 2px solid var(--theme-main-color) !important;
     padding-bottom: 8px !important;
     margin-bottom: 16px !important;
 }
@@ -146,7 +146,7 @@
     width: 100% !important;
     height: 350px !important;
     margin-top: 15px !important;
-    border: 1px solid #ccc2a4 !important;
+    border: 1px solid #dee2e6 !important;
     border-radius: 8px;
 }
 
