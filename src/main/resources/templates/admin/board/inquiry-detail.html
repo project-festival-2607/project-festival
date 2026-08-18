@@ -31,7 +31,7 @@
             </ul>
         </div>
 
-        <form th:action="@{/inquiry/admin/answer/{ino}(ino=${inquiry.ino})}" method="post">
+        <form th:action="@{/admin/board/inquiry/{ino}/answer(ino=${inquiry.ino})}" method="post">
             <div class="mb-3">
                 <label for="comment" class="form-label">답변</label>
                 <!-- 한 번 등록된 답변은 수정 불가 -->
