@@ -34,10 +34,15 @@ public record FestivalSearchCondition(
 ) {
 
   public static FestivalSearchCondition from(FestivalSearchForm form) {
+
+    FestivalKeywordType keywordType = toEnum(form.keywordType(), FestivalKeywordType.class, null);
+    KeywordCriteria keywordCriteria = getKeywordCriteria(keywordType, form.keywordCriteria());
+    List<String> keywordList = getKeywordList(form.keywords(), keywordCriteria);
+
     return FestivalSearchCondition.builder()
-      .keywordType(toEnum(form.keywordType(), FestivalKeywordType.class, null))
-      .keywordList(getKeywordList(form.keywords(), form.keywordCriteria()))
-      .keywordCriteria(getKeywordCriteria(form.keywordType(), form.keywordCriteria()))
+      .keywordType(keywordType)
+      .keywordList(keywordList)
+      .keywordCriteria(keywordCriteria)
       .dateRangeType(toEnum(form.dateRangeType(), FestivalDateRangeType.class, null))
       .startDate(form.startDate())
       .endDate(form.endDate())

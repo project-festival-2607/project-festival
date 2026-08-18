@@ -44,10 +44,14 @@ public record JobEquipSearchCondition(
 
   public static JobEquipSearchCondition from(JobSeekerSearchForm form) {
 
+    JobEquipKeywordType keywordType = toEnum(form.keywordType(), JobEquipKeywordType.class, null);
+    KeywordCriteria keywordCriteria = getKeywordCriteria(keywordType, form.keywordCriteria());
+    List<String> keywordList = getKeywordList(form.keywords(), keywordCriteria);
+
     return JobEquipSearchCondition.builder()
-      .keywordType(toEnum(form.keywordType(), JobEquipKeywordType.class, null))
-      .keywordList(getKeywordList(form.keywords(), form.keywordCriteria()))
-      .keywordCriteria(getKeywordCriteria(form.keywordType(), form.keywordCriteria()))
+      .keywordType(keywordType)
+      .keywordList(keywordList)
+      .keywordCriteria(keywordCriteria)
       .dateRangeType(toEnum(form.dateRangeType(), JobEquipDateRangeType.class, null))
       .startDateTime(form.startDateTime())
       .endDateTime(form.endDateTime())
