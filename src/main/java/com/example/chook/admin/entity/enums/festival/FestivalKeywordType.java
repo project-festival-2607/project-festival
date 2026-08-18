@@ -13,9 +13,15 @@ public enum FestivalKeywordType implements KeywordType {
 
   CONTENT_ID("고유 아이디", EnumSet.of(KeywordCriteria.EXACT)),
   TITLE("제목"),
-  PLACE("장소"),
-  CONTENT("내용"),
-  MEMBER_USERNAME("주최자 아이디", EnumSet.of(KeywordCriteria.EXACT));
+  PLACE("장소", EnumSet.of(
+    KeywordCriteria.ALL_WORDS_CONTAINS,
+    KeywordCriteria.PHRASE_CONTAINS
+  )),
+  CONTENT("내용", EnumSet.of(
+    KeywordCriteria.ALL_WORDS_CONTAINS,
+    KeywordCriteria.PHRASE_CONTAINS
+  )),
+  USERNAME("주최자 아이디", EnumSet.of(KeywordCriteria.EXACT));
 
   private final String label;
   private final EnumSet<KeywordCriteria> supportedCriteria;

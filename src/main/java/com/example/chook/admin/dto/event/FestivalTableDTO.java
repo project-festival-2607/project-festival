@@ -21,6 +21,8 @@ public class FestivalTableDTO {
   private LocalDate endDate;
 
   private Long memberId;
+  private String memberUsername;
+  private String memberName;
   private Long recruitmentCount;
 
 }
