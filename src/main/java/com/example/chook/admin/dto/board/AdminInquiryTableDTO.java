@@ -1,6 +1,7 @@
 package com.example.chook.admin.dto.board;
 
 import com.example.chook.admin.entity.enums.inquiry.InquiryReplyStatus;
+import com.example.chook.member.entity.enums.MemberRole;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -18,6 +19,7 @@ public class AdminInquiryTableDTO {
   Long memberId;
   String memberUsername;
   String memberName;
+  MemberRole memberRole;
 
   String title;
 

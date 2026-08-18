@@ -7,6 +7,7 @@ import com.example.chook.admin.entity.enums.inquiry.InquiryDateRangeType;
 import com.example.chook.admin.entity.enums.inquiry.InquiryKeywordType;
 import com.example.chook.admin.entity.enums.inquiry.InquiryReplyStatus;
 import com.example.chook.admin.entity.enums.inquiry.InquirySortCriteria;
+import com.example.chook.member.entity.enums.MemberRole;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
@@ -30,8 +31,7 @@ import java.util.function.BiFunction;
 
 import static com.example.chook.admin.util.KeywordUtils.getKeywordCheckFunction;
 import static com.example.chook.admin.util.KeywordUtils.getOrderSpecifier;
-import static com.example.chook.common.util.QuerydslUtils.goe;
-import static com.example.chook.common.util.QuerydslUtils.loe;
+import static com.example.chook.common.util.QuerydslUtils.*;
 import static com.example.chook.member.entity.QMember.member;
 import static com.example.chook.support.entity.QInquiry.inquiry;
 
@@ -61,7 +61,8 @@ public class AdminBoardRepositoryImpl implements AdminBoardRepository {
 
         member.id.as("memberId"),
         member.username.as("memberUsername"),
-        member.name.as("memberName")
+        member.name.as("memberName"),
+        member.role.as("memberRole")
 
       ))
       .from(inquiry)
@@ -77,6 +78,7 @@ public class AdminBoardRepositoryImpl implements AdminBoardRepository {
     whereCondition
       .and(applyInquiryKeywordFilter(condition.keywordList(), condition.keywordType(), condition.keywordCriteria()))
       .and(applyReplyStatusFilter(condition.replyStatus()))
+      .and(eq(member.role, condition.memberRole()))
       .and(applyRecruiterDateRangeFilter(
         condition.dateRangeType(),
         condition.startDateTime(),

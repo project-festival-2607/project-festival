@@ -6,6 +6,7 @@ import com.example.chook.admin.entity.enums.inquiry.InquiryKeywordType;
 import com.example.chook.admin.entity.enums.inquiry.InquiryReplyStatus;
 import com.example.chook.admin.entity.enums.inquiry.InquirySortCriteria;
 import com.example.chook.admin.form.board.InquirySearchForm;
+import com.example.chook.member.entity.enums.MemberRole;
 import lombok.Builder;
 
 import java.time.LocalDateTime;
@@ -28,6 +29,7 @@ public record InquirySearchCondition(
 
   // 테이블 상단 필터
   InquiryReplyStatus replyStatus,
+  MemberRole memberRole,
 
   // 테이블 상단 정렬
   InquirySortCriteria sortCriteria,
@@ -44,6 +46,7 @@ public record InquirySearchCondition(
       .startDateTime(form.startDateTime())
       .endDateTime(form.endDateTime())
       .replyStatus(toEnum(form.replyStatus(), InquiryReplyStatus.class, null))
+      .memberRole(toEnum(form.memberRole(), MemberRole.class, null))
       .sortCriteria(toEnum(form.sortCriteria(), InquirySortCriteria.class, null))
       .ascending(form.ascending())
       .build();
