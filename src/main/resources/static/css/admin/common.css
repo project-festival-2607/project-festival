@@ -22,34 +22,40 @@ ul.submenu {
   font-weight: 500;
 }
 
-.member-status-active {
+.badge.member-status-active {
   background-color: #5ba456;
   color: #fff;
+  font-weight: 500;
 }
 
-.member-status-dormant {
+.badge.member-status-dormant {
   background-color: #b0b6bf;
   color: #fff;
+  font-weight: 500;
 }
 
-.member-status-suspended {
+.badge.member-status-suspended {
   background-color: #C65852;
   color: #fff;
+  font-weight: 500;
 }
 
-.member-status-deleted {
+.badge.member-status-deleted {
   background-color: #625B62;
   color: #fff;
+  font-weight: 500;
 }
 
-.inquiry-replied {
+.badge.inquiry-replied {
   background-color: var(--bs-success);
   color: #fff;
+  font-weight: 500;
 }
 
-.inquiry-not-replied {
+.badge.inquiry-not-replied {
   background-color: var(--bs-secondary);
   color: #fff;
+  font-weight: 500;
 }
 
 /* ==================== MISCELLANEOUS ==================== */
@@ -124,4 +130,22 @@ a[data-bs-toggle="tooltip"] {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.text-ellipsis-with-suffix {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  min-width: 0;
+}
+
+.ellipsis-main {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ellipsis-suffix {
+  flex-shrink: 0;
 }

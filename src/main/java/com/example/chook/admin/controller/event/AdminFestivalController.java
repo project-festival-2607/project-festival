@@ -3,8 +3,8 @@ package com.example.chook.admin.controller.event;
 import com.example.chook.admin.condition.event.FestivalSearchCondition;
 import com.example.chook.admin.dto.event.FestivalTableDTO;
 import com.example.chook.admin.entity.enums.DateRangeAutofillOption;
-import com.example.chook.admin.entity.enums.inquiry.InquiryDateRangeType;
-import com.example.chook.admin.entity.enums.inquiry.InquiryKeywordType;
+import com.example.chook.admin.entity.enums.festival.FestivalDateRangeType;
+import com.example.chook.admin.entity.enums.festival.FestivalKeywordType;
 import com.example.chook.admin.form.event.FestivalSearchForm;
 import com.example.chook.admin.provider.AdminMemberInfoFieldProvider;
 import com.example.chook.admin.service.AdminEventService;
@@ -33,18 +33,18 @@ public class AdminFestivalController {
   private final AdminMemberInfoFieldProvider infoFieldProvider;
 
   @GetMapping
-  public void loadInquiryListPage(
+  public void loadFestivalPage(
     Model model,
     @Valid @ModelAttribute FestivalSearchForm form
   ) {
     model.addAttribute("form", form);
-    model.addAttribute("keywordOptions", List.of(InquiryKeywordType.values()));
-    model.addAttribute("dateRangeOptions", List.of(InquiryDateRangeType.values()));
+    model.addAttribute("keywordOptions", List.of(FestivalKeywordType.values()));
+    model.addAttribute("dateRangeOptions", List.of(FestivalDateRangeType.values()));
     model.addAttribute("dateRangeAutofillOptions", List.of(DateRangeAutofillOption.values()));
   }
 
   @GetMapping("/result")
-  public String getJobSeekerResultFragment(
+  public String getFestivalResultFragment(
     Model model,
     @RequestParam(name = "pageIdx", required = false, defaultValue = "1") int pageIdx,
     @RequestParam(name = "pageSize", required = false, defaultValue = "10") int pageSize,

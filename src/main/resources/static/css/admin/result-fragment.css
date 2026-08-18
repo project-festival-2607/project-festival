@@ -22,6 +22,11 @@
   height: 24px;
 }
 
+.unique-id-icon {
+  width: 14px;
+  height: 14px;
+}
+
 /* ==================== TABLE BUTTON ==================== */
 
 .moderation-btn {
@@ -85,8 +90,12 @@ button:has(.filter-idle-icon) {
   padding-right: 1px;
 }
 
-.result-table-wrapper table td {
+.result-table-wrapper table td,
+.result-table-wrapper table td * {
   font-weight: 400;
+}
+
+.result-table-wrapper table td {
   white-space: nowrap;
   padding-left: 8px;
   padding-right: 8px;

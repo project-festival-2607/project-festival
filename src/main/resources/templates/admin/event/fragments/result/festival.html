@@ -13,7 +13,7 @@
       <colgroup>
         <col style="width: 340px">  <!-- 제목 -->
         <col style="width: 300px;"> <!-- 상세주소 -->
-        <col style="width: 200px;"> <!-- 장소 -->
+        <col style="width: 300px;"> <!-- 장소 -->
         <col style="width: 90px;">  <!-- 우편번호 -->
         <col style="width: 135px;"> <!-- 시작일 -->
         <col style="width: 135px;"> <!-- 종료일 -->
@@ -55,6 +55,52 @@
         <th class="text-center bg-body-secondary" scope="col">관리</th>
       </tr>
       </thead>
+      <tbody>
+      <tr th:each="festival: ${page}">
+        <td>
+          <div class="text-ellipsis-with-suffix">
+            <span class="ellipsis-main">
+              <span data-field="title" th:text="${festival.title}"></span>
+            </span>
+            <span class="ellipsis-suffix">
+              <span data-field="content-id">
+                <a class="link-secondary link-underline-opacity-0"
+                   data-bs-html="true"
+                   data-bs-toggle="tooltip"
+                   href="#"
+                   th:data-bs-title="${festival.contentId}">
+                  <span th:replace="~{admin/fragments/svg :: unique-id('unique-id-icon')}"></span>
+                </a>
+              </span>
+            </span>
+          </div>
+        </td>
+        <td data-field="address" th:text="${festival.address}"></td>
+        <td data-field="eventPlace" th:text="${festival.eventPlace}"></td>
+        <td data-field="zipCode" th:text="${festival.zipCode}"></td>
+        <td data-field="startDate" th:text="${#temporals.format(festival.startDate, 'yyyy.MM.dd.')}"></td>
+        <td data-field="endDate" th:text="${#temporals.format(festival.endDate, 'yyyy.MM.dd.')}"></td>
+        <td>
+          <span data-field="memberId" class="d-none" th:text="${festival.memberId}"></span>
+          <th:block th:if="${festival.memberId ne null}">
+            <span data-field="memberName" th:text="${festival.memberName}"></span>
+            <span data-field="memberUsername" th:text="'('+${festival.memberUsername}+')'"></span>
+          </th:block>
+          <th:block th:if="${festival.memberId eq null}">
+            <span class="text-body-tertiary">(담당자 없음)</span>
+          </th:block>
+        </td>
+        <td class="text-end" th:text="${festival.recruitmentCount}"></td>
+        <td class="center bg-body-secondary">
+          <button class="btn btn-reset dropdown-toggle dropdown-no-caret moderation-btn" data-bs-toggle="dropdown"
+                  type="button">
+            <th:block th:replace="~{admin/fragments/svg :: moderation('moderation-icon')}"></th:block>
+          </button>
+          <ul class="dropdown-menu moderation-menu">
+          </ul>
+        </td>
+      </tr>
+      </tbody>
     </table>
   </div>
   <div>
