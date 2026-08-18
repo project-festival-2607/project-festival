@@ -1,8 +1,17 @@
 <!DOCTYPE html>
 <html lang="ko"
-      layout:decorate="~{layout/layout}"
+      layout:decorate="~{layout/admin-layout}"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <th:block layout:fragment="css">
+        <link rel="stylesheet" th:href="@{/css/admin/result-fragment.css}">
+        <link rel="stylesheet" th:href="@{/css/admin/result-fragment-inquiry.css}">
+        <link rel="stylesheet" th:href="@{/css/admin/common.css}">
+        <link rel="stylesheet" th:href="@{/css/admin/search-form.css}">
+    </th:block>
+</head>
 
 <body>
 <div layout:fragment="content">
@@ -35,7 +44,7 @@
             </div>
 
             <div class="d-flex justify-content-end gap-2 mt-3">
-                <a th:href="@{/inquiry/admin/list}" class="btn btn-outline-secondary">목록</a>
+                <a th:href="@{/admin/board/inquiry}" class="btn btn-outline-secondary">목록</a>
                 <button type="submit" class="btn btn-primary" th:if="${inquiry.comment == null}">답변 등록</button>
             </div>
         </form>
