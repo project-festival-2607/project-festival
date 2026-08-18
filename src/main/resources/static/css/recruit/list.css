@@ -20,13 +20,17 @@
 
 .recruit-write-btn {
     margin-top: 8px;
+    border: none;
+    border-radius: 999px;
+    padding: 10px 22px;
     background-color: var(--theme-main-color);
-    border-color: var(--theme-main-color);
+    color: #fff;
+    font-weight: 700;
 }
 
 .recruit-write-btn:hover {
     background-color: #b02a37;
-    border-color: #b02a37;
+    color: #fff;
 }
 
 /* 왼쪽 필터 사이드바 + 오른쪽 리스트 2단 레이아웃 */
@@ -269,6 +273,10 @@
     margin-bottom: 16px;
     color: #6c757d;
     font-size: 14px;
+}
+
+.recruit-main-toolbar .d-flex {
+    gap: 10px;
 }
 
 .recruit-main-toolbar select {
