@@ -27,4 +27,11 @@
       </div>
     </form>
   </div>
+  <script th:src="@{/js/admin/initialize-search-form.js}"></script>
+  <script th:src="@{/js/admin/load-result.js}"></script>
+  <script th:src="@{/js/admin/table-th-filter.js}"></script>
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    loadResult(window.location.pathname, {forceParams: params});
+  </script>
 </div>

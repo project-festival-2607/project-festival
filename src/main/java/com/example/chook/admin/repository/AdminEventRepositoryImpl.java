@@ -13,6 +13,8 @@ import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.core.types.dsl.NumberExpression;
 import com.querydsl.core.types.dsl.StringExpression;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQuery;
@@ -42,6 +44,17 @@ import static com.example.chook.recruitment.entity.QRecruitment.recruitment;
 public class AdminEventRepositoryImpl implements AdminEventRepository {
 
   private final JPAQueryFactory jpaQueryFactory;
+  private final NumberExpression<Long> recruitmentCount = Expressions.numberTemplate(
+    Long.class,
+    "({0})",
+    JPAExpressions
+      .select(recruitment.id.count())
+      .from(recruitment)
+      .where(
+        recruitment.festival.contentId.eq(festival.contentId),
+        recruitment.status.eq(RecruitmentStatus.RECRUITING)
+      )
+  );
 
   public AdminEventRepositoryImpl(EntityManager em) {
     this.jpaQueryFactory = new JPAQueryFactory(em);
@@ -51,6 +64,7 @@ public class AdminEventRepositoryImpl implements AdminEventRepository {
   public Page<FestivalTableDTO> getFestivalPage(Pageable pageable, FestivalSearchCondition condition) {
 
     JPAQuery<FestivalTableDTO> resultQuery;
+
 
     resultQuery = this.jpaQueryFactory.select(Projections.fields(
 
@@ -66,14 +80,7 @@ public class AdminEventRepositoryImpl implements AdminEventRepository {
         member.id,
         member.username,
         member.name,
-        ExpressionUtils.as(JPAExpressions
-            .select(recruitment.id.count())
-            .from(recruitment)
-            .where(
-              recruitment.festival.contentId.eq(festival.contentId),
-              recruitment.status.eq(RecruitmentStatus.RECRUITING)
-            )
-          , "recruitmentCount")
+        ExpressionUtils.as(recruitmentCount, "recruitmentCount")
 
       ))
       .from(festival)
@@ -194,6 +201,7 @@ public class AdminEventRepositoryImpl implements AdminEventRepository {
       switch (sortCriteria) {
         case START_DATE -> orderSpecifiers.addAll(getOrderSpecifier(order, festival.startDate));
         case END_DATE -> orderSpecifiers.addAll(getOrderSpecifier(order, festival.endDate));
+        case RECRUITMENT_COUNT -> orderSpecifiers.addAll(getOrderSpecifier(order, recruitmentCount));
       }
     }
     orderSpecifiers.add(new OrderSpecifier<>(Order.ASC, festival.contentId));
