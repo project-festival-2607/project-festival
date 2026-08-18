@@ -8,6 +8,7 @@ import com.example.chook.application.service.ApplicationService;
 import com.example.chook.file.record.FileResource;
 import com.example.chook.file.service.FileService;
 import com.example.chook.member.entity.Member;
+import com.example.chook.member.entity.enums.MemberRole;
 import com.example.chook.member.repository.MemberRepository;
 import com.example.chook.member.security.CustomUserDetails;
 import jakarta.servlet.http.HttpSession;
@@ -191,10 +192,20 @@ public class ApplicationController {
         // 이력서가 없는 경우
         if (applyDTO.getResume() == null) {
 
-            redirectAttributes.addFlashAttribute(
-                    "resumeMessage",
-                    "지원하려면 먼저 이력서를 작성해주세요."
-            );
+            if(userDetails.getRole() == MemberRole.JOB_SEEKER){
+                redirectAttributes.addFlashAttribute(
+                        "resumeMessage",
+                        "지원하려면 먼저 이력서를 작성해주세요."
+                );
+            }
+
+            if(userDetails.getRole() == MemberRole.RECRUITER){
+                redirectAttributes.addFlashAttribute(
+                        "resumeMessage",
+                        "구직자가 이용 가능한 서비스입니다."
+                );
+            }
+
 
             return "redirect:/recruitment/" + recruitmentId;
         }
