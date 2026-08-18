@@ -10,16 +10,15 @@ import com.example.chook.admin.form.board.InquirySearchForm;
 import com.example.chook.admin.service.AdminBoardService;
 import com.example.chook.common.handler.PagingHandler;
 import com.example.chook.member.entity.enums.MemberRole;
+import com.example.chook.support.entity.Inquiry;
+import com.example.chook.support.service.InquiryService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -31,6 +30,7 @@ public class AdminInquiryController {
 
   private static final int PAGINATION_SIZE = 10;
   private final AdminBoardService adminBoardService;
+  private final InquiryService inquiryService;
 
   @GetMapping
   public void loadInquiryListPage(
@@ -68,5 +68,18 @@ public class AdminInquiryController {
     log.info("form: {}", form);
     log.info("model: {}", model);
     return "admin/board/fragments/result/inquiry";
+  }
+
+  @GetMapping("/{ino}")
+  public String adminDetail(@PathVariable Long ino, Model model) {
+    model.addAttribute("inquiry", inquiryService.getDetail(ino));
+    return "admin/board/inquiry-detail";
+  }
+
+  @PostMapping("/{ino}/answer")
+  public String answer(@PathVariable Long ino, @RequestParam String comment) {
+    Inquiry answered = inquiryService.answer(ino, comment);
+    log.info("inquiry answered: {}", answered);
+    return "redirect:/admin/board/inquiry";
   }
 }

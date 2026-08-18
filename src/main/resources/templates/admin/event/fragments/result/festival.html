@@ -64,15 +64,7 @@
             </span>
             <span class="d-none" data-field="contentId" th:text="${festival.contentId}"></span>
             <span class="ellipsis-suffix">
-              <span>
-                <a class="link-secondary link-underline-opacity-0"
-                   data-bs-html="true"
-                   data-bs-toggle="tooltip"
-                   href="#"
-                   th:data-bs-title="${festival.contentId}">
-                  <span th:replace="~{admin/fragments/svg :: unique-id('unique-id-icon')}"></span>
-                </a>
-              </span>
+              <span th:replace="~{admin/fragments/tooltip :: unique-id(${festival.contentId})}"></span>
             </span>
           </div>
         </td>
@@ -102,7 +94,15 @@
               <button class="dropdown-item" data-bs-target="#assignFestivalManagerModal"
                       data-bs-toggle="modal"
                       data-role="assignFestivalManager"
-                      type="button">담당자 정보 추가
+                      th:text="${'담당자 정보 ' + ((festival.memberId ne null) ? '변경' : '추가')}"
+                      type="button">
+              </button>
+            </li>
+            <li th:if="${festival.memberId ne null}">
+              <button class="dropdown-item" data-bs-target="#unassignFestivalManagerModal"
+                      data-bs-toggle="modal"
+                      data-role="assignFestivalManager"
+                      type="button">담당자 정보 삭제
               </button>
             </li>
           </ul>
