@@ -1,6 +1,6 @@
 package com.example.chook.admin.provider;
 
-import com.example.chook.admin.record.MemberInfoField;
+import com.example.chook.admin.record.ModalInfoField;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -8,74 +8,96 @@ import java.util.List;
 @Component
 public class AdminMemberInfoFieldProvider {
 
-  public List<MemberInfoField> suspend() {
+  public List<ModalInfoField> suspendMember() {
     return List.of(
-      new MemberInfoField("아이디", "username"),
-      new MemberInfoField("이름", "name"),
-      new MemberInfoField("이메일", "email"),
-      new MemberInfoField("휴대전화번호", "phone"),
-      new MemberInfoField("최근접속일시", "lastLoginAt")
+      new ModalInfoField("아이디", "username"),
+      new ModalInfoField("이름", "name"),
+      new ModalInfoField("이메일", "email"),
+      new ModalInfoField("휴대전화번호", "phone"),
+      new ModalInfoField("최근접속일시", "lastLoginAt")
     );
   }
 
-  public List<MemberInfoField> unsuspend() {
+  public List<ModalInfoField> unsuspendMember() {
     return List.of(
-      new MemberInfoField("아이디", "username"),
-      new MemberInfoField("이름", "name"),
-      new MemberInfoField("정지일시", "suspendedAt"),
-      new MemberInfoField("정지사유", "suspendedReason")
+      new ModalInfoField("아이디", "username"),
+      new ModalInfoField("이름", "name"),
+      new ModalInfoField("정지일시", "suspendedAt"),
+      new ModalInfoField("정지사유", "suspendedReason")
     );
   }
 
-  public List<MemberInfoField> removePhoneVerification() {
+  public List<ModalInfoField> removePhoneVerificationMember() {
     return List.of(
-      new MemberInfoField("아이디", "username"),
-      new MemberInfoField("이름", "name"),
-      new MemberInfoField("휴대전화번호", "phone")
+      new ModalInfoField("아이디", "username"),
+      new ModalInfoField("이름", "name"),
+      new ModalInfoField("휴대전화번호", "phone")
     );
   }
 
-  public List<MemberInfoField> addPhoneWithVerification() {
+  public List<ModalInfoField> addPhoneWithVerificationMember() {
     return List.of(
-      new MemberInfoField("아이디", "username"),
-      new MemberInfoField("이름", "name"),
-      new MemberInfoField("기존 휴대전화번호", "phone")
+      new ModalInfoField("아이디", "username"),
+      new ModalInfoField("이름", "name"),
+      new ModalInfoField("기존 휴대전화번호", "phone")
     );
   }
 
-  public List<MemberInfoField> removeBusinessRegistration() {
+  public List<ModalInfoField> removeBusinessRegistrationMember() {
     return List.of(
-      new MemberInfoField("아이디", "username"),
-      new MemberInfoField("이름", "name"),
-      new MemberInfoField("사업자등록번호", "businessNumber"),
-      new MemberInfoField("인증 일시", "businessNumberVerifiedAt")
+      new ModalInfoField("아이디", "username"),
+      new ModalInfoField("이름", "name"),
+      new ModalInfoField("사업자등록번호", "businessNumber"),
+      new ModalInfoField("인증 일시", "businessNumberVerifiedAt")
     );
   }
 
-  public List<MemberInfoField> removeBusinessRegistrationWithCompanyInfo() {
+  public List<ModalInfoField> removeBusinessRegistrationWithCompanyInfoMember() {
     return List.of(
-      new MemberInfoField("아이디", "username"),
-      new MemberInfoField("이름", "name"),
-      new MemberInfoField("상호명", "companyName"),
-      new MemberInfoField("대표자명", "ceoName"),
-      new MemberInfoField("사업자등록번호", "businessNumber"),
-      new MemberInfoField("인증 일시", "businessNumberVerifiedAt")
+      new ModalInfoField("아이디", "username"),
+      new ModalInfoField("이름", "name"),
+      new ModalInfoField("상호명", "companyName"),
+      new ModalInfoField("대표자명", "ceoName"),
+      new ModalInfoField("사업자등록번호", "businessNumber"),
+      new ModalInfoField("인증 일시", "businessNumberVerifiedAt")
     );
   }
 
-  public List<MemberInfoField> addBusinessRegistration() {
+  public List<ModalInfoField> addBusinessRegistrationMember() {
     return List.of(
-      new MemberInfoField("아이디", "username"),
-      new MemberInfoField("이름", "name")
+      new ModalInfoField("아이디", "username"),
+      new ModalInfoField("이름", "name")
     );
   }
 
-  public List<MemberInfoField> addBusinessRegistrationWithCompanyInfo() {
+  public List<ModalInfoField> addBusinessRegistrationWithCompanyInfoMember() {
     return List.of(
-      new MemberInfoField("아이디", "username"),
-      new MemberInfoField("이름", "name"),
-      new MemberInfoField("상호명", "companyName"),
-      new MemberInfoField("대표자명", "ceoName")
+      new ModalInfoField("아이디", "username"),
+      new ModalInfoField("이름", "name"),
+      new ModalInfoField("상호명", "companyName"),
+      new ModalInfoField("대표자명", "ceoName")
+    );
+  }
+
+  public List<ModalInfoField> assignFestivalManagerFestival() {
+    return List.of(
+      new ModalInfoField("고유 아이디", "contentId"),
+      new ModalInfoField("행사 제목", "title"),
+      new ModalInfoField("행사 상세주소", "address"),
+      new ModalInfoField("행사 장소", "eventPlace"),
+      new ModalInfoField("행사 시작일", "startDate"),
+      new ModalInfoField("행사 종료일", "endDate")
+    );
+  }
+
+  public List<ModalInfoField> assignFestivalManagerMember() {
+    return List.of(
+      new ModalInfoField("아이디", "username"),
+      new ModalInfoField("이름", "name"),
+      new ModalInfoField("상호명", "companyName"),
+      new ModalInfoField("대표자명", "ceoName"),
+      new ModalInfoField("사업자등록번호", "businessNumber"),
+      new ModalInfoField("인증 일시", "businessNumberVerifiedAt")
     );
   }
 }

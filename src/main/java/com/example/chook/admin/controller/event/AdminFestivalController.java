@@ -41,6 +41,10 @@ public class AdminFestivalController {
     model.addAttribute("keywordOptions", List.of(FestivalKeywordType.values()));
     model.addAttribute("dateRangeOptions", List.of(FestivalDateRangeType.values()));
     model.addAttribute("dateRangeAutofillOptions", List.of(DateRangeAutofillOption.values()));
+
+    // MODAL에 표시할 정보 특정용 attribute
+    model.addAttribute("assignFestivalManagerFestival", infoFieldProvider.assignFestivalManagerFestival());
+    model.addAttribute("assignFestivalManagerMember", infoFieldProvider.assignFestivalManagerMember());
   }
 
   @GetMapping("/result")

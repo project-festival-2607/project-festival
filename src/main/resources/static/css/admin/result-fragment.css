@@ -203,6 +203,6 @@ button:has(.filter-idle-icon) {
   font-weight: 400;
 }
 
-.modal-member-info-th {
+.modal-info-th {
   width: 120px;
 }

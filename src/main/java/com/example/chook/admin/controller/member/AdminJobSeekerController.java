@@ -45,11 +45,12 @@ public class AdminJobSeekerController {
     model.addAttribute("dateRangeOptions", List.of(JobSeekerDateRangeType.values()));
     model.addAttribute("dateRangeAutofillOptions", List.of(DateRangeAutofillOption.values()));
 
-    model.addAttribute("suspendMemberInfo", infoFieldProvider.suspend());
-    model.addAttribute("unsuspendMemberInfo", infoFieldProvider.unsuspend());
-    model.addAttribute("removePhoneVerificationInfo", infoFieldProvider.removePhoneVerification());
-    model.addAttribute("addPhoneWithVerificationInfo", infoFieldProvider.addPhoneWithVerification());
-    model.addAttribute("addBusinessRegistrationInfo", infoFieldProvider.addBusinessRegistration());
+    // MODAL에 표시할 정보 특정용 attribute
+    model.addAttribute("suspendMemberInfo", infoFieldProvider.suspendMember());
+    model.addAttribute("unsuspendMemberInfo", infoFieldProvider.unsuspendMember());
+    model.addAttribute("removePhoneVerificationInfo", infoFieldProvider.removePhoneVerificationMember());
+    model.addAttribute("addPhoneWithVerificationInfo", infoFieldProvider.addPhoneWithVerificationMember());
+    model.addAttribute("addBusinessRegistrationInfo", infoFieldProvider.addBusinessRegistrationMember());
   }
 
   @GetMapping("/result")
