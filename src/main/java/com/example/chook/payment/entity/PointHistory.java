@@ -6,52 +6,58 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
-//entity_yetdunguut/PointHistory
+
+// entity/PointHistory
 @Entity
 @Table(name = "point_history")
 @Getter
 @Setter
-@ToString(exclude = {"member", "recruit", "payment"})  // 양방향 참조시 순환 참조 방지
+@ToString(exclude = {"member", "recruit", "payment", "payClassify"})
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class PointHistory {
 
-    @Id//포인트 식별용...admin에서 보든가 말든가 하겠지.
+    // 포인트 이력 식별번호
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "point_history_id")
     private Integer pointHistoryId;
 
-    //회원 식별자Member의 id랑 연계해서 Member의 point를 업데이트 할거임.
+    // 회원
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id")  // members.id 참조 (회원 식별자)
+    @JoinColumn(name = "member_id")
     private Member member;
 
-    //모집공고 id
+    // 모집공고
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "recruit_id")  // p_type='use'일 때만 값 존재 (nullable)
+    @JoinColumn(name = "recruit_id")
     private Recruitment recruit;
 
-    //결제번호id
+    // 결제
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "payment_id")  // p_type='charge'/'refund'일 때만 값 존재 (nullable)
+    @JoinColumn(name = "payment_id")
     private Payment payment;
 
-    //타입.  환불 사용 충전 3종류로 분류.
+    // ★ 이 포인트 기록이 어떤 거래에 속하는지
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "pay_classify_id", nullable = false)
+    private PayClassify payClassify;
+
+    // 포인트 변화 종류
+    // charge / use / refund / charge_admin
     @Column(name = "p_type", nullable = false, length = 50)
-    private String pType;  // charge / use / refund / charge_admin(관리자 계정이 포인트를 이용자 계정에 넣어주는 경우. - payment를 null로.
+    private String pType;
 
-
-    //포인트의 변화... +10000   -3000 이런식으로 표기...
-    //Member의 point에 업데이트해줄용도임.
+    // 포인트 변화량
+    // +10000 / -3000 등
     @Column(name = "point_changing", nullable = false)
     private Integer pointChanging;
 
-    //기록 생성일.
+    // 기록 생성일
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
 
-    //해당데이터생성일
     @PrePersist
     protected void onCreate() {
         this.createdAt = LocalDateTime.now();
