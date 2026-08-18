@@ -61,7 +61,7 @@ public class DevMemberDataInitializer {
       // RECRUITER
       for (long i = 1; i <= recruiterCount; i++) {
         Member member = addMember("r", "행사 구인자", MemberRole.RECRUITER, i);
-        member.setPoint(50_000L);
+        member.setPoint(0L);
         addEmployerProfile(member, i);
         addBusinessRegistration(member, businessNumberGenerator);
 
