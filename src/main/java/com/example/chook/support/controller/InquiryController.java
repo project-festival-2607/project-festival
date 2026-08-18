@@ -88,32 +88,17 @@ public class InquiryController {
         return "inquiry/detail";
     }
 
-    // ponytail: 로그인/관리자 페이지 구현 전 임시 답변 큐 - 실제 admin 관리 화면이 생기면 이관
-    @GetMapping("/admin/list")
-    public String adminList(
-        @RequestParam(required = false) String searchType,
-        @RequestParam(required = false) String keyword,
-        @RequestParam(required = false) String answered,
-        Model model
-    ) {
-        model.addAttribute("inquiries", inquiryService.getAdminList(searchType, keyword, answered));
-        model.addAttribute("searchType", searchType);
-        model.addAttribute("keyword", keyword);
-        model.addAttribute("answered", answered);
-        return "inquiry/adminList";
-    }
-
     @GetMapping("/admin/detail/{ino}")
     public String adminDetail(@PathVariable Long ino, Model model) {
         model.addAttribute("inquiry", inquiryService.getDetail(ino));
-        return "inquiry/adminDetail";
+        return "admin/board/adminDetail";
     }
 
     @PostMapping("/admin/answer/{ino}")
     public String answer(@PathVariable Long ino, @RequestParam String comment) {
         Inquiry answered = inquiryService.answer(ino, comment);
         log.info("inquiry answered: {}", answered);
-        return "redirect:/inquiry/admin/list";
+        return "redirect:/admin/board/inquiry";
     }
 
     @GetMapping("/file/{uuid}/download")

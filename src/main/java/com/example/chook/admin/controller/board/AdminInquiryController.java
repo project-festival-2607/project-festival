@@ -10,6 +10,7 @@ import com.example.chook.admin.entity.enums.jobequip.JobEquipKeywordType;
 import com.example.chook.admin.form.board.InquirySearchForm;
 import com.example.chook.admin.service.AdminBoardService;
 import com.example.chook.common.handler.PagingHandler;
+import com.example.chook.support.service.InquiryService;
 import com.example.chook.member.entity.enums.MemberRole;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +33,8 @@ public class AdminInquiryController {
 
   private static final int PAGINATION_SIZE = 10;
   private final AdminBoardService adminBoardService;
+  private final InquiryService inquiryService;
+
 
   @GetMapping
   public void loadInquiryListPage(

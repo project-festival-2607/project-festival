@@ -13,9 +13,12 @@
 
 <div layout:fragment="content">
     <div class="container recruit-register">
-        <h1>구인공고 등록</h1>
+        <div class="recruit-register-head">
+            <h1>구인공고 등록</h1>
+            <p>축제에서 함께 일할 사람을 모집해보세요.</p>
+        </div>
 
-        <div th:if="${hasError}">
+        <div class="recruit-form-error-box" th:if="${hasError}">
             <p class="recruit-form-error">입력값을 다시 확인해주세요.</p>
             <ul class="recruit-form-error">
                 <li th:each="msg : ${errorMessages}" th:text="${msg}"></li>
@@ -24,193 +27,209 @@
 
         <form th:action="@{/recruitment/register}" method="post" id="registerForm">
 
-            <!-- 1. 행사 선택 -->
-            <div class="recruit-field">
-                <label for="festivalContentId">모집할 행사</label>
-                <select name="festivalContentId" id="festivalContentId" class="form-select" required>
-                    <option value="">행사를 선택하세요</option>
-                    <option th:each="fes : ${festivals}"
-                            th:value="${fes.contentId}"
-                            th:text="${fes.title}"
-                            th:selected="${recruitmentCreateForm != null and fes.contentId == recruitmentCreateForm.festivalContentId}"></option>
-                </select>
-            </div>
+            <section class="recruit-form-section">
+                <h2 class="recruit-form-section-title">행사 정보</h2>
 
-            <!-- 2. 지역 선택 (시도 -> 시군구 연동) -->
-            <div class="recruit-field recruit-field-row recruit-field-row-narrow">
-                <div>
-                    <label for="regionSidoCode">지역(시/도)</label>
-                    <select name="regionSidoCode" id="regionSidoCode" class="form-select" required>
-                        <option value="">시/도 선택</option>
-                        <option th:each="sido : ${sidoList}"
-                                th:value="${sido.code}"
-                                th:text="${sido.name}"
-                                th:selected="${recruitmentCreateForm != null and sido.code == recruitmentCreateForm.regionSidoCode}"></option>
+                <!-- 1. 행사 선택 -->
+                <div class="recruit-field">
+                    <label for="festivalContentId">모집할 행사</label>
+                    <select name="festivalContentId" id="festivalContentId" class="form-select" required>
+                        <option value="">행사를 선택하세요</option>
+                        <option th:each="fes : ${festivals}"
+                                th:value="${fes.contentId}"
+                                th:text="${fes.title}"
+                                th:selected="${recruitmentCreateForm != null and fes.contentId == recruitmentCreateForm.festivalContentId}"></option>
                     </select>
                 </div>
-                <div>
-                    <label for="regionSigunguCode">지역(시/군/구)</label>
-                    <select name="regionSigunguCode" id="regionSigunguCode" class="form-select" required
-                            th:disabled="${sigunguList == null}">
-                        <option value="" th:if="${sigunguList == null}">시/도를 먼저 선택하세요</option>
-                        <option value="" th:if="${sigunguList != null}">시/군/구 선택</option>
-                        <option th:each="sigungu : ${sigunguList}"
-                                th:value="${sigungu.code}"
-                                th:text="${sigungu.name}"
-                                th:selected="${recruitmentCreateForm != null and sigungu.code == recruitmentCreateForm.regionSigunguCode}"></option>
-                    </select>
-                </div>
-            </div>
 
-            <!-- 3. 모집마감 날짜 + 모집 인원 -->
-            <div class="recruit-field recruit-field-row recruit-field-row-narrow">
-                <div>
-                    <label for="applicationDeadline">모집마감 날짜</label>
-                    <input type="date" name="applicationDeadline" id="applicationDeadline" class="form-control"
-                           th:value="${recruitmentCreateForm != null} ? ${recruitmentCreateForm.applicationDeadline} : null"
-                           th:max="${maxDeadline}" required>
-                </div>
-                <div>
-                    <label for="recruitmentCount">모집 인원</label>
-                    <input type="number" name="recruitmentCount" id="recruitmentCount" class="form-control" min="0" max="9999"
-                           th:value="${recruitmentCreateForm != null} ? ${recruitmentCreateForm.recruitmentCount} : null" required>
-                </div>
-            </div>
-
-            <!-- 4. 모집인력 종류 -->
-            <div class="recruit-field">
-                <label for="category">모집인력 종류</label>
-                <select name="category" id="category" class="form-select" required>
-                    <option value="">종류를 선택하세요</option>
-                    <option value="INDIVIDUAL" th:selected="${recruitmentCreateForm != null and recruitmentCreateForm.category != null and recruitmentCreateForm.category.name() == 'INDIVIDUAL'}">알바</option>
-                    <option value="FOOD_TRUCK" th:selected="${recruitmentCreateForm != null and recruitmentCreateForm.category != null and recruitmentCreateForm.category.name() == 'FOOD_TRUCK'}">푸드트럭</option>
-                    <option value="EQUIPMENT" th:selected="${recruitmentCreateForm != null and recruitmentCreateForm.category != null and recruitmentCreateForm.category.name() == 'EQUIPMENT'}">장비</option>
-                    <option value="ETC" th:selected="${recruitmentCreateForm != null and recruitmentCreateForm.category != null and recruitmentCreateForm.category.name() == 'ETC'}">기타</option>
-                </select>
-            </div>
-
-            <!-- 4-1. 알바(INDIVIDUAL): 급여유형 + 급여 -->
-            <div class="recruit-field recruit-field-row recruit-specific" data-category="INDIVIDUAL">
-                <div>
-                    <label for="wageType">급여유형</label>
-                    <select name="wageType" id="wageType" class="form-select">
-                        <option value="">급여유형 선택</option>
-                        <option value="HOURLY" th:selected="${recruitmentCreateForm != null and recruitmentCreateForm.wageType != null and recruitmentCreateForm.wageType.name() == 'HOURLY'}">시급</option>
-                        <option value="DAILY" th:selected="${recruitmentCreateForm != null and recruitmentCreateForm.wageType != null and recruitmentCreateForm.wageType.name() == 'DAILY'}">일급</option>
-                        <option value="WEEKLY" th:selected="${recruitmentCreateForm != null and recruitmentCreateForm.wageType != null and recruitmentCreateForm.wageType.name() == 'WEEKLY'}">주급</option>
-                        <option value="PER_TASK" th:selected="${recruitmentCreateForm != null and recruitmentCreateForm.wageType != null and recruitmentCreateForm.wageType.name() == 'PER_TASK'}">건당</option>
-                    </select>
-                </div>
-                <div>
-                    <label for="wageValue">급여(원)</label>
-                    <input type="number" name="wageValue" id="wageValue" class="form-control" min="0" max="99999999"
-                           th:value="${recruitmentCreateForm != null} ? ${recruitmentCreateForm.wageValue} : null">
-                </div>
-            </div>
-
-            <!-- 4-2. 푸드트럭(FOOD_TRUCK): 체크박스 -->
-            <div class="recruit-specific" data-category="FOOD_TRUCK">
-                <div class="form-check">
-                    <input type="checkbox" class="form-check-input" name="prepaid" id="prepaid" value="true"
-                           th:checked="${recruitmentCreateForm != null and recruitmentCreateForm.prepaid}">
-                    <input type="hidden" name="_prepaid" value="on">
-                    <label class="form-check-label" for="prepaid">선결제</label>
-                </div>
-                <div class="form-check">
-                    <input type="checkbox" class="form-check-input" name="boothFeeRequired" id="boothFeeRequired" value="true"
-                           th:checked="${recruitmentCreateForm != null and recruitmentCreateForm.boothFeeRequired}">
-                    <input type="hidden" name="_boothFeeRequired" value="on">
-                    <label class="form-check-label" for="boothFeeRequired">입점료</label>
-                </div>
-                <div class="form-check">
-                    <input type="checkbox" class="form-check-input" name="electricityProvided" id="electricityProvided" value="true"
-                           th:checked="${recruitmentCreateForm != null and recruitmentCreateForm.electricityProvided}">
-                    <input type="hidden" name="_electricityProvided" value="on">
-                    <label class="form-check-label" for="electricityProvided">전기제공</label>
-                </div>
-            </div>
-
-            <!-- 4-3. 장비/기타(EQUIPMENT, ETC): 업무내용에 안내 -->
-            <p class="recruit-specific recruit-specific-note" data-category="EQUIPMENT">모집하는 장비 관련 내용을 아래 업무내용에 작성해주세요.</p>
-            <p class="recruit-specific recruit-specific-note" data-category="ETC">모집 관련 세부 내용을 아래 업무내용에 작성해주세요.</p>
-
-            <!-- 6. 근무 시간 (시/분을 고른 뒤 팝오버 안의 확인 버튼으로 확정) -->
-            <div class="recruit-field recruit-field-row recruit-field-row-narrow">
-                <div class="recruit-time-field">
-                    <label for="workingStartTimeTrigger">근무 시작 시간</label>
-                    <button type="button" class="form-control recruit-time-trigger" id="workingStartTimeTrigger"
-                            th:text="${recruitmentCreateForm != null and recruitmentCreateForm.workingStartTime != null} ? ${recruitmentCreateForm.workingStartTime} : '시간을 선택하세요'">
-                        시간을 선택하세요
-                    </button>
-                    <div class="recruit-time-popover" id="workingStartTimePopover" hidden>
-                        <div class="recruit-time-selects">
-                            <select id="workingStartHour"></select>시
-                            <select id="workingStartMinute"></select>분
-                        </div>
-                        <button type="button" class="btn btn-sm btn-primary recruit-time-confirm" id="workingStartTimeConfirm">확인</button>
+                <!-- 2. 지역 선택 (시도 -> 시군구 연동) -->
+                <div class="recruit-field recruit-field-row recruit-field-row-narrow">
+                    <div>
+                        <label for="regionSidoCode">지역(시/도)</label>
+                        <select name="regionSidoCode" id="regionSidoCode" class="form-select" required>
+                            <option value="">시/도 선택</option>
+                            <option th:each="sido : ${sidoList}"
+                                    th:value="${sido.code}"
+                                    th:text="${sido.name}"
+                                    th:selected="${recruitmentCreateForm != null and sido.code == recruitmentCreateForm.regionSidoCode}"></option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="regionSigunguCode">지역(시/군/구)</label>
+                        <select name="regionSigunguCode" id="regionSigunguCode" class="form-select" required
+                                th:disabled="${sigunguList == null}">
+                            <option value="" th:if="${sigunguList == null}">시/도를 먼저 선택하세요</option>
+                            <option value="" th:if="${sigunguList != null}">시/군/구 선택</option>
+                            <option th:each="sigungu : ${sigunguList}"
+                                    th:value="${sigungu.code}"
+                                    th:text="${sigungu.name}"
+                                    th:selected="${recruitmentCreateForm != null and sigungu.code == recruitmentCreateForm.regionSigunguCode}"></option>
+                        </select>
                     </div>
                 </div>
-                <div class="recruit-time-field">
-                    <label for="workingEndTimeTrigger">근무 종료 시간</label>
-                    <button type="button" class="form-control recruit-time-trigger" id="workingEndTimeTrigger"
-                            th:text="${recruitmentCreateForm != null and recruitmentCreateForm.workingEndTime != null} ? ${recruitmentCreateForm.workingEndTime} : '시간을 선택하세요'">
-                        시간을 선택하세요
-                    </button>
-                    <div class="recruit-time-popover" id="workingEndTimePopover" hidden>
-                        <div class="recruit-time-selects">
-                            <select id="workingEndHour"></select>시
-                            <select id="workingEndMinute"></select>분
-                        </div>
-                        <button type="button" class="btn btn-sm btn-primary recruit-time-confirm" id="workingEndTimeConfirm">확인</button>
+            </section>
+
+            <section class="recruit-form-section">
+                <h2 class="recruit-form-section-title">모집 조건</h2>
+
+                <!-- 3. 모집마감 날짜 + 모집 인원 -->
+                <div class="recruit-field recruit-field-row recruit-field-row-narrow">
+                    <div>
+                        <label for="applicationDeadline">모집마감 날짜</label>
+                        <input type="date" name="applicationDeadline" id="applicationDeadline" class="form-control"
+                               th:value="${recruitmentCreateForm != null} ? ${recruitmentCreateForm.applicationDeadline} : null"
+                               th:max="${maxDeadline}" required>
+                    </div>
+                    <div>
+                        <label for="recruitmentCount">모집 인원</label>
+                        <input type="number" name="recruitmentCount" id="recruitmentCount" class="form-control" min="0" max="9999"
+                               th:value="${recruitmentCreateForm != null} ? ${recruitmentCreateForm.recruitmentCount} : null" required>
                     </div>
                 </div>
-            </div>
-            <!-- 실제 폼 전송값: 팝오버에서 확인을 눌러야 채워짐 -->
-            <input type="hidden" name="workingStartTime" id="workingStartTime"
-                   th:value="${recruitmentCreateForm != null} ? ${recruitmentCreateForm.workingStartTime} : null">
-            <input type="hidden" name="workingEndTime" id="workingEndTime"
-                   th:value="${recruitmentCreateForm != null} ? ${recruitmentCreateForm.workingEndTime} : null">
-            <p class="recruit-total-hours" id="totalHours">시간을 고른 뒤 확인 버튼을 눌러주세요.</p>
 
-            <!-- 7. 근무 일자 -->
-            <div class="recruit-field recruit-field-row recruit-field-row-narrow">
-                <div>
-                    <label for="workingStartDate">근무 시작일</label>
-                    <input type="date" name="workingStartDate" id="workingStartDate" class="form-control"
-                           th:value="${recruitmentCreateForm != null} ? ${recruitmentCreateForm.workingStartDate} : null" required>
+                <!-- 4. 모집인력 종류 -->
+                <div class="recruit-field">
+                    <label for="category">모집인력 종류</label>
+                    <select name="category" id="category" class="form-select" required>
+                        <option value="">종류를 선택하세요</option>
+                        <option value="INDIVIDUAL" th:selected="${recruitmentCreateForm != null and recruitmentCreateForm.category != null and recruitmentCreateForm.category.name() == 'INDIVIDUAL'}">알바</option>
+                        <option value="FOOD_TRUCK" th:selected="${recruitmentCreateForm != null and recruitmentCreateForm.category != null and recruitmentCreateForm.category.name() == 'FOOD_TRUCK'}">푸드트럭</option>
+                        <option value="EQUIPMENT" th:selected="${recruitmentCreateForm != null and recruitmentCreateForm.category != null and recruitmentCreateForm.category.name() == 'EQUIPMENT'}">장비</option>
+                        <option value="ETC" th:selected="${recruitmentCreateForm != null and recruitmentCreateForm.category != null and recruitmentCreateForm.category.name() == 'ETC'}">기타</option>
+                    </select>
                 </div>
-                <div>
-                    <label for="workingEndDate">근무 종료일</label>
-                    <input type="date" name="workingEndDate" id="workingEndDate" class="form-control"
-                           th:value="${recruitmentCreateForm != null} ? ${recruitmentCreateForm.workingEndDate} : null" required>
+
+                <!-- 4-1. 알바(INDIVIDUAL): 급여유형 + 급여 -->
+                <div class="recruit-field recruit-field-row recruit-specific" data-category="INDIVIDUAL">
+                    <div>
+                        <label for="wageType">급여유형</label>
+                        <select name="wageType" id="wageType" class="form-select">
+                            <option value="">급여유형 선택</option>
+                            <option value="HOURLY" th:selected="${recruitmentCreateForm != null and recruitmentCreateForm.wageType != null and recruitmentCreateForm.wageType.name() == 'HOURLY'}">시급</option>
+                            <option value="DAILY" th:selected="${recruitmentCreateForm != null and recruitmentCreateForm.wageType != null and recruitmentCreateForm.wageType.name() == 'DAILY'}">일급</option>
+                            <option value="WEEKLY" th:selected="${recruitmentCreateForm != null and recruitmentCreateForm.wageType != null and recruitmentCreateForm.wageType.name() == 'WEEKLY'}">주급</option>
+                            <option value="PER_TASK" th:selected="${recruitmentCreateForm != null and recruitmentCreateForm.wageType != null and recruitmentCreateForm.wageType.name() == 'PER_TASK'}">건당</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="wageValue">급여(원)</label>
+                        <input type="number" name="wageValue" id="wageValue" class="form-control" min="0" max="99999999"
+                               th:value="${recruitmentCreateForm != null} ? ${recruitmentCreateForm.wageValue} : null">
+                    </div>
                 </div>
-            </div>
 
-            <!-- 8. 상세근무지 -->
-            <div class="recruit-field">
-                <label for="workingLocation">상세근무지</label>
-                <input type="text" name="workingLocation" id="workingLocation" class="form-control" maxlength="255"
-                       th:value="${recruitmentCreateForm != null} ? ${recruitmentCreateForm.workingLocation} : null">
-            </div>
+                <!-- 4-2. 푸드트럭(FOOD_TRUCK): 체크박스 -->
+                <div class="recruit-specific" data-category="FOOD_TRUCK">
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input" name="prepaid" id="prepaid" value="true"
+                               th:checked="${recruitmentCreateForm != null and recruitmentCreateForm.prepaid}">
+                        <input type="hidden" name="_prepaid" value="on">
+                        <label class="form-check-label" for="prepaid">선결제</label>
+                    </div>
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input" name="boothFeeRequired" id="boothFeeRequired" value="true"
+                               th:checked="${recruitmentCreateForm != null and recruitmentCreateForm.boothFeeRequired}">
+                        <input type="hidden" name="_boothFeeRequired" value="on">
+                        <label class="form-check-label" for="boothFeeRequired">입점료</label>
+                    </div>
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input" name="electricityProvided" id="electricityProvided" value="true"
+                               th:checked="${recruitmentCreateForm != null and recruitmentCreateForm.electricityProvided}">
+                        <input type="hidden" name="_electricityProvided" value="on">
+                        <label class="form-check-label" for="electricityProvided">전기제공</label>
+                    </div>
+                </div>
 
-            <!-- 9. 모집공고 제목 -->
-            <div class="recruit-field">
-                <label for="recruitmentTitle">모집공고 제목</label>
-                <input type="text" name="recruitmentTitle" id="recruitmentTitle" class="form-control" maxlength="100"
-                       th:value="${recruitmentCreateForm != null} ? ${recruitmentCreateForm.recruitmentTitle} : null" required>
-            </div>
+                <!-- 4-3. 장비/기타(EQUIPMENT, ETC): 업무내용에 안내 -->
+                <p class="recruit-specific recruit-specific-note" data-category="EQUIPMENT">모집하는 장비 관련 내용을 아래 업무내용에 작성해주세요.</p>
+                <p class="recruit-specific recruit-specific-note" data-category="ETC">모집 관련 세부 내용을 아래 업무내용에 작성해주세요.</p>
+            </section>
 
-            <!-- 10. 업무내용 (admin_board와 동일한 Toast UI 패턴) -->
-            <div class="recruit-field">
-                <label>업무내용</label>
-                <input type="hidden" name="content" id="content">
-                <textarea id="contentSource" hidden th:text="${recruitmentCreateForm != null} ? ${recruitmentCreateForm.content} : null"></textarea>
-                <div id="editor"></div>
-            </div>
+            <section class="recruit-form-section">
+                <h2 class="recruit-form-section-title">근무 정보</h2>
 
-            <div class="d-flex justify-content-end gap-2 mt-3">
+                <!-- 6. 근무 시간 (시/분을 고른 뒤 팝오버 안의 확인 버튼으로 확정) -->
+                <div class="recruit-field recruit-field-row recruit-field-row-narrow">
+                    <div class="recruit-time-field">
+                        <label for="workingStartTimeTrigger">근무 시작 시간</label>
+                        <button type="button" class="form-control recruit-time-trigger" id="workingStartTimeTrigger"
+                                th:text="${recruitmentCreateForm != null and recruitmentCreateForm.workingStartTime != null} ? ${recruitmentCreateForm.workingStartTime} : '시간을 선택하세요'">
+                            시간을 선택하세요
+                        </button>
+                        <div class="recruit-time-popover" id="workingStartTimePopover" hidden>
+                            <div class="recruit-time-selects">
+                                <select id="workingStartHour"></select>시
+                                <select id="workingStartMinute"></select>분
+                            </div>
+                            <button type="button" class="btn btn-sm btn-primary recruit-time-confirm" id="workingStartTimeConfirm">확인</button>
+                        </div>
+                    </div>
+                    <div class="recruit-time-field">
+                        <label for="workingEndTimeTrigger">근무 종료 시간</label>
+                        <button type="button" class="form-control recruit-time-trigger" id="workingEndTimeTrigger"
+                                th:text="${recruitmentCreateForm != null and recruitmentCreateForm.workingEndTime != null} ? ${recruitmentCreateForm.workingEndTime} : '시간을 선택하세요'">
+                            시간을 선택하세요
+                        </button>
+                        <div class="recruit-time-popover" id="workingEndTimePopover" hidden>
+                            <div class="recruit-time-selects">
+                                <select id="workingEndHour"></select>시
+                                <select id="workingEndMinute"></select>분
+                            </div>
+                            <button type="button" class="btn btn-sm btn-primary recruit-time-confirm" id="workingEndTimeConfirm">확인</button>
+                        </div>
+                    </div>
+                </div>
+                <!-- 실제 폼 전송값: 팝오버에서 확인을 눌러야 채워짐 -->
+                <input type="hidden" name="workingStartTime" id="workingStartTime"
+                       th:value="${recruitmentCreateForm != null} ? ${recruitmentCreateForm.workingStartTime} : null">
+                <input type="hidden" name="workingEndTime" id="workingEndTime"
+                       th:value="${recruitmentCreateForm != null} ? ${recruitmentCreateForm.workingEndTime} : null">
+                <p class="recruit-total-hours" id="totalHours">시간을 고른 뒤 확인 버튼을 눌러주세요.</p>
+
+                <!-- 7. 근무 일자 -->
+                <div class="recruit-field recruit-field-row recruit-field-row-narrow">
+                    <div>
+                        <label for="workingStartDate">근무 시작일</label>
+                        <input type="date" name="workingStartDate" id="workingStartDate" class="form-control"
+                               th:value="${recruitmentCreateForm != null} ? ${recruitmentCreateForm.workingStartDate} : null" required>
+                    </div>
+                    <div>
+                        <label for="workingEndDate">근무 종료일</label>
+                        <input type="date" name="workingEndDate" id="workingEndDate" class="form-control"
+                               th:value="${recruitmentCreateForm != null} ? ${recruitmentCreateForm.workingEndDate} : null" required>
+                    </div>
+                </div>
+
+                <!-- 8. 상세근무지 -->
+                <div class="recruit-field">
+                    <label for="workingLocation">상세근무지</label>
+                    <input type="text" name="workingLocation" id="workingLocation" class="form-control" maxlength="255"
+                           th:value="${recruitmentCreateForm != null} ? ${recruitmentCreateForm.workingLocation} : null">
+                </div>
+            </section>
+
+            <section class="recruit-form-section">
+                <h2 class="recruit-form-section-title">공고 내용</h2>
+
+                <!-- 9. 모집공고 제목 -->
+                <div class="recruit-field">
+                    <label for="recruitmentTitle">모집공고 제목</label>
+                    <input type="text" name="recruitmentTitle" id="recruitmentTitle" class="form-control" maxlength="100"
+                           th:value="${recruitmentCreateForm != null} ? ${recruitmentCreateForm.recruitmentTitle} : null" required>
+                </div>
+
+                <!-- 10. 업무내용 (admin_board와 동일한 Toast UI 패턴) -->
+                <div class="recruit-field">
+                    <label>업무내용</label>
+                    <input type="hidden" name="content" id="content">
+                    <textarea id="contentSource" hidden th:text="${recruitmentCreateForm != null} ? ${recruitmentCreateForm.content} : null"></textarea>
+                    <div id="editor"></div>
+                </div>
+            </section>
+
+            <div class="recruit-form-actions">
                 <a th:href="@{/recruitment/manage}" class="btn btn-outline-secondary">취소</a>
-                <button type="submit" id="btn" class="btn btn-primary">등록</button>
+                <button type="submit" id="btn" class="btn btn-primary recruit-submit-btn">등록</button>
             </div>
 
         </form>
