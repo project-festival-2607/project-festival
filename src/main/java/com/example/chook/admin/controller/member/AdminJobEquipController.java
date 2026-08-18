@@ -1,13 +1,14 @@
-package com.example.chook.admin.controller;
+package com.example.chook.admin.controller.member;
 
-import com.example.chook.admin.condition.JobSeekerSearchCondition;
-import com.example.chook.admin.dto.JobSeekerTableDTO;
+import com.example.chook.admin.condition.member.JobEquipSearchCondition;
+import com.example.chook.admin.dto.member.JobEquipTableDTO;
 import com.example.chook.admin.entity.enums.DateRangeAutofillOption;
-import com.example.chook.admin.entity.enums.jobseeker.JobSeekerDateRangeType;
-import com.example.chook.admin.entity.enums.jobseeker.JobSeekerKeywordType;
-import com.example.chook.admin.form.JobSeekerSearchForm;
+import com.example.chook.admin.entity.enums.jobequip.JobEquipDateRangeType;
+import com.example.chook.admin.entity.enums.jobequip.JobEquipKeywordType;
+import com.example.chook.admin.form.member.JobSeekerSearchForm;
+import com.example.chook.admin.form.member.RecruiterSearchForm;
 import com.example.chook.admin.provider.AdminMemberInfoFieldProvider;
-import com.example.chook.admin.service.AdminService;
+import com.example.chook.admin.service.AdminMemberService;
 import com.example.chook.common.handler.PagingHandler;
 import com.example.chook.member.entity.enums.Gender;
 import com.example.chook.member.entity.enums.MemberStatus;
@@ -26,47 +27,47 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.util.List;
 
 @Controller
-@RequestMapping("/admin/member/job-seeker")
+@RequestMapping("/admin/member/job-equip")
 @RequiredArgsConstructor
 @Slf4j
-public class AdminJobSeekerController {
+public class AdminJobEquipController {
 
   private static final int PAGINATION_SIZE = 10;
-  private final AdminService adminService;
+  private final AdminMemberService adminMemberService;
   private final AdminMemberInfoFieldProvider infoFieldProvider;
 
   @GetMapping
-  public void loadJobSeekerPage(
+  public void loadJobEquipPage(
     Model model,
-    @Valid @ModelAttribute JobSeekerSearchForm form
+    @Valid @ModelAttribute RecruiterSearchForm form
   ) {
     model.addAttribute("form", form);
-    model.addAttribute("keywordOptions", List.of(JobSeekerKeywordType.values()));
-    model.addAttribute("dateRangeOptions", List.of(JobSeekerDateRangeType.values()));
+    model.addAttribute("keywordOptions", List.of(JobEquipKeywordType.values()));
+    model.addAttribute("dateRangeOptions", List.of(JobEquipDateRangeType.values()));
     model.addAttribute("dateRangeAutofillOptions", List.of(DateRangeAutofillOption.values()));
 
     model.addAttribute("suspendMemberInfo", infoFieldProvider.suspend());
     model.addAttribute("unsuspendMemberInfo", infoFieldProvider.unsuspend());
     model.addAttribute("removePhoneVerificationInfo", infoFieldProvider.removePhoneVerification());
     model.addAttribute("addPhoneWithVerificationInfo", infoFieldProvider.addPhoneWithVerification());
-    model.addAttribute("addBusinessRegistrationInfo", infoFieldProvider.addBusinessRegistration());
+    model.addAttribute("removeBusinessRegistrationInfo", infoFieldProvider.removeBusinessRegistration());
   }
 
   @GetMapping("/result")
-  public String getJobSeekerResultFragment(
+  public String getJobEquipResultFragment(
     Model model,
     @RequestParam(name = "pageIdx", required = false, defaultValue = "1") int pageIdx,
     @RequestParam(name = "pageSize", required = false, defaultValue = "10") int pageSize,
     @Valid @ModelAttribute JobSeekerSearchForm form
   ) {
 
-    JobSeekerSearchCondition condition = JobSeekerSearchCondition.from(form);
+    JobEquipSearchCondition condition = JobEquipSearchCondition.from(form);
     log.info("condition: {}", condition);
-    Page<JobSeekerTableDTO> page = adminService.getJobSeekerPage(pageIdx, pageSize, condition);
+    Page<JobEquipTableDTO> page = adminMemberService.getJobEquipPage(pageIdx, pageSize, condition);
 
     model.addAttribute("page", page);
     model.addAttribute("pageSize", pageSize);
-    PagingHandler<JobSeekerTableDTO, JobSeekerSearchForm> pagingHandler =
+    PagingHandler<JobEquipTableDTO, JobSeekerSearchForm> pagingHandler =
       new PagingHandler<>(page, form, PAGINATION_SIZE, pageIdx);
     model.addAttribute("pagingHandler", pagingHandler);
     model.addAttribute("pageSizeOptions", List.of(10, 30, 50));
@@ -78,7 +79,7 @@ public class AdminJobSeekerController {
 
     log.info("form: {}", form);
     log.info("model: {}", model);
-    return "admin/member/fragments/result/job-seeker";
+    return "admin/member/fragments/result/job-equip";
   }
 
 }

@@ -1,3 +1,5 @@
+/* ==================== HEADER ==================== */
+
 :root {
   --theme-main-color: var(--bs-dark);
   --theme-main-color-rgb: var(--bs-dark-rgb);
@@ -12,9 +14,9 @@ ul.submenu {
   gap: 4px;
 }
 
-.member-gender-filter,
-.member-provider-filter,
-.member-status-clear-filter {
+/* ==================== BADGE ==================== */
+
+.badge.general {
   background-color: #fafafa;
   color: var(--bs-secondary-color);
   font-weight: 500;
@@ -39,6 +41,18 @@ ul.submenu {
   background-color: #625B62;
   color: #fff;
 }
+
+.inquiry-replied {
+  background-color: var(--bs-success);
+  color: #fff;
+}
+
+.inquiry-not-replied {
+  background-color: var(--bs-secondary);
+  color: #fff;
+}
+
+/* ==================== MISCELLANEOUS ==================== */
 
 .alert-icon {
   width: 1rem;

@@ -1,6 +1,6 @@
 package com.example.chook.admin.mapper;
 
-import com.example.chook.admin.dto.SocialLoginDTO;
+import com.example.chook.admin.dto.member.SocialLoginDTO;
 import com.example.chook.member.entity.SocialLogin;
 import org.springframework.stereotype.Component;
 

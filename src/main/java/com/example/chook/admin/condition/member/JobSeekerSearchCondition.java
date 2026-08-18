@@ -1,11 +1,11 @@
-package com.example.chook.admin.condition;
+package com.example.chook.admin.condition.member;
 
 import com.example.chook.admin.entity.enums.KeywordCriteria;
 import com.example.chook.admin.entity.enums.MemberStatusFilter;
 import com.example.chook.admin.entity.enums.jobseeker.JobSeekerDateRangeType;
 import com.example.chook.admin.entity.enums.jobseeker.JobSeekerKeywordType;
 import com.example.chook.admin.entity.enums.jobseeker.JobSeekerSortCriteria;
-import com.example.chook.admin.form.JobSeekerSearchForm;
+import com.example.chook.admin.form.member.JobSeekerSearchForm;
 import com.example.chook.member.entity.enums.Gender;
 import com.example.chook.member.entity.enums.Provider;
 import lombok.Builder;

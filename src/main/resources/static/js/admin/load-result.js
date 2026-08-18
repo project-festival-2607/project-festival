@@ -3,11 +3,12 @@ document.querySelector('#form').addEventListener('submit', event => {
 
   if (event.submitter?.classList.contains('page-link')) {
     document.getElementById('pageIdx').value = event.submitter.value;
+  } else {
+    document.getElementById('pageIdx').value = 1;
   }
 
   if (event.submitter?.classList.contains('page-size-li')) {
     console.log("PAGE SIZE LI");
-    document.getElementById('pageIdx').value = 1;
     document.getElementById('pageSize').value = event.submitter.value;
   }
 
@@ -19,6 +20,11 @@ document.querySelector('button[data-role="reset-search-form"]').addEventListener
   document.querySelector('#form').querySelectorAll('input[type="hidden"]').forEach(element => {
     element.value = '';
   })
+  document.querySelector('.admin-search-form').querySelectorAll('input').forEach(element => {
+    element.value = '';
+  })
+  updateCurrentKeywordType();
+  updateDateRangeTypeAndToggleInputType();
 })
 
 function getPageUrl(baseUrl, {reset=false, forceParams} = {}) {

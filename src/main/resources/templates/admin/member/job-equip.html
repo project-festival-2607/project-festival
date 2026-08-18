@@ -16,12 +16,12 @@
           th:action="@{/admin/member/job-equip}">
       <div class="mb-3">
         <div class="admin-search-form">
-          <th:block th:replace="~{admin/member/fragments/search-form :: keyword(
+          <th:block th:replace="~{admin/fragments/search-form :: keyword(
             ${keywordOptions}, ${form})}"></th:block>
-          <th:block th:replace="~{admin/member/fragments/search-form ::date-range(
+          <th:block th:replace="~{admin/fragments/search-form ::date-range(
             ${dateRangeOptions}, ${dateRangeAutofillOptions}, ${form})}"></th:block>
         </div>
-        <th:block th:replace="~{admin/member/fragments/search-form :: search-buttons}"></th:block>
+        <th:block th:replace="~{admin/fragments/search-form :: search-buttons}"></th:block>
       </div>
       <div id="result">
       </div>
@@ -138,10 +138,10 @@
       </div>
     </div>
   </div>
-  <script th:src="@{/js/admin/member/member.js}"></script>
-  <script th:src="@{/js/admin/member/get-result.js}"></script>
-  <script th:src="@{/js/admin/member/table-th-filter.js}"></script>
-  <script th:src="@{/js/admin/member/member-modal.js}"></script>
+  <script th:src="@{/js/admin/initialize-search-form.js}"></script>
+  <script th:src="@{/js/admin/load-result.js}"></script>
+  <script th:src="@{/js/admin/table-th-filter.js}"></script>
+  <script th:src="@{/js/admin/member/modal.js}"></script>
   <script>
     loadResult(window.location.pathname, {forceParams: new URLSearchParams(window.location.search)});
   </script>

@@ -5,16 +5,17 @@
 
 <span th:fragment="member-status(status, deleted, clearFilter)"
       class="badge rounded-pill"
-      th:classappend="${clearFilter ? 'member-status-clear-filter' : (deleted ? 'member-status-deleted' : status.badgeClass)}"
+      th:classappend="${clearFilter ? 'general' : (deleted ? 'member-status-deleted' : status.badgeClass)}"
       th:text="${clearFilter ? '전체' : (deleted ? '탈퇴' : status.label)}">
 </span>
 
-<span th:fragment="member-provider(label)"
-      class="badge rounded-pill member-provider-filter"
+<span th:fragment="general(label)"
+      class="badge rounded-pill general"
       th:text="${label}">
 </span>
 
-<span th:fragment="member-gender(label)"
-      class="badge rounded-pill member-gender-filter"
-      th:text="${label}">
+<span th:fragment="inquiry-reply-status(replyStatus)"
+      class="badge rounded-pill"
+      th:classappend="${replyStatus.badgeClass}"
+      th:text="${(replyStatus.label)}">
 </span>

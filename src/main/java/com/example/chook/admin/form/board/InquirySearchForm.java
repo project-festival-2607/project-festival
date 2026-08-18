@@ -1,11 +1,11 @@
-package com.example.chook.admin.form;
+package com.example.chook.admin.form.board;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import static com.example.chook.common.util.CustomStringUtils.blankToNull;
 
-public record JobSeekerSearchForm(
+public record InquirySearchForm(
 
   // 공통 검색 폼
   String keywordType,
@@ -14,13 +14,11 @@ public record JobSeekerSearchForm(
   String dateRangeType,
   LocalDateTime startDateTime,
   LocalDateTime endDateTime,
-  LocalDate startDate,
-  LocalDate endDate,
+  LocalDate startDate,    // 여기에서는 사용되지 않으나 호환을 위해 삽입
+  LocalDate endDate,      // 여기에서는 사용되지 않으나 호환을 위해 삽입
 
   // 테이블 상단 필터
-  String status,
-  String gender,
-  String provider,
+  String replyStatus,
 
   // 테이블 상단 정렬
   String sortCriteria,
@@ -28,15 +26,13 @@ public record JobSeekerSearchForm(
 
 ) {
 
-  public JobSeekerSearchForm {
+  public InquirySearchForm {
 
     keywordType = blankToNull(keywordType);
     keywords = blankToNull(keywords);
     keywordCriteria = blankToNull(keywordCriteria);
     dateRangeType = blankToNull(dateRangeType);
-    status = blankToNull(status);
-    gender = blankToNull(gender);
-    provider = blankToNull(provider);
+    replyStatus = blankToNull(replyStatus);
     sortCriteria = blankToNull(sortCriteria);
 
   }

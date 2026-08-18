@@ -4,18 +4,52 @@
 
 const currentKeywordType = document.getElementById('currentKeywordType');
 const keywordType = document.getElementById('keywordType');
-const keywordCriteriaEqualsGroup = document.getElementById('keywordCriteriaEqualsGroup');
+
+const keywordCriteriaAllWordsContainsGroup = document.getElementById('keywordCriteriaAllWordsContainsGroup');
+const keywordCriteriaPhraseContainsGroup = document.getElementById('keywordCriteriaPhraseContainsGroup');
+const keywordCriteriaExactGroup = document.getElementById('keywordCriteriaExactGroup');
 
 function updateCurrentKeywordType() {
 
   let keywordTypeValue = keywordType.value;
   if (!keywordTypeValue) keywordTypeValue = 'ALL';
 
-  const selected = document.querySelector(`.keyword-type-li[data-value="${keywordTypeValue}"]`);
-  currentKeywordType.textContent = selected.textContent;
-  const exactMatchSupported = selected.dataset.exactMatchSupported === 'true';
-  if (!exactMatchSupported) document.getElementById('keywordCriteriaContains').click();
-  keywordCriteriaEqualsGroup.classList.toggle('d-none', !exactMatchSupported);
+  const selectedKeywordElem = document.querySelector(`.keyword-type-li[data-value="${keywordTypeValue}"]`);
+  currentKeywordType.textContent = selectedKeywordElem.textContent;
+
+  let previousGroup;
+  [keywordCriteriaAllWordsContainsGroup, keywordCriteriaPhraseContainsGroup, keywordCriteriaExactGroup].forEach(group => {
+    group.classList.add('d-none');
+    if (group.querySelector('input').checked) previousGroup = group;
+  })
+
+  console.log(selectedKeywordElem);
+  console.log(selectedKeywordElem.dataset.supportedCriteria);
+
+  let lastVisibleGroup;
+
+  const supportedCriteria = selectedKeywordElem.dataset.supportedCriteria.split(',');
+  supportedCriteria.forEach(criteria => {
+    switch (criteria) {
+      case 'ALL_WORDS_CONTAINS' :
+        keywordCriteriaAllWordsContainsGroup.classList.remove('d-none');
+        lastVisibleGroup = keywordCriteriaAllWordsContainsGroup;
+        break;
+      case 'PHRASE_CONTAINS' :
+        keywordCriteriaPhraseContainsGroup.classList.remove('d-none');
+        lastVisibleGroup = keywordCriteriaPhraseContainsGroup;
+        break;
+      case 'EXACT' :
+        keywordCriteriaExactGroup.classList.remove('d-none');
+        lastVisibleGroup = keywordCriteriaExactGroup;
+        break;
+    }
+  })
+  if (previousGroup.classList.contains('d-none')) {
+    lastVisibleGroup.querySelector('input').click();
+  }
+
+
 }
 
 document.getElementById('keywordTypeDropdownList').addEventListener('click', (event) => {
@@ -74,7 +108,7 @@ startDate.addEventListener('change', () => {
   startDateTime.value = `${startDate.value}T00:00`;
 })
 endDate.addEventListener('change', () => {
-  endDateTime.value =`${endDate.value}T23:59`;
+  endDateTime.value = `${endDate.value}T23:59`;
 })
 
 //  ###############################################

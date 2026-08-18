@@ -1,12 +1,12 @@
 package com.example.chook.admin.service;
 
-import com.example.chook.admin.condition.JobEquipSearchCondition;
-import com.example.chook.admin.condition.JobSeekerSearchCondition;
-import com.example.chook.admin.condition.RecruiterSearchCondition;
-import com.example.chook.admin.dto.JobEquipTableDTO;
-import com.example.chook.admin.dto.JobSeekerTableDTO;
-import com.example.chook.admin.dto.JobSeekerTableDTOBase;
-import com.example.chook.admin.dto.RecruiterTableDTO;
+import com.example.chook.admin.condition.member.JobEquipSearchCondition;
+import com.example.chook.admin.condition.member.JobSeekerSearchCondition;
+import com.example.chook.admin.condition.member.RecruiterSearchCondition;
+import com.example.chook.admin.dto.member.JobEquipTableDTO;
+import com.example.chook.admin.dto.member.JobSeekerTableDTO;
+import com.example.chook.admin.dto.member.JobSeekerTableDTOBase;
+import com.example.chook.admin.dto.member.RecruiterTableDTO;
 import com.example.chook.admin.mapper.AdminMapper;
 import com.example.chook.admin.repository.AdminMemberRepository;
 import com.example.chook.member.entity.BusinessRegistration;
@@ -37,7 +37,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Service
 @Slf4j
-public class AdminServiceImpl implements AdminService {
+public class AdminMemberServiceImpl implements AdminMemberService {
 
   private final AdminMemberRepository adminMemberRepository;
   private final AdminMapper adminMapper;
