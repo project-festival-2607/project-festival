@@ -86,9 +86,13 @@
         </td>
         <!--  태그 달아서 답변 작성 페이지로  -->
         <td>
-          <a class="fw-medium" data-field="title"
-             th:href="@{/notice/detail/{bno}(bno=${notice.bno})}"
-             th:text="${notice.title}"></a>
+          <a class="fw-medium text-ellipsis-with-suffix gap-1" target="_blank"
+             th:href="@{/notice/detail/{bno}(bno=${notice.bno})}">
+            <span class="ellipsis-main" data-field="title" th:text="${notice.title}"></span>
+            <span class="ellipsis-suffix">
+              <th:block th:replace="~{admin/fragments/svg :: new-window('new-window-icon')}"></th:block>
+            </span>
+          </a>
         </td>
         <td data-field="createdAt" th:text="${#temporals.format(notice.createdAt, 'yyyy.MM.dd. HH:mm')}"></td>
         <td class="center bg-body-secondary">

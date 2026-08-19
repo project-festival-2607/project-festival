@@ -17,7 +17,7 @@ ul.submenu {
 /* ==================== BADGE ==================== */
 
 .badge {
-  font-weight: 500;
+  font-weight: 500 !important;
   color: #fff;
 }
 
@@ -148,9 +148,12 @@ a[data-bs-toggle="tooltip"] {
   justify-content: center;
 }
 
+.min-width-0 {
+  min-width: 0;
+}
+
 .text-ellipsis-with-suffix {
   display: flex;
-  justify-content: space-between;
   align-items: center;
   min-width: 0;
 }
@@ -164,4 +167,9 @@ a[data-bs-toggle="tooltip"] {
 
 .ellipsis-suffix {
   flex-shrink: 0;
+}
+
+.new-window-icon {
+  width: 10px;
+  height: 10px;
 }
