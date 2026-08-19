@@ -15,4 +15,7 @@ public interface ApplicationRepository extends JpaRepository<Application, Long> 
 
     // 같은 공고에 이미 지원했는지 확인 (applypage Zone)
     boolean existsByMemberIdAndRecruitmentId(Long memberId, Long recruitmentId);
+
+    // 지원 이력 존재 여부 확인(applypage Zone)
+    boolean existsByResumeId(Long resumeId);
 }

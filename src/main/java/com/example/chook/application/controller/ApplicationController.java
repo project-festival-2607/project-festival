@@ -35,7 +35,7 @@ public class ApplicationController {
     private final MemberRepository memberRepository;
     private final FileService fileService;
 
-    // 지원하기 기능
+    // 지원하기 기능 (applypage Zone)
     @PostMapping("/apply")
     public String apply (ApplicationDTO applicationDTO){
         applicationService.apply(applicationDTO);

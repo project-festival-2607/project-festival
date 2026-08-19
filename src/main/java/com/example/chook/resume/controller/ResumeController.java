@@ -24,6 +24,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import com.example.chook.member.entity.Member;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.nio.charset.StandardCharsets;
 import java.util.UUID;
@@ -204,11 +205,24 @@ public class ResumeController {
     // 이력서 삭제
     @PostMapping("/delete")
     public String delete(
-            @RequestParam Long resumeId
-    ){
-        resumeService.delete(resumeId);
+            @RequestParam Long resumeId,
+            RedirectAttributes redirectAttributes
+    ) {
+        try {
+            resumeService.delete(resumeId);
+            redirectAttributes.addFlashAttribute(
+                    "message",
+                    "이력서가 삭제되었습니다."
+            );
 
-        return "redirect:/";
+        } catch (IllegalStateException e) {
+            redirectAttributes.addFlashAttribute(
+                    "message",
+                    "이미 지원한 이력서는 삭제할 수 없습니다."
+            );
+        }
+
+        return "redirect:/resume/manage";
     }
 
     // 이력서 파일 조회 (프로필/첨부파일)
