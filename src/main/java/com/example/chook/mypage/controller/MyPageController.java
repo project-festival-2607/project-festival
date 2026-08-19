@@ -191,6 +191,43 @@ public class MyPageController {
         return "mypage/recruiter/ongoing";
     }
 
+    // 행사 진행중 상황
+    @GetMapping("/recruiter/festival-ongoing")
+    public String ongoingFestivals(
+            @AuthenticationPrincipal UserDetails user,
+            Model model) {
+
+        if (user == null) {
+            return "redirect:/member/login";
+        }
+        String username = user.getUsername();
+
+        MyPageDTO myPageDTO = myPageService.getMyPage(username);
+        // 구인자만 접근 가능
+        if (myPageDTO.getRole() != MemberRole.RECRUITER) {
+            return "redirect:/";
+        }
+        // 구인자가 등록한 행사 조회
+        List<Festival> festivals = festivalRepository.findByMember_Username(username);
+
+        // 현재 진행 중인 행사
+        List<Festival> ongoingFestivals = new java.util.ArrayList<>();
+
+        LocalDate today = LocalDate.now();
+
+        for (Festival festival : festivals) {
+            // 행사 시작일 <= 오늘 <= 행사 종료일
+            if (!today.isBefore(festival.getStartDate())
+                    && !today.isAfter(festival.getEndDate())) {
+                ongoingFestivals.add(festival);
+            }
+        }
+        model.addAttribute("myPageDTO", myPageDTO);
+        model.addAttribute("festivals", ongoingFestivals);
+
+        return "mypage/recruiter/festival-ongoing";
+    }
+
     // 비밀번호 확인 페이지
     @GetMapping("/password-check")
     public String passwordCheckForm(@AuthenticationPrincipal CustomUserDetails userDetails, Model model) {

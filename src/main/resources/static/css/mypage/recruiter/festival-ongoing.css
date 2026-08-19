@@ -1,0 +1,79 @@
+/* 제목 */
+.container h1 {
+    margin: 0 0 30px;
+    font-size: 30px;
+    font-weight: 700;
+}
+
+/* 행사 카드 */
+.festival-card {
+    border: 1px solid #e5e5e5;
+    border-radius: 12px;
+    padding: 25px;
+    margin-bottom: 20px;
+    background-color: #ffffff;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+}
+
+/* 행사 제목 + 진행 상태 */
+.festival-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #eeeeee;
+}
+
+.festival-header h2 {
+    margin: 0;
+    font-size: 22px;
+    font-weight: 700;
+}
+
+/* 진행 중 표시 */
+.ongoing-status {
+    flex-shrink: 0;
+    padding: 7px 14px;
+    border-radius: 20px;
+    background-color: #e8f7ee;
+    color: #1f9d55;
+    font-size: 14px;
+}
+
+/* 행사 정보 */
+.festival-info {
+    margin-top: 20px;
+}
+
+/* 정보 한 줄 */
+.info-item {
+    display: flex;
+    align-items: center;
+    padding: 10px 0;
+    font-size: 15px;
+    color: #555555;
+}
+
+/* 정보 제목 */
+.info-item .label {
+    width: 100px;
+    flex-shrink: 0;
+    font-weight: 600;
+    color: #333333;
+}
+
+/* 진행 중 행사가 없는 경우 */
+.empty-message {
+    padding: 60px 20px;
+    text-align: center;
+    border: 1px solid #eeeeee;
+    border-radius: 12px;
+    background-color: #fafafa;
+    color: #777777;
+}
+
+.empty-message p {
+    margin: 0;
+    font-size: 16px;
+}
