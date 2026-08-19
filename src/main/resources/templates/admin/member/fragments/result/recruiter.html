@@ -198,25 +198,25 @@
               </button>
             </li>
             <li th:if="${recruiter.phoneVerified}">
-              <button class="dropdown-item date-range-criteria-li" data-bs-target="#removePhoneVerificationModal"
+              <button class="dropdown-item" data-bs-target="#removePhoneVerificationModal"
                       data-bs-toggle="modal"
                       data-role="removePhoneVerification" type="button">휴대전화번호 인증 삭제
               </button>
             </li>
             <li th:unless="${recruiter.phoneVerified}">
-              <button class="dropdown-item date-range-criteria-li" data-bs-target="#addPhoneWithVerificationModal"
+              <button class="dropdown-item" data-bs-target="#addPhoneWithVerificationModal"
                       data-bs-toggle="modal"
                       data-role="addPhoneWithVerification" type="button">휴대전화번호 인증 추가
               </button>
             </li>
             <li th:if="${recruiter.businessNumberVerifiedAt ne null}">
-              <button class="dropdown-item date-range-criteria-li" data-bs-target="#removeBusinessRegistrationModal"
+              <button class="dropdown-item" data-bs-target="#removeBusinessRegistrationModal"
                       data-bs-toggle="modal"
                       data-role="removePhoneVerification" type="button">사업자등록번호 인증 삭제
               </button>
             </li>
             <li th:if="${recruiter.businessNumberVerifiedAt eq null}">
-              <button class="dropdown-item date-range-criteria-li" data-bs-target="#addBusinessRegistrationModal"
+              <button class="dropdown-item" data-bs-target="#addBusinessRegistrationModal"
                       data-bs-toggle="modal"
                       data-role="addPhoneWithVerification" type="button">사업자등록번호 인증 추가
               </button>

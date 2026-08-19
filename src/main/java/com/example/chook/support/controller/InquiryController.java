@@ -88,19 +88,6 @@ public class InquiryController {
         return "inquiry/detail";
     }
 
-    @GetMapping("/admin/detail/{ino}")
-    public String adminDetail(@PathVariable Long ino, Model model) {
-        model.addAttribute("inquiry", inquiryService.getDetail(ino));
-        return "admin/board/adminDetail";
-    }
-
-    @PostMapping("/admin/answer/{ino}")
-    public String answer(@PathVariable Long ino, @RequestParam String comment) {
-        Inquiry answered = inquiryService.answer(ino, comment);
-        log.info("inquiry answered: {}", answered);
-        return "redirect:/admin/board/inquiry";
-    }
-
     @GetMapping("/file/{uuid}/download")
     @ResponseBody
     public ResponseEntity<Resource> downloadFile(@PathVariable UUID uuid) {

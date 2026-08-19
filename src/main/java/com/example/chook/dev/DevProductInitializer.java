@@ -21,7 +21,7 @@ public class DevProductInitializer {
 
     log.info("테스트용 상품 데이터 삽입 시작");
 
-    List<Integer> values = List.of(5000, 10000, 20000);
+    List<Integer> values = List.of(1000, 5000, 10000, 20000, 40000);
     for (Integer value : values) {
       productRepository.save(Product.builder()
         .pointGet(value)

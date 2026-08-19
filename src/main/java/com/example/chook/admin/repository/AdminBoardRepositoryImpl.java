@@ -1,13 +1,16 @@
 package com.example.chook.admin.repository;
 
 import com.example.chook.admin.condition.board.InquirySearchCondition;
+import com.example.chook.admin.condition.board.NoticeSearchCondition;
 import com.example.chook.admin.dto.board.AdminInquiryTableDTO;
+import com.example.chook.admin.dto.board.AdminNoticeTableDTO;
 import com.example.chook.admin.entity.enums.KeywordCriteria;
 import com.example.chook.admin.entity.enums.inquiry.InquiryDateRangeType;
 import com.example.chook.admin.entity.enums.inquiry.InquiryKeywordType;
 import com.example.chook.admin.entity.enums.inquiry.InquiryReplyStatus;
 import com.example.chook.admin.entity.enums.inquiry.InquirySortCriteria;
-import com.example.chook.member.entity.enums.MemberRole;
+import com.example.chook.admin.entity.enums.notice.NoticeDateRangeType;
+import com.example.chook.admin.entity.enums.notice.NoticeSortCriteria;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
@@ -24,6 +27,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +38,7 @@ import static com.example.chook.admin.util.KeywordUtils.getOrderSpecifier;
 import static com.example.chook.common.util.QuerydslUtils.*;
 import static com.example.chook.member.entity.QMember.member;
 import static com.example.chook.support.entity.QInquiry.inquiry;
+import static com.example.chook.support.entity.QNotice.notice;
 
 @Repository
 @Slf4j
@@ -88,6 +93,53 @@ public class AdminBoardRepositoryImpl implements AdminBoardRepository {
     List<AdminInquiryTableDTO> content = resultQuery
       .where(whereCondition)
       .orderBy(getInquiryOrderSpecifierArray(condition.sortCriteria(), condition.ascending()))
+      .offset(pageable.getOffset())
+      .limit(pageable.getPageSize())
+      .fetch();
+
+    Long total = countQuery
+      .where(whereCondition)
+      .fetchOne();
+
+    return new PageImpl<>(
+      content,
+      pageable,
+      total != null ? total : 0
+    );
+
+  }
+
+  @Override
+  public Page<AdminNoticeTableDTO> getNoticeListPage(Pageable pageable, NoticeSearchCondition condition) {
+
+    JPAQuery<AdminNoticeTableDTO> resultQuery;
+    resultQuery = this.jpaQueryFactory.select(Projections.fields(
+
+        AdminNoticeTableDTO.class,
+
+        notice.bno,
+        notice.title,
+        notice.createdAt,
+        notice.highlight
+
+      ))
+      .from(notice);
+
+    JPAQuery<Long> countQuery = jpaQueryFactory
+      .select(notice.count())
+      .from(notice);
+
+    BooleanBuilder whereCondition = new BooleanBuilder()
+      .and(eq(notice.highlight, condition.highlight()))
+      .and(applyNoticeDateRangeFilter(
+        condition.dateRangeType(),
+        condition.startDate(),
+        condition.endDate()
+      ));
+
+    List<AdminNoticeTableDTO> content = resultQuery
+      .where(whereCondition)
+      .orderBy(getNoticeOrderSpecifierArray(condition.sortCriteria(), condition.ascending()))
       .offset(pageable.getOffset())
       .limit(pageable.getPageSize())
       .fetch();
@@ -171,6 +223,27 @@ public class AdminBoardRepositoryImpl implements AdminBoardRepository {
     return result;
   }
 
+  private BooleanBuilder applyNoticeDateRangeFilter(NoticeDateRangeType dateRangeType,
+                                                    LocalDate startDate,
+                                                    LocalDate endDate) {
+
+    if (dateRangeType == null) return null;
+
+    BooleanBuilder result = new BooleanBuilder();
+    LocalDateTime startDateTime = startDate.atStartOfDay();
+    LocalDateTime endDateTimeExclusive = endDate.plusDays(1).atStartOfDay();
+
+    switch (dateRangeType) {
+      case CREATED_AT -> {
+        result.and(goe(notice.createdAt, startDateTime));
+        result.and(lt(notice.createdAt, endDateTimeExclusive));
+      }
+      // 이 경우에 속하지 않는 경우 날짜 기준 필터를 사용하지 않음
+    }
+
+    return result;
+  }
+
 
   // #################### 테이블 상단 필터 적용 메서드 ####################
 
@@ -204,6 +277,19 @@ public class AdminBoardRepositoryImpl implements AdminBoardRepository {
       }
     }
     orderSpecifiers.add(new OrderSpecifier<>(Order.ASC, inquiry.ino));
+    return orderSpecifiers.toArray(new OrderSpecifier[0]);
+  }
+
+  private OrderSpecifier<?>[] getNoticeOrderSpecifierArray(NoticeSortCriteria sortCriteria,
+                                                           Boolean ascending) {
+    List<OrderSpecifier<?>> orderSpecifiers = new ArrayList<>();
+    if (sortCriteria != null) {
+      Order order = ascending ? Order.ASC : Order.DESC;
+      switch (sortCriteria) {
+        case CREATED_AT -> orderSpecifiers.addAll(getOrderSpecifier(order, notice.createdAt));
+      }
+    }
+    orderSpecifiers.add(new OrderSpecifier<>(Order.ASC, notice.bno));
     return orderSpecifiers.toArray(new OrderSpecifier[0]);
   }
 }

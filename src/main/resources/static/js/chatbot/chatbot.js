@@ -58,16 +58,34 @@ sendBtn.addEventListener("click", async () => {
     // 서버 응답 받기
     const data = await response.json();
 
-    // AI 응답 받기
+    console.log("서버 응답:", data);
+
+    if (!response.ok) {
+        console.error("서버 오류:", data);
+        chatBody.innerHTML += `
+        <p>
+            🤖 잠시 후 다시 시도해주세요.
+        </p>
+    `;
+        return;
+    }
+    if (!data.choices || !data.choices[0]) {
+        console.error("AI 응답 형식 오류:", data);
+        chatBody.innerHTML += `
+        <p>
+            🤖 AI 응답을 받아오지 못했습니다.
+        </p>
+    `;
+        return;
+    }
     let answer = data.choices[0].message.content;
 
-    // AI 답변 출력
-    answer = answer.replace(/\n/g, "<br>");
-    chatBody.innerHTML +=
-        `
-        <p>
-            🤖 ${answer}
-        </p>
-        `;
-    console.log("사용자 질문:", question);
+    const formattedAnswer = answer.replace(/\n/g, '<br>');
+
+    chatBody.innerHTML += `
+    <p>
+        🤖 ${formattedAnswer}
+    </p>
+`;
+    chatBody.scrollTop = chatBody.scrollHeight;
 });

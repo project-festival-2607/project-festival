@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @Builder
 public class SocialLoginDTO {
 
-  Provider provider;
-  LocalDateTime linkedAt;
+  private Provider provider;
+  private LocalDateTime linkedAt;
 
 }

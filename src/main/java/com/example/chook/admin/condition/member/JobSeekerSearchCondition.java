@@ -45,10 +45,14 @@ public record JobSeekerSearchCondition(
 
   public static JobSeekerSearchCondition from(JobSeekerSearchForm form) {
 
+    JobSeekerKeywordType keywordType = toEnum(form.keywordType(), JobSeekerKeywordType.class, null);
+    KeywordCriteria keywordCriteria = getKeywordCriteria(keywordType, form.keywordCriteria());
+    List<String> keywordList = getKeywordList(form.keywords(), keywordCriteria);
+
     return JobSeekerSearchCondition.builder()
-      .keywordType(toEnum(form.keywordType(), JobSeekerKeywordType.class, null))
-      .keywordList(getKeywordList(form.keywords(), form.keywordCriteria()))
-      .keywordCriteria(getKeywordCriteria(form.keywordType(), form.keywordCriteria()))
+      .keywordType(keywordType)
+      .keywordList(keywordList)
+      .keywordCriteria(keywordCriteria)
       .dateRangeType(toEnum(form.dateRangeType(), JobSeekerDateRangeType.class, null))
       .startDateTime(form.startDateTime())
       .endDateTime(form.endDateTime())

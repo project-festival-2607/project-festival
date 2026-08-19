@@ -2,7 +2,7 @@ package com.example.chook.support.service;
 
 import com.example.chook.file.entity.UploadedFile;
 import com.example.chook.file.repository.UploadedFileRepository;
-import com.example.chook.support.dto.AdminBoardDTO;
+import com.example.chook.support.dto.NoticeDTO;
 import com.example.chook.support.entity.Notice;
 import com.example.chook.support.entity.NoticeFile;
 import com.example.chook.support.repository.NoticeFileRepository;
@@ -36,7 +36,7 @@ public class NoticeServiceImpl implements NoticeService {
 
   @Transactional
   @Override
-  public Notice register(AdminBoardDTO dto) {
+  public Notice register(NoticeDTO dto) {
 
     Notice savedBoard = noticeRepository.save(
       Notice.builder()
@@ -63,13 +63,13 @@ public class NoticeServiceImpl implements NoticeService {
   }
 
   @Override
-  public Page<AdminBoardDTO> getList(int page, String searchType, String keyword) {
+  public Page<NoticeDTO> getList(int page, String searchType, String keyword) {
     // 정렬(하이라이트 우선, 최신순)은 검색 쿼리 안에서 처리
     Pageable pageable = PageRequest.of(Math.max(page - 1, 0), PAGE_SIZE);
-    Page<AdminBoardDTO> boardPage = noticeRepository.search(searchType, keyword, pageable).map(this::toDto);
+    Page<NoticeDTO> boardPage = noticeRepository.search(searchType, keyword, pageable).map(this::toDto);
 
     int seq = 1;
-    for (AdminBoardDTO board : boardPage.getContent()) {
+    for (NoticeDTO board : boardPage.getContent()) {
       board.setDisplayNo(Boolean.TRUE.equals(board.getHighlight()) ? "중요" : String.valueOf(seq++));
     }
 
@@ -77,7 +77,7 @@ public class NoticeServiceImpl implements NoticeService {
   }
 
   @Override
-  public AdminBoardDTO getDetail(Long bno) {
+  public NoticeDTO getDetail(Long bno) {
     Notice board = noticeRepository.findById(bno)
       .orElseThrow(() -> new IllegalArgumentException("게시글을 찾을 수 없음: " + bno));
     return toDto(board);
@@ -85,7 +85,7 @@ public class NoticeServiceImpl implements NoticeService {
 
   @Transactional
   @Override
-  public Notice modify(Long bno, AdminBoardDTO dto) {
+  public Notice modify(Long bno, NoticeDTO dto) {
     Notice board = noticeRepository.findById(bno)
       .orElseThrow(() -> new IllegalArgumentException("게시글을 찾을 수 없음: " + bno));
 
@@ -121,8 +121,8 @@ public class NoticeServiceImpl implements NoticeService {
     noticeRepository.delete(board);
   }
 
-  private AdminBoardDTO toDto(Notice board) {
-    return AdminBoardDTO.builder()
+  private NoticeDTO toDto(Notice board) {
+    return NoticeDTO.builder()
       .bno(board.getBno())
       .title(board.getTitle())
       .content(board.getContent())

@@ -5,7 +5,7 @@ import com.example.chook.file.record.FileResource;
 import com.example.chook.file.service.FileService;
 import com.example.chook.member.entity.enums.MemberRole;
 import com.example.chook.member.security.CustomUserDetails;
-import com.example.chook.support.dto.AdminBoardDTO;
+import com.example.chook.support.dto.NoticeDTO;
 import com.example.chook.support.entity.Notice;
 import com.example.chook.support.service.NoticeService;
 import lombok.RequiredArgsConstructor;
@@ -44,7 +44,7 @@ public class NoticeController {
         @AuthenticationPrincipal CustomUserDetails user,
         Model model
     ) {
-        Page<AdminBoardDTO> boardPage = noticeService.getList(page, searchType, keyword);
+        Page<NoticeDTO> boardPage = noticeService.getList(page, searchType, keyword);
         model.addAttribute("boardPage", boardPage);
         model.addAttribute("searchType", searchType);
         model.addAttribute("keyword", keyword);
@@ -70,7 +70,7 @@ public class NoticeController {
     }
 
     @PostMapping("/register")
-    public String register(@AuthenticationPrincipal CustomUserDetails user, AdminBoardDTO dto) {
+    public String register(@AuthenticationPrincipal CustomUserDetails user, NoticeDTO dto) {
         requireAdmin(user);
         Notice saved = noticeService.register(dto);
         log.info("admin board saved: {}", saved);
@@ -81,7 +81,7 @@ public class NoticeController {
     public String modify(
         @PathVariable Long bno,
         @AuthenticationPrincipal CustomUserDetails user,
-        AdminBoardDTO dto
+        NoticeDTO dto
     ) {
         requireAdmin(user);
         Notice modified = noticeService.modify(bno, dto);

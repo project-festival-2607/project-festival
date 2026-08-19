@@ -1,18 +1,18 @@
 package com.example.chook.support.service;
 
-import com.example.chook.support.dto.AdminBoardDTO;
+import com.example.chook.support.dto.NoticeDTO;
 import com.example.chook.support.entity.Notice;
 import org.springframework.data.domain.Page;
 
 public interface NoticeService {
 
-  Notice register(AdminBoardDTO dto);
+  Notice register(NoticeDTO dto);
 
-  Page<AdminBoardDTO> getList(int page, String searchType, String keyword);
+  Page<NoticeDTO> getList(int page, String searchType, String keyword);
 
-  AdminBoardDTO getDetail(Long bno);
+  NoticeDTO getDetail(Long bno);
 
-  Notice modify(Long bno, AdminBoardDTO dto);
+  Notice modify(Long bno, NoticeDTO dto);
 
   void delete(Long bno);
 

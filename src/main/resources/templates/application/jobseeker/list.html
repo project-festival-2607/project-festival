@@ -47,11 +47,11 @@
                     <td th:text="${app.address}"></td>
 
                     <!-- 지원일 -->
-                    <td th:text="${app.registerDate}"></td>
+                    <td th:text="${#temporals.format(app.registerDate, 'yyyy-MM-dd')}"></td>
 
                     <!-- 열람일 -->
                     <td>
-                        <span th:if="${app.readDate != null}" th:text="${app.readDate}"></span>
+                        <span th:if="${app.readDate != null}" th:text="${#temporals.format(app.readDate, 'yyyy-MM-dd')}"></span>
                         <span th:if="${app.readDate == null}" class="not-read">미열람</span>
                     </td>
 

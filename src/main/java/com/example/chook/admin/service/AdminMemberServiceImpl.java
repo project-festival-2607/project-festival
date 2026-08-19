@@ -9,16 +9,10 @@ import com.example.chook.admin.dto.member.JobSeekerTableDTOBase;
 import com.example.chook.admin.dto.member.RecruiterTableDTO;
 import com.example.chook.admin.mapper.AdminMapper;
 import com.example.chook.admin.repository.AdminMemberRepository;
-import com.example.chook.member.entity.BusinessRegistration;
-import com.example.chook.member.entity.Member;
-import com.example.chook.member.entity.MemberSuspension;
-import com.example.chook.member.entity.SocialLogin;
+import com.example.chook.member.entity.*;
 import com.example.chook.member.entity.enums.MemberRole;
 import com.example.chook.member.entity.enums.MemberStatus;
-import com.example.chook.member.repository.BusinessRegistrationRepository;
-import com.example.chook.member.repository.MemberRepository;
-import com.example.chook.member.repository.MemberSuspensionRepository;
-import com.example.chook.member.repository.SocialLoginRepository;
+import com.example.chook.member.repository.*;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -45,6 +39,7 @@ public class AdminMemberServiceImpl implements AdminMemberService {
   private final MemberRepository memberRepository;
   private final MemberSuspensionRepository memberSuspensionRepository;
 
+  private final EmployerProfileRepository employerProfileRepository;
   private final SocialLoginRepository socialLoginRepository;
   private final BusinessRegistrationRepository businessRegistrationRepository;
 
@@ -67,6 +62,19 @@ public class AdminMemberServiceImpl implements AdminMemberService {
   public Page<RecruiterTableDTO> getRecruiterPage(int pageIdx, int pageSize, RecruiterSearchCondition condition) {
     Pageable pageable = PageRequest.of(pageIdx - 1, pageSize);
     return adminMemberRepository.getRecruiterPage(pageable, condition);
+  }
+
+  @Override
+  public RecruiterTableDTO getRecruiterDto(Long recruiterId) {
+
+    Member member = memberRepository.findById(recruiterId).orElseThrow(EntityNotFoundException::new);
+    if (member.getRole() != MemberRole.RECRUITER) throw new IllegalArgumentException("해당 사용자는 행사 구인자가 아닙니다.");
+    if (member.getStatus() != MemberStatus.ACTIVE) throw new IllegalArgumentException("휴면 또는 정지 상태인 사용자입니다.");
+    EmployerProfile employerProfile = employerProfileRepository.findById(recruiterId).orElseThrow(EntityNotFoundException::new);
+    BusinessRegistration businessRegistration = businessRegistrationRepository.findById(recruiterId).orElseThrow(EntityNotFoundException::new);
+
+    return adminMapper.toDto(member, employerProfile, businessRegistration);
+
   }
 
   @Transactional

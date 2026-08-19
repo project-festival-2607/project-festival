@@ -3,6 +3,7 @@
       xmlns:th="http://www.thymeleaf.org">
 <body>
 
+<!-- #################### HEADER #################### -->
 <th:block th:fragment="modal-header(title)">
   <div class="modal-header">
     <h1 class="modal-title fs-5" th:text="${title}"></h1>
@@ -10,19 +11,35 @@
   </div>
 </th:block>
 
+<!-- #################### MEMBER #################### -->
 <th:block th:fragment="modal-member-info(targetInfoList)">
   <label class="mb-3">회원 정보</label>
   <table class="table mb-3">
     <tbody>
     <tr data-member-info th:data-member-field="${targetInfo.field}"
         th:each="targetInfo: ${targetInfoList}">
-      <th class="modal-member-info-th" scope="row" th:text="${targetInfo.label}"></th>
+      <th class="modal-info-th" scope="row" th:text="${targetInfo.label}"></th>
       <td data-load-here></td>
     </tr>
     </tbody>
   </table>
 </th:block>
 
+<!-- #################### FESTIVAL #################### -->
+<th:block th:fragment="modal-festival-info(targetInfoList)">
+  <label class="mb-3">행사 정보</label>
+  <table class="table mb-3">
+    <tbody>
+    <tr data-festival-info th:data-festival-field="${targetInfo.field}"
+        th:each="targetInfo: ${targetInfoList}">
+      <th class="modal-info-th" scope="row" th:text="${targetInfo.label}"></th>
+      <td data-load-here></td>
+    </tr>
+    </tbody>
+  </table>
+</th:block>
+
+<!-- #################### FOOTER #################### -->
 <th:block th:fragment="modal-footer(submitButtonColorClass, submitButtonLabel)">
   <div class="modal-footer">
     <button class="btn btn-secondary" data-bs-dismiss="modal" type="button">취소</button>

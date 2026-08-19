@@ -38,10 +38,15 @@ public record InquirySearchCondition(
 ) {
 
   public static InquirySearchCondition from(InquirySearchForm form) {
+
+    InquiryKeywordType keywordType = toEnum(form.keywordType(), InquiryKeywordType.class, null);
+    KeywordCriteria keywordCriteria = getKeywordCriteria(keywordType, form.keywordCriteria());
+    List<String> keywordList = getKeywordList(form.keywords(), keywordCriteria);
+
     return InquirySearchCondition.builder()
-      .keywordType(toEnum(form.keywordType(), InquiryKeywordType.class, null))
-      .keywordList(getKeywordList(form.keywords(), form.keywordCriteria()))
-      .keywordCriteria(getKeywordCriteria(form.keywordType(), form.keywordCriteria()))
+      .keywordType(keywordType)
+      .keywordList(keywordList)
+      .keywordCriteria(keywordCriteria)
       .dateRangeType(toEnum(form.dateRangeType(), InquiryDateRangeType.class, null))
       .startDateTime(form.startDateTime())
       .endDateTime(form.endDateTime())

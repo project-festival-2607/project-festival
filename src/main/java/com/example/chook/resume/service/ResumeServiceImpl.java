@@ -1,6 +1,8 @@
 package com.example.chook.resume.service;
 
 import java.time.LocalDateTime;
+
+import com.example.chook.application.repository.ApplicationRepository;
 import com.example.chook.file.entity.UploadedFile;
 import com.example.chook.file.repository.UploadedFileRepository;
 import com.example.chook.member.entity.Member;
@@ -29,6 +31,7 @@ public class ResumeServiceImpl implements ResumeService{
     private final ResumeCareerRepository resumeCareerRepository;
     private final ResumePortfolioRepository resumePortfolioRepository;
     private final ResumeFileRepository resumeFileRepository;
+    private final ApplicationRepository applicationRepository;
 
     // 이력서 등록하기 기능
     @Override
@@ -435,6 +438,10 @@ public class ResumeServiceImpl implements ResumeService{
         Resume resume =
                 resumeRepository.findById(resumeId)
                         .orElseThrow();
+        // 해당 이력서를 사용한 지원내역 전부 삭제
+        applicationRepository.deleteAllByResume_Id(
+                resume.getId()
+        );
         // 경력 삭제
         resumeCareerRepository.deleteAllByResume_Id(
                 resume.getId()

@@ -10,11 +10,20 @@ import org.springframework.data.domain.Page;
 
 public interface AdminMemberService {
 
+  // 목록 페이지 조회용
   Page<JobSeekerTableDTO> getJobSeekerPage(int pageIdx, int pageSize, JobSeekerSearchCondition condition);
 
   Page<JobEquipTableDTO> getJobEquipPage(int pageIdx, int pageSize, JobEquipSearchCondition condition);
 
   Page<RecruiterTableDTO> getRecruiterPage(int pageIdx, int pageSize, RecruiterSearchCondition condition);
+
+
+  // GET MAPPING
+
+  RecruiterTableDTO getRecruiterDto(Long recruiterId);
+
+
+  // POST MAPPING
 
   boolean suspendMember(Long memberId, String reason);
 

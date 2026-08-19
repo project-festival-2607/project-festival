@@ -40,10 +40,14 @@ public record RecruiterSearchCondition(
 
   public static RecruiterSearchCondition from(RecruiterSearchForm form) {
 
+    RecruiterKeywordType keywordType = toEnum(form.keywordType(), RecruiterKeywordType.class, null);
+    KeywordCriteria keywordCriteria = getKeywordCriteria(keywordType, form.keywordCriteria());
+    List<String> keywordList = getKeywordList(form.keywords(), keywordCriteria);
+
     return RecruiterSearchCondition.builder()
-      .keywordType(toEnum(form.keywordType(), RecruiterKeywordType.class, null))
-      .keywordList(getKeywordList(form.keywords(), form.keywordCriteria()))
-      .keywordCriteria(getKeywordCriteria(form.keywordType(), form.keywordCriteria()))
+      .keywordType(keywordType)
+      .keywordList(keywordList)
+      .keywordCriteria(keywordCriteria)
       .dateRangeType(toEnum(form.dateRangeType(), RecruiterDateRangeType.class, null))
       .startDateTime(form.startDateTime())
       .endDateTime(form.endDateTime())
