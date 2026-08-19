@@ -1,0 +1,115 @@
+/* 행사 진행중 상황 페이지 */
+.ongoing-page {
+    width: 100%;
+}
+
+/* 제목 */
+.ongoing-page h1 {
+    margin-bottom: 30px;
+    font-size: 28px;
+    font-weight: 700;
+}
+
+/* 행사 목록 */
+.ongoing-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* 행사 카드 */
+.ongoing-card {
+    padding: 25px;
+    border: 1px solid #e5e5e5;
+    border-radius: 12px;
+    background-color: #ffffff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+/* 행사 제목 */
+.ongoing-card h2 {
+    margin: 0 0 20px;
+    font-size: 21px;
+    font-weight: 700;
+}
+
+/* 행사 정보 */
+.ongoing-info {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.ongoing-info p {
+    margin: 0;
+    font-size: 15px;
+    color: #555;
+}
+
+.ongoing-info strong {
+    color: #222;
+}
+
+/* 진행중 표시 */
+.ongoing-status {
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: 20px;
+    background-color: #e8f5e9;
+    color: #2e7d32;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+/* 행사가 없을 때 */
+.ongoing-empty {
+    padding: 60px 20px;
+    text-align: center;
+    border: 1px solid #e5e5e5;
+    border-radius: 12px;
+    background-color: #fafafa;
+    color: #777;
+}
+
+.ongoing-empty p {
+    margin: 0;
+    font-size: 16px;
+}
+
+/* 마이페이지 돌아가기 */
+.ongoing-back {
+    margin-top: 30px;
+}
+
+.ongoing-back a {
+    display: inline-block;
+    padding: 10px 18px;
+    border-radius: 8px;
+    background-color: #f3f3f3;
+    color: #333;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.ongoing-back a:hover {
+    background-color: #e5e5e5;
+}
+
+
+/* 모바일 */
+@media (max-width: 768px) {
+
+    .ongoing-page h1 {
+        font-size: 24px;
+    }
+
+    .ongoing-card {
+        padding: 20px;
+    }
+
+    .ongoing-card h2 {
+        font-size: 19px;
+    }
+
+}

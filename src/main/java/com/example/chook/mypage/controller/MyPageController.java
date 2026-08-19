@@ -29,6 +29,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
+import java.time.LocalDate;
 
 @Controller
 @RequestMapping("/mypage")
@@ -146,6 +147,48 @@ public class MyPageController {
 
         // 구직자 마이페이지
         return "mypage/recruiter/mypage";
+    }
+
+    @GetMapping("/recruiter/ongoing")
+    public String ongoingRecruitments(
+            @AuthenticationPrincipal UserDetails user,
+            Model model) {
+        // 로그인하지 않은 경우
+        if (user == null) {
+            return "redirect:/member/login";
+        }
+        // 현재 로그인한 구인자의 username
+        String username = user.getUsername();
+
+        // 회원 정보 조회
+        MyPageDTO myPageDTO = myPageService.getMyPage(username);
+
+        // 구인자만 접근 가능
+        if (myPageDTO.getRole() != MemberRole.RECRUITER) {
+            return "redirect:/";
+        }
+        // 현재 구인자가 등록한 행사 조회
+        List<Festival> festivals = festivalRepository.findByMember_Username(username);
+
+        // 진행 중인 모집공고 저장
+        List<Recruitment> ongoingRecruitments = new java.util.ArrayList<>();
+
+        // 오늘 날짜
+        LocalDate today = LocalDate.now();
+
+        // 구인자가 등록한 모든 행사 확인
+        for (Festival festival : festivals) {
+            List<Recruitment> recruitments = festival.getRecruitments();
+            for (Recruitment recruitment : recruitments) {
+                // 모집 마감일 전인지 확인
+                if (!today.isAfter(recruitment.getApplicationDeadline())) {
+                    ongoingRecruitments.add(recruitment);
+                }
+            }
+        }
+        // HTML에 진행 중 행사 전달
+        model.addAttribute("recruitments", ongoingRecruitments);
+        return "mypage/recruiter/ongoing";
     }
 
     // 비밀번호 확인 페이지
