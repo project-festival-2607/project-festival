@@ -117,14 +117,31 @@
     margin: 0;
 }
 
-.menu-item > div > span {
+.menu-item > div > span, .mypage-point-box > span {
     font-size: 15px;
 }
 
-.menu-item > div > span, .menu-item > div > a {
+.menu-item > div > a, .mypage-point-box a {
     font-size: 12px;
     color: #2C2C2C;
     margin-left: 30px;
+}
+
+.mypage-point-box a {
+    margin-left: 0;
+}
+
+.mypage-point-box {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.mypage-point-box > div {
+    display: flex;
+    flex-direction: row;
+    gap: 15px;
 }
 
 .mypage-menu-btn {
