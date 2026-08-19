@@ -141,13 +141,10 @@
                 <a th:href="@{/resume/modify(resumeId=${resume.id})}" class="modify-btn">
                     이력서 수정
                 </a>
-                <form th:action="@{/resume/delete}" method="post">
-                    <input type="hidden" name="resumeId" th:value="${resume.id}">
 
-                    <button type="submit" class="delete-btn">
-                        이력서 삭제
-                    </button>
-                </form>
+                <a th:href="@{/resume/delete-password(resumeId=${resume.id})}" class="delete-btn">
+                    이력서 삭제
+                </a>
 
                 <a th:href="@{/mypage}" class="cancel-btn">마이페이지</a>
             </div>
