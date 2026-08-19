@@ -104,7 +104,9 @@
                 <a th:href="@{/mypage/password-change}">비밀번호 변경</a>
             </div>
             <div class="menu-item">
-                행사 진행중 상황
+                <a th:href="@{/mypage/recruiter/ongoing}">
+                    행사 진행중 상황
+                </a>
             </div>
 
             <div class="menu-item">
@@ -112,7 +114,7 @@
             </div>
 
             <div class="menu-item">
-                <a th:href="@{/application/recruiter/list(recruitmentId=${recruitment.id})}">
+                <a>
                     지원자 목록
                 </a>
             </div>
