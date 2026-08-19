@@ -1,5 +1,6 @@
 package com.example.chook.member.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 import java.time.LocalDate;

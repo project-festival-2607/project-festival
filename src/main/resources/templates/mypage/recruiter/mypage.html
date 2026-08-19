@@ -7,7 +7,7 @@
 <div layout:fragment="content">
 
     <!-- 기존 마이페이지 CSS -->
-    <link rel="stylesheet" th:href="@{/css/mypage/recruiter/mypage.css}">
+    <link rel="stylesheet" th:href="@{/css/mypage/mypage.css}">
 
     <!-- 토스페이먼츠 SDK -->
     <script src="https://js.tosspayments.com/v2/standard"></script>
@@ -25,105 +25,104 @@
 
         <!-- 모든 inner는 class="container" 로 맞춤 -->
 
-        <h1>마이페이지</h1>
+        <div class="member-info-container">
+            <div class="member-info">
+                <div class="member-detail">
+                    <div class="member-basic-info">
+                        <div class="member-profile-img">
 
-        <div class="member-info">
-            <div class="member-detail">
-                <div>
-                    <p>아이디</p>
-                    <span th:text="${myPageDTO.username}"></span>
+                        </div>
+                        <div>
+                            <span th:text="${myPageDTO.name}"></span>
+                            <span th:text="${myPageDTO.email}"></span>
+                        </div>
+                    </div>
                 </div>
-
-                <div>
-                    <p>이름</p>
-                    <span th:text="${myPageDTO.name}"></span>
-                </div>
-
-                <div>
-                    <p>전화번호</p>
-                    <span th:text="${myPageDTO.phone}"></span>
-                </div>
-
-                <div>
-                    <p>이메일</p>
-                    <span th:text="${myPageDTO.email}"></span>
-                </div>
-
-                <div>
-                    <p>포인트</p>
-                    <span th:text="${myPageDTO.point}"></span>
-                </div>
-
-                <div>
-                    <p>계정유형</p>
-                    <span th:text="${myPageDTO.role}"></span>
-                </div>
-            </div>
-            <!-- 기존 수정 버튼 -->
-            <a th:if="${!myPageDTO.socialSignUp}" th:href="@{/mypage/password-check}" class="btn btn-primary">수정</a>
-
-            <!-- =================================================
-                 포인트 구매 버튼
-                 기존 btn btn-primary CSS 그대로 사용
-                 id만 추가
-                 ================================================= -->
-
-            <a th:if="${!myPageDTO.socialSignUp}"
-               href="javascript:void(0)"
-               id="openPointPaymentBtn"
-               class="btn btn-primary">
-                포인트 구매
-            </a>
-
-<!--            <a style="display:block; width:100%; height:60px; margin-top:20px; border-radius:8px; text-align:center; line-height:60px; box-sizing:border-box; text-decoration:none;">-->
-<!--                포인트 환불-->
-<!--            </a>-->
-
-
-<!--            <a th:if="${!myPageDTO.socialSignUp}"-->
-<!--               href="/refund"-->
-<!--               id="openPointRefundBtn"-->
-<!--               class="btn btn-primary">-->
-<!--                포인트 환불-->
-<!--            </a>-->
-
-        <a th:if="${!myPageDTO.socialSignUp}"
-           href="javascript:void(0)"
-           id="openPointRefundBtn"
-           class="btn btn-primary">
-            포인트 환불
-        </a>
-
-            <!-- 소셜 회원 수정 -->
-            <a th:if="${myPageDTO.socialSignUp}" th:href="@{/mypage/modify/job-seeker}" class="btn btn-primary">수정</a>
-        </div>
-
-        <!-- 기존 메뉴 -->
-        <div class="mypage-menu">
-            <div class="menu-item" th:if="${!myPageDTO.socialSignUp}">
-                <a th:href="@{/mypage/password-change}">비밀번호 변경</a>
-            </div>
-            <div class="menu-item">
-                <a>
-                    행사 진행중 상황
-                </a>
+                <a th:if="${!myPageDTO.socialSignUp}" th:href="@{/mypage/password-check}" class="mypage-modify-btn">회원정보수정</a>
+                <a th:if="${myPageDTO.socialSignUp}" th:href="@{/mypage/modify/job-seeker}" class="mypage-modify-btn">회원정보수정</a>
             </div>
 
-            <div class="menu-item">
-                행사 마감
-            </div>
+            <!-- 기존 메뉴 -->
+            <div class="mypage-menu">
+                <div class="member-detail-info">
+                    <div class="mypage-h1">내 프로필</div>
+                    <div class="menu-item">
+                        <div>
+                            <p>전화번호</p>
+                            <span th:text="${myPageDTO.phone}"></span>
+                        </div>
+                        <div>
+                            <p>아이디</p>
+                            <span th:text="${myPageDTO.username}"></span>
+                        </div>
+                        <div>
+                            <p>계정유형</p>
+                            <span th:text="${myPageDTO.role}"></span>
+                        </div>
+                        <div>
+                            <p>포인트</p>
+                            <div class="mypage-point-box">
+                                <span th:text="'Ⓟ ' + ${myPageDTO.point}"></span>
+                                <div>
+                                    <a th:if="${!myPageDTO.socialSignUp}"
+                                       href="javascript:void(0)"
+                                       id="openPointPaymentBtn"
+                                       class="mypage-menu-btn">
+                                        포인트 구매
+                                    </a>
 
-            <div class="menu-item">
-                <a th:href="@{/mypage/recruiter/ongoing}">
-                    공고 목록
-                </a>
-            </div>
+                                    <a th:if="${!myPageDTO.socialSignUp}"
+                                       href="javascript:void(0)"
+                                       id="openPointRefundBtn"
+                                       class="mypage-menu-btn">
+                                        포인트 환불
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-            <div class="menu-item">
-                <a th:href="@{/mypage/account-leave}">회원탈퇴</a>
+                <div class="member-detail-info">
+                    <div class="mypage-h1">보안설정</div>
+                    <div class="menu-item">
+                        <div th:if="${!myPageDTO.socialSignUp}">
+                            <p>비밀번호</p>
+                            <a class="mypage-menu-btn" th:href="@{/mypage/password-change}">비밀번호 변경 ↗ </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="member-detail-info">
+                    <div class="mypage-h1">나의 현황</div>
+                    <div class="menu-item">
+                        <div>
+                            <p>행사진행</p>
+                            <a class="mypage-menu-btn">
+                                행사 진행중 상황  ↗
+                            </a>
+                        </div>
+                        <div>
+                            <p>행사마감</p>
+                            <a class="mypage-menu-btn">
+                                마감된 행사  ↗
+                            </a>
+                        </div>
+                        <div>
+                            <p>모집공고</p>
+                            <a class="mypage-menu-btn" th:href="@{/mypage/recruiter/ongoing}">
+                                등록한 공고 현황  ↗
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+            <a class="mypage-del-btn" th:href="@{/mypage/account-leave}">회원탈퇴</a>
+
             </div>
         </div>
     </div>
+
 
 
     <!-- 포인트 구매 모달창 -->
