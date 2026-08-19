@@ -150,17 +150,45 @@
     border-radius: 8px;
 }
 
-/* 6. 지원하기 버튼 전체 너비 채우기 */
-.recruit-detail-apply {
-    display: block !important;
+/* 6. 지원하기 / 찜하기를 한 줄로 붙여 배치 (찜하기 이미지.png 참고: 아이콘 박스 + 액션 버튼) */
+.recruit-detail-primary-row {
+    display: flex !important;
+    align-items: stretch !important;
     width: 100% !important;
+}
+
+.recruit-detail-apply {
+    display: flex !important;
+    flex: 1 !important;
+    width: auto !important;
+    align-items: center !important;
+    justify-content: center !important;
     padding: 14px 0 !important;
     font-size: 16px !important;
     font-weight: bold !important;
     text-align: center !important;
+    border-radius: 0 8px 8px 0 !important;
 }
 
 /* 7. 지도 보러가기 버튼 */
 .goToMap {
     margin-top: 12px !important;
+}
+
+/* 8. 찜하기 버튼 (list 페이지 .recruit-card-bookmark와 동일한 별 아이콘/색상 규칙) */
+.recruit-detail-bookmark {
+    flex: 0 0 52px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #dee2e6;
+    border-right: none;
+    border-radius: 8px 0 0 8px;
+    font-size: 22px;
+    color: #dee2e6;
+    cursor: pointer;
+}
+
+.recruit-detail-bookmark.active {
+    color: #e8a33d;
 }

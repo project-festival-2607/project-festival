@@ -161,11 +161,17 @@
 
                 <!-- 지원하기 / 버튼 영역 (사이드바 하단에 고정) -->
                 <div class="recruit-detail-actions">
-                    <a th:unless="${recruiter}"
-                       th:href="@{/application/apply(recruitmentId=${recruitment.recruitmentId})}"
-                       class="btn btn-primary recruit-detail-apply" style="width: 100%;">
-                        지원하기
-                    </a>
+                    <div th:unless="${recruiter}" class="recruit-detail-primary-row">
+                        <span class="recruit-detail-bookmark"
+                              th:classappend="${bookmarked} ? 'active'"
+                              th:attr="data-id=${recruitment.recruitmentId}"
+                              th:text="${bookmarked} ? '★' : '☆'"
+                              title="찜하기"></span>
+                        <a th:href="@{/application/apply(recruitmentId=${recruitment.recruitmentId})}"
+                           class="btn btn-primary recruit-detail-apply">
+                            지원하기
+                        </a>
+                    </div>
 
                     <div th:if="${isOwner}" class="recruit-detail-owner-actions">
                         <a id="editBtn" th:unless="${recruitment.isPastDeadline()}"
