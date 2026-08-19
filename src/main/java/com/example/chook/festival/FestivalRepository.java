@@ -6,4 +6,5 @@ import java.util.List;
 
 public interface FestivalRepository extends JpaRepository<Festival, String>, FestivalCustomRepository {
   List<Festival> findByMember_Username(String username);
+
 }
