@@ -1,8 +1,24 @@
 /* 회원정보 박스 */
+.member-info-container {
+    display: flex;
+    flex-direction: row;
+    gap: 45px;
+}
+
 .member-info {
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
     align-items: center;
+    gap: 10px;
+}
+
+/* 회원정보 내용 */
+.member-detail{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+    justify-content: center;
     background: #ffffff;
     border: 1px solid #ddd;
     border-radius: 10px;
@@ -10,38 +26,49 @@
     margin-bottom: 30px;
 }
 
-/* 회원정보 내용 */
-.member-detail {
-    display: flex;
-    gap: 50px;
+/* 각각의 정보 */
+.member-profile-img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    border: 1px solid #dc3545;
 }
 
-/* 각각의 정보 */
-.member-detail div {
+.member-basic-info {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.member-basic-info div {
     display: flex;
     flex-direction: column;
 }
 
-/* 제목 */
-.member-detail p {
-    margin: 0;
+.member-basic-info div > span:nth-child(1) {
+    font-size: 20px;
+    color: #2C2C2C;
+    font-weight: 800;
+    letter-spacing: -1px;
+}
+
+.member-basic-info div > span:nth-child(2) {
     font-size: 14px;
-    color: #888;
-    font-weight: bold;
+    color: #999999;
 }
 
-/* 값 */
-.member-detail span {
-    margin-top: 8px;
-    font-size: 17px;
-    color: #222;
-    font-weight: 600;
+.mypage-modify-btn {
+    border: 1px solid #0D6EFD;
+    border-radius: 10px;
+    padding: 5px 15px;
+
+    transition: 0.3s ease;
 }
 
-/* 수정 버튼 */
-.member-info .btn {
-    padding: 8px 20px;
-    border-radius: 8px;
+.mypage-modify-btn:hover {
+    background: #0055d8;
+    color: #FEFEFE;
 }
 
 /* 마이페이지 메뉴 전체 */
@@ -49,27 +76,82 @@
     display: flex;
     flex-direction: column;  /* 세로 배치 */
     gap: 15px;
-    margin-top: 30px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    width: 100%;
+    padding: 30px;
+}
+
+.mypage-h1 {
+    font-size: 16px;
+    font-weight: 700;
+    color: #FEFEFE;
+    background: #dc3545;
+    width: 100%;
+    border-radius: 5px;
+    padding: 5px 15px;
+    margin-bottom: 10px;
 }
 
 /* 메뉴 하나 */
 .menu-item {
     background: white;
     border: 1px solid #ddd;
-    border-radius: 10px;
+    border-radius: 5px;
     padding: 20px;
-    cursor: pointer;
 }
 
-/* 메뉴 글자 */
-.menu-item p {
+.menu-item > div {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    border-bottom: 1px solid #DDD;
+    padding: 5px 0;
+    margin-bottom: 15px;
+}
+
+.menu-item > div > p {
+    font-size: 13px;
+    color: #999999;
+    width: 100px;
     margin: 0;
-    font-size: 16px;
-    font-weight: bold;
-    color: #333;
 }
 
-/* 마우스 올렸을 때 */
-.menu-item:hover {
-    background: #f5f5f5;
+.menu-item > div > span {
+    font-size: 15px;
+}
+
+.menu-item > div > span, .menu-item > div > a {
+    font-size: 12px;
+    color: #2C2C2C;
+    margin-left: 30px;
+}
+
+.mypage-menu-btn {
+    padding: 5px 15px;
+    border: 1px solid #0D6EFD;
+    border-radius: 10px;
+
+    transition: 0.3s ease;
+}
+
+.mypage-menu-btn:hover {
+    background: #0055d8;
+    color: #FEFEFE;
+}
+
+.mypage-del-btn {
+    border: 1px solid #dc3545;
+    border-radius: 10px;
+    color: #dc3545;
+    transition: 0.3s ease;
+    font-size: 13px;
+    padding: 5px 15px;
+
+    align-self: flex-end;
+}
+
+.mypage-del-btn:hover {
+    background: #dc3545;
+    color: #FEFEFE;
 }
