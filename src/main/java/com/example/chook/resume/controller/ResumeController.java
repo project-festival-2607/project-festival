@@ -4,6 +4,7 @@ import com.example.chook.file.entity.UploadedFile;
 import com.example.chook.file.record.FileResource;
 import com.example.chook.file.service.FileService;
 import com.example.chook.member.repository.MemberRepository;
+import com.example.chook.member.service.MemberService;
 import com.example.chook.resume.dto.ResumeFileDTO;
 import com.example.chook.resume.dto.ResumePortfolioDTO;
 import org.springframework.core.io.Resource;
@@ -37,6 +38,7 @@ public class ResumeController {
     private final ResumeService resumeService;
     private final MemberRepository memberRepository;
     private final FileService fileService;
+    private final MemberService memberService;
 
     // 이력서 관리 페이지로 이동
     @GetMapping("/manage")
@@ -201,14 +203,48 @@ public class ResumeController {
         return "resume/detail";
     }
 
-    // 이력서 삭제
-    @PostMapping("/delete")
-    public String delete(
-            @RequestParam Long resumeId
-    ){
-        resumeService.delete(resumeId);
+    // 이력서 삭제 전 비밀번호 확인 페이지
+    @GetMapping("/delete-password")
+    public String deletePassword(
+            @RequestParam Long resumeId,
+            @AuthenticationPrincipal UserDetails user,
+            Model model
+    ) {
+        if (user == null) {
+            return "redirect:/member/login";
+        }
+        model.addAttribute("resumeId", resumeId);
+        model.addAttribute("username", user.getUsername());
 
-        return "redirect:/";
+        return "resume/delete-password";
+    }
+
+    // 이력서 삭제 전 비밀번호 확인
+    @PostMapping("/delete-password")
+    public String deletePassword(
+            @RequestParam Long resumeId,
+            @RequestParam String password,
+            @AuthenticationPrincipal UserDetails user,
+            Model model
+    ) {
+        if (user == null) {
+            return "redirect:/member/login";
+        }
+        Member member = memberRepository
+                .findByUsernameAndDeletedAtIsNull(user.getUsername())
+                .orElseThrow();
+
+        // 비밀번호 확인
+        if (!memberService.verifyPassword(member.getId(), password)) {
+            model.addAttribute("resumeId", resumeId);
+            model.addAttribute("username", user.getUsername());
+            model.addAttribute("FailureMsg", "비밀번호가 일치하지 않습니다.");
+            return "resume/delete-password";
+        }
+
+        // 비밀번호가 맞으면 실제 이력서 삭제
+        resumeService.delete(resumeId);
+        return "redirect:/resume/manage";
     }
 
     // 이력서 파일 조회 (프로필/첨부파일)
