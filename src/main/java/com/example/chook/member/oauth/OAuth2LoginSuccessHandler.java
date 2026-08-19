@@ -13,7 +13,9 @@ import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -83,20 +85,21 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
             // 정지 회원 → 정지 안내 페이지
             response.sendRedirect("/member/suspended");
         } catch (IllegalArgumentException e) {
-            // 연동된 계정이 없음 → 신규 소셜 가입 플로우
             session.setAttribute("socialAuthInfo", SocialAuthSessionDTO.builder()
                     .provider(userInfo.getProvider())
                     .providerId(userInfo.getProviderId())
                     .email(userInfo.getEmail())
                     .name(userInfo.getName())
                     .build());
+
+            // OAuth2 로그인 필터가 이미 세션에 저장해버린 임시 인증(CustomOAuth2User)을 제거
+            // 회원가입이 완료되기 전까지는 로그인 상태로 취급되면 안 됨
+            SecurityContextHolder.clearContext();
+            session.removeAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY);
+
             if (memberService.hasJobSeekerAccountWithEmail(userInfo.getEmail())) {
-                // 같은 이메일을 사용하는 기존 개인 회원 계정이 있는지 확인
-                // 있다면 기존 계정과 소셜 계정을 연결하는 가입 플로우로 이동
                 response.sendRedirect("/member/signup/social/link");
             } else {
-                // 해당 이메일로 기존 계정이 없다면
-                // 새로운 소셜 회원가입 플로우로 이동
                 response.sendRedirect("/member/signup/social");
             }
         }
