@@ -72,6 +72,24 @@
     color: #FEFEFE;
 }
 
+.new-ac-btn {
+    padding: 5px 25px;
+    font-size: 14px;
+    border: 1px solid #dc3545;
+    color: #2C2C2C;
+    border-radius: 10px;
+    width: 100%;
+    background: #FEFEFE;
+    white-space: nowrap;
+
+    transition: 0.3s ease;
+}
+
+.new-ac-btn:hover {
+    background-color: #c52231;
+    color: #FEFEFE;
+}
+
 .auth-span {
     font-size: 13px;
     color: #999999;

@@ -1,21 +1,23 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<html lang="ko"
+      layout:decorate="~{layout/layout}"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>계정 연동 안내</title>
-    <link rel="stylesheet" th:href="@{/libs/bootstrap-5.3.8-dist/css/bootstrap.min.css}">
+    <th:block layout:fragment="css">
+        <link rel="stylesheet" th:href="@{/css/member/login.css}">
+    </th:block>
 </head>
-<body>
-<div class="container" style="max-width: 400px;">
-    <h1 class="mb-4 text-center mt-5">이미 가입된 이메일이 있습니다</h1>
-    <p class="text-muted text-center mb-4">같은 이메일로 가입된 계정이 있습니다. 기존 계정으로 로그인하시겠습니까?</p>
+    <div layout:fragment="content">
+    <div class="container login-container">
+        <h1 class="login-h1" style="font-size: 35px;">이미 가입된 이메일이 있습니다</h1>
+        <p style="font-size: 15px; color: #999999; font-weight: 500; text-align: center;">같은 이메일로 가입된 계정이 있습니다. <br> 기존 계정으로 로그인하시겠습니까?</p>
 
-    <!-- TODO: 같은 이메일을 쓰는 기존 계정 목록(아이디 블러 처리) 표시 예정 -->
+        <!-- TODO: 같은 이메일을 쓰는 기존 계정 목록(아이디 블러 처리) 표시 예정 -->
 
-    <div class="d-grid gap-3">
-        <a th:href="@{/member/login}" class="btn btn-primary btn-lg">기존 계정으로 로그인</a>
-        <a th:href="@{/member/signup/social}" class="btn btn-outline-secondary btn-lg">새 계정 만들기</a>
+        <div class="d-grid gap-3">
+            <a th:href="@{/member/login}" class="login-btn" style="text-align: center">기존 계정으로 로그인</a>
+            <a th:href="@{/member/signup/social}" class="new-ac-btn" style="text-align: center">새 계정 만들기</a>
+        </div>
     </div>
 </div>
-</body>
-</html>
