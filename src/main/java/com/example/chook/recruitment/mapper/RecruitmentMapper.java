@@ -2,6 +2,7 @@ package com.example.chook.recruitment.mapper;
 
 import com.example.chook.common.util.CustomStringUtils;
 import com.example.chook.festival.Festival;
+import com.example.chook.member.entity.Member;
 import com.example.chook.recruitment.dto.*;
 import com.example.chook.recruitment.entity.Recruitment;
 import com.example.chook.recruitment.entity.RecruitmentFoodTruck;
@@ -255,6 +256,8 @@ public class RecruitmentMapper {
 
   private RecruitmentResponseDTO.RecruitmentResponseDTOBuilder toResponseDtoBuilder(Recruitment entity,
                                                                                     String organizerPhone) {
+    Member member = entity.getFestival().getMember();
+
     return RecruitmentResponseDTO.builder()
       .recruitmentId(entity.getId())
       .regionSidoName(entity.getSigungu().getSido().getName())
@@ -276,7 +279,7 @@ public class RecruitmentMapper {
       .updatedAt(entity.getUpdatedAt())
       .deletedAt(entity.getDeletedAt())
       .organizerPhone(organizerPhone)
-      .organizerMemberId(entity.getFestival().getMember().getId())
+      .organizerMemberId(member == null ? null : member.getId())
       ;
   }
 

@@ -5,6 +5,7 @@ import com.example.chook.festival.Festival;
 import com.example.chook.festival.FestivalRepository;
 import com.example.chook.file.entity.UploadedFile;
 import com.example.chook.file.repository.UploadedFileRepository;
+import com.example.chook.member.entity.Member;
 import com.example.chook.recruitment.dto.*;
 import com.example.chook.recruitment.entity.Recruitment;
 import com.example.chook.recruitment.entity.RecruitmentFile;
@@ -227,7 +228,8 @@ public class RecruitmentServiceImpl implements RecruitmentService {
     Recruitment recruitment = recruitmentRepository.findById(id)
       .orElseThrow(() -> new EntityNotFoundException(String.format("id가 \"%d\"인 공고가 없음", id)));
 
-    String organizerPhone = recruitment.getFestival().getMember().getPhone();
+    Member member = recruitment.getFestival().getMember();
+    String organizerPhone = member == null ? "" : member.getPhone();
 
     switch (recruitment.getCategory()) {
 
