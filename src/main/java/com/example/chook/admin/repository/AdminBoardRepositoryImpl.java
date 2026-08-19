@@ -2,8 +2,8 @@ package com.example.chook.admin.repository;
 
 import com.example.chook.admin.condition.board.InquirySearchCondition;
 import com.example.chook.admin.condition.board.NoticeSearchCondition;
-import com.example.chook.admin.dto.board.AdminInquiryTableDTO;
-import com.example.chook.admin.dto.board.AdminNoticeTableDTO;
+import com.example.chook.admin.dto.board.InquiryTableDTO;
+import com.example.chook.admin.dto.board.NoticeTableDTO;
 import com.example.chook.admin.entity.enums.KeywordCriteria;
 import com.example.chook.admin.entity.enums.inquiry.InquiryDateRangeType;
 import com.example.chook.admin.entity.enums.inquiry.InquiryKeywordType;
@@ -51,12 +51,12 @@ public class AdminBoardRepositoryImpl implements AdminBoardRepository {
   }
 
   @Override
-  public Page<AdminInquiryTableDTO> getInquiryListPage(Pageable pageable, InquirySearchCondition condition) {
+  public Page<InquiryTableDTO> getInquiryListPage(Pageable pageable, InquirySearchCondition condition) {
 
-    JPAQuery<AdminInquiryTableDTO> resultQuery;
+    JPAQuery<InquiryTableDTO> resultQuery;
     resultQuery = this.jpaQueryFactory.select(Projections.fields(
 
-        AdminInquiryTableDTO.class,
+        InquiryTableDTO.class,
 
         inquiry.ino,
         inquiry.title,
@@ -90,7 +90,7 @@ public class AdminBoardRepositoryImpl implements AdminBoardRepository {
         condition.endDateTime()
       ));
 
-    List<AdminInquiryTableDTO> content = resultQuery
+    List<InquiryTableDTO> content = resultQuery
       .where(whereCondition)
       .orderBy(getInquiryOrderSpecifierArray(condition.sortCriteria(), condition.ascending()))
       .offset(pageable.getOffset())
@@ -110,12 +110,12 @@ public class AdminBoardRepositoryImpl implements AdminBoardRepository {
   }
 
   @Override
-  public Page<AdminNoticeTableDTO> getNoticeListPage(Pageable pageable, NoticeSearchCondition condition) {
+  public Page<NoticeTableDTO> getNoticeListPage(Pageable pageable, NoticeSearchCondition condition) {
 
-    JPAQuery<AdminNoticeTableDTO> resultQuery;
+    JPAQuery<NoticeTableDTO> resultQuery;
     resultQuery = this.jpaQueryFactory.select(Projections.fields(
 
-        AdminNoticeTableDTO.class,
+        NoticeTableDTO.class,
 
         notice.bno,
         notice.title,
@@ -137,7 +137,7 @@ public class AdminBoardRepositoryImpl implements AdminBoardRepository {
         condition.endDate()
       ));
 
-    List<AdminNoticeTableDTO> content = resultQuery
+    List<NoticeTableDTO> content = resultQuery
       .where(whereCondition)
       .orderBy(getNoticeOrderSpecifierArray(condition.sortCriteria(), condition.ascending()))
       .offset(pageable.getOffset())

@@ -2,8 +2,6 @@ package com.example.chook.admin.dto.event;
 
 import com.example.chook.recruitment.entity.enums.RecruitmentCategory;
 import com.example.chook.recruitment.entity.enums.RecruitmentStatus;
-import com.example.chook.region.entity.RegionSido;
-import com.example.chook.region.entity.RegionSigungu;
 import lombok.*;
 
 import java.time.LocalDate;

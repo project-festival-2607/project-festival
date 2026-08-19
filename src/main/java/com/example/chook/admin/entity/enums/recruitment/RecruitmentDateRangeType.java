@@ -13,8 +13,7 @@ public enum RecruitmentDateRangeType {
   WORKING_START_DATE("근무시작일"),
   WORKING_END_DATE("근무종료일"),
   WORK_DURATION_OVERLAPPING("근무기간 겹침"),
-  WORK_DURATION_CONTAINED_IN("근무기간 전체 포함")
-  ;
+  WORK_DURATION_CONTAINED_IN("근무기간 전체 포함");
 
   private final String label;
   private final boolean dateOnly;

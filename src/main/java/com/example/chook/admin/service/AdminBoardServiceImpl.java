@@ -2,8 +2,8 @@ package com.example.chook.admin.service;
 
 import com.example.chook.admin.condition.board.InquirySearchCondition;
 import com.example.chook.admin.condition.board.NoticeSearchCondition;
-import com.example.chook.admin.dto.board.AdminInquiryTableDTO;
-import com.example.chook.admin.dto.board.AdminNoticeTableDTO;
+import com.example.chook.admin.dto.board.InquiryTableDTO;
+import com.example.chook.admin.dto.board.NoticeTableDTO;
 import com.example.chook.admin.entity.enums.inquiry.InquiryReplyStatus;
 import com.example.chook.admin.repository.AdminBoardRepository;
 import lombok.RequiredArgsConstructor;
@@ -21,9 +21,9 @@ public class AdminBoardServiceImpl implements AdminBoardService {
   private final AdminBoardRepository adminBoardRepository;
 
   @Override
-  public Page<AdminInquiryTableDTO> getInquiryListPage(int pageIdx, int pageSize, InquirySearchCondition condition) {
+  public Page<InquiryTableDTO> getInquiryListPage(int pageIdx, int pageSize, InquirySearchCondition condition) {
     Pageable pageable = PageRequest.of(pageIdx - 1, pageSize);
-    Page<AdminInquiryTableDTO> result = adminBoardRepository.getInquiryListPage(pageable, condition);
+    Page<InquiryTableDTO> result = adminBoardRepository.getInquiryListPage(pageable, condition);
     result.forEach(dto -> {
       dto.setReplyStatus(
         (dto.getRepliedAt() == null) ? InquiryReplyStatus.NOT_REPLIED : InquiryReplyStatus.REPLIED
@@ -33,7 +33,7 @@ public class AdminBoardServiceImpl implements AdminBoardService {
   }
 
   @Override
-  public Page<AdminNoticeTableDTO> getNoticeListPage(int pageIdx, int pageSize, NoticeSearchCondition condition) {
+  public Page<NoticeTableDTO> getNoticeListPage(int pageIdx, int pageSize, NoticeSearchCondition condition) {
     Pageable pageable = PageRequest.of(pageIdx - 1, pageSize);
     return adminBoardRepository.getNoticeListPage(pageable, condition);
   }
