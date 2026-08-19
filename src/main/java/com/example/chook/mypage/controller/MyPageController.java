@@ -180,9 +180,8 @@ public class MyPageController {
         for (Festival festival : festivals) {
             List<Recruitment> recruitments = festival.getRecruitments();
             for (Recruitment recruitment : recruitments) {
-                // 행사 진행 기간 안에 있는지 확인
-                if (!today.isBefore(recruitment.getWorkingStartDate())
-                        && !today.isAfter(recruitment.getWorkingEndDate())) {
+                // 행사 마감일 전인지 확인
+                if (!today.isAfter(recruitment.getWorkingEndDate())) {
                     ongoingRecruitments.add(recruitment);
                 }
             }
