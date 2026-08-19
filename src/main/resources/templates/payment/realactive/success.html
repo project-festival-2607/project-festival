@@ -1,106 +1,219 @@
 <!DOCTYPE html>
 <html lang="ko">
-<!--/widget/success.html-->
+<!---->
 <head>
-  <meta charset="utf-8" />
-  <link rel="icon" href="https://static.toss.im/icons/png/4x/icon-toss-logo.png" />
-  <link rel="stylesheet" type="text/css" href="/css/payment/style.css" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>토스페이먼츠 샘플 프로젝트</title>
-</head>
+  <meta charset="utf-8"/>
 
-<body>
-<div class="box_section" style="width: 600px">
-  <img width="100px" src="https://static.toss.im/illusts/check-blue-spot-ending-frame.png" />
-  <h2>결제를 완료했어요</h2>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
-  <div class="p-grid typography--p" style="margin-top: 50px">
-    <div class="p-grid-col text--left"><b>결제금액</b></div>
-    <div class="p-grid-col text--right" id="amount"></div>
-  </div>
-  <div class="p-grid typography--p" style="margin-top: 10px">
-    <div class="p-grid-col text--left"><b>주문번호</b></div>
-    <div class="p-grid-col text--right" id="orderId"></div>
-  </div>
-  <div class="p-grid typography--p" style="margin-top: 10px">
-    <div class="p-grid-col text--left"><b>paymentKey</b></div>
-    <div class="p-grid-col text--right" id="paymentKey" style="white-space: initial; width: 250px"></div>
-  </div>
-  <div class="p-grid" style="margin-top: 30px">
-    <button class="button p-grid-col5" onclick="location.href='https://docs.tosspayments.com/guides/v2/payment-widget/integration';">연동 문서</button>
-    <button class="button p-grid-col5" onclick="location.href='https://discord.gg/A4fRFXQhRu';" style="background-color: #e8f3ff; color: #1b64da">실시간 문의</button>
-  </div>
-</div>
-
-<div class="box_section" style="width: 600px; text-align: left">
-  <b>Response Data :</b>
-  <div id="response" style="white-space: initial"></div>
-</div>
-
-<script>
-  // 쿼리 파라미터 값을 서버로 전달해 결제 요청할 때 보낸 데이터와 동일한지 반드시 확인하세요.
-  // 클라이언트에서 결제 금액을 조작하는 행위를 방지할 수 있습니다.
-  const urlParams = new URLSearchParams(window.location.search);
-
-  // 서버로 결제 승인에 필요한 결제 정보를 보내세요.
-  async function confirm() {
-    var requestData = {
-      paymentKey: urlParams.get("paymentKey"),
-      orderId: urlParams.get("orderId"),
-      amount: urlParams.get("amount"),
-    };
-
-    const response = await fetch("/confirm/widget", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(requestData),
-    });
-
-    const json = await response.json();
-
-    if (!response.ok) {
-      throw { message: json.message, code: json.code };
+  <title>결제 완료</title>
+  <style>
+    * {
+      box-sizing: border-box;
     }
 
-    return json;
+    body {
+      margin: 0;
+      background: #f5f7fa;
+      font-family:
+              -apple-system,
+              BlinkMacSystemFont,
+              "Segoe UI",
+              sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    .payment-complete-box {
+      width: 500px;
+      max-width: 90%;
+      background: white;
+      padding: 40px;
+      border-radius: 16px;
+      text-align: center;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+    }
+
+    .check-icon {
+      width: 70px;
+      height: 70px;
+      margin: 0 auto 20px;
+      border-radius: 50%;
+      background: #3182f6;
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 36px;
+      font-weight: bold;
+    }
+
+    h2 {
+      margin: 0 0 30px;
+      color: #191f28;
+      font-size: 26px;
+    }
+
+    .payment-info {
+      background: #f5f7fa;
+      border-radius: 10px;
+      padding: 18px;
+      margin-bottom: 30px;
+      text-align: left;
+    }
+
+    .payment-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .payment-label {
+      color: #8b95a1;
+      font-size: 15px;
+    }
+
+    .payment-value {
+      color: #191f28;
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    .back-button {
+      width: 100%;
+      height: 52px;
+      border: none;
+      border-radius: 8px;
+      background: #3182f6;
+      color: white;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .back-button:hover {
+      background: #1b64da;
+    }
+
+    .error-message {
+      margin-top: 15px;
+      color: #f04452;
+      font-size: 14px;
+    }
+
+  </style>
+</head>
+
+
+<body>
+<div class="payment-complete-box">
+  <!-- 결제 완료 -->
+  <div class="check-icon">✓</div>
+
+  <h2>
+    결제를 완료했어요
+  </h2>
+
+  <!-- 결제 금액 -->
+  <div class="payment-info">
+    <div class="payment-row">
+            <span class="payment-label">
+                결제금액
+            </span>
+      <span class="payment-value" id="amount"></span>
+    </div>
+  </div>
+
+  <!-- 원래 페이지로 돌아가기 -->
+  <button type="button" class="back-button" onclick="goBack()">원래 페이지로 돌아가기</button>
+
+
+  <!-- 승인 실패 메시지 본적은 없긴함-->
+  <div
+          id="errorMessage"
+          class="error-message"
+          style="display:none;">
+  </div>
+
+
+</div>
+
+
+<script>
+  // URL 파라미터
+  const urlParams = new URLSearchParams(window.location.search);
+  const paymentKey = urlParams.get("paymentKey");
+  const orderId = urlParams.get("orderId");
+  const amount = urlParams.get("amount");
+
+
+  // 결제 금액 표시
+  if (amount) {
+    document.getElementById("amount")
+            .textContent
+            = Number(amount).toLocaleString() + "원";
+
+  } else {
+    document.getElementById("amount")
+            .textContent
+            = "-";
   }
 
-  confirm()
-          .then(function (data) {
 
-            // Response 저장
-            sessionStorage.setItem(
-                    "paymentResponse",
-                    JSON.stringify(data)
-            );
-
-            document.getElementById("response").innerHTML =
-                    `<pre>${JSON.stringify(data, null, 4)}</pre>`;
-          })
-    .catch((err) => {
-      // TODO: 결제 승인에 실패했을 경우 UI 처리 로직을 구현하세요.
-      window.location.href = `/fail.html?message=${err.message}&code=${err.code}`;
-    });
-
-  const paymentKeyElement = document.getElementById("paymentKey");
-  const orderIdElement = document.getElementById("orderId");
-  const amountElement = document.getElementById("amount");
-
-  orderIdElement.textContent = urlParams.get("orderId");
-  amountElement.textContent = urlParams.get("amount") + "원";
-  paymentKeyElement.textContent = urlParams.get("paymentKey");
+  // 결제 승인
+  async function confirmPayment() {
+    try {
+      const requestData = {
+        paymentKey: paymentKey,
+        orderId: orderId,
+        amount: amount
+      };
 
 
+      const response = await fetch("/confirm/widget",
+                      {
+                        method: "POST",
+                        headers: {
+                          "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify(requestData)
+                      }
+              );
+
+
+      const json = await response.json();
+
+      if (!response.ok) {
+        throw new Error(json.message || "결제 승인에 실패했습니다.");
+      }
+      console.log("결제 승인 성공", json);
+
+    } catch (error) {
+      console.error("결제 승인 실패:", error);
+
+      const errorMessage = document.getElementById("errorMessage");
+
+      errorMessage.textContent = error.message;
+      errorMessage.style.display = "block";
+    }
+  }
+
+
+
+  // 페이지가 열리면 결제 승인
+  confirmPayment();
+
+
+  // 원래 페이지로 돌아가기
+  function goBack() {
+    window.location.href = "/mypage";
+
+  }
 
 </script>
-<div style="margin-top:30px;">
-  <button class="button"
-          onclick="location.href='/datatesting'">
-    데이터 확인 페이지
-  </button>
-</div>
+
 </body>
+
 </html>
