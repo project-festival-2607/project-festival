@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class AdminNoticeTableDTO {
+public class NoticeTableDTO {
 
   Long bno;
   String title;

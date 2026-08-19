@@ -16,53 +16,60 @@ ul.submenu {
 
 /* ==================== BADGE ==================== */
 
+.badge {
+  font-weight: 500;
+  color: #fff;
+}
+
 .badge.general {
   background-color: #fafafa;
   color: var(--bs-secondary-color);
-  font-weight: 500;
 }
 
 .badge.member-status-active {
   background-color: #5ba456;
-  color: #fff;
-  font-weight: 500;
 }
 
 .badge.member-status-dormant {
   background-color: #b0b6bf;
-  color: #fff;
-  font-weight: 500;
 }
 
 .badge.member-status-suspended {
   background-color: #C65852;
-  color: #fff;
-  font-weight: 500;
 }
 
 .badge.member-status-deleted {
   background-color: #625B62;
-  color: #fff;
-  font-weight: 500;
 }
 
 .badge.inquiry-replied {
   background-color: var(--bs-success);
-  color: #fff;
-  font-weight: 500;
 }
 
 .badge.inquiry-not-replied {
   background-color: var(--bs-secondary);
-  color: #fff;
-  font-weight: 500;
 }
 
 .badge.notice-highlight {
   background-color: var(--bs-danger);
-  color: #fff;
-  font-weight: 500;
 }
+
+.badge.recruitment-status-draft {
+  background-color: var(--bs-secondary);
+}
+
+.badge.recruitment-status-recruiting {
+  background-color: var(--bs-success);
+}
+
+.badge.recruitment-status-paused {
+  background-color: var(--bs-warning);
+  color: var(--bs-dark);
+}
+.badge.recruitment-status-closed {
+  background-color: var(--bs-dark);
+}
+
 
 /* ==================== MISCELLANEOUS ==================== */
 
@@ -101,6 +108,9 @@ a[data-bs-toggle="tooltip"] {
   --bs-dropdown-padding-y: .25rem;
   --bs-dropdown-item-padding-y: .15rem;
   font-size: 13px;
+
+  max-height: 400px;
+  overflow-y: auto;
 }
 
 .dropdown-btn-left {

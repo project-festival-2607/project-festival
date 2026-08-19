@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class AdminInquiryTableDTO {
+public class InquiryTableDTO {
 
   Long ino;
 

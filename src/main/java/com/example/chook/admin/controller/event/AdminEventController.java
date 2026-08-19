@@ -1,7 +1,7 @@
 package com.example.chook.admin.controller.event;
 
 import com.example.chook.admin.dto.member.RecruiterTableDTO;
-import com.example.chook.admin.provider.AdminInfoFieldProvider;
+import com.example.chook.admin.provider.ModalInfoFieldProvider;
 import com.example.chook.admin.service.AdminMemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class AdminEventController {
 
   private final AdminMemberService adminMemberService;
-  private final AdminInfoFieldProvider infoFieldProvider;
+  private final ModalInfoFieldProvider infoFieldProvider;
 
   @GetMapping("/fragment/member")
   public String getMemberFragment(Model model) {
