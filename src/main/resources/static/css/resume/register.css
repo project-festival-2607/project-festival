@@ -185,3 +185,39 @@ body {
 .resume-buttons .cancel-btn:hover {
     background-color: #ddd;
 }
+
+.add-resume-btn {
+    padding: 5px 25px;
+    font-size: 14px;
+    border: 1px solid #4769e4;
+    color: #2C2C2C;
+    border-radius: 10px;
+    width: 200px;
+    background: #FEFEFE;
+    white-space: nowrap;
+
+    transition: 0.3s ease;
+}
+
+.add-resume-btn:hover {
+    background-color: #4769e4;
+    color: #FEFEFE;
+}
+
+.remove-career, .remove-portfolio {
+    padding: 5px 25px;
+    font-size: 14px;
+    border: 1px solid #dc3545;
+    color: #2C2C2C;
+    border-radius: 10px;
+    width: 200px;
+    background: #FEFEFE;
+    white-space: nowrap;
+
+    transition: 0.3s ease;
+}
+
+.remove-career:hover, .remove-portfolio:hover {
+    background-color: #dc3545;
+    color: #FEFEFE;
+}
