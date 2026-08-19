@@ -2,11 +2,13 @@ package com.example.chook.admin.service;
 
 import com.example.chook.admin.condition.event.FestivalSearchCondition;
 import com.example.chook.admin.dto.event.FestivalTableDTO;
+import com.example.chook.admin.dto.event.RecruitmentTableDTO;
 import com.example.chook.admin.repository.AdminEventRepository;
 import com.example.chook.festival.Festival;
 import com.example.chook.festival.FestivalRepository;
 import com.example.chook.member.entity.Member;
 import com.example.chook.member.repository.MemberRepository;
+import com.example.chook.admin.condition.event.RecruitmentSearchCondition;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,6 +31,12 @@ public class AdminEventServiceImpl implements AdminEventService {
   public Page<FestivalTableDTO> getFestivalPage(int pageIdx, int pageSize, FestivalSearchCondition condition) {
     Pageable pageable = PageRequest.of(pageIdx - 1, pageSize);
     return adminEventRepository.getFestivalPage(pageable, condition);
+  }
+
+  @Override
+  public Page<RecruitmentTableDTO> getRecruitmentPage(int pageIdx, int pageSize, RecruitmentSearchCondition condition) {
+    Pageable pageable = PageRequest.of(pageIdx - 1, pageSize);
+    return adminEventRepository.getRecruitmentPage(pageable, condition);
   }
 
   @Transactional

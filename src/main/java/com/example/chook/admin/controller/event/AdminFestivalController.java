@@ -9,7 +9,6 @@ import com.example.chook.admin.form.event.FestivalSearchForm;
 import com.example.chook.admin.provider.ModalInfoFieldProvider;
 import com.example.chook.admin.record.AdminActionResponse;
 import com.example.chook.admin.service.AdminEventService;
-import com.example.chook.admin.service.AdminMemberService;
 import com.example.chook.common.handler.PagingHandler;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +28,6 @@ public class AdminFestivalController {
 
   private static final int PAGINATION_SIZE = 10;
   private final AdminEventService adminEventService;
-  private final AdminMemberService adminMemberService;
   private final ModalInfoFieldProvider infoFieldProvider;
 
   @GetMapping
