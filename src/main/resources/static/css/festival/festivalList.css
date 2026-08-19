@@ -140,6 +140,8 @@
     color: #FEFEFE;
 
     cursor: pointer;
+
+    z-index: 888;
 }
 
 .addBtn {
