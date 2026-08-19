@@ -209,19 +209,19 @@
                     </p>
                 </div>
 
-                <nav th:if="${pagingHandler.totalPageCount > 1}">
-                    <ul class="pagination justify-content-center">
-                        <li class="page-item" th:if="${pagingHandler.prevBtnActive}">
-                            <button class="page-link" type="submit" name="pageIdx" th:value="${pagingHandler.pageIdx - 1}">이전</button>
+                <nav class="pageBtn" th:if="${pagingHandler.totalPageCount > 1}">
+                    <div class="pagination justify-content-center rec-pagination">
+                        <li class="page-item rec-page-item" th:if="${pagingHandler.prevBtnActive}">
+                            <button class="rec-page-link" type="submit" name="pageIdx" th:value="${pagingHandler.pageIdx - 1}"> ← </button>
                         </li>
-                        <li class="page-item" th:each="i : ${#numbers.sequence(pagingHandler.startPageIdx, pagingHandler.endPageIdx)}"
+                        <li class="page-item rec-page-item" th:each="i : ${#numbers.sequence(pagingHandler.startPageIdx, pagingHandler.endPageIdx)}"
                             th:classappend="${i == pagingHandler.pageIdx} ? 'active'">
-                            <button class="page-link" type="submit" name="pageIdx" th:value="${i}">[[${i}]]</button>
+                            <button class="rec-page-link" type="submit" name="pageIdx" th:value="${i}">[[${i}]]</button>
                         </li>
-                        <li class="page-item" th:if="${pagingHandler.nextBtnActive}">
-                            <button class="page-link" type="submit" name="pageIdx" th:value="${pagingHandler.pageIdx + 1}">다음</button>
+                        <li class="page-item rec-page-item" th:if="${pagingHandler.nextBtnActive}">
+                            <button class="rec-page-link" type="submit" name="pageIdx" th:value="${pagingHandler.pageIdx + 1}"> → </button>
                         </li>
-                    </ul>
+                    </div>
                 </nav>
             </div>
 
