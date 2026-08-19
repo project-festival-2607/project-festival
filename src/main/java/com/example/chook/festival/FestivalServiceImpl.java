@@ -21,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.ObjectMapper;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -224,7 +225,10 @@ public class FestivalServiceImpl implements FestivalService, ApplicationRunner {
 
     @Override
     public List<ChookMainDTO> getMainList() {
-        return festivalRepository.findAll(Sort.by(Sort.Direction.DESC, "startDate"))
+
+        LocalDate today = LocalDate.now();
+
+        return festivalRepository.findActiveFestivalsTop9(today)
                 .stream()
                 .map((fes) -> new ChookMainDTO(
                         fes.getContentId(),

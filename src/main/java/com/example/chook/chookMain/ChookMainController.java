@@ -25,9 +25,9 @@ public class ChookMainController {
         List<ChookRecruitmentDTO> recruitmentList = recruitmentService.getMainList();
 
         if (!mainList.isEmpty()) {
-            ChookMainDTO topFestival = mainList.get(0);
+            ChookMainDTO topFestival = mainList.get(1);
 
-            List<ChookMainDTO> subList = mainList.subList(1, 9);
+            List<ChookMainDTO> subList = mainList.subList(2, 10);
 
             model.addAttribute("topFestival", topFestival);
             model.addAttribute("subList", subList);

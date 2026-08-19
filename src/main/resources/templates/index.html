@@ -117,9 +117,7 @@
                 <div class="index-gallery">
                     <div class="gallery-items" th:each="fes : ${subList}">
                         <a th:href="@{/festival/detail(id=${fes.contentId})}">
-                            <div class="gallery-item"
-                                 th:style="'background-image: url(' + ${fes.firstImage} + ')'"
-                            ></div>
+                            <img class="gallery-item-img" th:src="${fes.firstImage}" alt="축제 포스터" />
                         </a>
                         <div class="gal-sub-title">
                             <div th:switch="${fes.status}">

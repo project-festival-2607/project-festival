@@ -1,6 +1,7 @@
 package com.example.chook.festival;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.CaseBuilder;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
@@ -10,6 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.util.StringUtils;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import static com.example.chook.festival.QFestival.festival;
@@ -40,6 +42,21 @@ public class FestivalCustomRepositoryImpl implements FestivalCustomRepository{
                 .where(condition);
 
         return PageableExecutionUtils.getPage(festivalList, pageable, count::fetchOne);
+    }
+
+    @Override
+    public List<Festival> findActiveFestivalsTop9(LocalDate today) {
+        return jpaQueryFactory
+                .selectFrom(festival)
+                .where(festival.endDate.goe(today))
+                .orderBy(
+                        new CaseBuilder()
+                                .when(festival.startDate.loe(today)).then(1)
+                                .otherwise(2).asc(),
+                        festival.startDate.asc()
+                )
+                .limit(10)
+                .fetch();
     }
 
     private BooleanExpression eqSearchType(String type, String keyword, String month){
