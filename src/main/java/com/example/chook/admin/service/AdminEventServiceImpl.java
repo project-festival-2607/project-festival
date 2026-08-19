@@ -1,6 +1,7 @@
 package com.example.chook.admin.service;
 
 import com.example.chook.admin.condition.event.FestivalSearchCondition;
+import com.example.chook.admin.condition.event.RecruitmentSearchCondition;
 import com.example.chook.admin.dto.event.FestivalTableDTO;
 import com.example.chook.admin.dto.event.RecruitmentTableDTO;
 import com.example.chook.admin.dto.event.RegionOption;
@@ -10,7 +11,6 @@ import com.example.chook.festival.Festival;
 import com.example.chook.festival.FestivalRepository;
 import com.example.chook.member.entity.Member;
 import com.example.chook.member.repository.MemberRepository;
-import com.example.chook.admin.condition.event.RecruitmentSearchCondition;
 import com.example.chook.region.repository.RegionSidoRepository;
 import com.example.chook.region.repository.RegionSigunguRepository;
 import jakarta.persistence.EntityNotFoundException;
