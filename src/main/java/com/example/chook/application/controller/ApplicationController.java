@@ -192,7 +192,8 @@ public class ApplicationController {
         // 이력서가 없는 경우
         if (applyDTO.getResume() == null) {
 
-            if(userDetails.getRole() == MemberRole.JOB_SEEKER){
+            if(userDetails.getRole() == MemberRole.JOB_SEEKER ||
+               userDetails.getRole() == MemberRole.JOB_EQUIP){
                 redirectAttributes.addFlashAttribute(
                         "resumeMessage",
                         "지원하려면 먼저 이력서를 작성해주세요."
