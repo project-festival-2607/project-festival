@@ -31,9 +31,7 @@ sendBtn.addEventListener("click", async () => {
 
     // 사용자 질문 화면 출력
     chatBody.innerHTML += `
-        <p>
-            👤 ${question}
-        </p>
+        <div class="my-question">${question}</div>
         `;
 
     // 입력창 비우기
@@ -83,9 +81,9 @@ sendBtn.addEventListener("click", async () => {
     const formattedAnswer = answer.replace(/\n/g, '<br>');
 
     chatBody.innerHTML += `
-    <p>
-        🤖 ${formattedAnswer}
-    </p>
+        <div class="chat-hi">
+                 ${formattedAnswer}
+        </div>
 `;
     chatBody.scrollTop = chatBody.scrollHeight;
 });
