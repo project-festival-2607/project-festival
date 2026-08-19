@@ -1,3 +1,4 @@
+// /*mypage.html에서 사용함.*/
 // DOM
 const pointPaymentBackdrop = document.getElementById("pointPaymentBackdrop");
 const pointPaymentNextBtn = document.getElementById("pointPaymentNextBtn");
