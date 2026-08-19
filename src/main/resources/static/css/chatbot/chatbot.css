@@ -128,3 +128,10 @@
     width: fit-content;
     max-width: 80%;
 }
+
+.chatbot-name {
+    -webkit-text-stroke: 1px #dc3545;
+    font-weight: 900;
+    color: #FEFEFE;
+    font-size: 18px;
+}
