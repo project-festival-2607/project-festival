@@ -21,9 +21,12 @@ public class RecruitmentTableDTO {
   private String festivalContentId;
   private String festivalTitle;
 
+  private String sidoCode;
   private String sidoName;
+  private String sigunguCode;
   private String sigunguName;
   private String workingLocation;
+
   private LocalDate applicationDeadline;
   private LocalDate workingStartDate;
   private LocalDate workingEndDate;
