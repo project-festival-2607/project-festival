@@ -70,10 +70,16 @@
 <!--                        </li>-->
 
                         <li sec:authorize="isAuthenticated()">
-                            <a th:href="@{/mypage}"
+                            <a sec:authorize="!hasRole('ROLE_ADMIN')"
+                               th:href="@{/mypage}"
                                class="nav-link">
                                 마이페이지
                             </a>
+                          <a sec:authorize="hasRole('ROLE_ADMIN')"
+                             th:href="@{/admin/board/inquiry}"
+                             class="nav-link">
+                            관리페이지
+                          </a>
                         </li>
 
                     </ul>
