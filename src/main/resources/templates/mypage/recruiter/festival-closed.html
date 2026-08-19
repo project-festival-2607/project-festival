@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ko"
+      layout:decorate="~{layout/layout}"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org">
+<div layout:fragment="content">
+    <link rel="stylesheet" th:href="@{/css/mypage/recruiter/festival-closed.css}">
+    <div class="container">
+<!--                모든 inner는 class="container" 로 맞춤        -->
+<!--        이 안에서 작업        -->
+        <h1>행사 마감</h1>
+
+        <div class="empty-message" th:if="${#lists.isEmpty(festivals)}">
+            <p>마감된 행사가 없습니다.</p>
+        </div>
+
+        <!-- 마감된 행사 목록 -->
+        <div class="festival-card" th:each="festival : ${festivals}">
+            <div class="festival-header">
+                <h2 th:text="${festival.title}">행사 제목</h2>
+                <strong class="closed-status">● 마감</strong>
+            </div>
+
+            <div class="festival-info">
+                <div class="info-item">
+                    <span class="label">행사 장소</span>
+                    <span th:text="${festival.eventPlace}">행사 장소</span>
+                </div>
+            </div>
+
+            <div class="info-item">
+                <span class="label">행사 기간</span>
+                <span>
+                    <span th:text="${festival.startDate}"></span>
+                    ~
+                    <span th:text="${festival.endDate}"></span>
+                </span>
+            </div>
+
+            <div class="info-item">
+                <span class="label">주소</span>
+                <span th:text="${festival.address}">행사 주소</span>
+            </div>
+        </div>
+    </div>
+</div>

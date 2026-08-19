@@ -228,6 +228,49 @@ public class MyPageController {
         return "mypage/recruiter/festival-ongoing";
     }
 
+    // 마감된 행사
+    @GetMapping("/recruiter/festival-closed")
+    public String closedFestivals(
+            @AuthenticationPrincipal UserDetails user,
+            Model model) {
+
+        // 로그인하지 않은 경우
+        if (user == null) {
+            return "redirect:/member/login";
+        }
+        // 현재 로그인한 구인자의 username
+        String username = user.getUsername();
+
+        // 회원 정보 조회
+        MyPageDTO myPageDTO = myPageService.getMyPage(username);
+
+        // 구인자만 접근 가능
+        if (myPageDTO.getRole() != MemberRole.RECRUITER) {
+            return "redirect:/";
+        }
+        // 구인자가 등록한 행사 조회
+        List<Festival> festivals = festivalRepository.findByMember_Username(username);
+
+        // 마감된 행사 저장
+        List<Festival> closedFestivals = new java.util.ArrayList<>();
+
+        // 오늘 날짜
+        LocalDate today = LocalDate.now();
+
+        // 모든 행사 확인
+        for (Festival festival : festivals) {
+            // 행사 종료일이 오늘보다 이전이면 마감
+            if (today.isAfter(festival.getEndDate())) {
+                closedFestivals.add(festival);
+            }
+        }
+        // HTML에 데이터 전달
+        model.addAttribute("myPageDTO", myPageDTO);
+        model.addAttribute("festivals", closedFestivals);
+
+        return "mypage/recruiter/festival-closed";
+    }
+
     // 비밀번호 확인 페이지
     @GetMapping("/password-check")
     public String passwordCheckForm(@AuthenticationPrincipal CustomUserDetails userDetails, Model model) {
