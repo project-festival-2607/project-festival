@@ -1,47 +1,46 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<html lang="ko"
+      layout:decorate="~{layout/layout}"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>회원탈퇴</title>
-    <link rel="stylesheet" th:href="@{/libs/bootstrap-5.3.8-dist/css/bootstrap.min.css}">
+    <th:block layout:fragment="css">
+        <link rel="stylesheet" th:href="@{/css/member/login.css}">
+    </th:block>
 </head>
-<body>
-<div class="container" style="max-width: 400px;">
-    <h1 class="mb-4 text-center mt-5">회원탈퇴</h1>
+<div layout:fragment="content">
+    <div class="container login-container">
+        <h1 class="login-h1">회원탈퇴</h1>
 
-    <div class="border rounded p-3 mb-3" style="height: 200px; overflow-y: auto;">
-        <p class="text-muted mb-0">
-            회원탈퇴 시 계정 정보 및 이용 기록이 삭제되며, 복구할 수 없습니다.
-        </p>
-    </div>
-
-    <div class="form-check mb-4">
-        <input type="checkbox" class="form-check-input" id="agreeTerms">
-        <label class="form-check-label" for="agreeTerms">
-            위 내용에 동의합니다.
-        </label>
-    </div>
-
-    <div id="confirmSection" style="display: none;">
-        <div class="mb-3">
-            <label for="username" class="form-label">아이디</label>
-            <input type="text" class="form-control" id="username" th:value="${username}" disabled>
+        <div class="p-3 mb-3" style="height: 200px; overflow-y: auto; font-size: 14px; color: #dc3545">
+            <p class="text-muted mb-0">
+                회원탈퇴 시 계정 정보 및 이용 기록이 삭제되며, 복구할 수 없습니다.
+            </p>
         </div>
 
-        <div th:if="${!socialSignUp}" class="mb-3">
-            <label for="password" class="form-label">비밀번호</label>
-            <input type="password" class="form-control" id="password" name="password" required>
+        <div class="form-check mb-4">
+            <input type="checkbox" class="form-check-input" id="agreeTerms">
+            <label class="form-check-label" for="agreeTerms" style="color: #dc3545; font-size: 14px;">
+                위 내용에 동의합니다.
+            </label>
         </div>
 
-        <div th:if="${socialSignUp}" class="mb-3">
-            <p class="text-muted mb-2">소셜회원은 비밀번호를 입력하지 않으셔도 됩니다.</p>
-            <label for="confirmName" class="form-label">이름 확인</label>
-            <input type="text" class="form-control" id="confirmName" name="confirmName" required>
-        </div>
+        <div id="confirmSection" style="display: none;">
+            <div class="mb-3">
+                <input type="text" class="login-input" id="username" th:value="${username}" disabled>
+            </div>
 
-        <button type="button" id="withdrawBtn" class="btn btn-danger w-100">탈퇴</button>
+            <div th:if="${!socialSignUp}" class="mb-3">
+                <input type="password" class="login-input" id="password" name="password" placeholder="비밀번호입력" required>
+            </div>
+
+            <div th:if="${socialSignUp}" class="mb-3">
+                <p class="text-muted mb-2">소셜회원은 비밀번호를 입력하지 않으셔도 됩니다.</p>
+                <input type="text" class="login-input" id="confirmName" name="confirmName" placeholder="이름확인" required>
+            </div>
+
+            <button type="button" id="withdrawBtn" class="btn btn-danger w-100" style="font-size: 14px;">탈퇴</button>
+        </div>
     </div>
+    <script th:src="@{/js/mypage/accountLeave.js}"></script>
 </div>
-<script th:src="@{/js/mypage/accountLeave.js}"></script>
-</body>
-</html>
