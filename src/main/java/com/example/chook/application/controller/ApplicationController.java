@@ -11,6 +11,7 @@ import com.example.chook.member.entity.Member;
 import com.example.chook.member.entity.enums.MemberRole;
 import com.example.chook.member.repository.MemberRepository;
 import com.example.chook.member.security.CustomUserDetails;
+import com.example.chook.recruitment.entity.enums.RecruitmentCategory;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -184,6 +185,18 @@ public class ApplicationController {
             redirectAttributes.addFlashAttribute(
                     "applicationMessage",
                     "이미 지원한 공고입니다."
+            );
+
+            return "redirect:/recruitment/" + recruitmentId;
+        }
+
+        // 푸드트럭 지원 제한
+        if (applyDTO.getRecruitment().getCategory() == RecruitmentCategory.FOOD_TRUCK
+                && userDetails.getRole() == MemberRole.JOB_SEEKER) {
+
+            redirectAttributes.addFlashAttribute(
+                    "applicationMessage",
+                    "푸드트럭 공고는 사업자등록번호가 등록된 구직자만 지원할 수 있습니다."
             );
 
             return "redirect:/recruitment/" + recruitmentId;
