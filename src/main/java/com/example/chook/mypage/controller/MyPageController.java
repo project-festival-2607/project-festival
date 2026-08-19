@@ -180,8 +180,8 @@ public class MyPageController {
         for (Festival festival : festivals) {
             List<Recruitment> recruitments = festival.getRecruitments();
             for (Recruitment recruitment : recruitments) {
-                // 행사 마감일 전인지 확인
-                if (!today.isAfter(recruitment.getWorkingEndDate())) {
+                // 모집 마감일 전인지 확인
+                if (!today.isAfter(recruitment.getApplicationDeadline())) {
                     ongoingRecruitments.add(recruitment);
                 }
             }
