@@ -9,6 +9,8 @@ import com.example.chook.admin.form.event.RecruitmentSearchForm;
 import com.example.chook.admin.provider.ModalInfoFieldProvider;
 import com.example.chook.admin.service.AdminEventService;
 import com.example.chook.common.handler.PagingHandler;
+import com.example.chook.recruitment.entity.enums.RecruitmentCategory;
+import com.example.chook.recruitment.entity.enums.RecruitmentStatus;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -52,7 +54,7 @@ public class AdminRecruitmentController {
   ) {
 
     RecruitmentSearchCondition condition = RecruitmentSearchCondition.from(form);
-    log.info("condition: {}", condition);
+    String sidoCode = condition.sidoCode();
     Page<RecruitmentTableDTO> page = adminEventService.getRecruitmentPage(pageIdx, pageSize, condition);
 
     model.addAttribute("page", page);
@@ -61,6 +63,12 @@ public class AdminRecruitmentController {
       new PagingHandler<>(page, form, PAGINATION_SIZE, pageIdx);
     model.addAttribute("pagingHandler", pagingHandler);
     model.addAttribute("pageSizeOptions", List.of(10, 30, 50));
+
+    // thead status dropdown용
+    model.addAttribute("recruitmentCategoryList", List.of(RecruitmentCategory.values()));
+    model.addAttribute("recruitmentStatusList", List.of(RecruitmentStatus.values()));
+    model.addAttribute("regionSidoList", adminEventService.getSidoOptionList());
+    model.addAttribute("regionSigunguList", adminEventService.getSigunguOptionListFromSidoCode(sidoCode));
 
     log.info("form: {}", form);
     log.info("model: {}", model);

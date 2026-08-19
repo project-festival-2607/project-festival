@@ -37,10 +37,12 @@ public record RecruitmentSearchForm(
     dateRangeType = blankToNull(dateRangeType);
     category = blankToNull(category);
     sidoCode = blankToNull(sidoCode);
-    sigunguCode = blankToNull(sigunguCode);
     status = blankToNull(status);
     sortCriteria = blankToNull(sortCriteria);
 
+    String rawSigunguCode = blankToNull(sigunguCode);
+    if (sidoCode != null && rawSigunguCode != null && !rawSigunguCode.startsWith(sidoCode)) rawSigunguCode = null;
+    sigunguCode = rawSigunguCode;
   }
 
 }
