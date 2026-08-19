@@ -1,7 +1,9 @@
 package com.example.chook.admin.service;
 
 import com.example.chook.admin.condition.board.InquirySearchCondition;
+import com.example.chook.admin.condition.board.NoticeSearchCondition;
 import com.example.chook.admin.dto.board.AdminInquiryTableDTO;
+import com.example.chook.admin.dto.board.AdminNoticeTableDTO;
 import com.example.chook.admin.entity.enums.inquiry.InquiryReplyStatus;
 import com.example.chook.admin.repository.AdminBoardRepository;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +30,12 @@ public class AdminBoardServiceImpl implements AdminBoardService {
       );
     });
     return result;
+  }
+
+  @Override
+  public Page<AdminNoticeTableDTO> getNoticeListPage(int pageIdx, int pageSize, NoticeSearchCondition condition) {
+    Pageable pageable = PageRequest.of(pageIdx - 1, pageSize);
+    return adminBoardRepository.getNoticeListPage(pageable, condition);
   }
 
 }

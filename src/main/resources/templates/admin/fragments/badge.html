@@ -19,3 +19,9 @@
       th:classappend="${replyStatus.badgeClass}"
       th:text="${(replyStatus.label)}">
 </span>
+
+<span th:fragment="general-with-badgeClass(label, badgeClass)"
+      class="badge rounded-pill"
+      th:classappend="${badgeClass}"
+      th:text="${label}">
+</span>

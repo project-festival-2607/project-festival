@@ -60,7 +60,8 @@
         <td>
           <div class="text-ellipsis-with-suffix">
             <span class="ellipsis-main">
-              <span data-field="title" th:text="${festival.title}"></span>
+              <a class="fw-medium" data-field="title"
+                 th:href="@{/festival/detail(id=${festival.contentId})}" th:text="${festival.title}"></a>
             </span>
             <span class="d-none" data-field="contentId" th:text="${festival.contentId}"></span>
             <span class="ellipsis-suffix">

@@ -11,7 +11,7 @@ import java.time.format.DateTimeFormatter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class AdminBoardDTO {
+public class NoticeDTO {
     private Long bno;
     private String title;
     private String content;
