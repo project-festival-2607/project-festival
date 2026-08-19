@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<th:block th:fragment="recruitment-result">
+  <div class="result-table-wrapper"
+       id="tableWrapper"
+       th:with="form=${pagingHandler.form}">
+    <input id="sortCriteria" name="sortCriteria" th:value="${form.sortCriteria}" type="hidden"/>
+    <input id="ascending" name="ascending" th:value="${form.ascending}" type="hidden"/>
+    <table class="table">
+      <colgroup>
+        <col style="width: 65px;">  <!-- # -->
+        <col style="width: 90px;">  <!-- 공고 구분 -->
+        <col style="width: 90px;">  <!-- 공고 상태 -->
+        <col style="width: 340px">  <!-- 공고 제목 -->
+        <col style="width: 340px">  <!-- 행사 제목 -->
+        <col style="width: 110px;">  <!-- 지역 구분 (광역시도) -->
+        <col style="width: 160px;"> <!-- 지역 구분 (시군구) -->
+        <col style="width: 300px;"> <!-- 근무 장소 -->
+        <col style="width: 110px;"> <!-- 지원마감일 -->
+        <col style="width: 110px;"> <!-- 근무시작일 -->
+        <col style="width: 110px;"> <!-- 근무종료일 -->
+        <col style="width: 135px;"> <!-- 게시일시 -->
+        <col style="width: 135px;"> <!-- 삭제일시 -->
+        <col style="width: 95px;">  <!-- 지원자 수 -->
+        <col style="width: 45px;">  <!-- 관리 -->
+      </colgroup>
+      <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">
+          <div class="d-flex gap-3 justify-content-between">
+            <span>구분</span>
+            <div class="dropdown d-flex justify-content-center align-items-center">
+              <button class="btn btn-reset btn-th dropdown-toggle dropdown-no-caret" data-bs-toggle="dropdown"
+                      type="button">
+                <th:block th:replace="${form.category == null}
+                                      ? ~{admin/fragments/svg :: filter-idle('filter-idle-icon')}
+                                      : ~{admin/fragments/svg :: filter-active('filter-active-icon')}"></th:block>
+              </button>
+              <ul class="dropdown-menu filter-menu" id="categoryFilterDropdownList">
+                <li>
+                  <button class="dropdown-item category-filter-li" data-role="update-filter"
+                          data-target-element="filterCategory"
+                          th:classappend="${form.category == null} ? 'active'"
+                          type="button">
+                    <th:block th:replace="~{admin/fragments/badge :: general('전체')}"></th:block>
+                  </button>
+                </li>
+                <li th:each="category: ${recruitmentCategoryList}">
+                  <button class="dropdown-item category-filter-li" data-role="update-filter"
+                          data-target-element="filterCategory"
+                          th:classappend="${form.category != null and form.category == category.name} ? 'active'"
+                          th:data-value="${category.name}"
+                          type="button">
+                    <th:block th:replace="~{admin/fragments/badge :: general(${category.label})}"></th:block>
+                  </button>
+                </li>
+              </ul>
+              <input id="filterCategory" name="category" th:value="${form.category}" type="hidden">
+            </div>
+          </div>
+        </th>
+        <th scope="col">
+          <div class="d-flex gap-3 justify-content-between">
+            <span>상태</span>
+            <div class="dropdown d-flex justify-content-center align-items-center">
+              <button class="btn btn-reset btn-th dropdown-toggle dropdown-no-caret" data-bs-toggle="dropdown"
+                      type="button">
+                <th:block th:replace="${form.status == null}
+                                      ? ~{admin/fragments/svg :: filter-idle('filter-idle-icon')}
+                                      : ~{admin/fragments/svg :: filter-active('filter-active-icon')}"></th:block>
+              </button>
+              <ul class="dropdown-menu filter-menu" id="statusFilterDropdownList">
+                <li>
+                  <button class="dropdown-item status-filter-li" data-role="update-filter"
+                          data-target-element="filterStatus"
+                          th:classappend="${form.status == null} ? 'active'"
+                          type="button">
+                    <th:block th:replace="~{admin/fragments/badge :: general('전체')}"></th:block>
+                  </button>
+                </li>
+                <li th:each="status: ${recruitmentStatusList}">
+                  <button class="dropdown-item status-filter-li" data-role="update-filter"
+                          data-target-element="filterStatus"
+                          th:classappend="${form.status != null and form.status == status.name} ? 'active'"
+                          th:data-value="${status.name}"
+                          type="button">
+                    <th:block
+                      th:replace="~{admin/fragments/badge :: general-with-badgeClass(${status.label}, ${status.badgeClass})}"></th:block>
+                  </button>
+                </li>
+              </ul>
+              <input id="filterStatus" name="status" th:value="${form.status}" type="hidden">
+            </div>
+          </div>
+        </th>
+        <th scope="col">공고 제목</th>
+        <th scope="col">행사 제목</th>
+        <th scope="col">
+          <div class="d-flex gap-3 justify-content-between">
+            <span>광역시도</span>
+            <div class="dropdown d-flex justify-content-center align-items-center">
+              <button class="btn btn-reset btn-th dropdown-toggle dropdown-no-caret" data-bs-toggle="dropdown"
+                      type="button">
+                <th:block th:replace="${form.sidoCode == null}
+                                      ? ~{admin/fragments/svg :: filter-idle('filter-idle-icon')}
+                                      : ~{admin/fragments/svg :: filter-active('filter-active-icon')}"></th:block>
+              </button>
+              <ul class="dropdown-menu filter-menu" id="regionSidoDropdownList">
+                <li>
+                  <button class="dropdown-item region-sido-filter-li" data-role="update-filter"
+                          data-target-element="filterSido"
+                          th:classappend="${form.sidoCode == null} ? 'active'"
+                          type="button">
+                    <th:block th:replace="~{admin/fragments/badge :: general('전체')}"></th:block>
+                  </button>
+                </li>
+                <li th:each="regionSido: ${regionSidoList}">
+                  <button class="dropdown-item region-sido-filter-li" data-role="update-filter"
+                          data-target-element="filterSido"
+                          th:classappend="${form.sidoCode != null and form.sidoCode == regionSido.name} ? 'active'"
+                          th:data-value="${regionSido.name}"
+                          type="button">
+                    <th:block
+                      th:replace="~{admin/fragments/badge :: general(${regionSido.label})}"></th:block>
+                  </button>
+                </li>
+              </ul>
+              <input id="filterSido" name="sidoCode" th:value="${form.sidoCode}" type="hidden">
+            </div>
+          </div>
+        </th>
+        <th scope="col">
+          <div class="d-flex gap-3 justify-content-between">
+            <span>시군구</span>
+            <div class="dropdown d-flex justify-content-center align-items-center">
+              <button class="btn btn-reset btn-th dropdown-toggle dropdown-no-caret" data-bs-toggle="dropdown"
+                      type="button">
+                <th:block th:replace="${form.sigunguCode == null}
+                                      ? ~{admin/fragments/svg :: filter-idle('filter-idle-icon')}
+                                      : ~{admin/fragments/svg :: filter-active('filter-active-icon')}"></th:block>
+              </button>
+              <ul class="dropdown-menu filter-menu" id="regionSigunguDropdownList">
+                <li>
+                  <button class="dropdown-item region-sigungu-filter-li" data-role="update-filter"
+                          data-target-element="filterSigungu"
+                          th:classappend="${form.sigunguCode == null} ? 'active'"
+                          type="button">
+                    <th:block th:replace="~{admin/fragments/badge :: general('선택')}"></th:block>
+                  </button>
+                </li>
+                <li th:each="regionSigungu: ${regionSigunguList}">
+                  <button class="dropdown-item region-sigungu-filter-li" data-role="update-filter"
+                          data-target-element="filterSigungu"
+                          th:classappend="${form.sigunguCode != null and form.sigunguCode == regionSigungu.name} ? 'active'"
+                          th:data-value="${regionSigungu.name}"
+                          type="button">
+                    <th:block
+                      th:replace="~{admin/fragments/badge :: general(${regionSigungu.label})}"></th:block>
+                  </button>
+                </li>
+              </ul>
+              <input id="filterSigungu" name="sigunguCode" th:value="${form.sigunguCode}" type="hidden">
+            </div>
+          </div>
+        </th>
+        <th scope="col">근무 장소</th>
+        <th scope="col">
+          <span class="d-flex gap-3 justify-content-between">
+            <span>지원마감일</span>
+            <th:block th:replace="~{admin/fragments/sort-button :: sort-button(
+            'APPLICATION_DEADLINE', ${form.sortCriteria}, ${form.ascending}
+            )}"></th:block>
+          </span>
+        </th>
+        <th scope="col">
+          <span class="d-flex gap-3 justify-content-between">
+            <span>근무시작일</span>
+            <th:block th:replace="~{admin/fragments/sort-button :: sort-button(
+            'WORKING_START_DATE', ${form.sortCriteria}, ${form.ascending}
+            )}"></th:block>
+          </span>
+        </th>
+        <th scope="col">
+          <span class="d-flex gap-3 justify-content-between">
+            <span>근무종료일</span>
+            <th:block th:replace="~{admin/fragments/sort-button :: sort-button(
+            'WORKING_END_DATE', ${form.sortCriteria}, ${form.ascending}
+            )}"></th:block>
+          </span>
+        </th>
+        <th scope="col">
+          <span class="d-flex gap-3 justify-content-between">
+            <span>게시일시</span>
+            <th:block th:replace="~{admin/fragments/sort-button :: sort-button(
+            'PUBLISHED_AT', ${form.sortCriteria}, ${form.ascending}
+            )}"></th:block>
+          </span>
+        </th>
+        <th scope="col">
+          <span class="d-flex gap-3 justify-content-between">
+            <span>삭제일시</span>
+            <th:block th:replace="~{admin/fragments/sort-button :: sort-button(
+            'DELETED_AT', ${form.sortCriteria}, ${form.ascending}
+            )}"></th:block>
+          </span>
+        </th>
+        <th scope="col">
+          <span class="d-flex gap-3 justify-content-between">
+            <span>지원자 수</span>
+            <th:block th:replace="~{admin/fragments/sort-button :: sort-button(
+            'APPLICANT_COUNT', ${form.sortCriteria}, ${form.ascending}
+            )}"></th:block>
+          </span>
+        </th>
+        <th class="text-center bg-body-secondary" scope="col">관리</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="recruitment: ${page}">
+        <td data-field="id" th:text="${recruitment.id}"></td>
+        <td>
+          <th:block
+            th:replace="~{admin/fragments/badge :: general(${recruitment.category.label})}"></th:block>
+        </td>
+        <td>
+          <th:block
+            th:replace="~{admin/fragments/badge :: general-with-badgeClass(
+            ${recruitment.status.label},
+            ${recruitment.status.badgeClass})}"></th:block>
+        </td>
+        <td>
+          <a class="fw-medium" data-field="title"
+             th:href="@{/recruitment/{id}(id=${recruitment.id})}" th:text="${recruitment.title}"></a>
+        </td>
+        <td>
+          <div class="text-ellipsis-with-suffix">
+            <span class="ellipsis-main">
+              <a class="fw-medium" data-field="title"
+                 th:href="@{/festival/detail(id=${recruitment.festivalContentId})}" th:text="${recruitment.festivalTitle}"></a>
+            </span>
+            <span class="d-none" data-field="contentId" th:text="${recruitment.festivalContentId}"></span>
+            <span class="ellipsis-suffix">
+              <span th:replace="~{admin/fragments/tooltip :: unique-id(${recruitment.festivalContentId})}"></span>
+            </span>
+          </div>
+        </td>
+        <td>
+          <span class="d-none" data-field="sidoCode" th:text="${recruitment.sidoCode}"></span>
+          <span data-field="sidoName" th:text="${recruitment.sidoName}"></span>
+        </td>
+        <td>
+          <span class="d-none" data-field="sigunguCode" th:text="${recruitment.sigunguCode}"></span>
+          <span data-field="sigunguName" th:text="${recruitment.sigunguName}"></span>
+        </td>
+        <td data-field="workingLocation" th:text="${recruitment.workingLocation}"></td>
+        <td data-field="applicationDeadline" th:text="${#temporals.format(recruitment.applicationDeadline, 'yyyy.MM.dd.')}"></td>
+        <td data-field="workingStartDate" th:text="${#temporals.format(recruitment.workingStartDate, 'yyyy.MM.dd.')}"></td>
+        <td data-field="workingEndDate" th:text="${#temporals.format(recruitment.workingEndDate, 'yyyy.MM.dd.')}"></td>
+        <td data-field="publishedAt" th:text="${#temporals.format(recruitment.deletedAt, 'yyyy.MM.dd. hh:mm')}"></td>
+        <td data-field="deletedAt" th:text="${#temporals.format(recruitment.deletedAt, 'yyyy.MM.dd. hh:mm')}"></td>
+        <td class="text-end" data-field="applicantCount" th:text="${recruitment.applicantCount}"></td>
+        <td class="center bg-body-secondary">
+          <button class="btn btn-reset dropdown-toggle dropdown-no-caret moderation-btn" data-bs-toggle="dropdown"
+                  type="button">
+            <th:block th:replace="~{admin/fragments/svg :: moderation('moderation-icon')}"></th:block>
+          </button>
+          <ul class="dropdown-menu moderation-menu">
+          </ul>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+  <div>
+    <th:block th:replace="~{admin/fragments/pagination :: pagination(
+      ${pagingHandler},
+      ${pageSize},
+      ${pageSizeOptions}
+    )}"></th:block>
+  </div>
+</th:block>

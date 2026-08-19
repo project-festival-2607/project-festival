@@ -27,33 +27,40 @@ document.querySelector('button[data-role="reset-search-form"]').addEventListener
   updateDateRangeTypeAndToggleInputType();
 })
 
-function getPageUrl(baseUrl, {reset=false, forceParams} = {}) {
+function getPageUrl(baseUrl, {reset = false, forceParams} = {}) {
 
   if (reset) return `${baseUrl}`;
 
   const form = document.getElementById('form');
-  const params = (forceParams) ? forceParams : new URLSearchParams(new FormData(form));
+  let params = new URLSearchParams(new FormData(form));
+  if (forceParams) {
+    for (const [key, value] of forceParams) params.set(key, value);
+  }
 
   return `${baseUrl}?${params}`;
 
 }
 
-function getResultRequestUrl(baseUrl, {reset=false, forceParams} = {}) {
+function getResultRequestUrl(baseUrl, {reset = false, forceParams} = {}) {
 
   if (reset) return `${baseUrl}/result`;
 
   const form = document.getElementById('form');
-  const params = (forceParams) ? forceParams : new URLSearchParams(new FormData(form));
+  let params = new URLSearchParams(new FormData(form));
+  if (forceParams) {
+    for (const [key, value] of forceParams) params.set(key, value);
+  }
 
   return `${baseUrl}/result?${params}`;
 
 }
 
-function loadResult(baseUrl, {reset=false, forceParams} = {}) {
-  
+function loadResult(baseUrl, {reset = false, forceParams} = {}) {
+
   const pageUrl = getPageUrl(baseUrl, {reset, forceParams});
   const resultUrl = getResultRequestUrl(baseUrl, {reset, forceParams});
 
+  console.log('pageUrl: ', pageUrl);
   console.log('resultUrl: ', resultUrl);
 
   fetch(resultUrl).then(
