@@ -72,6 +72,7 @@ public class AdminRecruitmentController {
 
     log.info("form: {}", form);
     log.info("model: {}", model);
+    log.info("page: {}", page.getContent());
     return "admin/event/fragments/result/recruitment";
   }
 

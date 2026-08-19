@@ -41,7 +41,8 @@ public record RecruitmentSearchForm(
     sortCriteria = blankToNull(sortCriteria);
 
     String rawSigunguCode = blankToNull(sigunguCode);
-    if (sidoCode != null && rawSigunguCode != null && !rawSigunguCode.startsWith(sidoCode)) rawSigunguCode = null;
+    if (sidoCode == null ||
+        rawSigunguCode != null && !rawSigunguCode.startsWith(sidoCode)) rawSigunguCode = null;
     sigunguCode = rawSigunguCode;
   }
 

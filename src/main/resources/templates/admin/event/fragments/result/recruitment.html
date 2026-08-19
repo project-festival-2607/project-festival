@@ -19,9 +19,9 @@
         <col style="width: 110px;">  <!-- 지역 구분 (광역시도) -->
         <col style="width: 160px;"> <!-- 지역 구분 (시군구) -->
         <col style="width: 300px;"> <!-- 근무 장소 -->
-        <col style="width: 135px;"> <!-- 지원마감일 -->
-        <col style="width: 135px;"> <!-- 근무시작일 -->
-        <col style="width: 135px;"> <!-- 근무종료일 -->
+        <col style="width: 110px;"> <!-- 지원마감일 -->
+        <col style="width: 110px;"> <!-- 근무시작일 -->
+        <col style="width: 110px;"> <!-- 근무종료일 -->
         <col style="width: 135px;"> <!-- 게시일시 -->
         <col style="width: 135px;"> <!-- 삭제일시 -->
         <col style="width: 95px;">  <!-- 지원자 수 -->
@@ -221,14 +221,56 @@
       </thead>
       <tbody>
       <tr th:each="recruitment: ${page}">
-        <!--        <td class="center bg-body-secondary">-->
-        <!--          <button class="btn btn-reset dropdown-toggle dropdown-no-caret moderation-btn" data-bs-toggle="dropdown"-->
-        <!--                  type="button">-->
-        <!--            <th:block th:replace="~{admin/fragments/svg :: moderation('moderation-icon')}"></th:block>-->
-        <!--          </button>-->
-        <!--          <ul class="dropdown-menu moderation-menu">-->
-        <!--          </ul>-->
-        <!--        </td>-->
+        <td data-field="id" th:text="${recruitment.id}"></td>
+        <td>
+          <th:block
+            th:replace="~{admin/fragments/badge :: general(${recruitment.category.label})}"></th:block>
+        </td>
+        <td>
+          <th:block
+            th:replace="~{admin/fragments/badge :: general-with-badgeClass(
+            ${recruitment.status.label},
+            ${recruitment.status.badgeClass})}"></th:block>
+        </td>
+        <td>
+          <a class="fw-medium" data-field="title"
+             th:href="@{/recruitment/{id}(id=${recruitment.id})}" th:text="${recruitment.title}"></a>
+        </td>
+        <td>
+          <div class="text-ellipsis-with-suffix">
+            <span class="ellipsis-main">
+              <a class="fw-medium" data-field="title"
+                 th:href="@{/festival/detail(id=${recruitment.festivalContentId})}" th:text="${recruitment.festivalTitle}"></a>
+            </span>
+            <span class="d-none" data-field="contentId" th:text="${recruitment.festivalContentId}"></span>
+            <span class="ellipsis-suffix">
+              <span th:replace="~{admin/fragments/tooltip :: unique-id(${recruitment.festivalContentId})}"></span>
+            </span>
+          </div>
+        </td>
+        <td>
+          <span class="d-none" data-field="sidoCode" th:text="${recruitment.sidoCode}"></span>
+          <span data-field="sidoName" th:text="${recruitment.sidoName}"></span>
+        </td>
+        <td>
+          <span class="d-none" data-field="sigunguCode" th:text="${recruitment.sigunguCode}"></span>
+          <span data-field="sigunguName" th:text="${recruitment.sigunguName}"></span>
+        </td>
+        <td data-field="workingLocation" th:text="${recruitment.workingLocation}"></td>
+        <td data-field="applicationDeadline" th:text="${#temporals.format(recruitment.applicationDeadline, 'yyyy.MM.dd.')}"></td>
+        <td data-field="workingStartDate" th:text="${#temporals.format(recruitment.workingStartDate, 'yyyy.MM.dd.')}"></td>
+        <td data-field="workingEndDate" th:text="${#temporals.format(recruitment.workingEndDate, 'yyyy.MM.dd.')}"></td>
+        <td data-field="publishedAt" th:text="${#temporals.format(recruitment.deletedAt, 'yyyy.MM.dd. hh:mm')}"></td>
+        <td data-field="deletedAt" th:text="${#temporals.format(recruitment.deletedAt, 'yyyy.MM.dd. hh:mm')}"></td>
+        <td class="text-end" data-field="applicantCount" th:text="${recruitment.applicantCount}"></td>
+        <td class="center bg-body-secondary">
+          <button class="btn btn-reset dropdown-toggle dropdown-no-caret moderation-btn" data-bs-toggle="dropdown"
+                  type="button">
+            <th:block th:replace="~{admin/fragments/svg :: moderation('moderation-icon')}"></th:block>
+          </button>
+          <ul class="dropdown-menu moderation-menu">
+          </ul>
+        </td>
       </tr>
       </tbody>
     </table>
