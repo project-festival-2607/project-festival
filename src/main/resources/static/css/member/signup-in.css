@@ -125,3 +125,21 @@ label {
 .signup-btn:hover {
     background: #d8d8d8;
 }
+
+.save-btn {
+    padding: 5px 25px;
+    font-size: 14px;
+    border: 1px solid #4769e4;
+    color: #2C2C2C;
+    border-radius: 10px;
+    width: 100%;
+    background: #FEFEFE;
+    white-space: nowrap;
+
+    transition: 0.3s ease;
+}
+
+.save-btn:hover {
+    background-color: #4769e4;
+    color: #FEFEFE;
+}
