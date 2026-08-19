@@ -191,7 +191,7 @@ public class ApplicationController {
         }
 
         // 푸드트럭 지원 제한
-        if ((applyDTO.getRecruitment().getCategory() == RecruitmentCategory.FOOD_TRUCK || applyDTO.getRecruitment().getCategory() == RecruitmentCategory.EQUIPMENT)
+        if (applyDTO.getRecruitment().getCategory() == RecruitmentCategory.FOOD_TRUCK
                 && userDetails.getRole() == MemberRole.JOB_SEEKER) {
 
             redirectAttributes.addFlashAttribute(
