@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org">
+
+<div th:fragment="pointRefundModal">
+
+    <!-- ==============================
+         포인트 환불 모달
+         ============================== -->
+    <div id="pointRefundBackdrop"
+         class="point-refund-backdrop">
+
+        <div class="point-refund-modal"
+             id="pointRefundModalContent">
+
+            <!-- ==============================
+                 헤더
+                 ============================== -->
+            <div class="point-refund-header">
+
+                <h3 class="point-refund-title">
+                    포인트 환불
+                </h3>
+
+                <button type="button"
+                        id="closePointRefundBtn"
+                        class="point-refund-close">
+                    &times;
+                </button>
+
+            </div>
+
+
+            <!-- ==============================
+                 환불 가능 포인트
+                 ============================== -->
+            <div id="pointRefundSummary"
+                 class="point-refund-summary">
+
+                불러오는 중...
+
+            </div>
+
+
+            <!-- ==============================
+                 환불 입력 영역
+                 ============================== -->
+            <div class="point-refund-input-area">
+
+                <label for="pointRefundAmount">
+                    환불할 포인트
+                </label>
+
+                <input type="number"
+                       id="pointRefundAmount"
+                       min="1"
+                       step="1"
+                       placeholder="환불할 포인트를 입력해주세요.">
+
+                <div class="point-refund-unit">
+                    P
+                </div>
+
+            </div>
+
+
+            <!-- ==============================
+                 에러 메시지
+                 ============================== -->
+            <div id="pointRefundError"
+                 class="point-refund-error"
+                 style="display:none;">
+            </div>
+
+
+            <!-- ==============================
+                 환불 요청 버튼
+                 ============================== -->
+            <div class="point-refund-footer">
+
+                <button type="button"
+                        id="pointRefundConfirmBtn"
+                        class="point-refund-confirm-btn">
+
+                    환불 요청
+
+                </button>
+
+            </div>
+
+
+            <!-- ==============================
+                 환불 완료 영역
+                 ============================== -->
+            <div id="pointRefundSuccess"
+                 class="point-refund-success"
+                 style="display:none;">
+
+                <div class="point-refund-success-icon">
+                    ✓
+                </div>
+
+                <h4>
+                    환불이 완료되었습니다.
+                </h4>
+
+                <p id="pointRefundSuccessMessage"></p>
+
+                <p class="point-refund-close-guide">
+                    화면을 클릭하면 닫힙니다.
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+</html>
