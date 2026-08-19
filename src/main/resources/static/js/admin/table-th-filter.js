@@ -18,6 +18,10 @@ document.querySelector('#form').addEventListener('click', (event) => {
     ascending.value = sortTarget.dataset.ascending;
   }
 
-  if (changed) loadResult(window.location.pathname);
+  if (changed) {
+    loadResult(window.location.pathname, {
+      forceParams: new URLSearchParams({ 'pageIdx': '1'})
+    });
+  }
 
 });
