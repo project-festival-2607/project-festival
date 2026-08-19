@@ -83,6 +83,12 @@
     font-display: swap;
 }
 
+:root {
+    --theme-main-color: var(--bs-danger);
+    --theme-main-color-rgb: var(--bs-danger-rgb);
+    --theme-main-color-subtle: var(--bs-danger-text-emphasis);
+}
+
 * {
     font-family: 'Pretendard';
     font-weight: 600;
@@ -119,7 +125,7 @@ ul * {
     transition: height 0.3s ease;
     overflow: visible;
     margin-bottom: 40px;
-    background: #dc3545;
+    background: var(--theme-main-color);
 }
 
 .header-bar > .header-nav {
@@ -194,11 +200,11 @@ ul * {
 
 .dropdown-bg {
     position: absolute;
-    top: 0px;
+    top: 0;
     left: 0;
     width: 100%;
     height: 0;
-    background-color: #dc3545;
+    background-color: var(--theme-main-color);
     transition: height 0.3s ease;
     overflow: hidden;
     z-index: 1;
@@ -229,7 +235,7 @@ ul * {
 }
 
 .user-box .user-sub li a {
-    color: #dc3545;
+    color: var(--theme-main-color);
     transition: 0.3s ease;
     border-radius: 20px;
     background: #FEFEFE;
@@ -237,7 +243,7 @@ ul * {
 }
 
 .user-box .user-sub li a:hover {
-    color: #dc3545;
+    color: var(--theme-main-color);
 }
 
 .user-sub .nav-link {

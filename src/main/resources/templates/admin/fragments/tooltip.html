@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org">
+<body>
+<th:block th:fragment="unique-id(title)">
+<span class="click-to-copy">
+  <a class="link-secondary link-underline-opacity-0"
+     data-bs-html="true"
+     data-bs-toggle="tooltip"
+     href="#"
+     th:data-bs-title="${festival.contentId}">
+    <span th:replace="~{admin/fragments/svg :: unique-id('unique-id-icon')}"></span>
+  </a>
+</span>
+</th:block>

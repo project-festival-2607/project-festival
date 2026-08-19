@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ko"
+      layout:decorate="~{layout/layout}"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block layout:fragment="css">
+        <link rel="stylesheet" th:href="@{/css/adminBoard/list.css}">
+    </th:block>
+</head>
+<div layout:fragment="content">
+    <div class="container">
+        <!--                모든 inner는 class="container" 로 맞춤        -->
+        <!--        이 안에서 작업        -->
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h1 class="mb-0">공지사항</h1>
+            <a th:if="${isAdmin}" th:href="@{/notice/register}" class="btn btn-primary" >글등록</a>
+        </div>
+
+        <form th:action="@{/notice/list}" method="get" class="mz-search">
+            <div class="mz-dropdown" id="searchTypeDropdown">
+                <button type="button" class="mz-dropdown-toggle" id="searchTypeToggle">
+                    <span id="searchTypeLabel" th:text="${searchType == 'content'} ? '내용' : '제목'"></span>
+                </button>
+                <ul class="mz-dropdown-menu" id="searchTypeMenu">
+                    <li data-value="title" th:classappend="${searchType == null or searchType == 'title'} ? 'active'">제목</li>
+                    <li data-value="content" th:classappend="${searchType == 'content'} ? 'active'">내용</li>
+                </ul>
+                <input type="hidden" name="searchType" id="searchTypeInput"
+                       th:value="${searchType == 'content'} ? 'content' : 'title'">
+            </div>
+            <input type="text" name="keyword" placeholder="궁금한 거 있으면 검색 ㄱㄱ" th:value="${keyword}">
+            <button type="submit" class="mz-search-btn">찾기</button>
+        </form>
+
+        <script th:src="@{/js/support/adminBoardSearch.js}"></script>
+
+        <table class="table table-hover align-middle">
+<!--            <thead>-->
+<!--            <tr>-->
+<!--                <th style="width: 80px;"></th>-->
+<!--                <th>제목</th>-->
+<!--                <th style="width: 160px;">작성일</th>-->
+<!--            </tr>-->
+<!--            </thead>-->
+            <tbody>
+            <tr th:each="board : ${boardPage.content}" th:class="${board.highlight} ? 'table-warning'">
+                <td th:text="${board.displayNo}"></td>
+                <td>
+<!--               <span th:if="${board.highlight}" class="badge bg-danger me-1">고정</span>-->
+                    <a th:href="@{/notice/detail/{bno}(bno=${board.bno})}" th:text="${board.title}"></a>
+                </td>
+                <td th:text="${board.createdAtStr}"></td>
+            </tr>
+            <tr th:if="${boardPage.content.isEmpty()}">
+                <td colspan="3" class="text-center text-muted">등록된 게시글이 없습니다.</td>
+            </tr>
+            </tbody>
+        </table>
+
+        <nav th:if="${boardPage.totalPages > 1}">
+            <ul class="pagination justify-content-center">
+                <li class="page-item" th:each="i : ${#numbers.sequence(1, boardPage.totalPages)}"
+                    th:classappend="${i == boardPage.number + 1} ? 'active'">
+                    <a class="page-link" th:href="@{/notice/list(page=${i}, searchType=${searchType}, keyword=${keyword})}" th:text="${i}"></a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</div>

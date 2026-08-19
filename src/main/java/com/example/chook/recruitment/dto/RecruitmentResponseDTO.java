@@ -48,6 +48,12 @@ public class RecruitmentResponseDTO {
   private String organizerPhone;
   private Long organizerMemberId;
 
+  // 마감일 당일까지는 수정 가능, 마감일이 지난 다음날부터 수정 불가
+  // (status는 스케줄러가 마감일 당일 자정에 CLOSED로 바꾸므로 status==CLOSED와는 별개로 판단)
+  public boolean isPastDeadline() {
+    return applicationDeadline != null && applicationDeadline.isBefore(LocalDate.now());
+  }
+
   public String getWorkingDurationText() {
     if (workingStartTime == null || workingEndTime == null) return null;
     long minutes = Duration.between(workingStartTime, workingEndTime).toMinutes();

@@ -1,30 +1,70 @@
-.member-gender-filter,
-.member-provider-filter,
-.member-status-clear-filter {
+/* ==================== HEADER ==================== */
+
+:root {
+  --theme-main-color: var(--bs-dark);
+  --theme-main-color-rgb: var(--bs-dark-rgb);
+  --theme-main-color-subtle: var(--bs-dark-text-emphasis);
+}
+
+.navbar .nav-link {
+  font-size: 15px;
+}
+
+ul.submenu {
+  gap: 4px;
+}
+
+/* ==================== BADGE ==================== */
+
+.badge.general {
   background-color: #fafafa;
   color: var(--bs-secondary-color);
   font-weight: 500;
 }
 
-.member-status-active {
+.badge.member-status-active {
   background-color: #5ba456;
   color: #fff;
+  font-weight: 500;
 }
 
-.member-status-dormant {
+.badge.member-status-dormant {
   background-color: #b0b6bf;
   color: #fff;
+  font-weight: 500;
 }
 
-.member-status-suspended {
+.badge.member-status-suspended {
   background-color: #C65852;
   color: #fff;
+  font-weight: 500;
 }
 
-.member-status-deleted {
+.badge.member-status-deleted {
   background-color: #625B62;
   color: #fff;
+  font-weight: 500;
 }
+
+.badge.inquiry-replied {
+  background-color: var(--bs-success);
+  color: #fff;
+  font-weight: 500;
+}
+
+.badge.inquiry-not-replied {
+  background-color: var(--bs-secondary);
+  color: #fff;
+  font-weight: 500;
+}
+
+.badge.notice-highlight {
+  background-color: var(--bs-danger);
+  color: #fff;
+  font-weight: 500;
+}
+
+/* ==================== MISCELLANEOUS ==================== */
 
 .alert-icon {
   width: 1rem;
@@ -57,15 +97,10 @@ a[data-bs-toggle="tooltip"] {
   max-width: 400px;
 }
 
-.dropdown-menu * {
+.dropdown-menu{
   --bs-dropdown-padding-y: .25rem;
   --bs-dropdown-item-padding-y: .15rem;
   font-size: 13px;
-}
-
-.dropdown-item:has(span.badge) {
-  --bs-dropdown-item-padding-y: .25rem;
-  font-size: 12px;
 }
 
 .dropdown-btn-left {
@@ -79,6 +114,10 @@ a[data-bs-toggle="tooltip"] {
   border-left: 0 none;
 }
 
+.dropdown-no-caret::after {
+  display: none;
+}
+
 .border-radius-end {
   border-top-right-radius: var(--bs-border-radius-sm) !important;
   border-bottom-right-radius: var(--bs-border-radius-sm) !important;
@@ -86,4 +125,33 @@ a[data-bs-toggle="tooltip"] {
 
 .page-size-selector .dropdown-btn-left {
   width: 60px;
+}
+
+.btn-reset {
+  background: transparent;
+  border: none;
+  padding: 0;
+  outline: none;
+  box-shadow: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.text-ellipsis-with-suffix {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  min-width: 0;
+}
+
+.ellipsis-main {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ellipsis-suffix {
+  flex-shrink: 0;
 }

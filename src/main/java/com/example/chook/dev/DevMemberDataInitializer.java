@@ -61,7 +61,6 @@ public class DevMemberDataInitializer {
       // RECRUITER
       for (long i = 1; i <= recruiterCount; i++) {
         Member member = addMember("r", "행사 구인자", MemberRole.RECRUITER, i);
-        member.setPoint(0L);
         addEmployerProfile(member, i);
         addBusinessRegistration(member, businessNumberGenerator);
 
@@ -96,7 +95,6 @@ public class DevMemberDataInitializer {
         .email("admin@example.com")
         .role(MemberRole.ADMIN)
         .status(MemberStatus.ACTIVE)
-        .point(1_000_000L)
         .build()
     );
 

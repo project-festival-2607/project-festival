@@ -1,11 +1,6 @@
 /**
  검색창
  */
-:root {
-  --theme-main-color: var(--bs-danger);
-  --theme-main-color-rgb: var(--bs-danger-rgb);
-  --theme-main-color-subtle: var(--bs-danger-border-subtle);
-}
 
 .admin-search-form a[data-bs-toggle="tooltip"] {
   color: inherit;
@@ -66,6 +61,7 @@
 
 .admin-search-form .search-criteria {
   font-size: 13px;
+  letter-spacing: -0.03em;
   display: flex;
   gap: 10px;
   align-items: center;
@@ -84,12 +80,12 @@
   color: rgba(var(--bs-body-color-rgb), 0.25);
 }
 
-.admin-search-form #dateRangeCriteriaAutofill {
+.admin-search-form #dateRangeTypeAutofill {
   display: flex;
   gap: 2px;
 }
 
-.admin-search-form #dateRangeCriteriaAutofill button {
+.admin-search-form #dateRangeTypeAutofill button {
   font-size: 11px;
   font-weight: 500;
   height: 19.5px;
@@ -128,4 +124,9 @@
 .admin-search-button-wrapper span {
   flex-grow: 1;
   text-align: center;
+}
+
+.admin-search-form input[type="datetime-local"],
+.admin-search-form input[type="date"] {
+  letter-spacing: -0.03em;
 }

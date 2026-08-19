@@ -3,7 +3,7 @@ package com.example.chook.common.util;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.ComparableExpression;
 import com.querydsl.core.types.dsl.SimpleExpression;
-import com.querydsl.core.types.dsl.StringPath;
+import com.querydsl.core.types.dsl.StringExpression;
 
 public final class QuerydslUtils {
 
@@ -11,7 +11,7 @@ public final class QuerydslUtils {
     return value == null ? null : path.eq(value);
   }
 
-  public static BooleanExpression contains(StringPath path, String value) {
+  public static BooleanExpression contains(StringExpression path, String value) {
     return value == null ? null : path.contains(value);
   }
 

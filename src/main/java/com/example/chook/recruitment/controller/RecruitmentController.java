@@ -227,6 +227,10 @@ public class RecruitmentController {
       redirectAttributes.addFlashAttribute("errorMsg", "수정 권한이 없습니다.");
       return redirectToRecruitment(id, from, redirectAttributes);
     }
+    if (current.isPastDeadline()) {
+      redirectAttributes.addFlashAttribute("errorMsg", "모집이 마감된 공고는 수정할 수 없습니다.");
+      return redirectToRecruitment(id, from, redirectAttributes);
+    }
     RecruitmentUpdateDTO update = recruitmentService.getRecruitmentForUpdate(id);
     model.addAttribute("recruitmentId", id);
     model.addAttribute("update", update);
@@ -372,6 +376,10 @@ public class RecruitmentController {
     RecruitmentResponseDTO current = requireOwnedRecruitment(id, user);
     if (current == null) {
       redirectAttributes.addFlashAttribute("errorMsg", "수정 권한이 없습니다.");
+      return redirectToRecruitment(id, from, redirectAttributes);
+    }
+    if (current.isPastDeadline()) {
+      redirectAttributes.addFlashAttribute("errorMsg", "모집이 마감된 공고는 수정할 수 없습니다.");
       return redirectToRecruitment(id, from, redirectAttributes);
     }
     if (bindingResult.hasErrors()) return modifyFormWithReloadedOptions(id, current, from, model, bindingResult);

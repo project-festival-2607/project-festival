@@ -28,7 +28,7 @@ public class DevDataInitializer implements ApplicationRunner {
 
     regionDataInitService.importData();
     memberDataInitializer.generateSampleMembers(RECRUITER_COUNT, JOB_SEEKER_COUNT, JOB_EQUIP_COUNT);
-    festivalDataInitializer.generateSampleFestivals(TARGET_FESTIVAL_COUNT);
+//    festivalDataInitializer.generateSampleFestivals(TARGET_FESTIVAL_COUNT);
     recruitmentInitializer.generateSampleRecruitments();
     productInitializer.generateSampleProducts();
 

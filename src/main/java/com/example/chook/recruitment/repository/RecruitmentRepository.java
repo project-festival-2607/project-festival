@@ -30,7 +30,7 @@ public interface RecruitmentRepository extends JpaRepository<Recruitment, Long>,
   // 모집 날짜가 지난 게시글(RECRUITING/PAUSED)만 자동으로 마감 처리 - DRAFT는 아직 공개된 적 없으므로 대상에서 제외
   @Modifying
   @Query("UPDATE Recruitment r SET r.status = com.example.chook.recruitment.entity.enums.RecruitmentStatus.CLOSED " +
-    "WHERE r.applicationDeadline < CURRENT_DATE " +
+    "WHERE r.applicationDeadline <= CURRENT_DATE " +
     "AND r.status IN (com.example.chook.recruitment.entity.enums.RecruitmentStatus.RECRUITING, com.example.chook.recruitment.entity.enums.RecruitmentStatus.PAUSED)")
   int closeExpiredRecruitments();
 

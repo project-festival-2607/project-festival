@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<th:block th:fragment="keyword(keywordOptions, form)">
+  <div class="search-field-group">
+    <div class="search-field-head">
+      <label class="search-field-label"
+             for="keywords">검색 키워드
+        <a data-bs-html="true"
+           data-bs-title="키워드 여러 개를 공백으로 구분해 검색할 수 있습니다."
+           data-bs-toggle="tooltip"
+           href="#">
+          <span th:replace="~{admin/fragments/svg :: tooltip('tooltip-icon')}"></span>
+        </a>
+      </label>
+      <div class="search-criteria" role="group">
+        <div class="form-check" id="keywordCriteriaAllWordsContainsGroup">
+          <input class="form-check-input" data-type="keywordCriteria" id="keywordCriteriaAllWordsContains"
+                 name="keywordCriteria"
+                 th:checked="${form.keywordCriteria == null or form.keywordCriteria == 'ALL_WORDS_CONTAINS'}"
+                 type="radio"
+                 value="ALL_WORDS_CONTAINS">
+          <label class="form-check-label" for="keywordCriteriaAllWordsContains">모든 키워드 포함</label>
+        </div>
+        <div class="form-check" id="keywordCriteriaPhraseContainsGroup">
+          <input class="form-check-input" data-type="keywordCriteria" id="keywordCriteriaPhraseContains"
+                 name="keywordCriteria"
+                 th:checked="${form.keywordCriteria != null and form.keywordCriteria == 'PHRASE_CONTAINS'}"
+                 type="radio"
+                 value="PHRASE_CONTAINS">
+          <label class="form-check-label" for="keywordCriteriaPhraseContains">전체 문자열 포함</label>
+        </div>
+        <div class="form-check" id="keywordCriteriaExactGroup">
+          <input class="form-check-input" data-type="keywordCriteria" id="keywordCriteriaExact"
+                 name="keywordCriteria"
+                 th:checked="${form.keywordCriteria != null and form.keywordCriteria == 'EXACT'}"
+                 type="radio"
+                 value="EXACT">
+          <label class="form-check-label" for="keywordCriteriaExact">전체 문자열 일치</label>
+        </div>
+      </div>
+    </div>
+    <div class="search-field-main">
+      <div class="input-group input-group-sm">
+        <button class="btn btn-light dropdown-btn-left" id="currentKeywordType" type="button">전체</button>
+        <button aria-expanded="false" class="btn btn-light dropdown-btn-right dropdown-toggle dropdown-toggle-split"
+                data-bs-toggle="dropdown" type="button"></button>
+        <ul class="dropdown-menu" id="keywordTypeDropdownList">
+          <li>
+            <button class="dropdown-item keyword-type-li"
+                    data-supported-criteria="ALL_WORDS_CONTAINS,PHRASE_CONTAINS"
+                    data-value="ALL"
+                    type="button">전체
+            </button>
+          </li>
+          <li th:each="option: ${keywordOptions}">
+            <button class="dropdown-item keyword-type-li"
+                    th:data-supported-criteria="${option.supportedCriteriaData}"
+                    th:data-value="${option.name}"
+                    th:text="${option.label}"
+                    type="button"></button>
+          </li>
+        </ul>
+        <input id="keywordType" name="keywordType" th:value="${form.keywordType}" type="hidden">
+        <input class="form-control" id="keywords" name="keywords" th:value="${form.keywords}" type="text">
+      </div>
+    </div>
+  </div>
+</th:block>
+
+<th:block th:fragment="date-range(dateRangeOptions, dateRangeAutofillOptions, form)">
+  <div class="search-field-group">
+    <div class="search-field-head">
+      <label class="search-field-label"
+      >날짜 범위
+      </label>
+      <div id="dateRangeTypeAutofill">
+        <button th:each="option: ${dateRangeAutofillOptions}" class="btn btn-outline-dark date-range-criteria-autofill"
+                th:data-value="${option.value}"
+                th:data-unit="${option.unit}"
+                th:text="${option.label}"
+                type="button"></button>
+      </div>
+    </div>
+    <div class="search-field-main">
+      <div class="input-group input-group-sm">
+        <button class="btn btn-light dropdown-btn-left" id="currentDateRangeType" type="button">선택</button>
+        <button aria-expanded="false" class="btn btn-light dropdown-btn-right dropdown-toggle dropdown-toggle-split"
+                data-bs-toggle="dropdown" type="button"></button>
+        <ul class="dropdown-menu" id="dateRangeTypeDropdownList">
+          <li>
+            <button class="dropdown-item date-range-criteria-li"
+                    th:data-date-only="${#lists.isEmpty(dateRangeOptions.?[dateOnly == false])}"
+                    data-value="NONE"
+                    type="button">선택
+            </button>
+          </li>
+          <li th:each="option: ${dateRangeOptions}">
+            <button class="dropdown-item date-range-criteria-li"
+                    th:data-date-only="${option.dateOnly}"
+                    th:data-value="${option.name}"
+                    th:text="${option.label}"
+                    type="button"></button>
+          </li>
+        </ul>
+        <input class="form-control border-end-0" id="startDateTime" name="startDateTime"
+               th:value="${form.startDateTime}"
+               type="datetime-local"/>
+        <input class="form-control border-end-0" id="startDate" name="startDate" th:value="${form.startDate}"
+               type="date">
+        <span class="input-group-text border-start-0 border-end-0" id="dateRangeBetween">~</span>
+        <input class="form-control border-radius-end border-start-0" id="endDateTime" name="endDateTime"
+               th:value="${form.endDateTime}"
+               type="datetime-local">
+        <input class="form-control border-radius-end border-start-0" id="endDate" name="endDate"
+               th:value="${form.endDate}"
+               type="date">
+        <input id="dateRangeType" name="dateRangeType" th:value="${form.dateRangeType}" type="hidden"/>
+      </div>
+    </div>
+  </div>
+</th:block>
+
+<th:block th:fragment="search-buttons">
+  <div class="admin-search-button-wrapper">
+    <button class="btn btn-sm btn-outline-secondary" type="button"
+            data-role="reset-search-form">
+      <span th:replace="~{admin/fragments/svg :: reset('search-icon')}"></span>
+      <span>초기화</span>
+    </button>
+    <button class="btn btn-sm btn-dark" type="submit">
+      <span th:replace="~{admin/fragments/svg :: search('search-icon')}"></span>
+      <span>검색</span>
+    </button>
+  </div>
+</th:block>
