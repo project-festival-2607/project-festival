@@ -6,10 +6,9 @@ import com.example.chook.admin.entity.enums.DateRangeAutofillOption;
 import com.example.chook.admin.entity.enums.festival.FestivalDateRangeType;
 import com.example.chook.admin.entity.enums.festival.FestivalKeywordType;
 import com.example.chook.admin.form.event.FestivalSearchForm;
-import com.example.chook.admin.provider.AdminInfoFieldProvider;
+import com.example.chook.admin.provider.ModalInfoFieldProvider;
 import com.example.chook.admin.record.AdminActionResponse;
 import com.example.chook.admin.service.AdminEventService;
-import com.example.chook.admin.service.AdminMemberService;
 import com.example.chook.common.handler.PagingHandler;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -29,8 +28,7 @@ public class AdminFestivalController {
 
   private static final int PAGINATION_SIZE = 10;
   private final AdminEventService adminEventService;
-  private final AdminMemberService adminMemberService;
-  private final AdminInfoFieldProvider infoFieldProvider;
+  private final ModalInfoFieldProvider infoFieldProvider;
 
   @GetMapping
   public void loadFestivalPage(

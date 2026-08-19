@@ -4,70 +4,84 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       xmlns:th="http://www.thymeleaf.org">
 <div layout:fragment="content">
-    <link rel="stylesheet" th:href="@{/css/mypage/jobseeker/mypage.css}">
+    <link rel="stylesheet" th:href="@{/css/mypage/mypage.css}">
     <div class="container">
         <!--                모든 inner는 class="container" 로 맞춤        -->
         <!--        이 안에서 작업        -->
 
-        <h1>마이페이지</h1>
+        <div class="member-info-container">
 
-        <div class="member-info">
-            <div class="member-detail">
-                <div>
-                    <p>아이디</p>
-                    <span th:text="${myPageDTO.username}"></span>
+            <div class="member-info">
+                <div class="member-detail">
+                    <div class="member-basic-info">
+                        <div class="member-profile-img">
+
+                        </div>
+                        <div>
+                            <span th:text="${myPageDTO.name}"></span>
+                            <span th:text="${myPageDTO.email}"></span>
+                        </div>
+                    </div>
                 </div>
-
-                <div>
-                    <p>이름</p>
-                    <span th:text="${myPageDTO.name}"></span>
-                </div>
-
-                <div>
-                    <p>전화번호</p>
-                    <span th:text="${myPageDTO.phone}"></span>
-                </div>
-
-                <div>
-                    <p>이메일</p>
-                    <span th:text="${myPageDTO.email}"></span>
-                </div>
-
-                <div>
-                    <p>포인트</p>
-                    <span th:text="${myPageDTO.point}"></span>
-                </div>
-
-                <div>
-                    <p>계정유형</p>
-                    <span th:text="${myPageDTO.role}"></span>
-                </div>
-            </div>
-            <a th:if="${!myPageDTO.socialSignUp}" th:href="@{/mypage/password-check}" class="btn btn-primary">수정</a>
-            <a th:if="${myPageDTO.socialSignUp}" th:href="@{/mypage/modify/job-seeker}" class="btn btn-primary">수정</a>
-        </div>
-
-        <div class="mypage-menu">
-            <div class="menu-item" th:if="${!myPageDTO.socialSignUp}">
-                <a th:href="@{/mypage/password-change}">비밀번호 변경</a>
-            </div>
-            <div class="menu-item">
-                <a th:href="@{/resume/manage}">
-                    나의 이력서 관리
-                </a>
+                <a th:if="${!myPageDTO.socialSignUp}" th:href="@{/mypage/password-check}" class="mypage-modify-btn">회원정보수정</a>
+                <a th:if="${myPageDTO.socialSignUp}" th:href="@{/mypage/modify/job-seeker}" class="mypage-modify-btn">회원정보수정</a>
             </div>
 
-            <div class="menu-item" th:if="${!myPageDTO.socialSignUp and myPageDTO.role.name() != 'RECRUITER'}">
-                <a th:href="@{/mypage/social-login}">간편 로그인 관리</a>
+            <div class="mypage-menu">
+                <div class="member-detail-info">
+                    <div class="mypage-h1">내 프로필</div>
+                    <div class="menu-item">
+                        <div>
+                            <p>전화번호</p>
+                            <span th:text="${myPageDTO.phone}"></span>
+                        </div>
+                        <div>
+                            <p>아이디</p>
+                            <span th:text="${myPageDTO.username}"></span>
+                        </div>
+                        <div>
+                            <p>계정유형</p>
+                            <span th:text="${myPageDTO.role}"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="member-detail-info">
+                    <div class="mypage-h1">보안설정</div>
+                    <div class="menu-item">
+                        <div th:if="${!myPageDTO.socialSignUp}">
+                            <p>비밀번호</p>
+                            <a class="mypage-menu-btn" th:href="@{/mypage/password-change}">비밀번호 변경 ↗ </a>
+                        </div>
+                        <div th:if="${!myPageDTO.socialSignUp and myPageDTO.role.name() != 'RECRUITER'}">
+                            <p>간편소셜로그인</p>
+                            <a class="mypage-menu-btn" th:href="@{/mypage/social-login}">간편 로그인 관리 ↗ </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="member-detail-info">
+                    <div class="mypage-h1">나의 현황</div>
+                    <div class="menu-item">
+                        <div>
+                            <p>이력서</p>
+                            <a class="mypage-menu-btn" th:href="@{/resume/manage}">
+                                나의 이력서 관리  ↗
+                            </a>
+                        </div>
+                        <div>
+                            <p>지원한공고</p>
+                            <a class="mypage-menu-btn" th:href="@{/application/jobseeker/list}">
+                                지원현황  ↗
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <a class="mypage-del-btn" th:href="@{/mypage/account-leave}">회원탈퇴</a>
+
             </div>
 
-            <div class="menu-item">
-                <a th:href="@{/application/jobseeker/list}">지원현황</a>
-            </div>
-
-            <div class="menu-item">
-                <a th:href="@{/mypage/account-leave}">회원탈퇴</a>
-            </div>
         </div>
     </div>
 </div>

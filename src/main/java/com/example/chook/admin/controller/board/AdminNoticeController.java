@@ -1,7 +1,7 @@
 package com.example.chook.admin.controller.board;
 
 import com.example.chook.admin.condition.board.NoticeSearchCondition;
-import com.example.chook.admin.dto.board.AdminNoticeTableDTO;
+import com.example.chook.admin.dto.board.NoticeTableDTO;
 import com.example.chook.admin.entity.enums.DateRangeAutofillOption;
 import com.example.chook.admin.entity.enums.inquiry.InquiryDateRangeType;
 import com.example.chook.admin.entity.enums.inquiry.InquiryKeywordType;
@@ -53,11 +53,11 @@ public class AdminNoticeController {
   ) {
     NoticeSearchCondition condition = NoticeSearchCondition.from(form);
     log.info("condition: {}", condition);
-    Page<AdminNoticeTableDTO> page = adminBoardService.getNoticeListPage(pageIdx, pageSize, condition);
+    Page<NoticeTableDTO> page = adminBoardService.getNoticeListPage(pageIdx, pageSize, condition);
 
     model.addAttribute("page", page);
     model.addAttribute("pageSize", pageSize);
-    PagingHandler<AdminNoticeTableDTO, NoticeSearchForm> pagingHandler =
+    PagingHandler<NoticeTableDTO, NoticeSearchForm> pagingHandler =
       new PagingHandler<>(page, form, PAGINATION_SIZE, pageIdx);
     model.addAttribute("pagingHandler", pagingHandler);
     model.addAttribute("pageSizeOptions", List.of(10, 30, 50));

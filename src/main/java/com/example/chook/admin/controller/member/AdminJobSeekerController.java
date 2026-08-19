@@ -6,7 +6,7 @@ import com.example.chook.admin.entity.enums.DateRangeAutofillOption;
 import com.example.chook.admin.entity.enums.jobseeker.JobSeekerDateRangeType;
 import com.example.chook.admin.entity.enums.jobseeker.JobSeekerKeywordType;
 import com.example.chook.admin.form.member.JobSeekerSearchForm;
-import com.example.chook.admin.provider.AdminInfoFieldProvider;
+import com.example.chook.admin.provider.ModalInfoFieldProvider;
 import com.example.chook.admin.service.AdminMemberService;
 import com.example.chook.common.handler.PagingHandler;
 import com.example.chook.member.entity.enums.Gender;
@@ -33,7 +33,7 @@ public class AdminJobSeekerController {
 
   private static final int PAGINATION_SIZE = 10;
   private final AdminMemberService adminMemberService;
-  private final AdminInfoFieldProvider infoFieldProvider;
+  private final ModalInfoFieldProvider infoFieldProvider;
 
   @GetMapping
   public void loadJobSeekerPage(

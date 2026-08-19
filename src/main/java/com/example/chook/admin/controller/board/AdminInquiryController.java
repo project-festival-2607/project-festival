@@ -1,7 +1,7 @@
 package com.example.chook.admin.controller.board;
 
 import com.example.chook.admin.condition.board.InquirySearchCondition;
-import com.example.chook.admin.dto.board.AdminInquiryTableDTO;
+import com.example.chook.admin.dto.board.InquiryTableDTO;
 import com.example.chook.admin.entity.enums.DateRangeAutofillOption;
 import com.example.chook.admin.entity.enums.inquiry.InquiryDateRangeType;
 import com.example.chook.admin.entity.enums.inquiry.InquiryKeywordType;
@@ -52,11 +52,11 @@ public class AdminInquiryController {
   ) {
     InquirySearchCondition condition = InquirySearchCondition.from(form);
     log.info("condition: {}", condition);
-    Page<AdminInquiryTableDTO> page = adminBoardService.getInquiryListPage(pageIdx, pageSize, condition);
+    Page<InquiryTableDTO> page = adminBoardService.getInquiryListPage(pageIdx, pageSize, condition);
 
     model.addAttribute("page", page);
     model.addAttribute("pageSize", pageSize);
-    PagingHandler<AdminInquiryTableDTO, InquirySearchForm> pagingHandler =
+    PagingHandler<InquiryTableDTO, InquirySearchForm> pagingHandler =
       new PagingHandler<>(page, form, PAGINATION_SIZE, pageIdx);
     model.addAttribute("pagingHandler", pagingHandler);
     model.addAttribute("pageSizeOptions", List.of(10, 30, 50));

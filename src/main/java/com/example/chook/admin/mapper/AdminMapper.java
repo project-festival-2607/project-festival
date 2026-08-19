@@ -1,11 +1,14 @@
 package com.example.chook.admin.mapper;
 
+import com.example.chook.admin.dto.event.RegionOption;
 import com.example.chook.admin.dto.member.RecruiterTableDTO;
 import com.example.chook.admin.dto.member.SocialLoginDTO;
 import com.example.chook.member.entity.BusinessRegistration;
 import com.example.chook.member.entity.EmployerProfile;
 import com.example.chook.member.entity.Member;
 import com.example.chook.member.entity.SocialLogin;
+import com.example.chook.region.entity.RegionSido;
+import com.example.chook.region.entity.RegionSigungu;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -43,4 +46,19 @@ public class AdminMapper {
       .businessNumberVerifiedAt(businessRegistration.getVerifiedAt())
       .build();
   }
+
+  public RegionOption toOption(RegionSido sido) {
+    return RegionOption.builder()
+      .name(sido.getCode())
+      .label(sido.getName())
+      .build();
+  }
+
+  public RegionOption toOption(RegionSigungu sigungu) {
+    return RegionOption.builder()
+      .name(sigungu.getCode())
+      .label(sigungu.getName())
+      .build();
+  }
 }
+
