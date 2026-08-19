@@ -20,9 +20,10 @@
     width: 320px;
     height: 420px;
     background: white;
-    border-radius: 10px;
-    box-shadow: 0 0 10px gray;
+    /*box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);*/
     display: none;
+
+    border: 1px solid #dc3545;
 }
 
 /* 보여질 때 */
@@ -32,30 +33,33 @@
 
 /* 헤더 */
 .chat-header{
-    height:50px;
-    background: #4769e4;
-    color:white;
+    height:30px;
+    border-bottom: 1px solid #dc3545;
+    color: #dc3545;
+    font-size: 14px;
     display:flex;
     justify-content:space-between;
     align-items:center;
     padding:10px;
-
-    border-radius: 10px 10px 0 0;
 }
 
 .chat-header button{
     background:none;
     border:none;
-    color:white;
-    font-size:20px;
+    color:#2C2C2C;
+    font-size:15px;
     cursor:pointer;
 }
 
 .chat-body{
     height: 350px;
-    padding: 10px;
+    padding: 20px;
     overflow-y: auto;
     word-break: break-word;
+
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
 }
 
 .chat-input{
@@ -72,13 +76,62 @@
 .chat-input input{
     width: 200px;
     height: 35px;
-    padding: 5px 10px;
+    padding: 5px 15px;
     margin-right: 8px;
-    border-radius: 10px;
+    border-radius: 15px;
+
+    background: #FEFEFE;
+    border: 1px solid #dc3545;
+    outline: none;
+
+    font-size: 13px;
+}
+
+.chat-input input:focus{
+    border: 1px solid #0D6EFD;
 }
 
 .chat-input button{
     height: 35px;
     padding: 0 15px;
-    border-radius: 10px;
+    border-radius: 15px;
+    font-size: 13px;
+    border: 1px solid #0D6EFD;
+    color: #0D6EFD;
+
+    background: #FEFEFE;
+
+    transition: 0.3s ease;
+}
+
+.chat-input button:hover {
+    background: #045cda;
+}
+
+.chat-hi {
+    background: #dc3545;
+    color: #FEFEFE;
+    border-radius: 15px;
+    padding: 10px;
+    font-size: 13px;
+    width: fit-content;
+    max-width: 80%;
+}
+
+.my-question {
+    background: #0D6EFD;
+    color: #FEFEFE;
+    border-radius: 15px;
+    font-size: 13px;
+    padding: 10px;
+    align-self: flex-end;
+    width: fit-content;
+    max-width: 80%;
+}
+
+.chatbot-name {
+    -webkit-text-stroke: 1px #dc3545;
+    font-weight: 900;
+    color: #FEFEFE;
+    font-size: 18px;
 }
