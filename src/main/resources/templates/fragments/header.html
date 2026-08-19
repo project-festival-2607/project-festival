@@ -62,12 +62,12 @@
                         <li sec:authorize="isAuthenticated()"><div th:text="${#authentication.principal.name}" style="color: #FEFEFE; font-weight: 800; font-size: 14px;"></div></li>
                         <li sec:authorize="isAuthenticated()"><a th:href="@{/member/logout}" class="nav-link">로그아웃</a></li>
 
-                        <li sec:authorize="hasRole('RECRUITER')">
-                            <a th:href="@{/payCreationTest}"
-                               class="nav-link">
-                                1단결제로보내
-                            </a>
-                        </li>
+<!--                        <li sec:authorize="hasRole('RECRUITER')">-->
+<!--                            <a th:href="@{/payCreationTest}"-->
+<!--                               class="nav-link">-->
+<!--                                1단결제로보내-->
+<!--                            </a>-->
+<!--                        </li>-->
 
                         <li sec:authorize="isAuthenticated()">
                             <a th:href="@{/mypage}"
