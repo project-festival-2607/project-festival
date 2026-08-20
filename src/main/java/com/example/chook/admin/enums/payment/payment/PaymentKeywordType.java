@@ -18,8 +18,7 @@ public enum PaymentKeywordType implements KeywordType {
   MEMBER_NAME("사용자 이름"),
 
   PRODUCT_ID("상품 UID", EnumSet.of(KeywordCriteria.EXACT)),
-  PRODUCT_NAME("상품 이름")
-  ;
+  PRODUCT_NAME("상품 이름");
 
   private final String label;
   private final EnumSet<KeywordCriteria> supportedCriteria;

@@ -24,7 +24,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 
-import static com.example.chook.common.util.CustomStringUtils.blankToNull;
 import static com.example.chook.common.util.CustomStringUtils.toEnum;
 
 @RequiredArgsConstructor
