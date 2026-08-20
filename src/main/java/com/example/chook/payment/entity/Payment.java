@@ -31,6 +31,10 @@ public class Payment {
     @JoinColumn(name = "product_id")
     private Product product;
 
+    // ★ 추가: 결제 시점에 한 번만 복사해서 저장, 이후로는 Product와 연결 끊김
+    @Column(name = "product_name", nullable = false, length = 100)
+    private String productName;
+
     //얻는 포인트양point history로 보내야됨.
     @Column(name = "point_get", nullable = false)
     private Integer pointGet;
