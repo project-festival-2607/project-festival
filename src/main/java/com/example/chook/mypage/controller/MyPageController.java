@@ -178,6 +178,9 @@ public class MyPageController {
             List<Recruitment> festivalRecruitments = festival.getRecruitments();
 
             for (Recruitment recruitment : festivalRecruitments) {
+                if (recruitment.getDeletedAt() != null) {
+                    continue;
+                }
                 recruitments.add(recruitment);
             }
         }
