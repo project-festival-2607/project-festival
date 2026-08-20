@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
 @Slf4j
 public class DevSqlDataInitializer {
 
-  private static final String CLEANUP_SQL_PATH = "docs/mysql/cleanup/truncate_festival_recruitment.sql";
+  private static final String LEGACY_CLEANUP_SQL_PATH = "docs/mysql/cleanup/delete_legacy_generated_dummy_data.sql";
   private static final String FESTIVAL_SQL_PATH = "docs/mysql/04_insert_festival_dummy_data.sql";
   private static final String RECRUITMENT_SQL_PATH = "docs/mysql/05_insert_recruitment_dummy_data.sql";
   private static final String SEED_MARKER_CONTENT_ID = "dummy-fes-01";
@@ -54,11 +54,14 @@ public class DevSqlDataInitializer {
   // festival 존재 여부만으로 전체를 건너뛰지 않고 빠진 쪽을 마저 채워 넣도록 함
   public void importFestivalAndRecruitmentDummyData() {
 
+    // festival 존재 여부와 무관하게 매번 시도함 - "예시 행사 #NN"/"일반 구인 공고 #N" 등 제목 패턴에만
+    // 걸리는 레거시 데이터를 지우므로, 이미 dummy-fes-01이 들어가 있는 환경(예: festival만 성공하고
+    // recruitment는 실패했던 이전 실행)에서도 남아있는 레거시 데이터를 놓치지 않고 정리함.
+    // 지울 대상이 없으면 그냥 아무 일도 안 하므로 매번 실행해도 안전함
+    runSqlFileSafely(LEGACY_CLEANUP_SQL_PATH);
+
     if (!festivalRepository.existsById(SEED_MARKER_CONTENT_ID)) {
       log.info("실사례형 축제 더미 데이터 삽입 시작");
-      // 처음 한 번(축제 더미가 아직 없을 때)만 옛날 버전 앱이 남긴 "예시 행사"/"일반 구인 공고" 같은
-      // 잔여 축제/구인공고 데이터를 정리하고 시작함. 이후 재기동 시엔 위 가드에 걸려 다시 지우지 않음
-      if (!runSqlFileSafely(CLEANUP_SQL_PATH)) return;
       if (!runSqlFileSafely(FESTIVAL_SQL_PATH)) return;
       log.info("실사례형 축제 더미 데이터 삽입 완료");
     }
