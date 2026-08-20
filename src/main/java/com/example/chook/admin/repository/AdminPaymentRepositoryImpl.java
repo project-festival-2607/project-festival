@@ -531,7 +531,7 @@ public class AdminPaymentRepositoryImpl implements AdminPaymentRepository {
         case RECORDED_AT -> orderSpecifiers.addAll(getOrderSpecifier(order, refund.refundComplete));
         case CANCELED_AT -> orderSpecifiers.addAll(getOrderSpecifier(order, refund.canceledAt));
         case REFUND_AMOUNT -> orderSpecifiers.addAll(getOrderSpecifier(order, refund.refundAmount));
-        case REFUND_REAL -> orderSpecifiers.addAll(getOrderSpecifier(order, refund.refundReal));
+//        case REFUND_REAL -> orderSpecifiers.addAll(getOrderSpecifier(order, refund.refundReal));
       }
     }
     orderSpecifiers.add(new OrderSpecifier<>(Order.ASC, refund.refundId));
