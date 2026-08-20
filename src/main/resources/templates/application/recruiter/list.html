@@ -8,21 +8,21 @@
     <div class="container">
         <!--                모든 inner는 class="container" 로 맞춤        -->
         <!--        이 안에서 작업        -->
-        <div class="container application-page">
+        <div class="application-page">
 
             <h1 class="application-title">지원자 목록</h1>
 
-            <!-- 알바 지원자 -->
-            <section class="application-section">
-                <h2>알바 지원자</h2>
-
                 <!-- 지원자가 없는 경우 -->
-                <div class="application-empty" th:if="${#lists.isEmpty(individualApplications)}">
+                <div class="application-empty" th:if="${#lists.isEmpty(applications)}">
                     <p>알바 모집공고에 지원한 지원자가 없습니다.</p>
                 </div>
 
+            <!-- 알바 지원자 -->
+            <section class="application-section" th:unless="${#lists.isEmpty(applications)}">
+                <h2>알바 지원자</h2>
+
                 <!--지원자가 있는 경우 -->
-                <table class="application-table" th:unless="${#lists.isEmpty(individualApplications)}">
+                <table class="application-table">
                     <thead>
                         <tr>
                             <th>지원자명</th>
@@ -36,145 +36,7 @@
                     </thead>
 
                     <tbody>
-                        <tr th:each="app : ${individualApplications}">
-
-                            <td th:text="${app.name}"></td>
-
-                            <td th:text="${app.recruitmentTitle}"></td>
-
-                            <td th:text="${app.title}"></td>
-
-                            <td th:text="${app.address}"></td>
-
-                            <td th:text="${#temporals.format(app.registerDate, 'yyyy-MM-dd')}"></td>
-
-                            <td th:text="${app.result}"></td>
-
-                            <td>
-                                <a th:href="@{/resume/detail(id=${app.resumeId})}">
-                                    이력서 보기
-                                </a>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </section>
-
-            <!-- 푸드트럭 지원자 -->
-            <section class="application-section">
-                <h2>푸드트럭 지원자</h2>
-
-                <div class="application-empty" th:if="${#lists.isEmpty(foodTruckApplications)}">
-                    <p>푸드트럭 모집공고에 지원한 지원자가 없습니다.</p>
-                </div>
-
-                <table class="application-table" th:unless="${#lists.isEmpty(foodTruckApplications)}">
-                    <thead>
-                        <tr>
-                            <th>지원자명</th>
-                            <th>모집공고</th>
-                            <th>행사명</th>
-                            <th>주소</th>
-                            <th>지원일</th>
-                            <th>상태</th>
-                            <th>이력서</th>
-                        </tr>
-                    </thead>
-
-                    <tbody>
-                        <tr th:each="app : ${foodTruckApplications}">
-
-                            <td th:text="${app.name}"></td>
-
-                            <td th:text="${app.recruitmentTitle}"></td>
-
-                            <td th:text="${app.title}"></td>
-
-                            <td th:text="${app.address}"></td>
-
-                            <td th:text="${#temporals.format(app.registerDate, 'yyyy-MM-dd')}"></td>
-
-                            <td th:text="${app.result}"></td>
-
-                            <td>
-                                <a th:href="@{/resume/detail(id=${app.resumeId})}">
-                                    이력서 보기
-                                </a>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </section>
-
-            <!-- 장비 지원자 -->
-            <section class="application-section">
-                <h2> 장비 지원자</h2>
-
-                <div class="application-empty" th:if="${#lists.isEmpty(equipmentApplications)}">
-                    <p>장비 모집공고에 지원한 지원자가 없습니다.</p>
-                </div>
-
-                <table class="application-table" th:unless="${#lists.isEmpty(equipmentApplications)}">
-                    <thead>
-                        <tr>
-                            <th>지원자명</th>
-                            <th>모집공고</th>
-                            <th>행사명</th>
-                            <th>주소</th>
-                            <th>지원일</th>
-                            <th>상태</th>
-                            <th>이력서</th>
-                        </tr>
-                    </thead>
-
-                    <tbody>
-                        <tr th:each="app : ${equipmentApplications}">
-
-                            <td th:text="${app.name}"></td>
-
-                            <td th:text="${app.recruitmentTitle}"></td>
-
-                            <td th:text="${app.title}"></td>
-
-                            <td th:text="${app.address}"></td>
-
-                            <td th:text="${#temporals.format(app.registerDate, 'yyyy-MM-dd')}"></td>
-
-                            <td th:text="${app.result}"></td>
-
-                            <td>
-                                <a th:href="@{/resume/detail(id=${app.resumeId})}">
-                                    이력서 보기
-                                </a>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </section>
-
-            <!-- 기타 지원자 -->
-            <section class="application-section">
-                <h2> 기타 지원자</h2>
-
-                <div class="application-empty" th:if="${#lists.isEmpty(etcApplications)}">
-                    <p>기타 모집공고에 지원한 지원자가 없습니다.</p>
-                </div>
-
-                <table class="application-table" th:unless="${#lists.isEmpty(etcApplications)}">
-                    <thead>
-                        <tr>
-                            <th>지원자명</th>
-                            <th>모집공고</th>
-                            <th>행사명</th>
-                            <th>주소</th>
-                            <th>지원일</th>
-                            <th>상태</th>
-                            <th>이력서</th>
-                        </tr>
-                    </thead>
-
-                    <tbody>
-                        <tr th:each="app : ${etcApplications}">
+                        <tr th:each="app : ${applications}">
 
                             <td th:text="${app.name}"></td>
 

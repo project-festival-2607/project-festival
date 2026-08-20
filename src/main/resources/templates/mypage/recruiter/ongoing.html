@@ -48,6 +48,11 @@
                             <span th:text="${recruitment.recruitmentCount}"> 모집 인원 </span> 명
                         </p>
 
+                        <a class="applicant-btn"
+                           th:href="@{/application/recruiter/list(recruitmentId=${recruitment.id})}">
+                            지원자 목록
+                        </a>
+
                         <span class="ongoing-status">
                             ● 진행 중
                         </span>
