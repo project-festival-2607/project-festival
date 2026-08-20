@@ -267,7 +267,8 @@ public class RecruitmentServiceImpl implements RecruitmentService {
   public List<ChookRecruitmentDTO> getMainList() {
     return recruitmentRepository.findAll()
             .stream()
-            .map((rec) -> new ChookRecruitmentDTO(
+            .filter((rec) -> rec.getStatus() == RecruitmentStatus.RECRUITING)
+            .map((rec) ->  new ChookRecruitmentDTO(
                     rec.getId(),
                     rec.getTitle(),
                     rec.getWorkingStartDate(),
