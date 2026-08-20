@@ -29,6 +29,7 @@ import java.util.stream.Collectors;
 @Slf4j
 public class DevSqlDataInitializer {
 
+  private static final String CLEANUP_SQL_PATH = "docs/mysql/cleanup/truncate_festival_recruitment.sql";
   private static final String FESTIVAL_SQL_PATH = "docs/mysql/04_insert_festival_dummy_data.sql";
   private static final String RECRUITMENT_SQL_PATH = "docs/mysql/05_insert_recruitment_dummy_data.sql";
   private static final String SEED_MARKER_CONTENT_ID = "dummy-fes-01";
@@ -48,14 +49,39 @@ public class DevSqlDataInitializer {
   private final FileProperties fileProperties;
   private final DataSource dataSource;
 
+  // festival/recruitment 를 각각 독립적으로 확인 후 삽입함 - 둘 중 하나만 먼저 존재하는 상태에서
+  // (예: 이전 실행에서 festival은 성공하고 recruitment는 SQL 오류 등으로 실패한 경우) 재기동해도
+  // festival 존재 여부만으로 전체를 건너뛰지 않고 빠진 쪽을 마저 채워 넣도록 함
   public void importFestivalAndRecruitmentDummyData() {
 
-    if (festivalRepository.existsById(SEED_MARKER_CONTENT_ID)) return;
+    if (!festivalRepository.existsById(SEED_MARKER_CONTENT_ID)) {
+      log.info("실사례형 축제 더미 데이터 삽입 시작");
+      // 처음 한 번(축제 더미가 아직 없을 때)만 옛날 버전 앱이 남긴 "예시 행사"/"일반 구인 공고" 같은
+      // 잔여 축제/구인공고 데이터를 정리하고 시작함. 이후 재기동 시엔 위 가드에 걸려 다시 지우지 않음
+      if (!runSqlFileSafely(CLEANUP_SQL_PATH)) return;
+      if (!runSqlFileSafely(FESTIVAL_SQL_PATH)) return;
+      log.info("실사례형 축제 더미 데이터 삽입 완료");
+    }
 
-    log.info("실사례형 축제/구인공고 더미 데이터 삽입 시작");
-    if (!runSqlFileSafely(FESTIVAL_SQL_PATH)) return;
-    if (!runSqlFileSafely(RECRUITMENT_SQL_PATH)) return;
-    log.info("실사례형 축제/구인공고 더미 데이터 삽입 완료");
+    if (!existsDummyRecruitment()) {
+      log.info("실사례형 구인공고 더미 데이터 삽입 시작");
+      if (!runSqlFileSafely(RECRUITMENT_SQL_PATH)) return;
+      log.info("실사례형 구인공고 더미 데이터 삽입 완료");
+    }
+  }
+
+  private boolean existsDummyRecruitment() {
+    String sql = "SELECT 1 FROM recruitment WHERE festival_id = ? LIMIT 1";
+    try (Connection conn = dataSource.getConnection();
+         java.sql.PreparedStatement ps = conn.prepareStatement(sql)) {
+      ps.setString(1, SEED_MARKER_CONTENT_ID);
+      try (java.sql.ResultSet rs = ps.executeQuery()) {
+        return rs.next();
+      }
+    } catch (SQLException e) {
+      log.warn("더미 구인공고 존재 여부 확인 실패: {}", e.getMessage());
+      return true; // 확인 자체가 실패하면 안전하게 재삽입을 시도하지 않음
+    }
   }
 
   public void importAdminBoardDummyData() {
