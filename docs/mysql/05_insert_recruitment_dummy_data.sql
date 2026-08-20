@@ -1,4 +1,4 @@
-sㅓ-- 개발용 실사례형 구인구직 공고 더미 데이터 (04_insert_festival_dummy_data.sql 의 축제들에 종속)
+-- 개발용 실사례형 구인구직 공고 더미 데이터 (04_insert_festival_dummy_data.sql 의 축제들에 종속)
 -- 이 파일은 dev 프로필 기동 시 DevSqlDataInitializer 에 의해 자동 실행됨
 
 INSERT INTO recruitment (sigungu_code, working_location, festival_id, category, title, content, application_deadline, recruitment_count, working_start_date, working_end_date, working_start_time, working_end_time, status, published_at, created_at, updated_at) VALUES ('44180', NULL, 'dummy-fes-01', 'FOOD_TRUCK', '보령머드축제 푸드트럭 입점 모집', '보령머드축제 현장에서 운영할 푸드트럭을 모집합니다. 위생 및 안전 수칙을 준수해주실 사업자를 찾습니다.', '2026-07-13', 1, '2026-07-18', '2026-07-27', '11:00:00', '21:00:00', 'CLOSED', '2026-06-28 09:00:00', '2026-06-28 09:00:00', '2026-06-28 09:00:00');
