@@ -1,5 +1,6 @@
 package com.example.chook.payment.entity;
 
+import com.example.chook.common.entity.TimeBase;
 import com.example.chook.member.entity.Member;
 import jakarta.persistence.*;
 import lombok.*;
@@ -13,7 +14,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Payment {
+public class Payment extends TimeBase {
 
     //결제번호 admin 계정 아니면 볼일 없을 예정.  단순 분류용.
     @Id
@@ -67,23 +68,4 @@ public class Payment {
     @Column(name = "approved_at")
     private LocalDateTime approvedAt;
 
-    //생성일
-    @Column(name = "created_at", updatable = false)
-    private LocalDateTime createdAt;
-
-    //수정일
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
-
-
-    @PrePersist
-    protected void onCreate() {
-        this.createdAt = LocalDateTime.now();
-        this.updatedAt = LocalDateTime.now();
-    }
-
-    @PreUpdate
-    protected void onUpdate() {
-        this.updatedAt = LocalDateTime.now();
-    }
 }
