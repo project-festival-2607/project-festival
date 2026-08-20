@@ -7,7 +7,7 @@ import lombok.Getter;
 @Getter
 public enum PointHistoryDateRangeType {
 
-  RECORDED_AT("게시일시");
+  RECORDED_AT("기록일시");
 
   private final String label;
   private final boolean dateOnly;
