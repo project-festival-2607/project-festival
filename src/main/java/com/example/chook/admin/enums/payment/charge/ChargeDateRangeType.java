@@ -1,11 +1,11 @@
-package com.example.chook.admin.enums.payment.payment;
+package com.example.chook.admin.enums.payment.charge;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
-public enum PaymentDateRangeType {
+public enum ChargeDateRangeType {
 
   REQUESTED_AT("결제요청시각"),
   APPROVED_AT("결제승인시각"),
@@ -16,7 +16,7 @@ public enum PaymentDateRangeType {
   private final String label;
   private final boolean dateOnly;
 
-  PaymentDateRangeType(String label) {
+  ChargeDateRangeType(String label) {
     this(label, false);
   }
 

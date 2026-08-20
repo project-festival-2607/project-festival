@@ -1,4 +1,4 @@
-package com.example.chook.admin.enums.payment.payment;
+package com.example.chook.admin.enums.payment.charge;
 
 import com.example.chook.admin.enums.KeywordCriteria;
 import com.example.chook.admin.enums.KeywordType;
@@ -9,7 +9,7 @@ import java.util.EnumSet;
 
 @AllArgsConstructor
 @Getter
-public enum PaymentKeywordType implements KeywordType {
+public enum ChargeKeywordType implements KeywordType {
 
   PAYMENT_ID("결제번호", EnumSet.of(KeywordCriteria.EXACT)),
 
@@ -26,7 +26,7 @@ public enum PaymentKeywordType implements KeywordType {
   private final String label;
   private final EnumSet<KeywordCriteria> supportedCriteria;
 
-  PaymentKeywordType(String label) {
+  ChargeKeywordType(String label) {
     this(label, EnumSet.of(
       KeywordCriteria.ALL_WORDS_CONTAINS,
       KeywordCriteria.PHRASE_CONTAINS,

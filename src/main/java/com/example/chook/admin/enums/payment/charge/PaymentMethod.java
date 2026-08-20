@@ -1,4 +1,4 @@
-package com.example.chook.admin.enums.payment.payment;
+package com.example.chook.admin.enums.payment.charge;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

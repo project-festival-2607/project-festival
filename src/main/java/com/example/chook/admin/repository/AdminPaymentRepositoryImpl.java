@@ -1,13 +1,13 @@
 package com.example.chook.admin.repository;
 
-import com.example.chook.admin.condition.payment.PaymentSearchCondition;
+import com.example.chook.admin.condition.payment.ChargeSearchCondition;
 import com.example.chook.admin.condition.payment.ProductSearchCondition;
 import com.example.chook.admin.condition.payment.RefundSearchCondition;
-import com.example.chook.admin.dto.payment.PaymentTableDTO;
+import com.example.chook.admin.dto.payment.ChargeTableDTO;
 import com.example.chook.admin.dto.payment.ProductTableDTO;
 import com.example.chook.admin.dto.payment.RefundTableDTO;
 import com.example.chook.admin.enums.KeywordCriteria;
-import com.example.chook.admin.enums.payment.payment.*;
+import com.example.chook.admin.enums.payment.charge.*;
 import com.example.chook.admin.enums.payment.product.ProductDateRangeType;
 import com.example.chook.admin.enums.payment.product.ProductKeywordType;
 import com.example.chook.admin.enums.payment.product.ProductSortCriteria;
@@ -57,11 +57,11 @@ public class AdminPaymentRepositoryImpl implements AdminPaymentRepository {
   }
 
   @Override
-  public Page<PaymentTableDTO> getPaymentPage(Pageable pageable, PaymentSearchCondition condition) {
+  public Page<ChargeTableDTO> getChargePage(Pageable pageable, ChargeSearchCondition condition) {
 
-    JPAQuery<PaymentTableDTO> resultQuery = this.jpaQueryFactory.select(Projections.fields(
+    JPAQuery<ChargeTableDTO> resultQuery = this.jpaQueryFactory.select(Projections.fields(
 
-      PaymentTableDTO.class,
+      ChargeTableDTO.class,
 
       payment.paymentId,
 
@@ -97,18 +97,18 @@ public class AdminPaymentRepositoryImpl implements AdminPaymentRepository {
     BooleanBuilder whereCondition = new BooleanBuilder();
 
     whereCondition
-      .and(applyPaymentKeywordFilter(condition.keywordList(), condition.keywordType(), condition.keywordCriteria()))
+      .and(applyChargeKeywordFilter(condition.keywordList(), condition.keywordType(), condition.keywordCriteria()))
       .and(applyPaymentMethodFilter(condition.paymentMethod()))
       .and(applyPaymentStatusFilter(condition.paymentStatus()))
-      .and(applyPaymentDateRangeFilter(
+      .and(applyChargeDateRangeFilter(
         condition.dateRangeType(),
         condition.startDateTime(),
         condition.endDateTime()
       ));
 
-    List<PaymentTableDTO> content = resultQuery
+    List<ChargeTableDTO> content = resultQuery
       .where(whereCondition)
-      .orderBy(getPaymentOrderSpecifierArray(condition.sortCriteria(), condition.ascending()))
+      .orderBy(getChargeOrderSpecifierArray(condition.sortCriteria(), condition.ascending()))
       .offset(pageable.getOffset())
       .limit(pageable.getPageSize())
       .fetch();
@@ -258,14 +258,14 @@ public class AdminPaymentRepositoryImpl implements AdminPaymentRepository {
 
   // #################### KEYWORD FILTER 적용 메서드 ####################
 
-  private BooleanBuilder applyPaymentKeywordFilter(List<String> keywordList,
-                                                   PaymentKeywordType keywordType,
-                                                   KeywordCriteria keywordCriteria) {
+  private BooleanBuilder applyChargeKeywordFilter(List<String> keywordList,
+                                                  ChargeKeywordType keywordType,
+                                                  KeywordCriteria keywordCriteria) {
 
     if (keywordList == null || keywordList.isEmpty()) return null;
-    List<PaymentKeywordType> types =
+    List<ChargeKeywordType> types =
       keywordType == null
-        ? List.of(PaymentKeywordType.values())
+        ? List.of(ChargeKeywordType.values())
         : List.of(keywordType);
 
     BooleanBuilder result = new BooleanBuilder();
@@ -275,7 +275,7 @@ public class AdminPaymentRepositoryImpl implements AdminPaymentRepository {
 
     for (String keyword : keywordList) {
       BooleanBuilder keywordResult = new BooleanBuilder();
-      for (PaymentKeywordType type : types) {
+      for (ChargeKeywordType type : types) {
         switch (type) {
           case PAYMENT_ID -> {
             StringExpression paymentId = Expressions.stringTemplate("STR({0})", payment.paymentId);
@@ -379,9 +379,9 @@ public class AdminPaymentRepositoryImpl implements AdminPaymentRepository {
 
   // #################### DATE RANGE FILTER 적용 메서드 ####################
 
-  private BooleanBuilder applyPaymentDateRangeFilter(PaymentDateRangeType dateRangeType,
-                                                     LocalDateTime startDateTime,
-                                                     LocalDateTime endDateTime) {
+  private BooleanBuilder applyChargeDateRangeFilter(ChargeDateRangeType dateRangeType,
+                                                    LocalDateTime startDateTime,
+                                                    LocalDateTime endDateTime) {
 
     if (dateRangeType == null) return null;
 
@@ -505,8 +505,8 @@ public class AdminPaymentRepositoryImpl implements AdminPaymentRepository {
 
   // #################### 테이블 상단 정렬 OrderSpecifier<>[] 구축 메서드 ####################
 
-  private OrderSpecifier<?>[] getPaymentOrderSpecifierArray(PaymentSortCriteria sortCriteria,
-                                                            Boolean ascending) {
+  private OrderSpecifier<?>[] getChargeOrderSpecifierArray(ChargeSortCriteria sortCriteria,
+                                                           Boolean ascending) {
     List<OrderSpecifier<?>> orderSpecifiers = new ArrayList<>();
     if (sortCriteria != null) {
       Order order = ascending ? Order.ASC : Order.DESC;
