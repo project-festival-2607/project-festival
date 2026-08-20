@@ -1,9 +1,12 @@
 package com.example.chook.admin.service;
 
+import com.example.chook.admin.condition.payment.ProductSearchCondition;
 import com.example.chook.admin.condition.payment.RefundSearchCondition;
 import com.example.chook.admin.dto.board.InquiryTableDTO;
+import com.example.chook.admin.dto.payment.ProductTableDTO;
 import com.example.chook.admin.dto.payment.RefundTableDTO;
 import com.example.chook.admin.enums.board.inquiry.InquiryReplyStatus;
+import com.example.chook.admin.enums.payment.product.ProductStatus;
 import com.example.chook.admin.enums.payment.refund.RefundStatus;
 import com.example.chook.admin.repository.AdminPaymentRepository;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +32,17 @@ public class AdminPaymentServiceImpl implements AdminPaymentService {
       if (dto.getRawStatus().equalsIgnoreCase("REQUESTED")) dto.setStatus(RefundStatus.REQUESTED);
       if (dto.getRawStatus().equalsIgnoreCase("PARTIALLY_FAILED")) dto.setStatus(RefundStatus.PARTIALLY_FAILED);
       if (dto.getRawStatus().equalsIgnoreCase("COMPLETED")) dto.setStatus(RefundStatus.COMPLETED);
+    });
+    return result;
+  }
+
+  @Override
+  public Page<ProductTableDTO> getProductPage(int pageIdx, int pageSize, ProductSearchCondition condition) {
+    Pageable pageable = PageRequest.of(pageIdx - 1, pageSize);
+    Page<ProductTableDTO> result = adminPaymentRepository.getProductPage(pageable, condition);
+    result.forEach(dto -> {
+      if (dto.getDeletedAt() == null) dto.setStatus(ProductStatus.ON_SALE);
+      if (dto.getDeletedAt() != null) dto.setStatus(ProductStatus.SALE_ENDED);
     });
     return result;
   }

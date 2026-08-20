@@ -2,6 +2,10 @@ package com.example.chook.payment.entity;
 //상품테이블
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
+
+import java.time.LocalDateTime;
+
 //entity_yetdunguut/Product
 @Entity
 @Table(name = "product")
@@ -30,4 +34,11 @@ public class Product {
     //제품명(이긴한데 사실상 몇번째 상품인지랑 같은 용도긴함.
     @Column(name = "product_name", nullable = false, length = 100)
     private String productName;
+
+    @CreatedDate
+    @Column(name = "created_at", updatable = false)
+    private LocalDateTime createdAt;
+
+    @Column(name="deleted_at")
+    private LocalDateTime deletedAt;
 }

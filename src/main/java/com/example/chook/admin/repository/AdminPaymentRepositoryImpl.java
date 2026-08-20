@@ -1,8 +1,14 @@
 package com.example.chook.admin.repository;
 
+import com.example.chook.admin.condition.payment.ProductSearchCondition;
 import com.example.chook.admin.condition.payment.RefundSearchCondition;
+import com.example.chook.admin.dto.payment.ProductTableDTO;
 import com.example.chook.admin.dto.payment.RefundTableDTO;
 import com.example.chook.admin.enums.KeywordCriteria;
+import com.example.chook.admin.enums.payment.product.ProductDateRangeType;
+import com.example.chook.admin.enums.payment.product.ProductKeywordType;
+import com.example.chook.admin.enums.payment.product.ProductSortCriteria;
+import com.example.chook.admin.enums.payment.product.ProductStatus;
 import com.example.chook.admin.enums.payment.refund.RefundDateRangeType;
 import com.example.chook.admin.enums.payment.refund.RefundKeywordType;
 import com.example.chook.admin.enums.payment.refund.RefundSortCriteria;
@@ -33,6 +39,7 @@ import static com.example.chook.admin.util.KeywordUtils.getOrderSpecifier;
 import static com.example.chook.common.util.QuerydslUtils.*;
 import static com.example.chook.member.entity.QMember.member;
 import static com.example.chook.payment.entity.QPayClassify.payClassify;
+import static com.example.chook.payment.entity.QProduct.product;
 import static com.example.chook.payment.entity.QRefund.refund;
 
 @Repository
@@ -106,6 +113,57 @@ public class AdminPaymentRepositoryImpl implements AdminPaymentRepository {
 
   }
 
+  @Override
+  public Page<ProductTableDTO> getProductPage(Pageable pageable, ProductSearchCondition condition) {
+    JPAQuery<ProductTableDTO> resultQuery = this.jpaQueryFactory.select(Projections.fields(
+
+        ProductTableDTO.class,
+
+        product.productId,
+        product.pointGet,
+        product.productPrice,
+        product.productName,
+
+        product.createdAt,
+        product.deletedAt
+
+      ))
+      .from(product);
+
+    JPAQuery<Long> countQuery = jpaQueryFactory
+      .select(product.count())
+      .from(product);
+
+    BooleanBuilder whereCondition = new BooleanBuilder();
+
+    whereCondition
+      .and(applyProductKeywordFilter(condition.keywordList(), condition.keywordType(), condition.keywordCriteria()))
+      .and(applyProductStatusFilter(condition.status()))
+      .and(applyProductDateRangeFilter(
+        condition.dateRangeType(),
+        condition.startDateTime(),
+        condition.endDateTime()
+      ));
+
+    List<ProductTableDTO> content = resultQuery
+      .where(whereCondition)
+      .orderBy(getProductOrderSpecifierArray(condition.sortCriteria(), condition.ascending()))
+      .offset(pageable.getOffset())
+      .limit(pageable.getPageSize())
+      .fetch();
+
+    Long total = countQuery
+      .where(whereCondition)
+      .fetchOne();
+
+    return new PageImpl<>(
+      content,
+      pageable,
+      total != null ? total : 0
+    );
+
+  }
+
   // #################### JOIN 적용 메서드 ####################
 
   private <T> JPAQuery<T> applyRefundJoin(JPAQuery<T> query) {
@@ -160,6 +218,40 @@ public class AdminPaymentRepositoryImpl implements AdminPaymentRepository {
 
   }
 
+  private BooleanBuilder applyProductKeywordFilter(List<String> keywordList,
+                                                   ProductKeywordType keywordType,
+                                                   KeywordCriteria keywordCriteria) {
+
+    if (keywordList == null || keywordList.isEmpty()) return null;
+    List<ProductKeywordType> types =
+      keywordType == null
+        ? List.of(ProductKeywordType.values())
+        : List.of(keywordType);
+
+    BooleanBuilder result = new BooleanBuilder();
+
+    BiFunction<StringExpression, String, BooleanExpression> keywordCheck =
+      getKeywordCheckFunction(keywordCriteria);
+
+    for (String keyword : keywordList) {
+      BooleanBuilder keywordResult = new BooleanBuilder();
+      for (ProductKeywordType type : types) {
+        switch (type) {
+          case PRODUCT_ID -> {
+            StringExpression productId = Expressions.stringTemplate("STR({0})", product.productId);
+            keywordResult.or(keywordCheck.apply(productId, keyword));
+          }
+          case PRODUCT_NAME -> {
+            keywordResult.or(keywordCheck.apply(product.productName, keyword));
+          }
+        }
+      }
+      result.and(keywordResult);
+    }
+    return result;
+
+  }
+
   // #################### DATE RANGE FILTER 적용 메서드 ####################
 
   private BooleanBuilder applyRefundDateRangeFilter(RefundDateRangeType dateRangeType,
@@ -186,6 +278,30 @@ public class AdminPaymentRepositoryImpl implements AdminPaymentRepository {
 
   }
 
+  private BooleanBuilder applyProductDateRangeFilter(ProductDateRangeType dateRangeType,
+                                                     LocalDateTime startDateTime,
+                                                     LocalDateTime endDateTime) {
+
+    if (dateRangeType == null) return null;
+
+    BooleanBuilder result = new BooleanBuilder();
+
+    switch (dateRangeType) {
+      case CREATED_AT -> {
+        result.and(goe(product.createdAt, startDateTime));
+        result.and(loe(product.createdAt, endDateTime));
+      }
+      case DELETED_AT -> {
+        result.and(goe(product.deletedAt, startDateTime));
+        result.and(loe(product.deletedAt, endDateTime));
+      }
+      // 이 경우에 속하지 않는 경우 날짜 기준 필터를 사용하지 않음
+    }
+
+    return result;
+
+  }
+
   // #################### 테이블 상단 필터 적용 메서드 ####################
 
   private BooleanBuilder applyRefundStatusFilter(RefundStatus refundStatus) {
@@ -198,7 +314,22 @@ public class AdminPaymentRepositoryImpl implements AdminPaymentRepository {
       case REQUESTED -> result.and(equalsIgnoreCase(refund.refundStatus, "REQUESTED"));
       case PARTIALLY_FAILED -> result.and(equalsIgnoreCase(refund.refundStatus, "PARTIALLY_FAILED"));
       case COMPLETED -> result.and(equalsIgnoreCase(refund.refundStatus, "COMPLETED"));
-      case CANCELED ->  result.and(refund.canceledAt.isNotNull());
+      case CANCELED -> result.and(refund.canceledAt.isNotNull());
+    }
+
+    return result;
+
+  }
+
+  private BooleanBuilder applyProductStatusFilter(ProductStatus productStatus) {
+
+    BooleanBuilder result = new BooleanBuilder();
+
+    if (productStatus == null) return null;
+
+    switch (productStatus) {
+      case ON_SALE -> result.and(product.deletedAt.isNull());
+      case SALE_ENDED -> result.and(product.deletedAt.isNotNull());
     }
 
     return result;
@@ -220,6 +351,22 @@ public class AdminPaymentRepositoryImpl implements AdminPaymentRepository {
       }
     }
     orderSpecifiers.add(new OrderSpecifier<>(Order.ASC, refund.refundId));
+    return orderSpecifiers.toArray(new OrderSpecifier[0]);
+  }
+
+  private OrderSpecifier<?>[] getProductOrderSpecifierArray(ProductSortCriteria sortCriteria,
+                                                            Boolean ascending) {
+    List<OrderSpecifier<?>> orderSpecifiers = new ArrayList<>();
+    if (sortCriteria != null) {
+      Order order = ascending ? Order.ASC : Order.DESC;
+      switch (sortCriteria) {
+        case POINT_GET -> orderSpecifiers.addAll(getOrderSpecifier(order, product.pointGet));
+        case PRODUCT_PRICE -> orderSpecifiers.addAll(getOrderSpecifier(order, product.productPrice));
+        case CREATED_AT -> orderSpecifiers.addAll(getOrderSpecifier(order, product.createdAt));
+        case DELETED_AT -> orderSpecifiers.addAll(getOrderSpecifier(order, product.deletedAt));
+      }
+    }
+    orderSpecifiers.add(new OrderSpecifier<>(Order.ASC, product.productId));
     return orderSpecifiers.toArray(new OrderSpecifier[0]);
   }
 
