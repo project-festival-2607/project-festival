@@ -292,6 +292,8 @@ public class AdminPaymentRepositoryImpl implements AdminPaymentRepository {
             keywordResult.or(keywordCheck.apply(productId, keyword));
           }
           case PRODUCT_NAME -> keywordResult.or(keywordCheck.apply(product.productName, keyword));
+          case PAYMENT_KEY ->  keywordResult.or(keywordCheck.apply(payment.paymentKey, keyword));
+          case ORDER_ID -> keywordResult.or(keywordCheck.apply(payment.orderId, keyword));
         }
       }
       result.and(keywordResult);
