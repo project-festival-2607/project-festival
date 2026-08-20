@@ -1,10 +1,13 @@
 package com.example.chook.admin.repository;
 
+import com.example.chook.admin.condition.payment.PaymentSearchCondition;
 import com.example.chook.admin.condition.payment.ProductSearchCondition;
 import com.example.chook.admin.condition.payment.RefundSearchCondition;
+import com.example.chook.admin.dto.payment.PaymentTableDTO;
 import com.example.chook.admin.dto.payment.ProductTableDTO;
 import com.example.chook.admin.dto.payment.RefundTableDTO;
 import com.example.chook.admin.enums.KeywordCriteria;
+import com.example.chook.admin.enums.payment.payment.*;
 import com.example.chook.admin.enums.payment.product.ProductDateRangeType;
 import com.example.chook.admin.enums.payment.product.ProductKeywordType;
 import com.example.chook.admin.enums.payment.product.ProductSortCriteria;
@@ -39,6 +42,7 @@ import static com.example.chook.admin.util.KeywordUtils.getOrderSpecifier;
 import static com.example.chook.common.util.QuerydslUtils.*;
 import static com.example.chook.member.entity.QMember.member;
 import static com.example.chook.payment.entity.QPayClassify.payClassify;
+import static com.example.chook.payment.entity.QPayment.payment;
 import static com.example.chook.payment.entity.QProduct.product;
 import static com.example.chook.payment.entity.QRefund.refund;
 
@@ -50,6 +54,75 @@ public class AdminPaymentRepositoryImpl implements AdminPaymentRepository {
 
   public AdminPaymentRepositoryImpl(EntityManager em) {
     this.jpaQueryFactory = new JPAQueryFactory(em);
+  }
+
+  @Override
+  public Page<PaymentTableDTO> getPaymentPage(Pageable pageable, PaymentSearchCondition condition) {
+
+    JPAQuery<PaymentTableDTO> resultQuery = this.jpaQueryFactory.select(Projections.fields(
+
+      PaymentTableDTO.class,
+
+      payment.paymentId,
+
+      payment.member.id.as("memberId"),
+      payment.member.username.as("memberUsername"),
+      payment.member.name.as("memberName"),
+
+      payment.product.productId,
+      payment.pointGet,
+      payment.product.productName,
+
+      payment.method.as("rawPaymentMethod"),
+
+      payment.paymentKey,
+      payment.orderId,
+
+      payment.paymentStatus.as("rawPaymentStatus"),
+
+      payment.requestedAt,
+      payment.approvedAt,
+      payment.createdAt,
+      payment.updatedAt
+
+    )).from(payment);
+
+    JPAQuery<Long> countQuery = jpaQueryFactory
+      .select(payment.count())
+      .from(payment);
+
+    resultQuery = applyPaymentJoin(resultQuery);
+    countQuery = applyPaymentJoin(countQuery);
+
+    BooleanBuilder whereCondition = new BooleanBuilder();
+
+    whereCondition
+      .and(applyPaymentKeywordFilter(condition.keywordList(), condition.keywordType(), condition.keywordCriteria()))
+      .and(applyPaymentMethodFilter(condition.paymentMethod()))
+      .and(applyPaymentStatusFilter(condition.paymentStatus()))
+      .and(applyPaymentDateRangeFilter(
+        condition.dateRangeType(),
+        condition.startDateTime(),
+        condition.endDateTime()
+      ));
+
+    List<PaymentTableDTO> content = resultQuery
+      .where(whereCondition)
+      .orderBy(getPaymentOrderSpecifierArray(condition.sortCriteria(), condition.ascending()))
+      .offset(pageable.getOffset())
+      .limit(pageable.getPageSize())
+      .fetch();
+
+    Long total = countQuery
+      .where(whereCondition)
+      .fetchOne();
+
+    return new PageImpl<>(
+      content,
+      pageable,
+      total != null ? total : 0
+    );
+
   }
 
   @Override
@@ -166,6 +239,14 @@ public class AdminPaymentRepositoryImpl implements AdminPaymentRepository {
 
   // #################### JOIN 적용 메서드 ####################
 
+  private <T> JPAQuery<T> applyPaymentJoin(JPAQuery<T> query) {
+    return query
+      .leftJoin(member)
+      .on(payment.member.id.eq(member.id))
+      .leftJoin(product)
+      .on(payment.product.productId.eq(product.productId));
+  }
+
   private <T> JPAQuery<T> applyRefundJoin(JPAQuery<T> query) {
     return query
       .leftJoin(member)
@@ -176,6 +257,50 @@ public class AdminPaymentRepositoryImpl implements AdminPaymentRepository {
 
 
   // #################### KEYWORD FILTER 적용 메서드 ####################
+
+  private BooleanBuilder applyPaymentKeywordFilter(List<String> keywordList,
+                                                   PaymentKeywordType keywordType,
+                                                   KeywordCriteria keywordCriteria) {
+
+    if (keywordList == null || keywordList.isEmpty()) return null;
+    List<PaymentKeywordType> types =
+      keywordType == null
+        ? List.of(PaymentKeywordType.values())
+        : List.of(keywordType);
+
+    BooleanBuilder result = new BooleanBuilder();
+
+    BiFunction<StringExpression, String, BooleanExpression> keywordCheck =
+      getKeywordCheckFunction(keywordCriteria);
+
+    for (String keyword : keywordList) {
+      BooleanBuilder keywordResult = new BooleanBuilder();
+      for (PaymentKeywordType type : types) {
+        switch (type) {
+          case PAYMENT_ID -> {
+            StringExpression paymentId = Expressions.stringTemplate("STR({0})", payment.paymentId);
+            keywordResult.or(keywordCheck.apply(paymentId, keyword));
+          }
+          case MEMBER_ID -> {
+            StringExpression memberId = Expressions.stringTemplate("STR({0})", member.id);
+            keywordResult.or(keywordCheck.apply(memberId, keyword));
+          }
+          case MEMBER_USERNAME -> keywordResult.or(keywordCheck.apply(member.username, keyword));
+          case MEMBER_NAME -> keywordResult.or(keywordCheck.apply(member.name, keyword));
+          case PRODUCT_ID -> {
+            StringExpression productId = Expressions.stringTemplate("STR({0})", payment.product.productId);
+            keywordResult.or(keywordCheck.apply(productId, keyword));
+          }
+          case PRODUCT_NAME -> keywordResult.or(keywordCheck.apply(product.productName, keyword));
+          case PAYMENT_KEY ->  keywordResult.or(keywordCheck.apply(payment.paymentKey, keyword));
+          case ORDER_ID -> keywordResult.or(keywordCheck.apply(payment.orderId, keyword));
+        }
+      }
+      result.and(keywordResult);
+    }
+    return result;
+
+  }
 
   private BooleanBuilder applyRefundKeywordFilter(List<String> keywordList,
                                                   RefundKeywordType keywordType,
@@ -254,6 +379,38 @@ public class AdminPaymentRepositoryImpl implements AdminPaymentRepository {
 
   // #################### DATE RANGE FILTER 적용 메서드 ####################
 
+  private BooleanBuilder applyPaymentDateRangeFilter(PaymentDateRangeType dateRangeType,
+                                                     LocalDateTime startDateTime,
+                                                     LocalDateTime endDateTime) {
+
+    if (dateRangeType == null) return null;
+
+    BooleanBuilder result = new BooleanBuilder();
+
+    switch (dateRangeType) {
+      case REQUESTED_AT -> {
+        result.and(goe(payment.requestedAt, startDateTime));
+        result.and(loe(payment.requestedAt, endDateTime));
+      }
+      case APPROVED_AT -> {
+        result.and(goe(payment.approvedAt, startDateTime));
+        result.and(loe(payment.approvedAt, endDateTime));
+      }
+      case CREATED_AT -> {
+        result.and(goe(payment.createdAt, startDateTime));
+        result.and(loe(payment.createdAt, endDateTime));
+      }
+      case UPDATED_AT -> {
+        result.and(goe(payment.updatedAt, startDateTime));
+        result.and(loe(payment.updatedAt, endDateTime));
+      }
+      // 이 경우에 속하지 않는 경우 날짜 기준 필터를 사용하지 않음
+    }
+
+    return result;
+
+  }
+
   private BooleanBuilder applyRefundDateRangeFilter(RefundDateRangeType dateRangeType,
                                                     LocalDateTime startDateTime,
                                                     LocalDateTime endDateTime) {
@@ -304,19 +461,32 @@ public class AdminPaymentRepositoryImpl implements AdminPaymentRepository {
 
   // #################### 테이블 상단 필터 적용 메서드 ####################
 
+  private BooleanBuilder applyPaymentMethodFilter(PaymentMethod paymentMethod) {
+
+    BooleanBuilder result = new BooleanBuilder();
+    if (paymentMethod == null) return null;
+    if (paymentMethod == PaymentMethod.NONE) result.and(payment.method.isNull());
+    else result.and(eq(payment.method, paymentMethod.getLabel()));
+    return result;
+
+  }
+
+  private BooleanBuilder applyPaymentStatusFilter(PaymentStatus paymentStatus) {
+
+    BooleanBuilder result = new BooleanBuilder();
+    if (paymentStatus == null) return null;
+    result.and(eq(payment.paymentStatus, paymentStatus.getLabel()));
+    return result;
+
+  }
+
+
   private BooleanBuilder applyRefundStatusFilter(RefundStatus refundStatus) {
 
     BooleanBuilder result = new BooleanBuilder();
-
     if (refundStatus == null) return null;
-
-    switch (refundStatus) {
-      case REQUESTED -> result.and(equalsIgnoreCase(refund.refundStatus, "REQUESTED"));
-      case PARTIALLY_FAILED -> result.and(equalsIgnoreCase(refund.refundStatus, "PARTIALLY_FAILED"));
-      case COMPLETED -> result.and(equalsIgnoreCase(refund.refundStatus, "COMPLETED"));
-      case CANCELED -> result.and(refund.canceledAt.isNotNull());
-    }
-
+    if (refundStatus == RefundStatus.CANCELED) result.and(refund.canceledAt.isNotNull());
+    else result.and(equalsIgnoreCase(refund.refundStatus, refundStatus.name()));
     return result;
 
   }
@@ -324,19 +494,33 @@ public class AdminPaymentRepositoryImpl implements AdminPaymentRepository {
   private BooleanBuilder applyProductStatusFilter(ProductStatus productStatus) {
 
     BooleanBuilder result = new BooleanBuilder();
-
     if (productStatus == null) return null;
-
     switch (productStatus) {
       case ON_SALE -> result.and(product.deletedAt.isNull());
       case SALE_ENDED -> result.and(product.deletedAt.isNotNull());
     }
-
     return result;
 
   }
 
   // #################### 테이블 상단 정렬 OrderSpecifier<>[] 구축 메서드 ####################
+
+  private OrderSpecifier<?>[] getPaymentOrderSpecifierArray(PaymentSortCriteria sortCriteria,
+                                                            Boolean ascending) {
+    List<OrderSpecifier<?>> orderSpecifiers = new ArrayList<>();
+    if (sortCriteria != null) {
+      Order order = ascending ? Order.ASC : Order.DESC;
+      switch (sortCriteria) {
+        case POINT_GET -> orderSpecifiers.addAll(getOrderSpecifier(order, product.pointGet));
+        case REQUESTED_AT -> orderSpecifiers.addAll(getOrderSpecifier(order, payment.requestedAt));
+        case APPROVED_AT -> orderSpecifiers.addAll(getOrderSpecifier(order, payment.approvedAt));
+        case CREATED_AT -> orderSpecifiers.addAll(getOrderSpecifier(order, payment.createdAt));
+        case UPDATED_AT -> orderSpecifiers.addAll(getOrderSpecifier(order, payment.updatedAt));
+      }
+    }
+    orderSpecifiers.add(new OrderSpecifier<>(Order.ASC, payment.paymentId));
+    return orderSpecifiers.toArray(new OrderSpecifier[0]);
+  }
 
   private OrderSpecifier<?>[] getRefundOrderSpecifierArray(RefundSortCriteria sortCriteria,
                                                            Boolean ascending) {

@@ -1,9 +1,13 @@
 package com.example.chook.admin.service;
 
+import com.example.chook.admin.condition.payment.PaymentSearchCondition;
 import com.example.chook.admin.condition.payment.ProductSearchCondition;
 import com.example.chook.admin.condition.payment.RefundSearchCondition;
+import com.example.chook.admin.dto.payment.PaymentTableDTO;
 import com.example.chook.admin.dto.payment.ProductTableDTO;
 import com.example.chook.admin.dto.payment.RefundTableDTO;
+import com.example.chook.admin.enums.payment.payment.PaymentMethod;
+import com.example.chook.admin.enums.payment.payment.PaymentStatus;
 import com.example.chook.admin.enums.payment.product.ProductStatus;
 import com.example.chook.admin.enums.payment.refund.RefundStatus;
 import com.example.chook.admin.repository.AdminPaymentRepository;
@@ -20,6 +24,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 
+import static com.example.chook.common.util.CustomStringUtils.toEnum;
+
 @RequiredArgsConstructor
 @Service
 @Slf4j
@@ -27,6 +33,17 @@ public class AdminPaymentServiceImpl implements AdminPaymentService {
 
   private final AdminPaymentRepository adminPaymentRepository;
   private final ProductRepository productRepository;
+
+  @Override
+  public Page<PaymentTableDTO> getPaymentPage(int pageIdx, int pageSize, PaymentSearchCondition condition) {
+    Pageable pageable = PageRequest.of(pageIdx - 1, pageSize);
+    Page<PaymentTableDTO> result = adminPaymentRepository.getPaymentPage(pageable, condition);
+    result.forEach(dto -> {
+      dto.setPaymentMethod(PaymentMethod.fromLabel(dto.getRawPaymentMethod()));
+      dto.setPaymentStatus(toEnum(dto.getRawPaymentStatus(), PaymentStatus.class, null));
+    });
+    return result;
+  }
 
   @Override
   public Page<RefundTableDTO> getRefundPage(int pageIdx, int pageSize, RefundSearchCondition condition) {

@@ -35,7 +35,7 @@ public class AdminProductController {
   private final ModalInfoFieldProvider infoFieldProvider;
 
   @GetMapping
-  public void loadRefundPage(
+  public void loadProductPage(
     Model model,
     @Valid @ModelAttribute ProductSearchForm form
   ) {
