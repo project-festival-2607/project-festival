@@ -25,6 +25,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.List;
 import java.util.UUID;
 
 @Controller
@@ -71,7 +72,9 @@ public class ApplicationController {
 
     // 특정 모집공고에 지원한 구직자 목록 조회 (구인자용)
     @GetMapping("/recruiter/list")
-    public String applicants(@AuthenticationPrincipal UserDetails user, Model model) {
+    public String applicants(@AuthenticationPrincipal UserDetails user,
+                             @RequestParam Long recruitmentId,
+                             Model model) {
 
         // 로그인하지 않은 경우
         if (user == null) {
@@ -81,29 +84,15 @@ public class ApplicationController {
         // 현재 로그인한 구인자의 username
         String username = user.getUsername();
 
-        // 구인자의 모집공고 지원자를 카테고리별로 조회
-        ApplicationCategoryListDTO applicationList = applicationService.getApplicantsByRecruiter(username);
+        // 특정 모집공고의 지원자 조회
+        List<ApplicationDTO> applications = applicationService.getApplicants(recruitmentId);
 
         // 카테고리별 지원자 목록 전달
-        model.addAttribute(
-                "individualApplications",
-                applicationList.getIndividualApplications()
-        );
+        model.addAttribute("applications", applications);
 
-        model.addAttribute(
-                "foodTruckApplications",
-                applicationList.getFoodTruckApplications()
-        );
+        // 선택한 모집공고 ID 전달
+        model.addAttribute("recruitmentId", recruitmentId);
 
-        model.addAttribute(
-                "equipmentApplications",
-                applicationList.getEquipmentApplications()
-        );
-
-        model.addAttribute(
-                "etcApplications",
-                applicationList.getEtcApplications()
-        );
         return "application/recruiter/list";
     }
 
