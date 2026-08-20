@@ -3,9 +3,11 @@ package com.example.chook.admin.repository;
 import com.example.chook.admin.condition.payment.ChargeSearchCondition;
 import com.example.chook.admin.condition.payment.ProductSearchCondition;
 import com.example.chook.admin.condition.payment.RefundSearchCondition;
+import com.example.chook.admin.condition.payment.UseSearchCondition;
 import com.example.chook.admin.dto.payment.ChargeTableDTO;
 import com.example.chook.admin.dto.payment.ProductTableDTO;
 import com.example.chook.admin.dto.payment.RefundTableDTO;
+import com.example.chook.admin.dto.payment.UseTableDTO;
 import com.example.chook.admin.enums.KeywordCriteria;
 import com.example.chook.admin.enums.payment.charge.*;
 import com.example.chook.admin.enums.payment.product.ProductDateRangeType;
@@ -16,6 +18,9 @@ import com.example.chook.admin.enums.payment.refund.RefundDateRangeType;
 import com.example.chook.admin.enums.payment.refund.RefundKeywordType;
 import com.example.chook.admin.enums.payment.refund.RefundSortCriteria;
 import com.example.chook.admin.enums.payment.refund.RefundStatus;
+import com.example.chook.admin.enums.payment.use.UseDateRangeType;
+import com.example.chook.admin.enums.payment.use.UseKeywordType;
+import com.example.chook.admin.enums.payment.use.UseSortCriteria;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
@@ -46,6 +51,7 @@ import static com.example.chook.payment.entity.QPayment.payment;
 import static com.example.chook.payment.entity.QPointHistory.pointHistory;
 import static com.example.chook.payment.entity.QProduct.product;
 import static com.example.chook.payment.entity.QRefund.refund;
+import static com.example.chook.recruitment.entity.QRecruitment.recruitment;
 
 @Repository
 @Slf4j
@@ -125,6 +131,68 @@ public class AdminPaymentRepositoryImpl implements AdminPaymentRepository {
       pageable,
       total != null ? total : 0
     );
+
+  }
+
+  @Override
+  public Page<UseTableDTO> getUsePage(Pageable pageable, UseSearchCondition condition) {
+
+    JPAQuery<UseTableDTO> resultQuery = this.jpaQueryFactory.select(Projections.fields(
+
+      UseTableDTO.class,
+
+      pointHistory.pointHistoryId,
+      pointHistory.createdAt.as("usedAt"),
+      pointHistory.pointChanging.negate().as("pointChanging"),
+
+      pointHistory.member.id.as("memberId"),
+      pointHistory.member.username.as("memberUsername"),
+      pointHistory.member.name.as("memberName"),
+
+      pointHistory.payment.paymentId,
+
+      pointHistory.recruit.id.as("recruitmentId"),
+      pointHistory.recruit.title.as("recruitmentTitle"),
+
+      pointHistory.payClassify.payClassifyId.as("recordId")
+
+    )).from(pointHistory);
+
+    JPAQuery<Long> countQuery = jpaQueryFactory
+      .select(pointHistory.count())
+      .from(pointHistory);
+
+    resultQuery = applyUseJoin(resultQuery);
+    countQuery = applyUseJoin(countQuery);
+
+    BooleanBuilder whereCondition = new BooleanBuilder();
+
+    whereCondition
+      .and(equalsIgnoreCase(pointHistory.pType, "USE"))
+      .and(applyUseKeywordFilter(condition.keywordList(), condition.keywordType(), condition.keywordCriteria()))
+      .and(applyUseDateRangeFilter(
+        condition.dateRangeType(),
+        condition.startDateTime(),
+        condition.endDateTime()
+      ));
+
+    List<UseTableDTO> content = resultQuery
+      .where(whereCondition)
+      .orderBy(getUseOrderSpecifierArray(condition.sortCriteria(), condition.ascending()))
+      .offset(pageable.getOffset())
+      .limit(pageable.getPageSize())
+      .fetch();
+
+    Long total = countQuery
+      .where(whereCondition)
+      .fetchOne();
+
+    return new PageImpl<>(
+      content,
+      pageable,
+      total != null ? total : 0
+    );
+
 
   }
 
@@ -257,6 +325,20 @@ public class AdminPaymentRepositoryImpl implements AdminPaymentRepository {
 
   }
 
+  private <T> JPAQuery<T> applyUseJoin(JPAQuery<T> query) {
+    return query
+      .leftJoin(member)
+      .on(pointHistory.member.id.eq(member.id))
+      .leftJoin(payment)
+      .on(pointHistory.payment.paymentId.eq(payment.paymentId))
+      .leftJoin(recruitment)
+      .on(pointHistory.recruit.id.eq(recruitment.id))
+      .leftJoin(payClassify)
+      .on(pointHistory.payClassify.payClassifyId.eq(payClassify.payClassifyId))
+      ;
+
+  }
+
   private <T> JPAQuery<T> applyRefundJoin(JPAQuery<T> query) {
     return query
       .leftJoin(member)
@@ -287,7 +369,7 @@ public class AdminPaymentRepositoryImpl implements AdminPaymentRepository {
       BooleanBuilder keywordResult = new BooleanBuilder();
       for (ChargeKeywordType type : types) {
         switch (type) {
-          case PAY_CLASSIFY_ID ->  {
+          case PAY_CLASSIFY_ID -> {
             StringExpression payClassifyId = Expressions.stringTemplate("STR({0})", payClassify.payClassifyId);
             keywordResult.or(keywordCheck.apply(payClassifyId, keyword));
           }
@@ -306,8 +388,54 @@ public class AdminPaymentRepositoryImpl implements AdminPaymentRepository {
             keywordResult.or(keywordCheck.apply(productId, keyword));
           }
           case PRODUCT_NAME -> keywordResult.or(keywordCheck.apply(product.productName, keyword));
-          case PAYMENT_KEY ->  keywordResult.or(keywordCheck.apply(payment.paymentKey, keyword));
+          case PAYMENT_KEY -> keywordResult.or(keywordCheck.apply(payment.paymentKey, keyword));
           case ORDER_ID -> keywordResult.or(keywordCheck.apply(payment.orderId, keyword));
+        }
+      }
+      result.and(keywordResult);
+    }
+    return result;
+
+  }
+
+  private BooleanBuilder applyUseKeywordFilter(List<String> keywordList,
+                                               UseKeywordType keywordType,
+                                               KeywordCriteria keywordCriteria) {
+
+    if (keywordList == null || keywordList.isEmpty()) return null;
+    List<UseKeywordType> types =
+      keywordType == null
+        ? List.of(UseKeywordType.values())
+        : List.of(keywordType);
+
+    BooleanBuilder result = new BooleanBuilder();
+
+    BiFunction<StringExpression, String, BooleanExpression> keywordCheck =
+      getKeywordCheckFunction(keywordCriteria);
+
+    for (String keyword : keywordList) {
+      BooleanBuilder keywordResult = new BooleanBuilder();
+      for (UseKeywordType type : types) {
+        switch (type) {
+          case PAY_CLASSIFY_ID -> {
+            StringExpression payClassifyId = Expressions.stringTemplate("STR({0})", payClassify.payClassifyId);
+            keywordResult.or(keywordCheck.apply(payClassifyId, keyword));
+          }
+          case POINT_HISTORY_ID -> {
+            StringExpression pointHistoryId = Expressions.stringTemplate("STR({0})", pointHistory.pointHistoryId);
+            keywordResult.or(keywordCheck.apply(pointHistoryId, keyword));
+          }
+          case MEMBER_ID -> {
+            StringExpression memberId = Expressions.stringTemplate("STR({0})", member.id);
+            keywordResult.or(keywordCheck.apply(memberId, keyword));
+          }
+          case MEMBER_USERNAME -> keywordResult.or(keywordCheck.apply(member.username, keyword));
+          case MEMBER_NAME -> keywordResult.or(keywordCheck.apply(member.name, keyword));
+          case RECRUITMENT_ID -> {
+            StringExpression recruitmentId = Expressions.stringTemplate("STR({0})", pointHistory.recruit.id);
+            keywordResult.or(keywordCheck.apply(recruitmentId, keyword));
+          }
+          case RECRUITMENT_TITLE -> keywordResult.or(keywordCheck.apply(pointHistory.recruit.title, keyword));
         }
       }
       result.and(keywordResult);
@@ -380,9 +508,7 @@ public class AdminPaymentRepositoryImpl implements AdminPaymentRepository {
             StringExpression productId = Expressions.stringTemplate("STR({0})", product.productId);
             keywordResult.or(keywordCheck.apply(productId, keyword));
           }
-          case PRODUCT_NAME -> {
-            keywordResult.or(keywordCheck.apply(product.productName, keyword));
-          }
+          case PRODUCT_NAME -> keywordResult.or(keywordCheck.apply(product.productName, keyword));
         }
       }
       result.and(keywordResult);
@@ -421,6 +547,22 @@ public class AdminPaymentRepositoryImpl implements AdminPaymentRepository {
       // 이 경우에 속하지 않는 경우 날짜 기준 필터를 사용하지 않음
     }
 
+    return result;
+
+  }
+
+  private BooleanBuilder applyUseDateRangeFilter(UseDateRangeType dateRangeType,
+                                                 LocalDateTime startDateTime,
+                                                 LocalDateTime endDateTime) {
+
+    if  (dateRangeType == null) return null;
+
+    BooleanBuilder result = new BooleanBuilder();
+
+    if (dateRangeType == UseDateRangeType.USED_AT) {
+      result.and(goe(pointHistory.createdAt, startDateTime));
+      result.and(loe(pointHistory.createdAt, endDateTime));
+    }
     return result;
 
   }
@@ -534,6 +676,22 @@ public class AdminPaymentRepositoryImpl implements AdminPaymentRepository {
     }
     orderSpecifiers.add(new OrderSpecifier<>(Order.ASC, payment.paymentId));
     return orderSpecifiers.toArray(new OrderSpecifier[0]);
+  }
+
+  private OrderSpecifier<?>[] getUseOrderSpecifierArray(UseSortCriteria sortCriteria,
+                                                        Boolean ascending) {
+
+    List<OrderSpecifier<?>> orderSpecifiers = new ArrayList<>();
+    if (sortCriteria != null) {
+      Order order = ascending ? Order.ASC : Order.DESC;
+      switch (sortCriteria) {
+        case USED_AT -> orderSpecifiers.addAll(getOrderSpecifier(order, pointHistory.createdAt));
+        case POINT_CHANGING -> orderSpecifiers.addAll(getOrderSpecifier(order, pointHistory.pointChanging.negate()));
+      }
+    }
+    orderSpecifiers.add(new OrderSpecifier<>(Order.ASC, pointHistory.pointHistoryId));
+    return orderSpecifiers.toArray(new OrderSpecifier[0]);
+
   }
 
   private OrderSpecifier<?>[] getRefundOrderSpecifierArray(RefundSortCriteria sortCriteria,

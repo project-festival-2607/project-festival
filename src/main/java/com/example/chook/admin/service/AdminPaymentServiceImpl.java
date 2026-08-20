@@ -3,9 +3,11 @@ package com.example.chook.admin.service;
 import com.example.chook.admin.condition.payment.ChargeSearchCondition;
 import com.example.chook.admin.condition.payment.ProductSearchCondition;
 import com.example.chook.admin.condition.payment.RefundSearchCondition;
+import com.example.chook.admin.condition.payment.UseSearchCondition;
 import com.example.chook.admin.dto.payment.ChargeTableDTO;
 import com.example.chook.admin.dto.payment.ProductTableDTO;
 import com.example.chook.admin.dto.payment.RefundTableDTO;
+import com.example.chook.admin.dto.payment.UseTableDTO;
 import com.example.chook.admin.enums.payment.charge.PaymentMethod;
 import com.example.chook.admin.enums.payment.charge.PaymentStatus;
 import com.example.chook.admin.enums.payment.product.ProductStatus;
@@ -43,6 +45,12 @@ public class AdminPaymentServiceImpl implements AdminPaymentService {
       dto.setPaymentStatus(toEnum(dto.getRawPaymentStatus(), PaymentStatus.class, null));
     });
     return result;
+  }
+
+  @Override
+  public Page<UseTableDTO> getUsePage(int pageIdx, int pageSize, UseSearchCondition condition) {
+    Pageable pageable = PageRequest.of(pageIdx - 1, pageSize);
+    return adminPaymentRepository.getUsePage(pageable, condition);
   }
 
   @Override
