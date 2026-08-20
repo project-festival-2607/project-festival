@@ -27,7 +27,23 @@
       </div>
     </form>
   </div>
+  <!-- deleteProductModal -->
+  <div aria-hidden="true" class="modal fade"
+       data-role="deleteProduct" id="deleteProductModal"
+       tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div th:replace="~{admin/fragments/modal :: modal-header('상품 판매 종료')}"></div>
+        <div class="modal-body">
+          <div
+            th:replace="~{admin/fragments/modal :: modal-product-info(${deleteProductInfo})}"></div>
+        </div>
+        <div th:replace="~{admin/fragments/modal :: modal-footer('danger', '판매 종료')}"></div>
+      </div>
+    </div>
+  </div>
   <script th:src="@{/js/admin/initialize-search-form.js}"></script>
+  <script th:src="@{/js/admin/payment/modal.js}"></script>
   <script th:src="@{/js/admin/load-result.js}"></script>
   <script th:src="@{/js/admin/table-th-filter.js}"></script>
   <script>

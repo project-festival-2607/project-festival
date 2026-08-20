@@ -113,6 +113,12 @@
             <th:block th:replace="~{admin/fragments/svg :: moderation('moderation-icon')}"></th:block>
           </button>
           <ul class="dropdown-menu moderation-menu">
+            <li th:if="${product.deletedAt eq null}">
+              <button class="dropdown-item" data-bs-target="#deleteProductModal"
+                      data-bs-toggle="modal"
+                      data-role="deleteProduct"
+                      type="button">판매 종료</button>
+            </li>
           </ul>
         </td>
       </tr>
