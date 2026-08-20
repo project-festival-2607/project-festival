@@ -275,7 +275,7 @@
         <td class="text-end" data-field="applicantCount" th:text="${recruitment.applicantCount}"></td>
         <td class="center bg-body-secondary">
           <button class="btn btn-reset dropdown-toggle dropdown-no-caret moderation-btn" data-bs-toggle="dropdown"
-                  type="button">
+                  type="button" disabled>
             <th:block th:replace="~{admin/fragments/svg :: moderation('moderation-icon')}"></th:block>
           </button>
           <ul class="dropdown-menu moderation-menu">
