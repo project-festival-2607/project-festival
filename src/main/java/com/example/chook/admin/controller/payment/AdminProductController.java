@@ -8,6 +8,7 @@ import com.example.chook.admin.enums.payment.product.ProductKeywordType;
 import com.example.chook.admin.enums.payment.product.ProductStatus;
 import com.example.chook.admin.form.payment.ProductSearchForm;
 import com.example.chook.admin.provider.ModalInfoFieldProvider;
+import com.example.chook.admin.record.AddProductRequest;
 import com.example.chook.admin.record.AdminActionResponse;
 import com.example.chook.admin.service.AdminPaymentService;
 import com.example.chook.common.handler.PagingHandler;
@@ -17,6 +18,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -87,6 +90,29 @@ public class AdminProductController {
       .build()
       ;
 
+  }
+
+  @PostMapping("/add")
+  @ResponseBody
+  public AdminActionResponse addProduct(@Valid @RequestBody AddProductRequest request,
+                                        BindingResult bindingResult) {
+
+    if (bindingResult.hasErrors()) {
+      throw new IllegalArgumentException(bindingResult.getAllErrors().stream()
+        .map(ObjectError::getDefaultMessage)
+        .findFirst()
+        .orElse(null));
+    }
+
+    String productName = request.productName();
+    Integer productPointGet = request.productPointGet();
+
+    Integer productId = adminPaymentService.addProduct(productName, productPointGet);
+    return AdminActionResponse.builder()
+      .result(true)
+      .message(String.format("입력한 상품이 %d번 상품으로 추가되었습니다.", productId))
+      .build()
+      ;
   }
 
 }

@@ -136,3 +136,23 @@
     </button>
   </div>
 </th:block>
+
+<th:block th:fragment="search-buttons-with-product-add-button">
+  <div class="admin-search-button-wrapper">
+    <button class="btn btn-sm btn-outline-primary product-add-button" data-bs-target="#addProductModal"
+            data-bs-toggle="modal"
+            data-role="addProduct">
+      <span th:replace="~{admin/fragments/svg :: add-product('search-icon')}"></span>
+      <span>상품 추가</span>
+    </button>
+    <button class="btn btn-sm btn-outline-secondary" type="button"
+            data-role="reset-search-form">
+      <span th:replace="~{admin/fragments/svg :: reset('search-icon')}"></span>
+      <span>초기화</span>
+    </button>
+    <button class="btn btn-sm btn-dark" type="submit">
+      <span th:replace="~{admin/fragments/svg :: search('search-icon')}"></span>
+      <span>검색</span>
+    </button>
+  </div>
+</th:block>

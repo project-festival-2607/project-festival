@@ -60,4 +60,18 @@ public class AdminPaymentServiceImpl implements AdminPaymentService {
     product.setDeletedAt(LocalDateTime.now());
     return true;
   }
+
+  @Transactional
+  @Override
+  public Integer addProduct(String productName, Integer productPointGet) {
+    Product product = productRepository.save(
+      Product.builder()
+        .pointGet(productPointGet)
+        .productPrice(productPointGet)
+        .productName(productName)
+        .build()
+    );
+
+    return product.getProductId();
+  }
 }

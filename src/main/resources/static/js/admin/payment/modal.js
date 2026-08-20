@@ -36,6 +36,17 @@ document.querySelectorAll('.modal-footer').forEach(element => {
         }
       })
     }
+    if (modal.dataset.role === 'addProduct') {
+      const productName = document.getElementById('addProductProductName').value;
+      const productPointGet = document.getElementById('addProductPointGet').value;
+      addProductRequest(productName, productPointGet).then(response => {
+        alert(response.message);
+        if (response.result === true) {
+          modal.querySelector('.btn-close').click();
+          loadResult(window.location.pathname);
+        }
+      })
+    }
   });
 });
 
@@ -48,6 +59,27 @@ async function deleteProductRequest(productId) {
         headers: {
           'Content-Type': 'application/json; charset=UTF-8',
         },
+      }
+    );
+    return await response.json();
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+async function addProductRequest(productName, productPointGet) {
+  try {
+    const response = await fetch(
+      `/admin/payment/product/add`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: JSON.stringify({
+          productName: productName,
+          productPointGet: productPointGet
+        })
       }
     );
     return await response.json();

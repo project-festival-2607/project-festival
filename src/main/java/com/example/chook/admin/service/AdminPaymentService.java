@@ -13,4 +13,7 @@ public interface AdminPaymentService {
   Page<ProductTableDTO> getProductPage(int pageIdx, int pageSize, ProductSearchCondition condition);
 
   boolean deleteProduct(Integer productId);
+
+  Integer addProduct(String productName, Integer productPointGet);
+
 }

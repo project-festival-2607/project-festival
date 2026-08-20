@@ -3,6 +3,7 @@ package com.example.chook.payment.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 
@@ -15,6 +16,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@EntityListeners(value = {AuditingEntityListener.class})
 public class Product {
 
     //몇번째 상품인지  ( 10000원 20000원 30000원 50000원
