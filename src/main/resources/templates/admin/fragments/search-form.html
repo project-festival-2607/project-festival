@@ -139,7 +139,9 @@
 
 <th:block th:fragment="search-buttons-with-product-add-button">
   <div class="admin-search-button-wrapper">
-    <button class="btn btn-sm btn-outline-primary product-add-button" data-bs-target="#addProductModal"
+    <button class="btn btn-sm btn-outline-primary product-add-button"
+            type="button"
+            data-bs-target="#addProductModal"
             data-bs-toggle="modal"
             data-role="addProduct">
       <span th:replace="~{admin/fragments/svg :: add-product('search-icon')}"></span>
