@@ -1,9 +1,9 @@
 package com.example.chook.admin.condition.event;
 
-import com.example.chook.admin.entity.enums.KeywordCriteria;
-import com.example.chook.admin.entity.enums.recruitment.RecruitmentDateRangeType;
-import com.example.chook.admin.entity.enums.recruitment.RecruitmentKeywordType;
-import com.example.chook.admin.entity.enums.recruitment.RecruitmentSortCriteria;
+import com.example.chook.admin.enums.KeywordCriteria;
+import com.example.chook.admin.enums.event.recruitment.RecruitmentDateRangeType;
+import com.example.chook.admin.enums.event.recruitment.RecruitmentKeywordType;
+import com.example.chook.admin.enums.event.recruitment.RecruitmentSortCriteria;
 import com.example.chook.admin.form.event.RecruitmentSearchForm;
 import com.example.chook.recruitment.entity.enums.RecruitmentCategory;
 import com.example.chook.recruitment.entity.enums.RecruitmentStatus;

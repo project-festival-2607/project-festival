@@ -11,6 +11,10 @@ public final class QuerydslUtils {
     return value == null ? null : path.eq(value);
   }
 
+  public static BooleanExpression equalsIgnoreCase(StringExpression path, String value) {
+    return value == null ? null : path.equalsIgnoreCase(value);
+  }
+
   public static BooleanExpression contains(StringExpression path, String value) {
     return value == null ? null : path.contains(value);
   }

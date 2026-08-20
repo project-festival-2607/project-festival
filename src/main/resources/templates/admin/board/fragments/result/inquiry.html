@@ -124,8 +124,13 @@
         <td class="text-end" data-field="ino" th:text="${inquiry.ino}"></td>
         <!--  태그 달아서 답변 작성 페이지로  -->
         <td>
-          <a class="fw-medium" data-field="title"
-             th:href="@{/admin/board/inquiry/{ino}(ino=${inquiry.ino})}" th:text="${inquiry.title}"></a>
+          <a class="fw-medium text-ellipsis-with-suffix gap-1" target="_blank"
+             th:href="@{/admin/board/inquiry/{ino}(ino=${inquiry.ino})}">
+            <span class="ellipsis-main" data-field="title" th:text="${inquiry.title}"></span>
+            <span class="ellipsis-suffix">
+              <th:block th:replace="~{admin/fragments/svg :: new-window('new-window-icon')}"></th:block>
+            </span>
+          </a>
         </td>
         <td>
           <span data-field="memberName" th:text="${inquiry.memberName}"></span>

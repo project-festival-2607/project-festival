@@ -17,7 +17,7 @@ ul.submenu {
 /* ==================== BADGE ==================== */
 
 .badge {
-  font-weight: 500;
+  font-weight: 500 !important;
   color: #fff;
 }
 
@@ -50,15 +50,18 @@ ul.submenu {
   background-color: var(--bs-secondary);
 }
 
-.badge.notice-highlight {
+.badge.notice-highlight,
+.badge.refund-failed{
   background-color: var(--bs-danger);
 }
 
-.badge.recruitment-status-draft {
+.badge.recruitment-status-draft,
+.badge.refund-requested{
   background-color: var(--bs-secondary);
 }
 
-.badge.recruitment-status-recruiting {
+.badge.recruitment-status-recruiting,
+.badge.refund-completed{
   background-color: var(--bs-success);
 }
 
@@ -66,9 +69,11 @@ ul.submenu {
   background-color: var(--bs-warning);
   color: var(--bs-dark);
 }
-.badge.recruitment-status-closed {
+.badge.recruitment-status-closed,
+.badge.refund-canceled{
   background-color: var(--bs-dark);
 }
+
 
 
 /* ==================== MISCELLANEOUS ==================== */
@@ -148,9 +153,12 @@ a[data-bs-toggle="tooltip"] {
   justify-content: center;
 }
 
+.min-width-0 {
+  min-width: 0;
+}
+
 .text-ellipsis-with-suffix {
   display: flex;
-  justify-content: space-between;
   align-items: center;
   min-width: 0;
 }
@@ -164,4 +172,9 @@ a[data-bs-toggle="tooltip"] {
 
 .ellipsis-suffix {
   flex-shrink: 0;
+}
+
+.new-window-icon {
+  width: 10px;
+  height: 10px;
 }

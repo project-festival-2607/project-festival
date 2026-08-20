@@ -124,14 +124,19 @@
           <div
             th:replace="~{admin/fragments/modal :: modal-member-info(${removeBusinessRegistrationInfo})}"></div>
         </div>
-        <div class="alert alert-light d-flex align-items-start" role="alert">
+        <div class="alert alert-light d-flex align-items-start mx-2" role="alert">
           <div th:replace="~{admin/fragments/svg :: notification('alert-icon')}"></div>
           <div>
-            "인증 삭제" 버튼을 누르면 <strong>사용자의 역할이 "JOB_SEEKER"로 변경</strong>됩니다.<br/>
+            "인증 삭제" 버튼을 누르면 <strong>사용자의 역할이 "일반 구직자"로 변경</strong>됩니다.<br/>
             사업자등록번호 인증 삭제 후에는 <a
-            class="link-danger link-offset-2 fw-semibold
-                   link-underline link-underline-opacity-0 link-underline-opacity-100"
-            href="/admin/member/job-seeker">JOB_SEEKER 조회 페이지</a>에서 해당 사용자를 관리할 수 있습니다.
+              class="link-danger link-offset-2 fw-semibold
+                     link-underline link-underline-opacity-0 link-underline-opacity-100
+                     d-inline-flex align-items-center gap-1"
+              href="/admin/member/job-seeker"
+              target="_blank">
+              <span>일반 구직자 조회 페이지</span>
+              <th:block th:replace="~{admin/fragments/svg :: new-window('new-window-icon')}"></th:block>
+            </a> 에서<br/>해당 사용자를 관리할 수 있습니다.
           </div>
         </div>
         <div th:replace="~{admin/fragments/modal :: modal-footer('danger', '인증 삭제')}"></div>

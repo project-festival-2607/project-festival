@@ -1,10 +1,10 @@
 package com.example.chook.admin.condition.board;
 
-import com.example.chook.admin.entity.enums.KeywordCriteria;
-import com.example.chook.admin.entity.enums.inquiry.InquiryDateRangeType;
-import com.example.chook.admin.entity.enums.inquiry.InquiryKeywordType;
-import com.example.chook.admin.entity.enums.inquiry.InquiryReplyStatus;
-import com.example.chook.admin.entity.enums.inquiry.InquirySortCriteria;
+import com.example.chook.admin.enums.KeywordCriteria;
+import com.example.chook.admin.enums.board.inquiry.InquiryDateRangeType;
+import com.example.chook.admin.enums.board.inquiry.InquiryKeywordType;
+import com.example.chook.admin.enums.board.inquiry.InquiryReplyStatus;
+import com.example.chook.admin.enums.board.inquiry.InquirySortCriteria;
 import com.example.chook.admin.form.board.InquirySearchForm;
 import com.example.chook.member.entity.enums.MemberRole;
 import lombok.Builder;

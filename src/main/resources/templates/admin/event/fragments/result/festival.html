@@ -58,13 +58,18 @@
       <tbody>
       <tr th:each="festival: ${page}">
         <td>
-          <div class="text-ellipsis-with-suffix">
-            <span class="ellipsis-main">
-              <a class="fw-medium" data-field="title"
-                 th:href="@{/festival/detail(id=${festival.contentId})}" th:text="${festival.title}"></a>
+          <div class="d-flex align-items-center justify-content-between gap-2">
+            <span class="min-width-0">
+              <a class="fw-medium text-ellipsis-with-suffix gap-1" target="_blank"
+                 th:href="@{/festival/detail(id=${festival.contentId})}">
+                <span class="ellipsis-main" data-field="title" th:text="${festival.title}"></span>
+                <span class="ellipsis-suffix">
+                  <th:block th:replace="~{admin/fragments/svg :: new-window('new-window-icon')}"></th:block>
+                </span>
+              </a>
             </span>
             <span class="d-none" data-field="contentId" th:text="${festival.contentId}"></span>
-            <span class="ellipsis-suffix">
+            <span class="flex-shrink-0">
               <span th:replace="~{admin/fragments/tooltip :: unique-id(${festival.contentId})}"></span>
             </span>
           </div>

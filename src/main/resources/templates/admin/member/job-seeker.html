@@ -135,15 +135,20 @@
               <input class="form-control form-control-sm" id="addBusinessRegistrationBusinessNumberVerify" type="text">
             </div>
           </div>
-          <div class="alert alert-light d-flex align-items-start" role="alert">
+          <div class="alert alert-light d-flex align-items-start mx-2" role="alert">
             <div th:replace="~{admin/fragments/svg :: notification('alert-icon')}"></div>
             <div>
               "인증 추가" 버튼을 누르면 <strong>인증 과정 없이</strong> 등록되며,<br/>
-              등록 성공 시 <strong>사용자의 역할이 "JOB_EQUIP"로 변경</strong>됩니다.<br/>
+              등록 성공 시 <strong>사용자의 역할이 "전문 구직자"로 변경</strong>됩니다.<br/>
               사업자등록번호 인증 등록 후에는 <a
-              class="link-danger link-offset-2 fw-semibold
-                   link-underline link-underline-opacity-0 link-underline-opacity-100"
-              href="/admin/member/job-equip">JOB_EQUIP 조회 페이지</a>에서 해당 사용자를 관리할 수 있습니다.
+                target="_blank"
+                class="link-danger link-offset-2 fw-semibold
+                       link-underline link-underline-opacity-0 link-underline-opacity-100
+                       d-inline-flex align-items-center gap-1"
+                href="/admin/member/job-equip">
+                <span>전문 구직자 조회 페이지</span>
+                <th:block th:replace="~{admin/fragments/svg :: new-window('new-window-icon')}"></th:block>
+              </a> 에서<br/>해당 사용자를 관리할 수 있습니다.
             </div>
           </div>
         </div>
