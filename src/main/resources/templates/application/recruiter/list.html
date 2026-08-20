@@ -19,7 +19,7 @@
 
             <!-- 알바 지원자 -->
             <section class="application-section" th:unless="${#lists.isEmpty(applications)}">
-                <h2>알바 지원자</h2>
+                <h2>지원자 목록</h2>
 
                 <!--지원자가 있는 경우 -->
                 <table class="application-table">
@@ -51,7 +51,7 @@
                             <td th:text="${app.result}"></td>
 
                             <td>
-                                <a th:href="@{/resume/detail(id=${app.resumeId})}">
+                                <a th:href="@{/resume/detail(id=${app.resumeId}, recruitmentId=${recruitmentId})}">
                                     이력서 보기
                                 </a>
                             </td>
@@ -59,6 +59,13 @@
                     </tbody>
                 </table>
             </section>
+
+            <!-- 돌아가기 -->
+            <div class="application-back">
+                <a th:href="@{/mypage/recruiter/ongoing}">
+                    공고 목록으로 돌아가기
+                </a>
+            </div>
         </div>
     </div>
 </div>

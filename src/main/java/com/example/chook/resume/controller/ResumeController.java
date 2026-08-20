@@ -189,7 +189,7 @@ public class ResumeController {
 
     // 지원자 이력서 상세 조회 (구인자용)
     @GetMapping("/detail")
-    public String detail(@RequestParam Long id, Model model) {
+    public String detail(@RequestParam Long id, @RequestParam Long recruitmentId, Model model) {
 
         // 이력서 조회
         ResumeResponseDTO resumeResponseDTO = resumeService.getResume(id);
@@ -199,6 +199,9 @@ public class ResumeController {
                 "resume",
                 resumeResponseDTO
         );
+
+        // 현재 지원자가 지원한 모집공고 ID 전달
+        model.addAttribute("recruitmentId", recruitmentId);
 
         return "resume/detail";
     }
