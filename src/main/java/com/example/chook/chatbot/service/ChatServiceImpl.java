@@ -194,64 +194,82 @@ public class ChatServiceImpl implements ChatService {
 
             // JOB
             case JOB:
-                // 전체 축제 조회
-                List<FestivalDTO> jobFestivals = festivalService.getAll();
+                // 전체 모집공고 조회
+                List<Recruitment> allRecruitments = recruitmentRepository.findAll();
 
-                log.info("JOB 검색용 전체 축제 개수 = {}", jobFestivals.size());
+                log.info("전체 모집공고 개수 = {}", allRecruitments.size());
 
-                // 축제명으로 검색
-                List<FestivalDTO> matchedJobFestivals = jobFestivals.stream()
-                                .filter(festival ->
-                                        festival.getTitle() != null
-                                                && searchQuestion.contains(
-                                                festival.getTitle()
-                                        )
-                                )
+                // 삭제되지 않은 모집공고만 검색
+                List<Recruitment> activeRecruitments = allRecruitments.stream()
+                        .filter(recruitment ->
+                                recruitment.getDeletedAt() == null
+                        )
+                        .toList();
+                log.info("삭제되지 않은 모집공고 개수 = {}", activeRecruitments.size());
+
+                // 지역으로 알바 검색
+                List<Recruitment> matchedRecruitments = activeRecruitments.stream()
+                                .filter(recruitment -> {
+
+                                    // 축제 정보가 없으면 제외
+                                    if (recruitment.getFestival() == null) {
+                                        return false;
+                                    }
+                                    // 축제 주소 가져오기
+                                    String address = recruitment.getFestival().getAddress();
+
+                                    if (address == null || address.isBlank()) {
+                                        return false;
+                                    }
+
+                                    // 사용자의 질문에 주소가 포함되어 있는지 확인
+                                    String[] addressParts = address.split("\\s+");
+                                    for (String part : addressParts) {
+
+                                        if (part.length() < 2) {
+                                            continue;
+                                        }
+                                        // 질문에 주소의 지역명이 포함되어 있으면 검색
+                                        if (searchQuestion.contains(part)) {
+                                            return true;
+                                        }
+                                        String normalizedPart = normalizeRegionName(part);
+
+                                        if (normalizedPart != null && searchQuestion.contains(normalizedPart)) {
+                                            return true;
+                                        }
+                                    }
+                                    return false;
+                                })
+                                .limit(5)
                                 .toList();
-                log.info("JOB 축제명 검색 결과 = {}", matchedJobFestivals.size());
-
-                // 축제명이 없으면 지역으로 검색
-                if (matchedJobFestivals.isEmpty()) {
-                    matchedJobFestivals = findFestivalsByRegion(
-                                    jobFestivals,
-                                    searchQuestion
-                            );
-                    log.info("JOB 지역 검색 결과 = {}", matchedJobFestivals.size());
-                }
-
-                // 축제/지역을 찾지 못한 경우
-                if (matchedJobFestivals.isEmpty()) {
-                    prompt = "질문에 해당하는 축제 정보를 찾을 수 없습니다.";
-                    break;
-                }
-
-                // 찾은 축제들의 알바 조회
-                List<Recruitment> recruitments = new ArrayList<>();
-
-                for (FestivalDTO festival : matchedJobFestivals) {
-
-                    log.info("알바 조회 축제 = {}, contentId = {}", festival.getTitle(), festival.getContentId());
-
-                    List<Recruitment> festivalRecruitments =
-                            recruitmentRepository.findByFestival_ContentId(
-                                            festival.getContentId()
-                                    );
-
-                    log.info("해당 축제 알바 개수 = {}", festivalRecruitments.size());
-
-                    recruitments.addAll(festivalRecruitments);
-                }
+                log.info("서울 지역 모집공고 개수 = {}", matchedRecruitments.size());
 
                 // 알바가 없는 경우
-                if (recruitments.isEmpty()) {
-                    prompt = "해당 지역 또는 축제에 등록된 알바 정보가 없습니다.";
+                if (matchedRecruitments.isEmpty()) {
+                    prompt = """
+                사용자의 질문에 답변하세요.
+
+                [사용자 질문]
+                %s
+
+                해당 지역에 등록된 알바 정보가 없습니다.
+
+                규칙:
+                - 존재하지 않는 알바 정보를 만들지 마세요.
+                - 등록된 알바 정보가 없다고 안내하세요.
+                - 한국어로 답변하세요.
+                """.formatted(question);
+
                     break;
                 }
+
+
 
                 // 알바 정보 문자열 생성
                 StringBuilder jobInfo = new StringBuilder();
 
-                for (Recruitment recruitment : recruitments) {
+                for (Recruitment recruitment : matchedRecruitments) {
                     jobInfo.append("""
                         축제: %s
                         모집공고: %s
@@ -275,6 +293,8 @@ public class ChatServiceImpl implements ChatService {
                             recruitment.getStatus()
                     ));
                 }
+
+                log.info("JOB 정보 = \n{}", jobInfo);
 
                 // JOB Prompt
                 prompt = """
