@@ -396,14 +396,14 @@ public class AdminPaymentRepositoryImpl implements AdminPaymentRepository {
         result.and(goe(payment.approvedAt, startDateTime));
         result.and(loe(payment.approvedAt, endDateTime));
       }
-      case CREATED_AT -> {
-        result.and(goe(payment.createdAt, startDateTime));
-        result.and(loe(payment.createdAt, endDateTime));
-      }
-      case UPDATED_AT -> {
-        result.and(goe(payment.updatedAt, startDateTime));
-        result.and(loe(payment.updatedAt, endDateTime));
-      }
+//      case CREATED_AT -> {
+//        result.and(goe(payment.createdAt, startDateTime));
+//        result.and(loe(payment.createdAt, endDateTime));
+//      }
+//      case UPDATED_AT -> {
+//        result.and(goe(payment.updatedAt, startDateTime));
+//        result.and(loe(payment.updatedAt, endDateTime));
+//      }
       // 이 경우에 속하지 않는 경우 날짜 기준 필터를 사용하지 않음
     }
 
@@ -514,8 +514,8 @@ public class AdminPaymentRepositoryImpl implements AdminPaymentRepository {
         case POINT_GET -> orderSpecifiers.addAll(getOrderSpecifier(order, product.pointGet));
         case REQUESTED_AT -> orderSpecifiers.addAll(getOrderSpecifier(order, payment.requestedAt));
         case APPROVED_AT -> orderSpecifiers.addAll(getOrderSpecifier(order, payment.approvedAt));
-        case CREATED_AT -> orderSpecifiers.addAll(getOrderSpecifier(order, payment.createdAt));
-        case UPDATED_AT -> orderSpecifiers.addAll(getOrderSpecifier(order, payment.updatedAt));
+//        case CREATED_AT -> orderSpecifiers.addAll(getOrderSpecifier(order, payment.createdAt));
+//        case UPDATED_AT -> orderSpecifiers.addAll(getOrderSpecifier(order, payment.updatedAt));
       }
     }
     orderSpecifiers.add(new OrderSpecifier<>(Order.ASC, payment.paymentId));
