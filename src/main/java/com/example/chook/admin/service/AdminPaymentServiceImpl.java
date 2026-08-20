@@ -2,19 +2,23 @@ package com.example.chook.admin.service;
 
 import com.example.chook.admin.condition.payment.ProductSearchCondition;
 import com.example.chook.admin.condition.payment.RefundSearchCondition;
-import com.example.chook.admin.dto.board.InquiryTableDTO;
 import com.example.chook.admin.dto.payment.ProductTableDTO;
 import com.example.chook.admin.dto.payment.RefundTableDTO;
-import com.example.chook.admin.enums.board.inquiry.InquiryReplyStatus;
 import com.example.chook.admin.enums.payment.product.ProductStatus;
 import com.example.chook.admin.enums.payment.refund.RefundStatus;
 import com.example.chook.admin.repository.AdminPaymentRepository;
+import com.example.chook.payment.entity.Product;
+import com.example.chook.payment.repository.ProductRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
 
 @RequiredArgsConstructor
 @Service
@@ -22,6 +26,7 @@ import org.springframework.stereotype.Service;
 public class AdminPaymentServiceImpl implements AdminPaymentService {
 
   private final AdminPaymentRepository adminPaymentRepository;
+  private final ProductRepository productRepository;
 
   @Override
   public Page<RefundTableDTO> getRefundPage(int pageIdx, int pageSize, RefundSearchCondition condition) {
@@ -45,5 +50,14 @@ public class AdminPaymentServiceImpl implements AdminPaymentService {
       if (dto.getDeletedAt() != null) dto.setStatus(ProductStatus.SALE_ENDED);
     });
     return result;
+  }
+
+  @Transactional
+  @Override
+  public boolean deleteProduct(Integer productId) {
+    Product product = productRepository.findById(productId).orElseThrow(() -> new EntityNotFoundException("해당 상품이 없습니다."));
+    if (product.getDeletedAt() != null) return false;
+    product.setDeletedAt(LocalDateTime.now());
+    return true;
   }
 }

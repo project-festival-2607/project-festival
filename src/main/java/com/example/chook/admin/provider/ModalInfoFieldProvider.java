@@ -101,4 +101,13 @@ public class ModalInfoFieldProvider {
     );
   }
 
+  public List<ModalInfoField> deleteProduct() {
+    return List.of(
+      new ModalInfoField("고유 아이디", "productId"),
+      new ModalInfoField("상품명", "productName"),
+      new ModalInfoField("가격", "productPrice"),
+      new ModalInfoField("포인트양", "pointGet")
+    );
+  }
+
 }
