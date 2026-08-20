@@ -6,8 +6,8 @@
 <div layout:fragment="content">
     <link rel="stylesheet" th:href="@{/css/mypage/recruiter/ongoing.css}">
     <div class="container">
-<!--                모든 inner는 class="container" 로 맞춤        -->
-<!--        이 안에서 작업        -->
+        <!--                모든 inner는 class="container" 로 맞춤        -->
+        <!--        이 안에서 작업        -->
 
         <div class="ongoing-page">
             <h1>공고 목록</h1>
@@ -55,10 +55,18 @@
                             지원자 목록
                         </a>
 
-                        <span class="ongoing-status">
-                            ● 진행 중
+                        <span class="ongoing-status"
+                              th:if="${recruitment.festival != null
+                              && recruitment.festival.endDate != null
+                              && !T(java.time.LocalDate).now().isAfter(recruitment.festival.endDate)}">
+                              ● 진행 중
                         </span>
-                        <hr>
+                        <span class="ongoing-status closed"
+                              th:if="${recruitment.festival != null
+                              && recruitment.festival.endDate != null
+                              && T(java.time.LocalDate).now().isAfter(recruitment.festival.endDate)}">
+                            ● 마감
+                        </span>
                     </div>
                 </div>
             </div>

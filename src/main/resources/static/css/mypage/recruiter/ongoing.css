@@ -96,20 +96,8 @@
     background-color: #e5e5e5;
 }
 
-
-/* 모바일 */
-@media (max-width: 768px) {
-
-    .ongoing-page h1 {
-        font-size: 24px;
-    }
-
-    .ongoing-card {
-        padding: 20px;
-    }
-
-    .ongoing-card h2 {
-        font-size: 19px;
-    }
-
+/* 마감 상태 */
+.ongoing-status.closed {
+    background-color: #f5f5f5;
+    color: #777;
 }
