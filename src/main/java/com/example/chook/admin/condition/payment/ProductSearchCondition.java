@@ -48,6 +48,7 @@ public record ProductSearchCondition(
       .dateRangeType(toEnum(form.dateRangeType(), ProductDateRangeType.class, null))
       .startDateTime(form.startDateTime())
       .endDateTime(form.endDateTime())
+      .status(toEnum(form.status(), ProductStatus.class, null))
       .sortCriteria(toEnum(form.sortCriteria(), ProductSortCriteria.class, null))
       .ascending(form.ascending())
       .build();

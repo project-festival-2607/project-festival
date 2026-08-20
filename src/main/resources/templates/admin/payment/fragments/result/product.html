@@ -42,7 +42,7 @@
                     <th:block th:replace="~{admin/fragments/badge :: general('전체')}"></th:block>
                   </button>
                 </li>
-                <li th:each="status: ${refundStatusList}">
+                <li th:each="status: ${productStatusList}">
                   <button class="dropdown-item status-filter-li" data-role="update-filter"
                           data-target-element="filterStatus"
                           th:classappend="${form.status != null and form.status == status.name} ? 'active'"
