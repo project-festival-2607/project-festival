@@ -19,7 +19,7 @@
         <col style="width: 150px;"> <!-- 환불일시 -->
         <col style="width: 150px;"> <!-- 취소일시 -->
         <col style="width: 200px;"> <!-- 사용자 [이름 (아이디)]-->
-        <col style="width: 65px;">  <!-- 기록 # -->
+        <col style="width: 90px;">  <!-- 전체기록 UID -->
         <col style="width: 45px;">  <!-- 관리 -->
       </colgroup>
       <thead>
@@ -93,7 +93,7 @@
           </span>
         </th>
         <th scope="col">사용자</th>
-        <th scope="col">기록 #</th>
+        <th scope="col">전체기록 UID</th>
         <th class="text-center bg-body-secondary" scope="col">관리</th>
       </tr>
       </thead>
@@ -118,7 +118,12 @@
             <span data-field="memberUsername" th:text="'('+${refund.memberUsername}+')'"></span>
           </th:block>
         </td>
-        <td th:field="recordId" th:text="${refund.recordId}"></td>
+        <td class="d-flex justify-content-end align-items-center gap-2">
+          <span th:text="${refund.recordId}" data-field="recordId"></span>
+          <th:block th:replace="~{admin/fragments/tooltip :: new-tab(
+            @{/admin/payment/summary(recordId=${refund.recordId})}
+          )}"></th:block>
+        </td>
         <td class="center bg-body-secondary">
           <button class="btn btn-reset dropdown-toggle dropdown-no-caret moderation-btn" data-bs-toggle="dropdown"
                   type="button" disabled>
