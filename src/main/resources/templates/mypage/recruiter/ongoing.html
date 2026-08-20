@@ -39,8 +39,10 @@
                         </p>
 
                         <p>
-                            근무 장소 :
-                            <span th:text="${recruitment.workingLocation}"> 근무 장소 </span>
+                            근무 장소 : <span th:if="${recruitment.workingLocation != null}"
+                                          th:text="${recruitment.workingLocation}"></span><span
+                                th:if="${recruitment.workingLocation == null && recruitment.festival != null}"
+                                th:text="${recruitment.festival.address}"></span>
                         </p>
 
                         <p>
