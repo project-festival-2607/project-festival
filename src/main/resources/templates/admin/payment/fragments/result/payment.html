@@ -139,20 +139,35 @@
         <td data-field="paymentId" th:text="${payment.paymentId}"></td>
         <td>
           <span class="d-none" data-field="memberId" th:text="${payment.memberId}"></span>
-          <th:block th:if="${payment.memberId ne null}">
-            <span data-field="memberName" th:text="${payment.memberName}"></span>
-            <span data-field="memberUsername" th:text="'('+${payment.memberUsername}+')'"></span>
-          </th:block>
+          <div class="d-flex align-items-center justify-content-between gap-2">
+            <span class="text-ellipsis-with-suffix">
+              <span class="ellipsis-main">
+                <span data-field="memberName" th:text="${payment.memberName}"></span>
+                <span data-field="memberUsername" th:text="'('+${payment.memberUsername}+')'"></span>
+              </span>
+            </span>
+            <span class="flex-shrink-0">
+              <span th:replace="~{admin/fragments/tooltip :: unique-id(${payment.memberId})}"></span>
+            </span>
+          </div>
         </td>
         <td>
-          <span class="d-none" data-field="productId" th:text="${payment.productId}"></span>
-          <a class="fw-medium text-ellipsis-with-suffix gap-1" target="_blank"
-             th:href="@{/admin/payment/product(keywordType='PRODUCT_ID',keywords=${payment.productId})}">
-            <span class="ellipsis-main" data-field="productName" th:text="${payment.productName}"></span>
-            <span class="ellipsis-suffix">
-              <th:block th:replace="~{admin/fragments/svg :: new-window('new-window-icon')}"></th:block>
+          <div class="d-flex align-items-center justify-content-between gap-2">
+            <span class="d-none" data-field="productId" th:text="${payment.productId}"></span>
+            <span class="min-width-0">
+              <a class="fw-medium text-ellipsis-with-suffix gap-1" target="_blank"
+                 th:href="@{/admin/payment/product(keywordType='PRODUCT_ID',keywords=${payment.productId})}">
+                <span class="ellipsis-main" data-field="productName" th:text="${payment.productName}"></span>
+                <span class="ellipsis-suffix">
+                  <th:block th:replace="~{admin/fragments/svg :: new-window('new-window-icon')}"></th:block>
+                </span>
+              </a>
             </span>
-          </a>
+            <span class="d-none" data-field="productId" th:text="${payment.productId}"></span>
+            <span class="flex-shrink-0">
+              <span th:replace="~{admin/fragments/tooltip :: unique-id(${payment.productId})}"></span>
+            </span>
+          </div>
         </td>
         <td class="text-center">
           <th:block
