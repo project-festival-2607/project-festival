@@ -40,7 +40,7 @@ public class AdminPaymentServiceImpl implements AdminPaymentService {
     Pageable pageable = PageRequest.of(pageIdx - 1, pageSize);
     Page<PaymentTableDTO> result = adminPaymentRepository.getPaymentPage(pageable, condition);
     result.forEach(dto -> {
-      dto.setPaymentMethod(toEnum(dto.getRawPaymentMethod(), PaymentMethod.class, null));
+      dto.setPaymentMethod(PaymentMethod.fromLabel(dto.getRawPaymentMethod()));
       dto.setPaymentStatus(toEnum(dto.getRawPaymentStatus(), PaymentStatus.class, null));
     });
     return result;

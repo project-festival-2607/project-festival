@@ -26,43 +26,37 @@ ul.submenu {
   color: var(--bs-secondary-color);
 }
 
-.badge.member-status-active {
-  background-color: #5ba456;
-}
 
-.badge.member-status-dormant {
-  background-color: #b0b6bf;
-}
-
-.badge.member-status-suspended {
-  background-color: #C65852;
-}
-
-.badge.member-status-deleted {
-  background-color: #625B62;
-}
-
-.badge.inquiry-replied {
-  background-color: var(--bs-success);
-}
-
-.badge.inquiry-not-replied {
-  background-color: var(--bs-secondary);
-}
-
+.badge.member-status-suspended,
 .badge.notice-highlight,
-.badge.refund-failed{
+.badge.refund-failed,
+.badge.payment-aborted,
+.badge.payment-expired{
   background-color: var(--bs-danger);
 }
 
+.badge.member-status-dormant,
+.badge.inquiry-not-replied,
 .badge.recruitment-status-draft,
-.badge.refund-requested{
+.badge.refund-requested,
+.badge.payment-canceled,
+.badge.payment-partial-canceled {
   background-color: var(--bs-secondary);
 }
 
+.badge.payment-ready,
+.badge.payment-in-progress,
+.badge.payment-waiting-for-deposit
+{
+  background-color: var(--bs-primary);
+}
+
+.badge.member-status-active,
+.badge.inquiry-replied,
 .badge.recruitment-status-recruiting,
 .badge.refund-completed,
-.badge.product-on-sale{
+.badge.product-on-sale,
+.badge.payment-done {
   background-color: var(--bs-success);
 }
 
@@ -70,6 +64,8 @@ ul.submenu {
   background-color: var(--bs-warning);
   color: var(--bs-dark);
 }
+
+.badge.member-status-deleted,
 .badge.recruitment-status-closed,
 .badge.refund-canceled,
 .badge.product-sale-ended{

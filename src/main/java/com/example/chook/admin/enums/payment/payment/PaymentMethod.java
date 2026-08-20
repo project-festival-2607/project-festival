@@ -3,6 +3,8 @@ package com.example.chook.admin.enums.payment.payment;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import java.util.Arrays;
+
 @AllArgsConstructor
 @Getter
 public enum PaymentMethod {
@@ -20,5 +22,12 @@ public enum PaymentMethod {
   GAME_CULTURE_GIFT_CERTIFICATE("게임문화상품권");
 
   private final String label;
+
+  public static PaymentMethod fromLabel(String label) {
+    return Arrays.stream(values())
+      .filter(e -> e.label.equals(label))
+      .findFirst()
+      .orElse(null);
+  }
 
 }

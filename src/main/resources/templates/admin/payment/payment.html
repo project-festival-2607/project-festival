@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ko"
+      layout:decorate="~{layout/admin-layout}"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+  <th:block layout:fragment="css">
+    <link rel="stylesheet" th:href="@{/css/admin/result-fragment.css}">
+    <link rel="stylesheet" th:href="@{/css/admin/common.css}">
+    <link rel="stylesheet" th:href="@{/css/admin/search-form.css}">
+  </th:block>
+</head>
+<div layout:fragment="content">
+  <div class="container admin-container">
+    <form id="form" method="get"
+          th:action="@{/admin/payment/payment}">
+      <div class="mb-3">
+        <div class="admin-search-form">
+          <th:block th:replace="~{admin/fragments/search-form :: keyword(
+            ${keywordOptions}, ${form})}"></th:block>
+          <th:block th:replace="~{admin/fragments/search-form ::date-range(
+            ${dateRangeOptions}, ${dateRangeAutofillOptions}, ${form})}"></th:block>
+        </div>
+        <th:block th:replace="~{admin/fragments/search-form :: search-buttons}"></th:block>
+      </div>
+      <div id="result">
+      </div>
+    </form>
+  </div>
+  <script th:src="@{/js/admin/initialize-search-form.js}"></script>
+  <script th:src="@{/js/admin/load-result.js}"></script>
+  <script th:src="@{/js/admin/table-th-filter.js}"></script>
+  <script>
+    loadResult(window.location.pathname, {forceParams: new URLSearchParams(window.location.search)});
+  </script>
+</div>
