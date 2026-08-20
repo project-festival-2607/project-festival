@@ -147,9 +147,9 @@
             th:replace="~{admin/fragments/badge :: inquiry-reply-status(${inquiry.replyStatus})}"></th:block>
         </td>
         <td data-field="repliedAt" th:text="${#temporals.format(inquiry.repliedAt, 'yyyy.MM.dd. HH:mm')}"></td>
-        <td class="center bg-body-secondary">
+        <td class="bg-body-secondary">
           <button class="btn btn-reset dropdown-toggle dropdown-no-caret moderation-btn" data-bs-toggle="dropdown"
-                  type="button">
+                  type="button" disabled>
             <th:block th:replace="~{admin/fragments/svg :: moderation('moderation-icon')}"></th:block>
           </button>
           <ul class="dropdown-menu moderation-menu">
