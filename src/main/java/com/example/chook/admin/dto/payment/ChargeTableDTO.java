@@ -33,6 +33,8 @@ public class ChargeTableDTO {
   PaymentStatus paymentStatus;
   String rawPaymentStatus;
 
+  Long recordId;
+
   LocalDateTime requestedAt;
   LocalDateTime approvedAt;
   LocalDateTime createdAt;

@@ -11,6 +11,8 @@ import java.util.EnumSet;
 @Getter
 public enum ChargeKeywordType implements KeywordType {
 
+  PAY_CLASSIFY_ID("전체기록 UID", EnumSet.of(KeywordCriteria.EXACT)),
+
   PAYMENT_ID("결제번호", EnumSet.of(KeywordCriteria.EXACT)),
 
   MEMBER_ID("사용자 UID", EnumSet.of(KeywordCriteria.EXACT)),

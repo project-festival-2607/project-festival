@@ -43,6 +43,7 @@ import static com.example.chook.common.util.QuerydslUtils.*;
 import static com.example.chook.member.entity.QMember.member;
 import static com.example.chook.payment.entity.QPayClassify.payClassify;
 import static com.example.chook.payment.entity.QPayment.payment;
+import static com.example.chook.payment.entity.QPointHistory.pointHistory;
 import static com.example.chook.payment.entity.QProduct.product;
 import static com.example.chook.payment.entity.QRefund.refund;
 
@@ -83,7 +84,9 @@ public class AdminPaymentRepositoryImpl implements AdminPaymentRepository {
       payment.requestedAt,
       payment.approvedAt,
       payment.createdAt,
-      payment.updatedAt
+      payment.updatedAt,
+
+      pointHistory.payClassify.payClassifyId.as("recordId")
 
     )).from(payment);
 
@@ -244,7 +247,14 @@ public class AdminPaymentRepositoryImpl implements AdminPaymentRepository {
       .leftJoin(member)
       .on(payment.member.id.eq(member.id))
       .leftJoin(product)
-      .on(payment.product.productId.eq(product.productId));
+      .on(payment.product.productId.eq(product.productId))
+      .join(pointHistory)
+      .on(
+        pointHistory.payment.paymentId.eq(payment.paymentId),
+        pointHistory.pType.equalsIgnoreCase("CHARGE")
+      )
+      ;
+
   }
 
   private <T> JPAQuery<T> applyRefundJoin(JPAQuery<T> query) {
@@ -277,6 +287,10 @@ public class AdminPaymentRepositoryImpl implements AdminPaymentRepository {
       BooleanBuilder keywordResult = new BooleanBuilder();
       for (ChargeKeywordType type : types) {
         switch (type) {
+          case PAY_CLASSIFY_ID ->  {
+            StringExpression payClassifyId = Expressions.stringTemplate("STR({0})", payClassify.payClassifyId);
+            keywordResult.or(keywordCheck.apply(payClassifyId, keyword));
+          }
           case PAYMENT_ID -> {
             StringExpression paymentId = Expressions.stringTemplate("STR({0})", payment.paymentId);
             keywordResult.or(keywordCheck.apply(paymentId, keyword));

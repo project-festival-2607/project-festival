@@ -22,6 +22,7 @@
         <!--<col style="width: 200px;">--> <!-- 수정일시 -->
         <col style="width: 240px;"> <!-- paymentKey -->
         <col style="width: 240px;"> <!-- orderId -->
+        <col style="width: 90px;">  <!-- 전체기록 UID -->
         <col style="width: 45px;">  <!-- 관리 -->
       </colgroup>
       <thead>
@@ -131,6 +132,7 @@
         </th>-->
         <th scope="col">payment_key</th>
         <th scope="col">order_id</th>
+        <th scope="col">전체기록 UID</th>
         <th class="text-center bg-body-secondary" scope="col">관리</th>
       </tr>
       </thead>
@@ -187,6 +189,12 @@
         <td data-field="updatedAt" th:text="${#temporals.format(payment.updatedAt, 'yyyy.MM.dd. HH:mm:ss.SSS')}"></td>-->
         <td data-field="paymentKey" th:text="${payment.paymentKey}"></td>
         <td data-field="orderId" th:text="${payment.orderId}"></td>
+        <td class="d-flex justify-content-end align-items-center gap-2">
+          <span th:text="${payment.recordId}" data-field="recordId"></span>
+          <th:block th:replace="~{admin/fragments/tooltip :: new-tab(
+            @{/admin/payment/summary(recordId=${payment.recordId})}
+          )}"></th:block>
+        </td>
         <td class="center bg-body-secondary">
           <button class="btn btn-reset dropdown-toggle dropdown-no-caret moderation-btn" data-bs-toggle="dropdown"
                   type="button" disabled>
