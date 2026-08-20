@@ -53,8 +53,8 @@ public class AdminPaymentRepositoryImpl implements AdminPaymentRepository {
         RefundTableDTO.class,
 
         refund.refundId.as("id"),
-        refund.refundAmount.as("refundRequestedAmount"),
-        refund.refundReal.as("refundCompletedAmount"),
+        refund.refundAmount,
+        refund.refundReal,
         refund.refundComplete.as("recordedAt"),
         refund.canceledAt.as("canceledAt"),
         refund.transactionKey,
@@ -139,15 +139,15 @@ public class AdminPaymentRepositoryImpl implements AdminPaymentRepository {
       for (RefundKeywordType type : types) {
         switch (type) {
           case REFUND_ID -> {
-            StringExpression refundId = Expressions.stringTemplate("CAST({0} AS CHAR)", refund.refundId);
+            StringExpression refundId = Expressions.stringTemplate("STR({0})", refund.refundId);
             keywordResult.or(keywordCheck.apply(refundId, keyword));
           }
           case PAY_CLASSIFY_ID -> {
-            StringExpression payClassifyId = Expressions.stringTemplate("CAST({0} AS CHAR)", refund.payClassify.payClassifyId);
+            StringExpression payClassifyId = Expressions.stringTemplate("STR({0})", payClassify.payClassifyId);
             keywordResult.or(keywordCheck.apply(payClassifyId, keyword));
           }
           case MEMBER_ID -> {
-            StringExpression memberId = Expressions.stringTemplate("CAST({0} AS CHAR)", member.id);
+            StringExpression memberId = Expressions.stringTemplate("STR({0})", member.id);
             keywordResult.or(keywordCheck.apply(memberId, keyword));
           }
           case MEMBER_USERNAME -> keywordResult.or(keywordCheck.apply(member.username, keyword));
@@ -215,8 +215,8 @@ public class AdminPaymentRepositoryImpl implements AdminPaymentRepository {
       switch (sortCriteria) {
         case RECORDED_AT -> orderSpecifiers.addAll(getOrderSpecifier(order, refund.refundComplete));
         case CANCELED_AT -> orderSpecifiers.addAll(getOrderSpecifier(order, refund.canceledAt));
-        case REFUND_REQUESTED_AMOUNT -> orderSpecifiers.addAll(getOrderSpecifier(order, refund.refundAmount));
-        case REFUND_COMPLETED_AMOUNT -> orderSpecifiers.addAll(getOrderSpecifier(order, refund.refundReal));
+        case REFUND_AMOUNT -> orderSpecifiers.addAll(getOrderSpecifier(order, refund.refundAmount));
+        case REFUND_REAL -> orderSpecifiers.addAll(getOrderSpecifier(order, refund.refundReal));
       }
     }
     orderSpecifiers.add(new OrderSpecifier<>(Order.ASC, refund.refundId));

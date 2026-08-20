@@ -50,15 +50,18 @@ ul.submenu {
   background-color: var(--bs-secondary);
 }
 
-.badge.notice-highlight {
+.badge.notice-highlight,
+.badge.refund-failed{
   background-color: var(--bs-danger);
 }
 
-.badge.recruitment-status-draft {
+.badge.recruitment-status-draft,
+.badge.refund-requested{
   background-color: var(--bs-secondary);
 }
 
-.badge.recruitment-status-recruiting {
+.badge.recruitment-status-recruiting,
+.badge.refund-completed{
   background-color: var(--bs-success);
 }
 
@@ -66,9 +69,11 @@ ul.submenu {
   background-color: var(--bs-warning);
   color: var(--bs-dark);
 }
-.badge.recruitment-status-closed {
+.badge.recruitment-status-closed,
+.badge.refund-canceled{
   background-color: var(--bs-dark);
 }
+
 
 
 /* ==================== MISCELLANEOUS ==================== */

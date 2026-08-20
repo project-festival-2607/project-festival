@@ -13,10 +13,10 @@ import java.time.LocalDateTime;
 @Builder
 public class RefundTableDTO {
 
-  Long id;
+  Integer id;
 
-  Long refundRequestedAmount;   // refund_amount
-  Long refundCompletedAmount;   // refund_real
+  Integer refundAmount;   // refund_amount
+  Integer refundReal;   // refund_real
 
   LocalDateTime recordedAt;
   LocalDateTime canceledAt;

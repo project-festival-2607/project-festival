@@ -14,7 +14,7 @@ public enum RefundDateRangeType {
   private final boolean dateOnly;
 
   RefundDateRangeType(String label) {
-    this(label, true);
+    this(label, false);
   }
 
 }
