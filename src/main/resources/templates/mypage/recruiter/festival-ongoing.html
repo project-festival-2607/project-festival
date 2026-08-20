@@ -11,13 +11,25 @@
         <h1>행사 진행중 상황</h1>
 
         <div class="empty-message" th:if="${#lists.isEmpty(festivals)}">
-            <p>현재 진행 중인 행사가 없습니다.</p>
+            <p>등록된 행사가 없습니다.</p>
         </div>
 
         <div class="festival-card" th:each="festival : ${festivals}">
             <div class="festival-header">
-                <h2 th:text="${festival.title}"></h2>
-                <strong class="ongoing-status">● 진행 중</strong>
+                <h2 th:text="${festival.title}">행사 제목</h2>
+
+                <!-- 진행 중 -->
+                <strong class="ongoing-status"
+                        th:if="${!today.isBefore(festival.startDate)
+                        && !today.isAfter(festival.endDate)}">
+                    ● 진행 중
+                </strong>
+
+                <!-- 예정 -->
+                <strong class="scheduled-status"
+                        th:if="${today.isBefore(festival.startDate)}">
+                    ○ 예정
+                </strong>
             </div>
 
             <div class="festival-info">

@@ -123,40 +123,39 @@ public class MyPageController {
             return "redirect:/";
         }
 
-        // 구인자가 등록한 행사 조회
+        // 구인자가 등록한 모든 행사 조회
         List<Festival> festivals = festivalRepository.findByMember_Username(username);
-        Recruitment recruitment = null;
 
-        // 구인자가 등록한 행사 중 모집공고 조회
-        if (!festivals.isEmpty()){
-            Festival festival = festivals.get(0);
+        // 구인자가 등록한 모든 모집공고
+        List<Recruitment> recruitments = new java.util.ArrayList<>();
 
-            List<Recruitment> recruitments = recruitmentRepository.findByFestival_ContentId(
+        // 모든 행사 확인
+        for (Festival festival : festivals) {
+            // 해당 행사에 등록된 모든 모집공고 조회
+            List<Recruitment> festivalRecruitments = recruitmentRepository.findByFestival_ContentId(
                             festival.getContentId()
                     );
-            if (!recruitments.isEmpty()){
-                recruitment = recruitments.get(0);
-            }
+            recruitments.addAll(festivalRecruitments);
         }
 
         // HTML에 회원 정보 전달
         model.addAttribute("myPageDTO", myPageDTO);
 
         // HTML에 모집공고 전달
-        model.addAttribute("recruitment", recruitment);
+        model.addAttribute("recruitment", recruitments);
 
         // 구직자 마이페이지
         return "mypage/recruiter/mypage";
     }
 
     @GetMapping("/recruiter/ongoing")
-    public String ongoingRecruitments(
-            @AuthenticationPrincipal UserDetails user,
-            Model model) {
+    public String ongoingRecruitments(@AuthenticationPrincipal UserDetails user, Model model) {
+
         // 로그인하지 않은 경우
         if (user == null) {
             return "redirect:/member/login";
         }
+
         // 현재 로그인한 구인자의 username
         String username = user.getUsername();
 
@@ -167,63 +166,65 @@ public class MyPageController {
         if (myPageDTO.getRole() != MemberRole.RECRUITER) {
             return "redirect:/";
         }
-        // 현재 구인자가 등록한 행사 조회
+
+        // 구인자가 등록한 행사 조회
         List<Festival> festivals = festivalRepository.findByMember_Username(username);
 
-        // 진행 중인 모집공고 저장
-        List<Recruitment> ongoingRecruitments = new java.util.ArrayList<>();
+        // 구인자가 등록한 모든 모집공고
+        List<Recruitment> recruitments = new java.util.ArrayList<>();
 
-        // 오늘 날짜
-        LocalDate today = LocalDate.now();
-
-        // 구인자가 등록한 모든 행사 확인
+        // 모든 행사 확인
         for (Festival festival : festivals) {
-            List<Recruitment> recruitments = festival.getRecruitments();
-            for (Recruitment recruitment : recruitments) {
-                // 모집 마감일 전인지 확인
-                if (!today.isAfter(recruitment.getApplicationDeadline())) {
-                    ongoingRecruitments.add(recruitment);
-                }
+            List<Recruitment> festivalRecruitments = festival.getRecruitments();
+
+            for (Recruitment recruitment : festivalRecruitments) {
+                recruitments.add(recruitment);
             }
         }
-        // HTML에 진행 중 행사 전달
-        model.addAttribute("recruitments", ongoingRecruitments);
+
+        model.addAttribute("myPageDTO", myPageDTO);
+        model.addAttribute("recruitments", recruitments);
+
         return "mypage/recruiter/ongoing";
     }
 
     // 행사 진행중 상황
     @GetMapping("/recruiter/festival-ongoing")
-    public String ongoingFestivals(
-            @AuthenticationPrincipal UserDetails user,
-            Model model) {
+    public String ongoingFestivals(@AuthenticationPrincipal UserDetails user, Model model) {
 
         if (user == null) {
             return "redirect:/member/login";
         }
+
         String username = user.getUsername();
 
         MyPageDTO myPageDTO = myPageService.getMyPage(username);
-        // 구인자만 접근 가능
+
         if (myPageDTO.getRole() != MemberRole.RECRUITER) {
             return "redirect:/";
         }
-        // 구인자가 등록한 행사 조회
+
+        // 구인자가 등록한 모든 행사
         List<Festival> festivals = festivalRepository.findByMember_Username(username);
 
-        // 현재 진행 중인 행사
-        List<Festival> ongoingFestivals = new java.util.ArrayList<>();
+        // 마감되지 않은 행사만 저장
+        List<Festival> activeFestivals = new java.util.ArrayList<>();
 
         LocalDate today = LocalDate.now();
 
         for (Festival festival : festivals) {
-            // 행사 시작일 <= 오늘 <= 행사 종료일
-            if (!today.isBefore(festival.getStartDate())
-                    && !today.isAfter(festival.getEndDate())) {
-                ongoingFestivals.add(festival);
+
+            // 종료일이 오늘보다 이전이면 마감된 행사
+            if (today.isAfter(festival.getEndDate())) {
+                continue;
             }
+            // 진행 중 또는 예정 행사
+            activeFestivals.add(festival);
         }
+
         model.addAttribute("myPageDTO", myPageDTO);
-        model.addAttribute("festivals", ongoingFestivals);
+        model.addAttribute("festivals", activeFestivals);
+        model.addAttribute("today", today);
 
         return "mypage/recruiter/festival-ongoing";
     }

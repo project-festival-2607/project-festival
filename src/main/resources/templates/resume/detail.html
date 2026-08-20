@@ -14,11 +14,11 @@
         <div th:if="${resume == null}" class="empty-resume">
             <p>작성된 이력서가 없습니다.</p>
 
-            <a th:href="@{/application/recruiter/list}" class="cancel-btn">
+            <a th:href="@{/application/recruiter/list(recruitmentId=${recruitmentId})}" class="cancel-btn">
                 지원자 목록으로 돌아가기
             </a>
-        </div>
 
+        </div>
         <!-- 이력서가 있는 경우 -->
         <div th:if="${resume != null}" class="resume-content">
 
@@ -138,7 +138,7 @@
             </section>
 
             <div class="resume-buttons">
-                <a th:href="@{/application/recruiter/list}" class="cancel-btn">
+                <a th:href="@{/application/recruiter/list(recruitmentId=${recruitmentId})}" class="cancel-btn">
                     지원자 목록으로 돌아가기
                 </a>
             </div>
