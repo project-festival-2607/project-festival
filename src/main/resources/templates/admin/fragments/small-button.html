@@ -16,22 +16,23 @@
 
 <th:block th:fragment="copy(value)">
 <span class="click-to-copy">
-  <a class="link-primary link-underline-opacity-0"
+  <a class="link-secondary opacity-50 link-underline-opacity-0"
      data-bs-html="true"
      data-bs-toggle="tooltip"
      href="#"
      th:data-value="${value}"
-     data-bs-title="복사하기">
+     title="복사하기">
     <span th:replace="~{admin/fragments/svg :: copy('copy-icon')}"></span>
   </a>
 </span>
 </th:block>
 
 <th:block th:fragment="new-tab(url)">
-<span class="click-to-copy">
+<span>
   <a class="link-primary link-underline-opacity-0"
      th:href="${url}"
-     data-bs-title="새 탭에서 보기">
+     target="_blank"
+     title="새 탭에서 보기">
     <span th:replace="~{admin/fragments/svg :: new-window('new-window-icon')}"></span>
   </a>
 </span>

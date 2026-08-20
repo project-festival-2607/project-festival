@@ -76,7 +76,9 @@ ul.submenu {
 
 /* ==================== MISCELLANEOUS ==================== */
 
-.tooltip-icon {
+.tooltip-icon,
+.unique-id-icon,
+.copy-icon{
   display: block;
   width: 13px;
   height: 13px;

@@ -149,7 +149,7 @@
               </span>
             </span>
             <span class="flex-shrink-0">
-              <span th:replace="~{admin/fragments/tooltip :: unique-id(${charge.memberId})}"></span>
+              <span th:replace="~{admin/fragments/small-button :: unique-id(${charge.memberId})}"></span>
             </span>
           </div>
         </td>
@@ -167,7 +167,7 @@
             </span>
             <span class="d-none" data-field="productId" th:text="${charge.productId}"></span>
             <span class="flex-shrink-0">
-              <span th:replace="~{admin/fragments/tooltip :: unique-id(${charge.productId})}"></span>
+              <span th:replace="~{admin/fragments/small-button :: unique-id(${charge.productId})}"></span>
             </span>
           </div>
         </td>
@@ -187,11 +187,31 @@
         <td data-field="approvedAt" th:text="${#temporals.format(charge.approvedAt, 'yyyy.MM.dd. HH:mm:ss')}"></td>
         <!--<td data-field="createdAt" th:text="${#temporals.format(charge.createdAt, 'yyyy.MM.dd. HH:mm:ss.SSS')}"></td>
         <td data-field="updatedAt" th:text="${#temporals.format(charge.updatedAt, 'yyyy.MM.dd. HH:mm:ss.SSS')}"></td>-->
-        <td data-field="paymentKey" th:text="${charge.paymentKey}"></td>
-        <td data-field="orderId" th:text="${charge.orderId}"></td>
+        <td>
+          <div class="d-flex align-items-center justify-content-between gap-2">
+            <span class="text-ellipsis-with-suffix">
+              <span class="ellipsis-main" data-field="paymentKey" th:text="${charge.paymentKey}">
+              </span>
+            </span>
+            <span class="flex-shrink-0">
+              <span th:replace="~{admin/fragments/small-button :: copy(${charge.paymentKey})}"></span>
+            </span>
+          </div>
+        </td>
+        <td>
+          <div class="d-flex align-items-center justify-content-between gap-2">
+            <span class="text-ellipsis-with-suffix">
+              <span class="ellipsis-main" data-field="orderId" th:text="${charge.orderId}">
+              </span>
+            </span>
+            <span class="flex-shrink-0">
+              <span th:replace="~{admin/fragments/small-button :: copy(${charge.orderId})}"></span>
+            </span>
+          </div>
+        </td>
         <td class="d-flex justify-content-end align-items-center gap-2">
           <span th:text="${charge.recordId}" data-field="recordId"></span>
-          <th:block th:replace="~{admin/fragments/tooltip :: new-tab(
+          <th:block th:replace="~{admin/fragments/small-button :: new-tab(
             @{/admin/payment/summary(recordId=${charge.recordId})}
           )}"></th:block>
         </td>

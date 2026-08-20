@@ -12,20 +12,20 @@
     <table class="table">
       <colgroup>
         <col style="width: 65px;">  <!-- # -->
-        <col style="width: 270px;"> <!-- transactionKey -->
+        <col style="width: 200px;"> <!-- 사용자 [이름 (아이디)]-->
         <col style="width: 80px;">  <!-- 상태 -->
         <col style="width: 100px;"> <!-- 환불양 -->
         <!--<col style="width: 120px;">--> <!-- 실제환불양 -->
         <col style="width: 150px;"> <!-- 환불일시 -->
         <col style="width: 150px;"> <!-- 취소일시 -->
-        <col style="width: 200px;"> <!-- 사용자 [이름 (아이디)]-->
+        <col style="width: 270px;"> <!-- transactionKey -->
         <col style="width: 100px;">  <!-- 전체기록 UID -->
         <col style="width: 45px;">  <!-- 관리 -->
       </colgroup>
       <thead>
       <tr>
         <th scope="col">#</th>
-        <th scope="col">transactionKey</th>
+        <th scope="col">사용자</th>
         <th scope="col">
           <div class="d-flex gap-3 justify-content-between">
             <span>상태</span>
@@ -92,7 +92,7 @@
             )}"></th:block>
           </span>
         </th>
-        <th scope="col">사용자</th>
+        <th scope="col">transactionKey</th>
         <th scope="col">전체기록 UID</th>
         <th class="text-center bg-body-secondary" scope="col">관리</th>
       </tr>
@@ -100,7 +100,20 @@
       <tbody>
       <tr th:each="refund : ${page}">
         <td data-field="id" th:text="${refund.id}"></td>
-        <td data-field="transactionKey" th:text="${refund.transactionKey}"></td>
+        <td>
+          <span class="d-none" data-field="memberId" th:text="${refund.memberId}"></span>
+          <div class="d-flex align-items-center justify-content-between gap-2">
+            <span class="text-ellipsis-with-suffix">
+              <span class="ellipsis-main">
+                <span data-field="memberName" th:text="${refund.memberName}"></span>
+                <span data-field="memberUsername" th:text="'('+${refund.memberUsername}+')'"></span>
+              </span>
+            </span>
+            <span class="flex-shrink-0">
+              <span th:replace="~{admin/fragments/small-button :: unique-id(${refund.memberId})}"></span>
+            </span>
+          </div>
+        </td>
         <td class="text-center">
           <th:block
             th:replace="~{admin/fragments/badge :: general-with-badgeClass(${refund.status.label}, ${refund.status.badgeClass})}"></th:block>
@@ -112,15 +125,19 @@
         <td data-field="recordedAt" th:text="${#temporals.format(refund.recordedAt, 'yyyy.MM.dd. HH:mm:ss')}"></td>
         <td data-field="canceledAt" th:text="${#temporals.format(refund.canceledAt, 'yyyy.MM.dd. HH:mm:ss')}"></td>
         <td>
-          <span class="d-none" data-field="memberId" th:text="${refund.memberId}"></span>
-          <th:block th:if="${refund.memberId ne null}">
-            <span data-field="memberName" th:text="${refund.memberName}"></span>
-            <span data-field="memberUsername" th:text="'('+${refund.memberUsername}+')'"></span>
-          </th:block>
+          <div class="d-flex align-items-center justify-content-between gap-2">
+            <span class="text-ellipsis-with-suffix">
+              <span class="ellipsis-main" data-field="transactionKey" th:text="${refund.transactionKey}">
+              </span>
+            </span>
+            <span class="flex-shrink-0">
+              <span th:replace="~{admin/fragments/small-button :: copy(${refund.transactionKey})}"></span>
+            </span>
+          </div>
         </td>
         <td class="d-flex justify-content-end align-items-center gap-2">
           <span th:text="${refund.recordId}" data-field="recordId"></span>
-          <th:block th:replace="~{admin/fragments/tooltip :: new-tab(
+          <th:block th:replace="~{admin/fragments/small-button :: new-tab(
             @{/admin/payment/summary(recordId=${refund.recordId})}
           )}"></th:block>
         </td>
