@@ -419,7 +419,7 @@
 }
 
 .rec-page-item {
-    border: 1px solid #0D6EFD;
+    border: 1px solid var(--theme-main-color);
     border-radius: 8px;
     width: 30px;
     height: 30px;
@@ -436,7 +436,7 @@
 }
 
 .rec-page-item.active, .rec-page-item.active button {
-    background: #0D6EFD;
+    background: var(--theme-main-color);
     color: #FEFEFE;
 }
 
@@ -446,7 +446,7 @@
 }
 
 .rec-page-link {
-    color: #0D6EFD;
+    color: var(--theme-main-color);
     margin: 0;
     padding: 0;
     font-size: 13px;
@@ -456,7 +456,7 @@
 }
 
 .rec-page-link:hover {
-    color: #706a57;
+    color: var(--theme-main-color);
 }
 
 

@@ -20,6 +20,7 @@ public class DevDataInitializer implements ApplicationRunner {
   private final DevFestivalDataInitializer festivalDataInitializer;
   private final DevRecruitmentInitializer recruitmentInitializer;
   private final DevProductInitializer productInitializer;
+  private final DevSqlDataInitializer sqlDataInitializer;
   private final RegionDataInitService regionDataInitService;
 
   @Profile("dev")
@@ -30,6 +31,8 @@ public class DevDataInitializer implements ApplicationRunner {
     memberDataInitializer.generateSampleMembers(RECRUITER_COUNT, JOB_SEEKER_COUNT, JOB_EQUIP_COUNT);
 //    festivalDataInitializer.generateSampleFestivals(TARGET_FESTIVAL_COUNT);
 //    recruitmentInitializer.generateSampleRecruitments();
+    sqlDataInitializer.importFestivalAndRecruitmentDummyData();
+    sqlDataInitializer.importAdminBoardDummyData();
     productInitializer.generateSampleProducts();
 
   }
