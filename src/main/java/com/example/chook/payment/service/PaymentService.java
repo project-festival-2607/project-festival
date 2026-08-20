@@ -104,6 +104,7 @@ public class PaymentService {
                         .member(member)
                         .product(product)
                         .pointGet(product.getPointGet())
+                        .productName(product.getProductName())  // ★ 이 순간의 값을 복사, 이후 Product가 바뀌어도 이 값은 그대로 남음
                         .orderId(orderId)
                         .paymentKey(paymentKey)
                         .method(method)
@@ -219,7 +220,7 @@ public class PaymentService {
                     );
                     result.put(
                             "productName",
-                            payment.getProduct().getProductName()
+                            payment.getProductName()
                     );
                     result.put(
                             "pointGet",
