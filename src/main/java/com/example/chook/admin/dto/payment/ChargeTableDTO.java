@@ -1,7 +1,7 @@
 package com.example.chook.admin.dto.payment;
 
-import com.example.chook.admin.enums.payment.payment.PaymentMethod;
-import com.example.chook.admin.enums.payment.payment.PaymentStatus;
+import com.example.chook.admin.enums.payment.charge.PaymentMethod;
+import com.example.chook.admin.enums.payment.charge.PaymentStatus;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class PaymentTableDTO {
+public class ChargeTableDTO {
 
   Integer paymentId;
 
@@ -32,6 +32,8 @@ public class PaymentTableDTO {
 
   PaymentStatus paymentStatus;
   String rawPaymentStatus;
+
+  Long recordId;
 
   LocalDateTime requestedAt;
   LocalDateTime approvedAt;

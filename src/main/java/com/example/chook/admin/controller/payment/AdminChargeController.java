@@ -1,13 +1,13 @@
 package com.example.chook.admin.controller.payment;
 
-import com.example.chook.admin.condition.payment.PaymentSearchCondition;
-import com.example.chook.admin.dto.payment.PaymentTableDTO;
+import com.example.chook.admin.condition.payment.ChargeSearchCondition;
+import com.example.chook.admin.dto.payment.ChargeTableDTO;
 import com.example.chook.admin.enums.DateRangeAutofillOption;
-import com.example.chook.admin.enums.payment.payment.PaymentDateRangeType;
-import com.example.chook.admin.enums.payment.payment.PaymentKeywordType;
-import com.example.chook.admin.enums.payment.payment.PaymentMethod;
-import com.example.chook.admin.enums.payment.payment.PaymentStatus;
-import com.example.chook.admin.form.payment.PaymentSearchForm;
+import com.example.chook.admin.enums.payment.charge.ChargeDateRangeType;
+import com.example.chook.admin.enums.payment.charge.ChargeKeywordType;
+import com.example.chook.admin.enums.payment.charge.PaymentMethod;
+import com.example.chook.admin.enums.payment.charge.PaymentStatus;
+import com.example.chook.admin.form.payment.ChargeSearchForm;
 import com.example.chook.admin.provider.ModalInfoFieldProvider;
 import com.example.chook.admin.service.AdminPaymentService;
 import com.example.chook.common.handler.PagingHandler;
@@ -25,10 +25,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.util.List;
 
 @Controller
-@RequestMapping("/admin/payment/payment")
+@RequestMapping("/admin/payment/charge")
 @RequiredArgsConstructor
 @Slf4j
-public class AdminPaymentController {
+public class AdminChargeController {
 
   private static final int PAGINATION_SIZE = 10;
   private final AdminPaymentService adminPaymentService;
@@ -37,11 +37,11 @@ public class AdminPaymentController {
   @GetMapping
   public void loadPaymentPage(
     Model model,
-    @Valid @ModelAttribute PaymentSearchForm form
+    @Valid @ModelAttribute ChargeSearchForm form
   ) {
     model.addAttribute("form", form);
-    model.addAttribute("keywordOptions", List.of(PaymentKeywordType.values()));
-    model.addAttribute("dateRangeOptions", List.of(PaymentDateRangeType.values()));
+    model.addAttribute("keywordOptions", List.of(ChargeKeywordType.values()));
+    model.addAttribute("dateRangeOptions", List.of(ChargeDateRangeType.values()));
     model.addAttribute("dateRangeAutofillOptions", List.of(DateRangeAutofillOption.values()));
   }
 
@@ -50,16 +50,16 @@ public class AdminPaymentController {
     Model model,
     @RequestParam(name = "pageIdx", required = false, defaultValue = "1") int pageIdx,
     @RequestParam(name = "pageSize", required = false, defaultValue = "10") int pageSize,
-    @Valid @ModelAttribute PaymentSearchForm form
+    @Valid @ModelAttribute ChargeSearchForm form
   ) {
 
-    PaymentSearchCondition condition = PaymentSearchCondition.from(form);
+    ChargeSearchCondition condition = ChargeSearchCondition.from(form);
     log.info("condition: {}", condition);
-    Page<PaymentTableDTO> page = adminPaymentService.getPaymentPage(pageIdx, pageSize, condition);
+    Page<ChargeTableDTO> page = adminPaymentService.getChargePage(pageIdx, pageSize, condition);
 
     model.addAttribute("page", page);
     model.addAttribute("pageSize", pageSize);
-    PagingHandler<PaymentTableDTO, PaymentSearchForm> pagingHandler =
+    PagingHandler<ChargeTableDTO, ChargeSearchForm> pagingHandler =
       new PagingHandler<>(page, form, PAGINATION_SIZE, pageIdx);
     model.addAttribute("pagingHandler", pagingHandler);
     model.addAttribute("pageSizeOptions", List.of(10, 30, 50));
@@ -71,7 +71,7 @@ public class AdminPaymentController {
     log.info("form: {}", form);
     log.info("model: {}", model);
     log.info("result: {}", page.getContent());
-    return "admin/payment/fragments/result/payment";
+    return "admin/payment/fragments/result/charge";
   }
 
 }

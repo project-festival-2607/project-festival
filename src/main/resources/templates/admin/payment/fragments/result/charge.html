@@ -22,6 +22,7 @@
         <!--<col style="width: 200px;">--> <!-- 수정일시 -->
         <col style="width: 240px;"> <!-- paymentKey -->
         <col style="width: 240px;"> <!-- orderId -->
+        <col style="width: 100px;">  <!-- 전체기록 UID -->
         <col style="width: 45px;">  <!-- 관리 -->
       </colgroup>
       <thead>
@@ -131,62 +132,89 @@
         </th>-->
         <th scope="col">payment_key</th>
         <th scope="col">order_id</th>
+        <th scope="col">전체기록 UID</th>
         <th class="text-center bg-body-secondary" scope="col">관리</th>
       </tr>
       </thead>
       <tbody>
-      <tr th:each="payment : ${page}">
-        <td data-field="paymentId" th:text="${payment.paymentId}"></td>
+      <tr th:each="charge : ${page}">
+        <td data-field="paymentId" th:text="${charge.paymentId}"></td>
         <td>
-          <span class="d-none" data-field="memberId" th:text="${payment.memberId}"></span>
+          <span class="d-none" data-field="memberId" th:text="${charge.memberId}"></span>
           <div class="d-flex align-items-center justify-content-between gap-2">
             <span class="text-ellipsis-with-suffix">
               <span class="ellipsis-main">
-                <span data-field="memberName" th:text="${payment.memberName}"></span>
-                <span data-field="memberUsername" th:text="'('+${payment.memberUsername}+')'"></span>
+                <span data-field="memberName" th:text="${charge.memberName}"></span>
+                <span data-field="memberUsername" th:text="'('+${charge.memberUsername}+')'"></span>
               </span>
             </span>
             <span class="flex-shrink-0">
-              <span th:replace="~{admin/fragments/tooltip :: unique-id(${payment.memberId})}"></span>
+              <span th:replace="~{admin/fragments/small-button :: unique-id(${charge.memberId})}"></span>
             </span>
           </div>
         </td>
         <td>
           <div class="d-flex align-items-center justify-content-between gap-2">
-            <span class="d-none" data-field="productId" th:text="${payment.productId}"></span>
+            <span class="d-none" data-field="productId" th:text="${charge.productId}"></span>
             <span class="min-width-0">
               <a class="fw-medium text-ellipsis-with-suffix gap-1" target="_blank"
-                 th:href="@{/admin/payment/product(keywordType='PRODUCT_ID',keywords=${payment.productId})}">
-                <span class="ellipsis-main" data-field="productName" th:text="${payment.productName}"></span>
+                 th:href="@{/admin/payment/product(keywordType='PRODUCT_ID',keywords=${charge.productId})}">
+                <span class="ellipsis-main" data-field="productName" th:text="${charge.productName}"></span>
                 <span class="ellipsis-suffix">
                   <th:block th:replace="~{admin/fragments/svg :: new-window('new-window-icon')}"></th:block>
                 </span>
               </a>
             </span>
-            <span class="d-none" data-field="productId" th:text="${payment.productId}"></span>
+            <span class="d-none" data-field="productId" th:text="${charge.productId}"></span>
             <span class="flex-shrink-0">
-              <span th:replace="~{admin/fragments/tooltip :: unique-id(${payment.productId})}"></span>
+              <span th:replace="~{admin/fragments/small-button :: unique-id(${charge.productId})}"></span>
             </span>
           </div>
         </td>
         <td class="text-center">
           <th:block
-            th:replace="~{admin/fragments/badge :: general-with-badgeClass(${payment.paymentStatus.label}, ${payment.paymentStatus.badgeClass})}"></th:block>
+            th:replace="~{admin/fragments/badge :: general-with-badgeClass(${charge.paymentStatus.label}, ${charge.paymentStatus.badgeClass})}"></th:block>
           <span class="d-none" data-field="paymentStatus"
-                th:text="${payment.paymentStatus}"></span>
+                th:text="${charge.paymentStatus}"></span>
         </td>
         <td class="text-center">
           <th:block
-            th:replace="~{admin/fragments/badge :: general(${payment.paymentMethod.label})}"></th:block>
+            th:replace="~{admin/fragments/badge :: general(${charge.paymentMethod.label})}"></th:block>
           <span class="d-none" data-field="paymentMethod"
-                th:text="${payment.paymentMethod}"></span>
+                th:text="${charge.paymentMethod}"></span>
         </td>
-        <td data-field="requestedAt" th:text="${#temporals.format(payment.requestedAt, 'yyyy.MM.dd. HH:mm:ss')}"></td>
-        <td data-field="approvedAt" th:text="${#temporals.format(payment.approvedAt, 'yyyy.MM.dd. HH:mm:ss')}"></td>
-        <!--<td data-field="createdAt" th:text="${#temporals.format(payment.createdAt, 'yyyy.MM.dd. HH:mm:ss.SSS')}"></td>
-        <td data-field="updatedAt" th:text="${#temporals.format(payment.updatedAt, 'yyyy.MM.dd. HH:mm:ss.SSS')}"></td>-->
-        <td data-field="paymentKey" th:text="${payment.paymentKey}"></td>
-        <td data-field="orderId" th:text="${payment.orderId}"></td>
+        <td data-field="requestedAt" th:text="${#temporals.format(charge.requestedAt, 'yyyy.MM.dd. HH:mm:ss')}"></td>
+        <td data-field="approvedAt" th:text="${#temporals.format(charge.approvedAt, 'yyyy.MM.dd. HH:mm:ss')}"></td>
+        <!--<td data-field="createdAt" th:text="${#temporals.format(charge.createdAt, 'yyyy.MM.dd. HH:mm:ss.SSS')}"></td>
+        <td data-field="updatedAt" th:text="${#temporals.format(charge.updatedAt, 'yyyy.MM.dd. HH:mm:ss.SSS')}"></td>-->
+        <td>
+          <div class="d-flex align-items-center justify-content-between gap-2">
+            <span class="text-ellipsis-with-suffix">
+              <span class="ellipsis-main" data-field="paymentKey" th:text="${charge.paymentKey}">
+              </span>
+            </span>
+            <span class="flex-shrink-0">
+              <span th:replace="~{admin/fragments/small-button :: copy(${charge.paymentKey})}"></span>
+            </span>
+          </div>
+        </td>
+        <td>
+          <div class="d-flex align-items-center justify-content-between gap-2">
+            <span class="text-ellipsis-with-suffix">
+              <span class="ellipsis-main" data-field="orderId" th:text="${charge.orderId}">
+              </span>
+            </span>
+            <span class="flex-shrink-0">
+              <span th:replace="~{admin/fragments/small-button :: copy(${charge.orderId})}"></span>
+            </span>
+          </div>
+        </td>
+        <td class="d-flex justify-content-end align-items-center gap-2">
+          <span th:text="${charge.recordId}" data-field="recordId"></span>
+          <th:block th:replace="~{admin/fragments/small-button :: new-tab(
+            @{/admin/payment/summary(recordId=${charge.recordId})}
+          )}"></th:block>
+        </td>
         <td class="center bg-body-secondary">
           <button class="btn btn-reset dropdown-toggle dropdown-no-caret moderation-btn" data-bs-toggle="dropdown"
                   type="button" disabled>

@@ -1,13 +1,15 @@
 package com.example.chook.admin.service;
 
-import com.example.chook.admin.condition.payment.PaymentSearchCondition;
+import com.example.chook.admin.condition.payment.ChargeSearchCondition;
 import com.example.chook.admin.condition.payment.ProductSearchCondition;
 import com.example.chook.admin.condition.payment.RefundSearchCondition;
-import com.example.chook.admin.dto.payment.PaymentTableDTO;
+import com.example.chook.admin.condition.payment.UseSearchCondition;
+import com.example.chook.admin.dto.payment.ChargeTableDTO;
 import com.example.chook.admin.dto.payment.ProductTableDTO;
 import com.example.chook.admin.dto.payment.RefundTableDTO;
-import com.example.chook.admin.enums.payment.payment.PaymentMethod;
-import com.example.chook.admin.enums.payment.payment.PaymentStatus;
+import com.example.chook.admin.dto.payment.UseTableDTO;
+import com.example.chook.admin.enums.payment.charge.PaymentMethod;
+import com.example.chook.admin.enums.payment.charge.PaymentStatus;
 import com.example.chook.admin.enums.payment.product.ProductStatus;
 import com.example.chook.admin.enums.payment.refund.RefundStatus;
 import com.example.chook.admin.repository.AdminPaymentRepository;
@@ -35,14 +37,20 @@ public class AdminPaymentServiceImpl implements AdminPaymentService {
   private final ProductRepository productRepository;
 
   @Override
-  public Page<PaymentTableDTO> getPaymentPage(int pageIdx, int pageSize, PaymentSearchCondition condition) {
+  public Page<ChargeTableDTO> getChargePage(int pageIdx, int pageSize, ChargeSearchCondition condition) {
     Pageable pageable = PageRequest.of(pageIdx - 1, pageSize);
-    Page<PaymentTableDTO> result = adminPaymentRepository.getPaymentPage(pageable, condition);
+    Page<ChargeTableDTO> result = adminPaymentRepository.getChargePage(pageable, condition);
     result.forEach(dto -> {
       dto.setPaymentMethod(PaymentMethod.fromLabel(dto.getRawPaymentMethod()));
       dto.setPaymentStatus(toEnum(dto.getRawPaymentStatus(), PaymentStatus.class, null));
     });
     return result;
+  }
+
+  @Override
+  public Page<UseTableDTO> getUsePage(int pageIdx, int pageSize, UseSearchCondition condition) {
+    Pageable pageable = PageRequest.of(pageIdx - 1, pageSize);
+    return adminPaymentRepository.getUsePage(pageable, condition);
   }
 
   @Override

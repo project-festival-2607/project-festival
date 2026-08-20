@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 
 import static com.example.chook.common.util.CustomStringUtils.blankToNull;
 
-public record PaymentSearchForm(
+public record ChargeSearchForm(
 
   // 공통 검색 폼
   String keywordType,
@@ -27,7 +27,7 @@ public record PaymentSearchForm(
 
 ) {
 
-  public PaymentSearchForm {
+  public ChargeSearchForm {
 
     keywordType = blankToNull(keywordType);
     keywords = blankToNull(keywords);
