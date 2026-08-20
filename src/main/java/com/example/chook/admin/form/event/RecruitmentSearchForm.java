@@ -42,7 +42,7 @@ public record RecruitmentSearchForm(
 
     String rawSigunguCode = blankToNull(sigunguCode);
     if (sidoCode == null ||
-        rawSigunguCode != null && !rawSigunguCode.startsWith(sidoCode)) rawSigunguCode = null;
+      rawSigunguCode != null && !rawSigunguCode.startsWith(sidoCode)) rawSigunguCode = null;
     sigunguCode = rawSigunguCode;
   }
 
