@@ -39,3 +39,8 @@ out/
 
 ### QueryDSL ###
 **/src/main/generated/
+
+### Example Images ###
+src/main/resources/static/images/dummy/**
+!src/main/resources/static/images/dummy/**/
+!src/main/resources/static/images/dummy/**/.gitkeep
