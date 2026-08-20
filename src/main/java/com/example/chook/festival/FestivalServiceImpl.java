@@ -24,6 +24,7 @@ import tools.jackson.databind.ObjectMapper;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -118,18 +119,19 @@ public class FestivalServiceImpl implements FestivalService, ApplicationRunner {
 //    DB에서 API 요청 후 백그라운드에서 동기화
 
     @Override
-    @Transactional
     public void run(@NonNull ApplicationArguments args) throws Exception{
-        if (festivalRepository.count() > 0) {
-            log.info("DB 데이터 동기 완료");
-            return;
-            // 나중에 새로 갱신될 때를 대비하여 ID로 비교하는 로직으로 바꿀 것! ===> 지금은 TEST
-        }
-
-        log.info("Festival DB 데이터 동기화 시작...");
+//        if (festivalRepository.count() > 0) {
+//            log.info("DB 데이터 동기 완료");
+//            return;
+//            // 나중에 새로 갱신될 때를 대비하여 ID로 비교하는 로직으로 바꿀 것! ===> 지금은 TEST
+//        }
 
         try {
-            String url = "https://apis.data.go.kr/B551011/KorService2/searchFestival2?numOfRows=100&MobileOS=WEB&MobileApp=CHUCK&_type=json&arrange=R&eventStartDate=20260101&serviceKey=" + apiKey;
+            // API 요청한도를 방지하기 위한 개선 ID비교 로직 추가
+            List<Festival> festivalDBList = festivalRepository.findAll();
+            Set<String> festivalDBIds = festivalDBList.stream().map(Festival::getContentId).collect(Collectors.toSet());
+
+            String url = "https://apis.data.go.kr/B551011/KorService2/searchFestival2?numOfRows=110&MobileOS=WEB&MobileApp=CHUCK&_type=json&arrange=R&eventStartDate=20260101&serviceKey=" + apiKey;
 
             RestTemplate restTemplate = new RestTemplate(); // 백엔드에서 RestAPI 실행시켜주는 객체
             String listResponse = restTemplate.getForObject(url, String.class);
@@ -147,6 +149,13 @@ public class FestivalServiceImpl implements FestivalService, ApplicationRunner {
 
             for(JsonNode item : items){
                 String contentId = item.path("contentid").asText(null);
+
+                if(contentId != null && festivalDBIds.contains(contentId)) {
+                    log.info("이미 등록된 축제 데이터를 건너뛰고 있습니다... {}", contentId);
+                    continue;
+                }
+
+                log.info("신규 축제 데이터 수집 시작...");
 
                 String commonUrl = "https://apis.data.go.kr/B551011/KorService2/detailCommon2?MobileOS=WEB&MobileApp=CHUCK&_type=json&contentId=" + contentId + "&serviceKey=" + apiKey;
                 String introUrl = "https://apis.data.go.kr/B551011/KorService2/detailIntro2?MobileOS=WEB&MobileApp=CHUCK&_type=json&contentId=" + contentId + "&contentTypeId=15&serviceKey=" + apiKey;
@@ -191,13 +200,13 @@ public class FestivalServiceImpl implements FestivalService, ApplicationRunner {
 
 
                 } catch (Exception e) {
-                    throw new RuntimeException(e);
+                    log.error("축제 데이터 수집 오류 : {}", contentId, e);
                 }
             }
 
             if(!festivalDTOList.isEmpty()){
                 saveAll(festivalDTOList);
-                log.info("축제 DB 동기화 완료 >>> {}", festivalDTOList.size());
+                log.info("축제 DB 동기화 완료 >>> {}건", festivalDTOList.size());
             }
 
         } catch (Exception e) {
