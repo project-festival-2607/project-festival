@@ -61,7 +61,8 @@ ul.submenu {
 }
 
 .badge.recruitment-status-recruiting,
-.badge.refund-completed{
+.badge.refund-completed,
+.badge.product-on-sale{
   background-color: var(--bs-success);
 }
 
@@ -70,13 +71,20 @@ ul.submenu {
   color: var(--bs-dark);
 }
 .badge.recruitment-status-closed,
-.badge.refund-canceled{
+.badge.refund-canceled,
+.badge.product-sale-ended{
   background-color: var(--bs-dark);
 }
 
 
 
 /* ==================== MISCELLANEOUS ==================== */
+
+.tooltip-icon {
+  display: block;
+  width: 13px;
+  height: 13px;
+}
 
 .alert-icon {
   width: 1rem;

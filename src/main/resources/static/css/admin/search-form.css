@@ -53,12 +53,6 @@
   color: var(--bs-secondary);
 }
 
-.admin-search-form .search-field-head .tooltip-icon {
-  display: block;
-  width: 13px;
-  height: 13px;
-}
-
 .admin-search-form .search-criteria {
   font-size: 13px;
   letter-spacing: -0.03em;
@@ -114,6 +108,10 @@
   --bs-btn-border-radius: 6px;
   font-size: 13px;
   font-weight: 500;
+}
+
+.admin-search-button-wrapper button.product-add-button {
+  width: 100px;
 }
 
 .admin-search-button-wrapper .search-icon {

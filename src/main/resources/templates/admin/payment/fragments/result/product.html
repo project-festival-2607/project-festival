@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<th:block th:fragment="product-result">
+  <div class="result-table-wrapper"
+       id="tableWrapper"
+       th:with="form=${pagingHandler.form}">
+    <input id="sortCriteria" name="sortCriteria" th:value="${form.sortCriteria}" type="hidden"/>
+    <input id="ascending" name="ascending" th:value="${form.ascending}" type="hidden"/>
+    <table class="table">
+      <colgroup>
+        <col style="width: 65px;">  <!-- # -->
+        <col style="width: 80px;">  <!-- 상태 -->
+        <col style="width: 200px;"> <!-- 상품명 -->
+        <col style="width: 100px;"> <!-- 포인트양 -->
+        <col style="width: 100px;"> <!-- 가격 -->
+        <col style="width: 150px;"> <!-- 판매개시일시 -->
+        <col style="width: 150px;"> <!-- 판매종료일시 -->
+        <col style="width: 45px;">  <!-- 관리 -->
+      </colgroup>
+      <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">
+          <div class="d-flex gap-3 justify-content-between">
+            <span>상태</span>
+            <div class="dropdown d-flex justify-content-center align-items-center">
+              <button class="btn btn-reset btn-th dropdown-toggle dropdown-no-caret" data-bs-toggle="dropdown"
+                      type="button">
+                <th:block th:replace="${form.status == null}
+                                      ? ~{admin/fragments/svg :: filter-idle('filter-idle-icon')}
+                                      : ~{admin/fragments/svg :: filter-active('filter-active-icon')}"></th:block>
+              </button>
+              <ul class="dropdown-menu filter-menu" id="statusFilterDropdownList">
+                <li>
+                  <button class="dropdown-item status-filter-li" data-role="update-filter"
+                          data-target-element="filterStatus"
+                          th:classappend="${form.status == null} ? 'active'"
+                          type="button">
+                    <th:block th:replace="~{admin/fragments/badge :: general('전체')}"></th:block>
+                  </button>
+                </li>
+                <li th:each="status: ${productStatusList}">
+                  <button class="dropdown-item status-filter-li" data-role="update-filter"
+                          data-target-element="filterStatus"
+                          th:classappend="${form.status != null and form.status == status.name} ? 'active'"
+                          th:data-value="${status.name}"
+                          type="button">
+                    <th:block
+                      th:replace="~{admin/fragments/badge :: general-with-badgeClass(${status.label}, ${status.badgeClass})}"></th:block>
+                  </button>
+                </li>
+              </ul>
+              <input id="filterStatus" name="status" th:value="${form.status}" type="hidden">
+            </div>
+          </div>
+        </th>
+        <th scope="col">상품명</th>
+        <th scope="col">
+          <span class="d-flex gap-3 justify-content-between">
+            <span>포인트양</span>
+            <th:block th:replace="~{admin/fragments/sort-button :: sort-button(
+            'POINT_GET', ${form.sortCriteria}, ${form.ascending}
+            )}"></th:block>
+          </span>
+        </th>
+        <th scope="col">
+          <span class="d-flex gap-3 justify-content-between">
+            <span>가격</span>
+            <th:block th:replace="~{admin/fragments/sort-button :: sort-button(
+            'PRODUCT_PRICE', ${form.sortCriteria}, ${form.ascending}
+            )}"></th:block>
+          </span>
+        </th>
+        <th scope="col">
+          <span class="d-flex gap-3 justify-content-between">
+            <span>판매개시일시</span>
+            <th:block th:replace="~{admin/fragments/sort-button :: sort-button(
+            'CREATED_AT', ${form.sortCriteria}, ${form.ascending}
+            )}"></th:block>
+          </span>
+        </th>
+        <th scope="col">
+          <span class="d-flex gap-3 justify-content-between">
+            <span>판매종료일시</span>
+            <th:block th:replace="~{admin/fragments/sort-button :: sort-button(
+            'DELETED_AT', ${form.sortCriteria}, ${form.ascending}
+            )}"></th:block>
+          </span>
+        </th>
+        <th class="text-center bg-body-secondary" scope="col">관리</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="product : ${page}">
+        <td data-field="productId" th:text="${product.productId}"></td>
+        <td class="text-center">
+          <th:block
+            th:replace="~{admin/fragments/badge :: general-with-badgeClass(${product.status.label}, ${product.status.badgeClass})}"></th:block>
+          <span class="d-none" data-field="status"
+                th:text="${product.status.name}"></span>
+        </td>
+        <td data-field="productName" th:text="${product.productName}"></td>
+        <td data-field="pointGet" th:text="${product.pointGet + ' 포인트'}"></td>
+        <td data-field="productPrice" th:text="${product.productPrice + ' 원'}"></td>
+        <td data-field="createdAt" th:text="${#temporals.format(product.createdAt, 'yyyy.MM.dd. HH:mm:ss')}"></td>
+        <td data-field="deletedAt" th:text="${#temporals.format(product.deletedAt, 'yyyy.MM.dd. HH:mm:ss')}"></td>
+        <td class="center bg-body-secondary">
+          <button class="btn btn-reset dropdown-toggle dropdown-no-caret moderation-btn" data-bs-toggle="dropdown"
+                  type="button">
+            <th:block th:replace="~{admin/fragments/svg :: moderation('moderation-icon')}"></th:block>
+          </button>
+          <ul class="dropdown-menu moderation-menu">
+            <li th:if="${product.deletedAt eq null}">
+              <button class="dropdown-item" data-bs-target="#deleteProductModal"
+                      data-bs-toggle="modal"
+                      data-role="deleteProduct"
+                      type="button">판매 종료</button>
+            </li>
+          </ul>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+  <div>
+    <th:block th:replace="~{admin/fragments/pagination :: pagination(
+      ${pagingHandler},
+      ${pageSize},
+      ${pageSizeOptions}
+    )}"></th:block>
+  </div>
+</th:block>

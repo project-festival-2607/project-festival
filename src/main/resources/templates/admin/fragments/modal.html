@@ -39,6 +39,20 @@
   </table>
 </th:block>
 
+<!-- #################### PRODUCT #################### -->
+<th:block th:fragment="modal-product-info(targetInfoList)">
+  <label class="mb-3">상품 정보</label>
+  <table class="table mb-3">
+    <tbody>
+    <tr data-product-info th:data-product-field="${targetInfo.field}"
+        th:each="targetInfo: ${targetInfoList}">
+      <th class="modal-info-th" scope="row" th:text="${targetInfo.label}"></th>
+      <td data-load-here></td>
+    </tr>
+    </tbody>
+  </table>
+</th:block>
+
 <!-- #################### FOOTER #################### -->
 <th:block th:fragment="modal-footer(submitButtonColorClass, submitButtonLabel)">
   <div class="modal-footer">
