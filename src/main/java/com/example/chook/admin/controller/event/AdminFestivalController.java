@@ -2,9 +2,9 @@ package com.example.chook.admin.controller.event;
 
 import com.example.chook.admin.condition.event.FestivalSearchCondition;
 import com.example.chook.admin.dto.event.FestivalTableDTO;
-import com.example.chook.admin.entity.enums.DateRangeAutofillOption;
-import com.example.chook.admin.entity.enums.festival.FestivalDateRangeType;
-import com.example.chook.admin.entity.enums.festival.FestivalKeywordType;
+import com.example.chook.admin.enums.DateRangeAutofillOption;
+import com.example.chook.admin.enums.event.festival.FestivalDateRangeType;
+import com.example.chook.admin.enums.event.festival.FestivalKeywordType;
 import com.example.chook.admin.form.event.FestivalSearchForm;
 import com.example.chook.admin.provider.ModalInfoFieldProvider;
 import com.example.chook.admin.record.AdminActionResponse;

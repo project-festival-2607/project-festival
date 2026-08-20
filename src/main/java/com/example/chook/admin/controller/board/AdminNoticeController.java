@@ -2,9 +2,9 @@ package com.example.chook.admin.controller.board;
 
 import com.example.chook.admin.condition.board.NoticeSearchCondition;
 import com.example.chook.admin.dto.board.NoticeTableDTO;
-import com.example.chook.admin.entity.enums.DateRangeAutofillOption;
-import com.example.chook.admin.entity.enums.inquiry.InquiryDateRangeType;
-import com.example.chook.admin.entity.enums.inquiry.InquiryKeywordType;
+import com.example.chook.admin.enums.DateRangeAutofillOption;
+import com.example.chook.admin.enums.board.inquiry.InquiryDateRangeType;
+import com.example.chook.admin.enums.board.inquiry.InquiryKeywordType;
 import com.example.chook.admin.form.board.InquirySearchForm;
 import com.example.chook.admin.form.board.NoticeSearchForm;
 import com.example.chook.admin.service.AdminBoardService;

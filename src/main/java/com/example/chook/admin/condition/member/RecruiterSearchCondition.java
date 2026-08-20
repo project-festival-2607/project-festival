@@ -1,10 +1,10 @@
 package com.example.chook.admin.condition.member;
 
-import com.example.chook.admin.entity.enums.KeywordCriteria;
-import com.example.chook.admin.entity.enums.MemberStatusFilter;
-import com.example.chook.admin.entity.enums.recruiter.RecruiterDateRangeType;
-import com.example.chook.admin.entity.enums.recruiter.RecruiterKeywordType;
-import com.example.chook.admin.entity.enums.recruiter.RecruiterSortCriteria;
+import com.example.chook.admin.enums.KeywordCriteria;
+import com.example.chook.admin.enums.MemberStatusFilter;
+import com.example.chook.admin.enums.member.recruiter.RecruiterDateRangeType;
+import com.example.chook.admin.enums.member.recruiter.RecruiterKeywordType;
+import com.example.chook.admin.enums.member.recruiter.RecruiterSortCriteria;
 import com.example.chook.admin.form.member.RecruiterSearchForm;
 import lombok.Builder;
 

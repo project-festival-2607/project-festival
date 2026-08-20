@@ -4,7 +4,7 @@ import com.example.chook.admin.condition.board.InquirySearchCondition;
 import com.example.chook.admin.condition.board.NoticeSearchCondition;
 import com.example.chook.admin.dto.board.InquiryTableDTO;
 import com.example.chook.admin.dto.board.NoticeTableDTO;
-import com.example.chook.admin.entity.enums.inquiry.InquiryReplyStatus;
+import com.example.chook.admin.enums.board.inquiry.InquiryReplyStatus;
 import com.example.chook.admin.repository.AdminBoardRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

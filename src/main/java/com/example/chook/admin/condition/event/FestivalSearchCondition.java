@@ -1,9 +1,9 @@
 package com.example.chook.admin.condition.event;
 
-import com.example.chook.admin.entity.enums.KeywordCriteria;
-import com.example.chook.admin.entity.enums.festival.FestivalDateRangeType;
-import com.example.chook.admin.entity.enums.festival.FestivalKeywordType;
-import com.example.chook.admin.entity.enums.festival.FestivalSortCriteria;
+import com.example.chook.admin.enums.KeywordCriteria;
+import com.example.chook.admin.enums.event.festival.FestivalDateRangeType;
+import com.example.chook.admin.enums.event.festival.FestivalKeywordType;
+import com.example.chook.admin.enums.event.festival.FestivalSortCriteria;
 import com.example.chook.admin.form.event.FestivalSearchForm;
 import lombok.Builder;
 

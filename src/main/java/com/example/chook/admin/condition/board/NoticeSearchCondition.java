@@ -1,9 +1,9 @@
 package com.example.chook.admin.condition.board;
 
-import com.example.chook.admin.entity.enums.KeywordCriteria;
-import com.example.chook.admin.entity.enums.notice.NoticeDateRangeType;
-import com.example.chook.admin.entity.enums.notice.NoticeKeywordType;
-import com.example.chook.admin.entity.enums.notice.NoticeSortCriteria;
+import com.example.chook.admin.enums.KeywordCriteria;
+import com.example.chook.admin.enums.board.notice.NoticeDateRangeType;
+import com.example.chook.admin.enums.board.notice.NoticeKeywordType;
+import com.example.chook.admin.enums.board.notice.NoticeSortCriteria;
 import com.example.chook.admin.form.board.NoticeSearchForm;
 import lombok.Builder;
 

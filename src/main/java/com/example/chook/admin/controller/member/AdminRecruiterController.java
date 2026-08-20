@@ -2,9 +2,9 @@ package com.example.chook.admin.controller.member;
 
 import com.example.chook.admin.condition.member.RecruiterSearchCondition;
 import com.example.chook.admin.dto.member.RecruiterTableDTO;
-import com.example.chook.admin.entity.enums.DateRangeAutofillOption;
-import com.example.chook.admin.entity.enums.recruiter.RecruiterDateRangeType;
-import com.example.chook.admin.entity.enums.recruiter.RecruiterKeywordType;
+import com.example.chook.admin.enums.DateRangeAutofillOption;
+import com.example.chook.admin.enums.member.recruiter.RecruiterDateRangeType;
+import com.example.chook.admin.enums.member.recruiter.RecruiterKeywordType;
 import com.example.chook.admin.form.member.RecruiterSearchForm;
 import com.example.chook.admin.provider.ModalInfoFieldProvider;
 import com.example.chook.admin.service.AdminMemberService;
