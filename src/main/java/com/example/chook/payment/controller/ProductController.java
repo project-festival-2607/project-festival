@@ -16,6 +16,6 @@ public class ProductController {
 
     @GetMapping("/products")
     public List<Product> getProducts() {
-        return productRepository.findAll();
+        return productRepository.findByDeletedAtIsNull();
     }
 }

@@ -81,6 +81,10 @@
   <script th:src="@{/js/admin/load-result.js}"></script>
   <script th:src="@{/js/admin/table-th-filter.js}"></script>
   <script>
-    loadResult(window.location.pathname, {forceParams: new URLSearchParams(window.location.search)});
+    const params = new URLSearchParams(window.location.search);
+    if (params.size === 0) {
+      params.set('status', 'ON_SALE');
+    }
+    loadResult(window.location.pathname, {forceParams: params});
   </script>
 </div>
