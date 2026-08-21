@@ -26,6 +26,7 @@ import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.StringExpression;
+import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
@@ -375,8 +376,6 @@ public class AdminPaymentRepositoryImpl implements AdminPaymentRepository {
       .on(pointHistory.payClassify.payClassifyId.eq(payClassify.payClassifyId))
       .leftJoin(recruitment)
       .on(pointHistory.recruit.id.eq(recruitment.id))
-      .leftJoin(refund)
-      .on(refund.payClassify.payClassifyId.eq(payClassify.payClassifyId))
       ;
 
   }
@@ -470,7 +469,16 @@ public class AdminPaymentRepositoryImpl implements AdminPaymentRepository {
           }
           case REFUND_ID -> {
             StringExpression refundId = Expressions.stringTemplate("STR({0})", refund.refundId);
-            keywordResult.or(keywordCheck.apply(refundId, keyword));
+            keywordResult.or(
+              JPAExpressions
+                .selectOne()
+                .from(refund)
+                .where(
+                  refund.payClassify.payClassifyId.eq(payClassify.payClassifyId),
+                  keywordCheck.apply(refundId, keyword)
+                )
+                .exists()
+            );
           }
           case MEMBER_ID -> {
             StringExpression memberId = Expressions.stringTemplate("STR({0})", member.id);
