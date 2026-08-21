@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ko"
+      layout:decorate="~{layout/layout}"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <th:block layout:fragment="css">
+        <link rel="stylesheet" th:href="@{/css/inquiry/common.css}">
+    </th:block>
+</head>
+
+<body>
+<div layout:fragment="content">
+    <div class="container">
+        <h1 class="mb-3">1:1 문의</h1>
+
+        <ul class="nav nav-tabs mb-4">
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/inquiry/register}">문의하기</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link active" th:href="@{/inquiry/list}">나의 문의내역</a>
+            </li>
+        </ul>
+
+        <table class="table table-hover align-middle">
+            <thead>
+            <tr>
+                <th style="width: 100px;">상태</th>
+                <th>제목</th>
+                <th style="width: 160px;">작성일</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="inquiry : ${inquiries}">
+                <td>
+                    <span th:if="${inquiry.comment != null}" class="badge bg-success">답변완료</span>
+                    <span th:unless="${inquiry.comment != null}" class="badge bg-secondary">답변대기</span>
+                </td>
+                <td>
+                    <a th:href="@{/inquiry/detail/{ino}(ino=${inquiry.ino})}" th:text="${inquiry.title}"></a>
+                </td>
+                <td th:text="${#temporals.format(inquiry.createdAt, 'yyyy-MM-dd HH:mm')}"></td>
+            </tr>
+            <tr th:if="${inquiries.isEmpty()}">
+                <td colspan="3" class="text-center text-muted">등록된 문의가 없습니다.</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>

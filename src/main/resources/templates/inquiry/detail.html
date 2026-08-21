@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ko"
+      layout:decorate="~{layout/layout}"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org">
+
+<body>
+<div layout:fragment="content">
+    <div class="container">
+        <h1>문의 상세</h1>
+
+        <div class="mb-3">
+            <span th:if="${inquiry.comment != null}" class="badge bg-success">답변완료</span>
+            <span th:unless="${inquiry.comment != null}" class="badge bg-secondary">답변대기</span>
+        </div>
+
+        <div class="mb-3">
+            <input type="text" class="form-control" th:value="${inquiry.title}" readonly>
+        </div>
+        <div class="mb-3">
+            <textarea class="form-control" rows="6" readonly th:text="${inquiry.content}"></textarea>
+        </div>
+
+        <div class="mb-3" th:if="${not #lists.isEmpty(inquiry.files)}">
+            <label class="form-label">첨부파일</label>
+            <ul class="list-group">
+                <li class="list-group-item" th:each="file : ${inquiry.files}">
+                    <a th:href="@{/inquiry/file/{uuid}/download(uuid=${file.uuid})}" th:text="${file.name}"></a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="card mt-4" th:if="${inquiry.comment != null}">
+            <div class="card-header">답변</div>
+            <div class="card-body">
+                <p class="card-text" th:text="${inquiry.comment}"></p>
+                <p class="card-text text-muted small" th:text="${#temporals.format(inquiry.commentTime, 'yyyy-MM-dd HH:mm')}"></p>
+            </div>
+        </div>
+        <div class="alert alert-secondary mt-4" th:unless="${inquiry.comment != null}">
+            아직 답변이 등록되지 않았습니다.
+        </div>
+
+        <div class="d-flex justify-content-end gap-2 mt-3">
+            <a th:href="@{/inquiry/list}" class="btn btn-outline-secondary">목록</a>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ko"
+      layout:decorate="~{layout/layout}"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block layout:fragment="css">
+        <link rel="stylesheet" th:href="@{/css/member/signup-in.css}">
+    </th:block>
+</head>
+
+<div layout:fragment="content">
+    <div class="container up-in-container">
+        <h1 class="up-in-h1">간편 로그인 관리</h1>
+
+        <div class="d-grid gap-2">
+            <div class="d-flex justify-content-between align-items-center p-2" style="background: #e2e2e2; color: #2C2C2C;">
+                <span style="font-size: 14px; padding: 0 20px;">구글</span>
+                <a th:if="${!linkedProviders.contains(T(com.example.chook.member.entity.enums.Provider).GOOGLE)}"
+                   th:href="@{/mypage/social-login/google/link}" class="btn btn-outline-primary btn-sm">연동하기</a>
+                <button th:if="${linkedProviders.contains(T(com.example.chook.member.entity.enums.Provider).GOOGLE)}"
+                        type="button" class="btn btn-outline-danger btn-sm unlink-btn btn-danger" data-provider="google">연동 해제</button>
+            </div>
+
+            <div class="d-flex justify-content-between align-items-center p-2" style="background: #0DC75C; color: #FEFEFE;">
+                <span style="font-size: 14px; padding: 0 20px;">네이버</span>
+                <a th:if="${!linkedProviders.contains(T(com.example.chook.member.entity.enums.Provider).NAVER)}"
+                   th:href="@{/mypage/social-login/naver/link}" class="btn btn-outline-primary btn-sm">연동하기</a>
+                <button th:if="${linkedProviders.contains(T(com.example.chook.member.entity.enums.Provider).NAVER)}"
+                        type="button" class="btn btn-outline-danger btn-sm unlink-btn" data-provider="naver">연동 해제</button>
+            </div>
+
+            <div class="d-flex justify-content-between align-items-center p-2" style="background: #ffd656; color: #2C2C2C;">
+                <span style="font-size: 14px; padding: 0 20px;">카카오</span>
+                <a th:if="${!linkedProviders.contains(T(com.example.chook.member.entity.enums.Provider).KAKAO)}"
+                   th:href="@{/mypage/social-login/kakao/link}" class="btn btn-outline-primary btn-sm">연동하기</a>
+                <button th:if="${linkedProviders.contains(T(com.example.chook.member.entity.enums.Provider).KAKAO)}"
+                        type="button" class="btn btn-outline-danger btn-sm unlink-btn" data-provider="kakao">연동 해제</button>
+            </div>
+        </div>
+
+        <div class="d-grid mt-3">
+            <a th:href="@{/mypage}" class="save-btn" style="text-align: center">마이페이지로 돌아가기</a>
+        </div>
+    </div>
+    <script th:src="@{/js/mypage/socialLogin.js}"></script>
+</div>>

@@ -1,0 +1,9 @@
+package com.example.chook.member.repository;
+
+import com.example.chook.member.entity.EmployerProfile;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface EmployerProfileRepository extends JpaRepository<EmployerProfile,Long> {
+}

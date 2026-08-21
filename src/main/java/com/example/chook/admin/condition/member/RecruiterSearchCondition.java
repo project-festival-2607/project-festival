@@ -1,0 +1,62 @@
+package com.example.chook.admin.condition.member;
+
+import com.example.chook.admin.enums.KeywordCriteria;
+import com.example.chook.admin.enums.MemberStatusFilter;
+import com.example.chook.admin.enums.member.recruiter.RecruiterDateRangeType;
+import com.example.chook.admin.enums.member.recruiter.RecruiterKeywordType;
+import com.example.chook.admin.enums.member.recruiter.RecruiterSortCriteria;
+import com.example.chook.admin.form.member.RecruiterSearchForm;
+import lombok.Builder;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
+
+import static com.example.chook.admin.util.KeywordUtils.getKeywordCriteria;
+import static com.example.chook.admin.util.KeywordUtils.getKeywordList;
+import static com.example.chook.common.util.CustomStringUtils.toEnum;
+
+@Builder
+public record RecruiterSearchCondition(
+
+  // 공통 검색 폼
+  RecruiterKeywordType keywordType,
+  List<String> keywordList,
+  KeywordCriteria keywordCriteria,
+  RecruiterDateRangeType dateRangeType,
+  LocalDateTime startDateTime,
+  LocalDateTime endDateTime,
+  LocalDate startDate,
+  LocalDate endDate,
+
+  // 테이블 상단 필터
+  MemberStatusFilter status,
+
+  // 테이블 상단 정렬
+  RecruiterSortCriteria sortCriteria,
+  Boolean ascending
+
+) {
+
+  public static RecruiterSearchCondition from(RecruiterSearchForm form) {
+
+    RecruiterKeywordType keywordType = toEnum(form.keywordType(), RecruiterKeywordType.class, null);
+    KeywordCriteria keywordCriteria = getKeywordCriteria(keywordType, form.keywordCriteria());
+    List<String> keywordList = getKeywordList(form.keywords(), keywordCriteria);
+
+    return RecruiterSearchCondition.builder()
+      .keywordType(keywordType)
+      .keywordList(keywordList)
+      .keywordCriteria(keywordCriteria)
+      .dateRangeType(toEnum(form.dateRangeType(), RecruiterDateRangeType.class, null))
+      .startDateTime(form.startDateTime())
+      .endDateTime(form.endDateTime())
+      .startDate(form.startDate())
+      .endDate(form.endDate())
+      .status(toEnum(form.status(), MemberStatusFilter.class, null))
+      .sortCriteria(toEnum(form.sortCriteria(), RecruiterSortCriteria.class, null))
+      .ascending(form.ascending())
+      .build();
+
+  }
+}

@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="ko"
+      layout:decorate="~{layout/layout}"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block layout:fragment="css">
+        <link rel="stylesheet" th:href="@{/css/festival/register.css}">
+    </th:block>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="container">
+        <!-- 모든 inner는 class="container" 로 맞춤 -->
+        <!-- 이 안에서 작업 -->
+        <div class="register-h1" style="font-style: normal">
+            행사등록
+            <span style="margin-left: 10px; font-size: 13px; color: #999;">행사정보는 데이터 질 향상을 위해 수정기능이 제공되지 않습니다. 필요한 필드를 모두 채워주세요.</span>
+        </div>
+
+        <div class="registerBox">
+            <form action="/festival/register" method="post" enctype="multipart/form-data">
+                <div class="regContainer">
+
+                    <div class="fileBox">
+                        <input class="form-control" type="file" id="file" name="imageFile" accept="image/*" required>
+                        <input type="text" name="homepage" placeholder="· 홈페이지주소를입력하세요.">
+                    </div>
+
+                    <div class="fes-infos">
+                        <!-- 좌측 정보 입력 영역 -->
+                        <div class="fes-infos-left">
+                            <input class="infos-h1" type="text" name="title" placeholder="행사이름" required>
+
+                            <div class="date-info">
+                                <span>행사진행일자</span>
+                                <div>
+                                    <input class="dateInput" type="date" name="startDate" required> ~ <input class="dateInput" type="date" name="endDate" required>
+                                </div>
+                            </div>
+
+                            <div class="basic-info-form">
+                                <div class="detail-sub-form">
+                                    <span>진행시간</span>
+                                    <input type="text" name="playTime" placeholder="08:00~18:00">
+                                </div>
+
+                                <div class="detail-sub-form">
+                                    <span>장소</span>
+                                    <input type="text" name="eventPlace" id="eventPlace" placeholder="세종문화회관 3층">
+                                </div>
+                            </div>
+
+                            <div class="detail-info-form">
+                                <div class="detail-sub-form">
+                                    <span>가격</span>
+                                    <input type="text" name="useTime" placeholder="무료">
+                                </div>
+                                <div class="detail-sub-form">
+                                    <span>주최</span>
+                                    <input type="text" name="telName" placeholder="세종시">
+                                </div>
+                                <div class="detail-sub-form">
+                                    <span>문의처</span>
+                                    <input type="text" name="tel" placeholder="031)000-0000">
+                                </div>
+                                <div class="detail-sub-form">
+                                    <span>참여대상</span>
+                                    <input type="text" name="ageLimit" placeholder="전연령">
+                                </div>
+                            </div>
+                        </div> <!-- //.fes-infos-left -->
+
+                        <!-- 우측 정보 입력 영역 -->
+                        <div class="fes-infos-right">
+                            <div class="detail-sub-form">
+                                <span>행사개요</span>
+                                <textarea name="overview" placeholder="이 행사는 …"></textarea>
+                            </div>
+                            <div class="detail-sub-form">
+                                <span>프로그램</span>
+                                <textarea name="program" placeholder="1부 - ○○○○ 2부 - ○○○○"></textarea>
+                            </div>
+
+                            <div class="detail-sub-form">
+                                <span>우편번호</span>
+                                <div style="display: flex; gap: 8px;">
+                                    <input type="text" id="zipCode" name="zipCode" readonly style="width: 120px;">
+                                    <button class="search-form-btn" type="button" onclick="execDaumPostcode()">주소 검색</button>
+                                </div>
+                            </div>
+
+                            <div class="detail-sub-form">
+                                <input type="text" id="address" name="address" readonly placeholder="주소 검색 버튼을 눌러주세요">
+                            </div>
+                        </div> <!-- //.fes-infos-right -->
+
+                        <input type="hidden" id="mapX" name="mapX">
+                        <input type="hidden" id="mapY" name="mapY">
+                    </div> <!-- //.fes-infos -->
+
+                </div> <!-- //.regContainer -->
+
+                <div class="btn-box">
+                    <button type="submit" class="regBtn">▼ 행사등록</button>
+                </div>
+
+            </form>
+        </div> <!-- //.registerBox -->
+    </div> <!-- //.container -->
+
+    <script th:src="@{|//dapi.kakao.com/v2/maps/sdk.js?appkey=${mapApiKey}&libraries=services,clusterer|}"></script>
+    <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+    <script th:src="@{/js/festival/festivalRegister.js}"></script>
+
+</div> <!-- //layout:fragment="content" -->
+</body>
+</html>

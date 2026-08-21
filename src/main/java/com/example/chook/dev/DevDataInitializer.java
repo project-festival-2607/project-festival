@@ -1,0 +1,40 @@
+package com.example.chook.dev;
+
+import com.example.chook.region.service.RegionDataInitService;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
+import org.springframework.boot.ApplicationArguments;
+import org.springframework.boot.ApplicationRunner;
+import org.springframework.context.annotation.Profile;
+import org.springframework.stereotype.Component;
+
+@Component
+@RequiredArgsConstructor
+public class DevDataInitializer implements ApplicationRunner {
+
+  private static final long RECRUITER_COUNT = 50;
+  private static final long JOB_SEEKER_COUNT = 100;
+  private static final long JOB_EQUIP_COUNT = 30;
+  private static final long TARGET_FESTIVAL_COUNT = 200;
+  private final DevMemberDataInitializer memberDataInitializer;
+  private final DevFestivalDataInitializer festivalDataInitializer;
+  private final DevRecruitmentInitializer recruitmentInitializer;
+  private final DevProductInitializer productInitializer;
+  private final DevSqlDataInitializer sqlDataInitializer;
+  private final RegionDataInitService regionDataInitService;
+
+  @Profile("dev")
+  @Override
+  public void run(@NonNull ApplicationArguments arg) throws Exception {
+
+    regionDataInitService.importData();
+    memberDataInitializer.generateSampleMembers(RECRUITER_COUNT, JOB_SEEKER_COUNT, JOB_EQUIP_COUNT);
+    memberDataInitializer.updateMemberDummyProfiles();
+//    festivalDataInitializer.generateSampleFestivals(TARGET_FESTIVAL_COUNT);
+//    recruitmentInitializer.generateSampleRecruitments();
+    sqlDataInitializer.importFestivalAndRecruitmentDummyData();
+    sqlDataInitializer.importAdminBoardDummyData();
+    productInitializer.generateSampleProducts();
+
+  }
+}

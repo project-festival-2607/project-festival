@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ko"
+      layout:decorate="~{layout/layout}"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block layout:fragment="css">
+        <link rel="stylesheet" th:href="@{/css/member/signup.css}">
+    </th:block>
+</head>
+<div layout:fragment="content">
+    <div class="container">
+        <h1 class="join-h1">회원가입</h1>
+        <div class="join-container">
+            <!-- 구직자 -->
+            <div class="join-seeker-box">
+                <a th:href="@{/member/signup/job-seeker}" class="join-seeker-h1">개인회원 가입</a>
+                <span>
+                    개인회원이라면 간편가입도! ⤵
+                </span>
+                <div class="join-seeker-auth">
+                    <a href="/oauth2/authorization/google" class="join-google auth">구글</a>
+                    <a href="/oauth2/authorization/naver" class="join-naver auth">네이버</a>
+                    <a href="/oauth2/authorization/kakao" class="join-kakao auth">카카오</a>
+                </div>
+            </div>
+
+            <!-- 구인자 -->
+            <div class="employer-box">
+                <a th:href="@{/member/signup/employer}" class="join-employer-h1">기업회원 가입</a>
+            </div>
+
+        </div>
+    </div>
+</div>

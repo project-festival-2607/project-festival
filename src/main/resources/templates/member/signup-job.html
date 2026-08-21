@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="ko"
+      layout:decorate="~{layout/layout}"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block layout:fragment="css">
+        <link rel="stylesheet" th:href="@{/css/member/signup-in.css}">
+    </th:block>
+</head>
+
+<div layout:fragment="content">
+    <div class="container up-in-container">
+        <div class="up-in-h1">
+            구직자 회원가입
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-person-raised-hand" viewBox="0 0 16 16">
+                <path d="M6 6.207v9.043a.75.75 0 0 0 1.5 0V10.5a.5.5 0 0 1 1 0v4.75a.75.75 0 0 0 1.5 0v-8.5a.25.25 0 1 1 .5 0v2.5a.75.75 0 0 0 1.5 0V6.5a3 3 0 0 0-3-3H6.236a1 1 0 0 1-.447-.106l-.33-.165A.83.83 0 0 1 5 2.488V.75a.75.75 0 0 0-1.5 0v2.083c0 .715.404 1.37 1.044 1.689L5.5 5c.32.32.5.754.5 1.207"/>
+                <path d="M8 3a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3"/>
+            </svg>
+        </div>
+        <div class="mark-msg">
+            * 표시가 있는 내용은 필수 입력사항입니다.
+        </div>
+
+        <div th:if="${FailureMsg != null}" class="api-alert" role="alert">
+            [[${FailureMsg}]]
+        </div>
+
+        <form th:action="${isSocial} ? @{/member/signup/social} : @{/member/signup/job-seeker}" method="post">
+
+            <div th:unless="${isSocial}">
+                <div class="basic-info-box">
+                    <input type="text" class="input id-input" id="userName" name="userName" placeholder="(*) 아이디를입력하세요." required>
+                    <input type="password" class="input ps-input" id="password" name="password" placeholder="(*) 비밀번호를입력하세요." required>
+                    <input type="password" class="input ps-input" id="password-check" name="passwordCheck" placeholder="(*) 비밀번호를확인하세요." required>
+                </div>
+            </div>
+
+            <div class="detail-profile-box">
+                <label for="name" class="label name-label">이름 *</label>
+                <input type="text" class="input name-input" id="name" name="name" th:value="${prefillName}" required>
+            </div>
+            <div class="mb-3">
+                <label for="phone" class="form-label">전화번호</label>
+                <div class="input-group">
+<!--                    TODO: required 임시삭제-->
+                    <input type="text" class="form-control" id="phone" name="phone">
+                    <button type="button" class="btn btn-outline-secondary" id="sendCodeBtn">인증번호 받기</button>
+                </div>
+            </div>
+            <div class="mb-3">
+                <label for="code" class="form-label">인증번호</label>
+                <div class="input-group">
+                    <input type="text" class="form-control" id="code" maxlength="6">
+                    <button type="button" class="btn btn-outline-secondary" id="verifyCodeBtn">확인</button>
+                </div>
+            </div>
+            <input type="hidden" id="phoneVerificationToken" name="phoneVerificationToken">
+            <div class="detail-profile-box">
+                <label for="email" class="label email-label">이메일 *</label>
+                <input type="email" class="input email-input" id="email" name="email" th:value="${prefillEmail}" required>
+            </div>
+            <div class="detail-profile-box">
+                <label for="gender" class="label gender-label">성별 *</label>
+                <select class="join-gender-select" id="gender" name="gender" required>
+                    <option value="" selected disabled>선택</option>
+                    <option value="MALE">남성</option>
+                    <option value="FEMALE">여성</option>
+                </select>
+            </div>
+            <div class="detail-profile-box">
+                <label for="birthDate" class="label birth-label">생년월일</label>
+                <input type="date" class="input birth-input" id="birthDate" name="birthDate" required>
+            </div>
+            <div class="detail-profile-box">
+                <label for="streetAddress" class="label addr-label">주소</label>
+                <div class="input-btn-box">
+                    <input type="text" class="input addr-input" id="streetAddress" name="streetAddress" readonly>
+                    <button type="button" class="join-btn search-join-btn" onclick="execDaumPostcode()">주소검색</button>
+                </div>
+            </div>
+            <div class="detail-profile-box">
+                <label for="detailAddress" class="label addr-label">상세주소</label>
+                <input type="text" class="input addr-input" id="detailAddress" name="detailAddress">
+            </div>
+
+            <hr class="my-4">
+
+            <div class="detail-profile-box">
+                <label for="businessNumberDisplay" class="label bn-label">사업자등록번호</label>
+                <div class="input-btn-box">
+                    <input type="text" class="input bn-input" id="businessNumberDisplay" inputmode="numeric" placeholder="123-45-67890" maxlength="12">
+                    <button type="button" class="join-btn search-bn-btn" id="verifyBusinessNumberBtn">인증하기</button>
+                </div>
+            </div>
+
+            <input type="hidden" id="businessNumber" name="businessNumber">
+            <input type="hidden" id="verificationToken" name="verificationToken">
+
+            <div class="signup-btn-box">
+                <button type="submit" class="join-btn signup-btn">가입하기</button>
+            </div>
+
+        </form>
+    </div>
+
+    <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+    <script th:src="@{/js/member/addressSearch.js}"></script>
+    <script th:src="@{/js/member/businessNumberVerify.js}"></script>
+    <script th:src="@{/js/member/phoneVerify.js}"></script>
+    <script th:src="@{/js/member/passwordMatch.js}"></script>
+</div>

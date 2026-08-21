@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ko"
+      layout:decorate="~{layout/layout}"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org">
+<div layout:fragment="content">
+  <div class="container">
+    <form action="/test/file/upload" class="my-5" enctype="multipart/form-data" method="post">
+      <div class="input-group">
+        <input class="form-control" id="file" name="file" type="file">
+        <button class="btn btn-outline-secondary" id="fileUploadBtn" type="submit">업로드</button>
+      </div>
+    </form>
+    <div th:if="${FailureMsg != null}" class="alert alert-danger" role="alert">
+      [[${FailureMsg}]]
+    </div>
+    <div th:if="${SuccessMsg != null}" class="alert alert-success" role="alert">
+      [[${SuccessMsg}]]
+    </div>
+    <div class="card" style="width: 18rem;">
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item d-flex" th:each="file: ${fileList}">
+          <div class="ms-2 me-auto">
+            <a class="fw-semibold" th:href="@{/test/file/{uuid}/download(uuid=${file.uuid})}">[[${file.name}]]</a>
+            <div class="text-body-tertiary" style="font-size: 12px;">
+              [[${file.category}]] / [[${file.sizeStr}]]
+            </div>
+            <div th:if="${file.isImage}" class="my-2">
+              <img style="max-height: 150px; max-width:150px; object-fit: contain;"
+                   th:src="@{/test/file/{uuid}(uuid=${file.uuid})}" alt="이미지">
+            </div>
+          </div>
+          <form method="post" th:action="@{/test/file/delete}">
+            <input name="uuid" th:value="${file.uuid}" type="hidden"/>
+            <button class="btn btn-sm btn-danger" type="submit">X</button>
+          </form>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>

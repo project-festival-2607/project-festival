@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ko"
+      layout:decorate="~{layout/layout}"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <th:block layout:fragment="css">
+        <link rel="stylesheet" th:href="@{/css/map/map.css}">
+    </th:block>
+</head>
+
+<div layout:fragment="content">
+
+    <div class="container">
+
+        <!-- 모든 inner는 class="container" 로 맞춤 -->
+        <!-- 이 안에서 작업 -->
+
+        <div class="row g-4">
+
+            <!-- 지도 -->
+            <div class="col-lg-7">
+                <div class="card shadow-sm h-100">
+                    <div class="card-body">
+                        <!-- 검색 -->
+                        <div class="search-box">
+                            <input
+                                    type="text"
+                                    id="keyword"
+                                    placeholder="지역 또는 행사명을 입력하세요">
+
+                            <button id="searchBtn">
+                                검색
+                            </button>
+                        </div>
+                        <!-- 지도 -->
+                        <div id="map"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 축제 목록 -->
+            <div class="col-lg-5">
+                <div class="card shadow-sm h-100">
+                    <div class="card-header fw-bold" id="cardHeaderTitle">
+                        주변 축제 목록
+                    </div>
+
+                    <!-- 1. 평소 상태: 단일 리스트 -->
+                    <div id="defaultListWrapper">
+                        <div id="festivalList" class="accordion accordion-flush festival-list"></div>
+                    </div>
+
+                    <!-- 2. 검색 상태: 검색 결과 리스트 + 지도 근처 리스트 상하 분할 -->
+                    <div id="splitListWrapper" class="d-none">
+                        <!-- 검색 결과 구역 -->
+                        <div class="list-section">
+                            <div class="section-sub-header">🔍 검색 결과</div>
+                            <div id="searchFestivalList" class="accordion accordion-flush sub-festival-list"></div>
+                        </div>
+                        <!-- 지도 근처 구역 -->
+                        <div class="list-section border-top">
+                            <div class="section-sub-header">📍 주변 축제 목록</div>
+                            <div id="nearbyFestivalList" class="accordion accordion-flush sub-festival-list"></div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script th:src="@{|//dapi.kakao.com/v2/maps/sdk.js?appkey=${mapApiKey}&libraries=services,clusterer|}"></script>
+    <script th:src="@{/js/map/map.js}"></script>
+
+</div>

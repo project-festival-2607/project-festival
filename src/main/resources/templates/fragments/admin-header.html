@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+>
+<div style="z-index: 999" th:fragment="admin-header">
+  <!--    style="position: sticky; top: 0; z-index: 1000;"-->
+  <nav class="navbar" data-bs-theme="dark">
+    <div class="dropdown-bg"></div>
+    <div class="container inner">
+      <div class="c-container">
+        <a class="logo" href="/">축!!</a>
+        <div class="header-bar">
+          <ul class="header-nav">
+
+            <li class="nav-item">
+              <a class="nav-link">회원 관리</a>
+              <div class="dropdown-menu-box">
+                <ul class="submenu">
+                  <li><a href="/admin/member/job-seeker">일반 구직자</a></li>
+                  <li><a href="/admin/member/job-equip">전문 구직자</a></li>
+                  <li><a href="/admin/member/recruiter">행사 구인자</a></li>
+                </ul>
+              </div>
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link">결제 및 상품</a>
+              <div class="dropdown-menu-box">
+                <ul class="submenu">
+                  <li><a href="/admin/payment/summary">전체 요약 내역</a></li>
+                  <li class="d-flex gap-1 justify-content-center align-items-center text-white">
+                    <a href="/admin/payment/charge">충전</a>
+                    <a>·</a>
+                    <a href="/admin/payment/use">사용</a>
+                    <a>·</a>
+                    <a href="/admin/payment/refund">환불</a>
+                  </li>
+                  <li><a href="/admin/payment/product">상품 관리</a></li>
+                </ul>
+              </div>
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link">공지 및 문의</a>
+              <div class="dropdown-menu-box">
+                <ul class="submenu">
+                  <li><a href="/admin/board/notice">공지 관리</a></li>
+                  <li><a href="/admin/board/inquiry">문의 관리</a></li>
+                </ul>
+              </div>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link">행사 및 공고</a>
+              <div class="dropdown-menu-box">
+                <ul class="submenu">
+                  <li><a href="/admin/event/festival">행사 관리</a></li>
+                  <li><a href="/admin/event/recruitment">공고 관리</a></li>
+                </ul>
+              </div>
+            </li>
+          </ul>
+        </div>
+        <div class="user-box">
+        </div>
+      </div>
+    </div>
+  </nav>
+</div>

@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="ko"
+      layout:decorate="~{layout/layout}"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block layout:fragment="css">
+        <link rel="stylesheet" th:href="@{/css/recruit/list.css}">
+    </th:block>
+</head>
+
+<div layout:fragment="content" th:with="form=${pagingHandler.form}">
+    <div class="container">
+
+        <div class="recruit-list-head">
+            <h1>모집공고</h1>
+            <p>축제에서 함께 일할 사람을 찾아보세요.</p>
+        </div>
+
+        <form class="recruit-layout" th:action="@{/recruitment/list}" method="get" id="recruitFilterForm"
+              >
+
+            <!-- 구직자/비로그인: 왼쪽 필터 사이드바. 구인자는 등록 버튼만 보고 필터는 보지 않음 -->
+            <aside class="recruit-sidebar">
+                <div class="recruit-sidebar-head">
+                    <span>필터</span>
+                    <a th:href="@{/recruitment/list}" class="recruit-filter-reset">초기화</a>
+                </div>
+
+                <div class="recruit-sidebar-section">
+                    <label>키워드</label>
+                    <input type="text" name="keywords" placeholder="제목/내용 검색" th:value="${form.keywords}">
+                </div>
+
+                <div class="recruit-sidebar-section">
+                    <label>모집인력 종류</label>
+                    <div class="recruit-chip-group" id="categoryChips">
+                        <button type="button" class="recruit-chip" data-value="" th:classappend="${form.category == null} ? 'active'">전체</button>
+                        <button type="button" class="recruit-chip" data-value="INDIVIDUAL" th:classappend="${form.category != null and form.category.name() == 'INDIVIDUAL'} ? 'active'">알바</button>
+                        <button type="button" class="recruit-chip" data-value="FOOD_TRUCK" th:classappend="${form.category != null and form.category.name() == 'FOOD_TRUCK'} ? 'active'">푸드트럭</button>
+                        <button type="button" class="recruit-chip" data-value="EQUIPMENT" th:classappend="${form.category != null and form.category.name() == 'EQUIPMENT'} ? 'active'">장비</button>
+                        <button type="button" class="recruit-chip" data-value="ETC" th:classappend="${form.category != null and form.category.name() == 'ETC'} ? 'active'">기타</button>
+                    </div>
+                    <input type="hidden" name="category" id="filterCategory" th:value="${form.category}">
+                </div>
+
+                <div class="recruit-sidebar-section recruit-sidebar-specific" data-category="INDIVIDUAL">
+                    <label>급여 유형</label>
+                    <div class="recruit-checkbox-group" id="wageTypeRadios">
+                        <div class="form-check">
+                            <input type="radio" class="form-check-input" name="wageType" id="wageTypeHourly" value="HOURLY"
+                                   th:checked="${form.wageType == null or form.wageType.name() == 'HOURLY'}">
+                            <label class="form-check-label" for="wageTypeHourly">시급</label>
+                        </div>
+                        <div class="form-check">
+                            <input type="radio" class="form-check-input" name="wageType" id="wageTypeDaily" value="DAILY"
+                                   th:checked="${form.wageType != null and form.wageType.name() == 'DAILY'}">
+                            <label class="form-check-label" for="wageTypeDaily">일급</label>
+                        </div>
+                        <div class="form-check">
+                            <input type="radio" class="form-check-input" name="wageType" id="wageTypeWeekly" value="WEEKLY"
+                                   th:checked="${form.wageType != null and form.wageType.name() == 'WEEKLY'}">
+                            <label class="form-check-label" for="wageTypeWeekly">주급</label>
+                        </div>
+                        <div class="form-check">
+                            <input type="radio" class="form-check-input" name="wageType" id="wageTypePerTask" value="PER_TASK"
+                                   th:checked="${form.wageType != null and form.wageType.name() == 'PER_TASK'}">
+                            <label class="form-check-label" for="wageTypePerTask">건별</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 푸드트럭(FOOD_TRUCK) 선택 시: 조건 체크박스 -->
+                <div class="recruit-sidebar-section recruit-sidebar-specific" data-category="FOOD_TRUCK">
+                    <label>푸드트럭 조건</label>
+                    <div class="recruit-checkbox-group">
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" name="boothFeeRequired" id="filterBoothFeeRequired" value="true"
+                                   th:checked="${form.boothFeeRequired}">
+                            <label class="form-check-label" for="filterBoothFeeRequired">입점료</label>
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" name="electricityProvided" id="filterElectricityProvided" value="true"
+                                   th:checked="${form.electricityProvided}">
+                            <label class="form-check-label" for="filterElectricityProvided">전기사용</label>
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" name="prepaid" id="filterPrepaid" value="true"
+                                   th:checked="${form.prepaid}">
+                            <label class="form-check-label" for="filterPrepaid">선결제</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="recruit-sidebar-section">
+                    <label for="filterSido">지역</label>
+                    <select name="regionSidoCode" id="filterSido">
+                        <option value="">시/도 전체</option>
+                        <option th:each="sido : ${sidoList}"
+                                th:value="${sido.code}"
+                                th:text="${sido.name}"
+                                th:selected="${sido.code == form.regionSidoCode}"></option>
+                    </select>
+                    <select name="regionSigunguCode" id="filterSigungu" th:disabled="${form.regionSidoCode == null or form.regionSidoCode.isEmpty()}">
+                        <option value="">시/군/구 전체</option>
+                    </select>
+                </div>
+
+                <div class="recruit-sidebar-section">
+                    <label>근무일자</label>
+                    <div class="recruit-sidebar-row">
+                        <input type="date" name="workingStartDate" id="workingStartDate" th:value="${form.workingStartDate}">
+                        <span>~</span>
+                        <input type="date" name="workingEndDate" id="workingEndDate" th:value="${form.workingEndDate}">
+                    </div>
+                </div>
+
+                <div class="recruit-sidebar-section">
+                    <label>근무시간</label>
+                    <div class="recruit-sidebar-row">
+                        <div class="recruit-time-field">
+                            <button type="button" class="recruit-time-trigger" id="workingStartTimeTrigger"
+                                    th:text="${form.workingStartTime != null ? form.workingStartTime : '시간을 선택하세요'}">시간을 선택하세요</button>
+                            <div class="recruit-time-popover" id="workingStartTimePopover" hidden>
+                                <div class="recruit-time-selects">
+                                    <select id="workingStartHour"></select>시
+                                    <select id="workingStartMinute"></select>분
+                                </div>
+                                <button type="button" class="btn btn-sm btn-primary recruit-time-confirm" id="workingStartTimeConfirm">확인</button>
+                            </div>
+                            <input type="hidden" name="workingStartTime" id="workingStartTime" th:value="${form.workingStartTime}">
+                        </div>
+                        <span>~</span>
+                        <div class="recruit-time-field">
+                            <button type="button" class="recruit-time-trigger" id="workingEndTimeTrigger"
+                                    th:text="${form.workingEndTime != null ? form.workingEndTime : '시간을 선택하세요'}">시간을 선택하세요</button>
+                            <div class="recruit-time-popover" id="workingEndTimePopover" hidden>
+                                <div class="recruit-time-selects">
+                                    <select id="workingEndHour"></select>시
+                                    <select id="workingEndMinute"></select>분
+                                </div>
+                                <button type="button" class="btn btn-sm btn-primary recruit-time-confirm" id="workingEndTimeConfirm">확인</button>
+                            </div>
+                            <input type="hidden" name="workingEndTime" id="workingEndTime" th:value="${form.workingEndTime}">
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary recruit-sidebar-apply">필터 적용</button>
+            </aside>
+
+            <div class="recruit-main">
+                <div class="recruit-main-toolbar">
+                    <span th:text="'총 ' + ${pagingHandler.totalElementCount} + '건'"></span>
+                    <select name="listCriteria" id="listCriteria">
+                        <option value="LATEST" th:selected="${form.listCriteria == null or form.listCriteria.name() == 'LATEST'}">최신순</option>
+                        <option value="DEADLINE" th:selected="${form.listCriteria != null and form.listCriteria.name() == 'DEADLINE'}">마감임박순</option>
+                        <option value="BOOKMARK" th:if="${jobSeeker}" th:selected="${form.listCriteria != null and form.listCriteria.name() == 'BOOKMARK'}">찜한순</option>
+                    </select>
+                </div>
+
+                <div class="recruit-card-grid">
+                    <a class="recruit-card" th:each="r : ${pagingHandler.elementList}" th:href="@{/recruitment/{id}(id=${r.recruitmentId})}">
+                        <div class="recruit-card-top">
+                            <span class="recruit-card-emoji" th:switch="${r.category != null ? r.category.name() : ''}">
+                                <span th:case="'INDIVIDUAL'">🙋</span>
+                                <span th:case="'FOOD_TRUCK'">🚚</span>
+                                <span th:case="'EQUIPMENT'">🔧</span>
+                                <span th:case="*">📦</span>
+                            </span>
+
+
+                            <span class="recruit-card-title" th:text="${r.recruitmentTitle}"></span>
+                            <span class="recruit-card-bookmark" th:unless="${recruiter}"
+                                  th:classappend="${r.bookmarked} ? 'active'"
+                                  th:attr="data-id=${r.recruitmentId}"
+                                  th:text="${r.bookmarked} ? '★' : '☆'"
+                                  title="찜하기">☆</span>
+
+                        </div>
+                        <div class="recruit-card-festival" th:text="${r.festivalTitle}"></div>
+                        <div class="recruit-card-location"
+                             th:text="${r.regionSidoName} + ' ' + ${r.regionSigunguName}"></div>
+                        <div class="recruit-card-date">
+                            <span th:text="${r.workingStartDate}"></span>
+                            <span> ~ </span>
+                            <span th:text="${r.workingEndDate}"></span>
+                        </div>
+                        <div class="recruit-card-specific" th:switch="${r.category != null ? r.category.name() : ''}">
+                            <span th:case="'INDIVIDUAL'" th:if="${r.specific != null}">
+                                <span th:switch="${r.specific.wageType != null ? r.specific.wageType.name() : ''}">
+                                    <span th:case="'HOURLY'">시급</span>
+                                    <span th:case="'DAILY'">일급</span>
+                                    <span th:case="'WEEKLY'">주급</span>
+                                    <span th:case="'PER_TASK'">건당</span>
+                                </span>
+                                <span th:if="${r.specific.wageValue != null}" th:text="${#numbers.formatInteger(r.specific.wageValue, 0, 'COMMA')} + '원'"></span>
+                            </span>
+                            <span th:case="'FOOD_TRUCK'" th:if="${r.specific != null}">
+                                <span th:if="${r.specific.prepaid}" class="recruit-badge">선결제</span>
+                                <span th:if="${r.specific.boothFeeRequired}" class="recruit-badge">입점료</span>
+                                <span th:if="${r.specific.electricityProvided}" class="recruit-badge">전기제공</span>
+                            </span>
+                        </div>
+                    </a>
+
+                    <p class="recruit-card-empty" th:if="${pagingHandler.elementList.isEmpty()}">
+                        조건에 맞는 모집공고가 없습니다.
+                    </p>
+                </div>
+
+                <nav class="pageBtn" th:if="${pagingHandler.totalPageCount > 1}">
+                    <div class="pagination justify-content-center rec-pagination">
+                        <li class="page-item rec-page-item" th:if="${pagingHandler.prevBtnActive}">
+                            <button class="rec-page-link" type="submit" name="pageIdx" th:value="${pagingHandler.pageIdx - 1}"> ← </button>
+                        </li>
+                        <li class="page-item rec-page-item" th:each="i : ${#numbers.sequence(pagingHandler.startPageIdx, pagingHandler.endPageIdx)}"
+                            th:classappend="${i == pagingHandler.pageIdx} ? 'active'">
+                            <button class="rec-page-link" type="submit" name="pageIdx" th:value="${i}">[[${i}]]</button>
+                        </li>
+                        <li class="page-item rec-page-item" th:if="${pagingHandler.nextBtnActive}">
+                            <button class="rec-page-link" type="submit" name="pageIdx" th:value="${pagingHandler.pageIdx + 1}"> → </button>
+                        </li>
+                    </div>
+                </nav>
+            </div>
+
+        </form>
+
+        <script th:src="@{/js/recruitment/recruitList.js}"
+                th:attr="data-sido=${form.regionSidoCode}, data-sigungu=${form.regionSigunguCode}, data-job-seeker=${jobSeeker}"></script>
+
+    </div>
+</div>
+</html>

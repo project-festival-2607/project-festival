@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<button
+  th:fragment="sort-button(targetCriteria, criteria, ascending)"
+  class="btn btn-reset btn-th" data-role="update-sort-criteria"
+  th:data-ascending="${criteria eq targetCriteria and ascending == true ? false : true}"
+  th:data-criteria="${criteria eq targetCriteria and ascending == false ? '' : targetCriteria}"
+  type="button">
+  <th:block th:if="${criteria ne targetCriteria}">
+    <th:block th:replace="~{admin/fragments/svg :: sort('sort-icon')}"></th:block>
+  </th:block>
+  <th:block th:if="${criteria eq targetCriteria and ascending == true}">
+    <th:block th:replace="~{admin/fragments/svg :: sort-up('sort-icon')}"></th:block>
+  </th:block>
+  <th:block th:if="${criteria eq targetCriteria and ascending == false}">
+    <th:block th:replace="~{admin/fragments/svg :: sort-down('sort-icon')}"></th:block>
+  </th:block>
+</button>

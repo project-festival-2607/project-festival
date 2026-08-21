@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="ko"
+      layout:decorate="~{layout/layout}"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block layout:fragment="css">
+        <link rel="stylesheet" th:href="@{/css/FAQ/faq.css}">
+    </th:block>
+</head>
+<div layout:fragment="content">
+    <div class="container">
+        <div class="faq-header">
+            <h1>자주하는질문 (FAQ)</h1>
+            <p>궁금하신 내용을 빠르게 확인해보세요. 원하는 답을 못 찾으셨다면 1:1문의를 이용해주세요.</p>
+        </div>
+
+
+
+
+
+<!--    회원가입    ----------------------------->
+        <div class="faq-category">
+            <div class="faq-category-title">회원가입 / 로그인</div>
+
+            <details class="faq-item">
+                <summary>회원가입은 어떻게 하나요?</summary>
+                <div class="faq-answer">우측 상단 '회원가입' 버튼을 눌러 이메일과 기본 정보를 입력하시면 가입이 완료됩니다.</div>
+            </details>
+
+            <details class="faq-item">
+                <summary>비밀번호를 잊어버렸어요.</summary>
+                <div class="faq-answer">로그인 화면의 '비밀번호 찾기'에서 가입 시 등록한 이메일로 재설정 링크를 받으실 수 있습니다.</div>
+            </details>
+
+            <details class="faq-item">
+                <summary>회원 탈퇴는 어떻게 하나요?</summary>
+                <div class="faq-answer">마이페이지 &gt; 회원정보 &gt; 회원 탈퇴 메뉴에서 신청하실 수 있습니다. 진행 중인 지원 건이 있는 경우 처리 완료 후 탈퇴가 가능합니다.</div>
+            </details>
+        </div>
+<!----------------------------------------------------------------------->
+
+
+
+
+
+
+
+
+
+
+
+
+<!--        지원모집공고-->
+        <div class="faq-category">
+            <div class="faq-category-title">지원 / 모집공고</div>
+
+            <details class="faq-item">
+                <summary>모집공고에는 어떻게 지원하나요?</summary>
+                <div class="faq-answer">원하는 모집공고 상세 페이지에서 '지원하기' 버튼을 누르면 간단한 정보 입력 후 지원이 완료됩니다.</div>
+            </details>
+
+            <details class="faq-item">
+                <summary>지원을 취소하고 싶어요.</summary>
+                <div class="faq-answer">마이페이지 &gt; 지원 현황에서 취소하실 수 있습니다. 근무 시작일이 임박한 경우 취소 정책에 따라 제한될 수 있습니다.</div>
+            </details>
+
+            <details class="faq-item">
+                <summary>지원 현황은 어디서 확인하나요?</summary>
+                <div class="faq-answer">마이페이지 &gt; 지원 현황에서 지원한 공고의 진행 상태(대기/승인/거절)를 확인하실 수 있습니다.</div>
+            </details>
+        </div>
+<!---------------------------------------------------------------------------------------------------------------------->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--        정산 환불-->
+        <div class="faq-category">
+            <div class="faq-category-title">정산 / 환불</div>
+
+            <details class="faq-item">
+                <summary>급여(정산)는 언제 지급되나요?</summary>
+                <div class="faq-answer">근무 종료 후 영업일 기준 3~5일 이내에 등록하신 계좌로 정산됩니다.</div>
+            </details>
+
+            <details class="faq-item">
+                <summary>취소 시 환불 규정이 궁금해요.</summary>
+                <div class="faq-answer">근무 시작 3일 전까지 취소 시 전액 환불, 1~2일 전 취소 시 50% 환불되며, 근무 당일 취소는 환불이 불가합니다. 자세한 내용은 공지사항을 참고해주세요.</div>
+            </details>
+        </div>
+<!------------------------------------------------------------------------------------------------>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--        모집공고-------------------------------------------------------------------------------->
+        <div class="faq-category">
+            <div class="faq-category-title">모집공고 등록 (업체용)</div>
+
+            <details class="faq-item">
+                <summary>모집공고는 어떻게 등록하나요?</summary>
+                <div class="faq-answer">사업자 회원으로 로그인 후 '모집공고 등록' 메뉴에서 근무 조건과 상세 내용을 입력하시면 등록됩니다.</div>
+            </details>
+
+            <details class="faq-item">
+                <summary>등록한 공고를 수정하거나 삭제하고 싶어요.</summary>
+                <div class="faq-answer">마이페이지 &gt; 등록한 공고 목록에서 수정 및 삭제가 가능합니다.</div>
+            </details>
+        </div>
+<!------------------------------------------------------------------------------------------------------------------->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--        기타------------------------------------------------------------------>
+        <div class="faq-category">
+            <div class="faq-category-title">기타</div>
+
+            <details class="faq-item">
+                <summary>여기서 원하는 답을 못 찾았어요.</summary>
+                <div class="faq-answer">1:1문의 게시판을 이용해주시면 담당자가 순차적으로 답변드립니다.</div>
+            </details>
+        </div>
+    </div>
+<!--    ----------------------------------------------------------------------------------->
+
+
+
+
+
+
+
+
+
+
+</div>
+</html>

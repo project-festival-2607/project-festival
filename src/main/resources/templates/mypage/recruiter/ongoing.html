@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ko"
+      layout:decorate="~{layout/layout}"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org">
+<div layout:fragment="content">
+    <link rel="stylesheet" th:href="@{/css/mypage/recruiter/ongoing.css}">
+    <div class="container">
+        <!--                모든 inner는 class="container" 로 맞춤        -->
+        <!--        이 안에서 작업        -->
+
+        <div class="ongoing-page">
+            <h1>공고 목록</h1>
+
+            <!-- 등록된 공고가 없는 경우 -->
+            <div class="ongoing-empty" th:if="${#lists.isEmpty(recruitments)}">
+                <p>현재 등록된 모집공고가 없습니다.</p>
+            </div>
+
+            <!-- 등록된 모집공고가 있는 경우 -->
+            <div class="ongoing-list" th:unless="${#lists.isEmpty(recruitments)}">
+                <div class="ongoing-card" th:each="recruitment : ${recruitments}">
+
+                    <h2 th:text="${recruitment.title}"> 모집공고 제목 </h2>
+
+                    <div class="ongoing-info">
+                        <p>
+                            행사 기간 :
+                            <span th:text="${recruitment.workingStartDate}"> 시작일 </span>
+                            ~
+                            <span th:text="${recruitment.workingEndDate}"> 종료일 </span>
+                        </p>
+
+                        <p>
+                            근무 시간 :
+                            <span th:text="${recruitment.workingStartTime}"> 시작 시간 </span>
+                            ~
+                            <span th:text="${recruitment.workingEndTime}"> 종료 시간 </span>
+                        </p>
+
+                        <p>
+                            근무 장소 : <span th:if="${recruitment.workingLocation != null}"
+                                          th:text="${recruitment.workingLocation}"></span><span
+                                th:if="${recruitment.workingLocation == null && recruitment.festival != null}"
+                                th:text="${recruitment.festival.address}"></span>
+                        </p>
+
+                        <p>
+                            모집 인원 :
+                            <span th:text="${recruitment.recruitmentCount}"> 모집 인원 </span> 명
+                        </p>
+
+                        <a class="applicant-btn"
+                           th:href="@{/application/recruiter/list(recruitmentId=${recruitment.id})}">
+                            지원자 목록
+                        </a>
+
+                        <span class="ongoing-status"
+                              th:if="${recruitment.festival != null
+                              && recruitment.festival.endDate != null
+                              && !T(java.time.LocalDate).now().isAfter(recruitment.festival.endDate)}">
+                              ● 진행 중
+                        </span>
+                        <span class="ongoing-status closed"
+                              th:if="${recruitment.festival != null
+                              && recruitment.festival.endDate != null
+                              && T(java.time.LocalDate).now().isAfter(recruitment.festival.endDate)}">
+                            ● 마감
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="ongoing-back">
+                <a th:href="@{/mypage/recruiter}"> 마이페이지로 돌아가기 </a>
+            </div>
+        </div>
+    </div>
+</div>

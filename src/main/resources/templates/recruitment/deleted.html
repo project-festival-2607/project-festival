@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>삭제된 공고</title>
+</head>
+<body>
+<script th:inline="javascript">
+    alert("삭제된 게시글입니다.");
+    if (document.referrer) {
+        history.back();
+    } else {
+        location.href = "/recruitment/list";
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,384 @@
+/* =========================================
+   포인트 환불 모달
+   ========================================= */
+
+/* 모달 뒤 배경 */
+.point-refund-backdrop {
+    display: none;
+
+    position: fixed;
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 100%;
+
+    background: rgba(0, 0, 0, 0.45);
+
+    justify-content: center;
+    align-items: center;
+
+    z-index: 99999;
+
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+
+/* =========================================
+   모달 본체
+   ========================================= */
+
+.point-refund-modal {
+    width: 480px;
+    max-width: 100%;
+
+    background: #ffffff;
+
+    border-radius: 16px;
+
+    padding: 28px;
+
+    box-sizing: border-box;
+
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.18);
+
+    animation: pointRefundModalOpen 0.2s ease-out;
+}
+
+
+/* 모달 등장 애니메이션 */
+@keyframes pointRefundModalOpen {
+
+    from {
+        opacity: 0;
+        transform: translateY(10px) scale(0.98);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+
+}
+
+
+/* =========================================
+   헤더
+   ========================================= */
+
+.point-refund-header {
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    margin-bottom: 24px;
+}
+
+
+.point-refund-title {
+    margin: 0;
+
+    font-size: 22px;
+    font-weight: 700;
+
+    color: #191f28;
+}
+
+
+/* X 버튼 */
+.point-refund-close {
+    width: 36px;
+    height: 36px;
+
+    border: none;
+    background: transparent;
+
+    border-radius: 8px;
+
+    font-size: 28px;
+    line-height: 1;
+
+    color: #8b95a1;
+
+    cursor: pointer;
+
+    transition: background 0.15s ease,
+    color 0.15s ease;
+}
+
+
+.point-refund-close:hover {
+    background: #f2f4f6;
+    color: #191f28;
+}
+
+
+/* =========================================
+   환불 가능 포인트
+   ========================================= */
+
+.point-refund-summary {
+    padding: 18px;
+
+    margin-bottom: 24px;
+
+    background: #f5f7fa;
+
+    border-radius: 10px;
+
+    text-align: center;
+
+    font-size: 16px;
+
+    color: #4e5968;
+}
+
+
+.point-refund-summary b {
+    margin: 0 3px;
+
+    font-size: 20px;
+
+    color: #3182f6;
+}
+
+
+/* =========================================
+   입력 영역
+   ========================================= */
+
+.point-refund-input-area {
+    position: relative;
+
+    margin-bottom: 10px;
+}
+
+
+.point-refund-input-area label {
+    display: block;
+
+    margin-bottom: 8px;
+
+    font-size: 14px;
+    font-weight: 600;
+
+    color: #333d4b;
+}
+
+
+.point-refund-input-area input {
+    width: 100%;
+
+    height: 52px;
+
+    padding: 0 45px 0 15px;
+
+    box-sizing: border-box;
+
+    border: 1px solid #d1d6db;
+
+    border-radius: 9px;
+
+    font-size: 16px;
+
+    color: #191f28;
+
+    outline: none;
+
+    transition: border-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+
+.point-refund-input-area input:focus {
+    border-color: #3182f6;
+
+    box-shadow: 0 0 0 3px rgba(49, 130, 246, 0.12);
+}
+
+
+.point-refund-input-area input::placeholder {
+    color: #9ca3af;
+}
+
+
+/* 숫자 input 화살표 */
+.point-refund-input-area input::-webkit-inner-spin-button,
+.point-refund-input-area input::-webkit-outer-spin-button {
+    opacity: 1;
+}
+
+
+/* P 표시 */
+.point-refund-unit {
+    position: absolute;
+
+    right: 15px;
+    bottom: 15px;
+
+    font-size: 15px;
+    font-weight: 600;
+
+    color: #8b95a1;
+
+    pointer-events: none;
+}
+
+
+/* =========================================
+   에러 메시지
+   ========================================= */
+
+.point-refund-error {
+    margin-top: 10px;
+    margin-bottom: 10px;
+
+    padding: 11px 13px;
+
+    background: #fff0f0;
+
+    border-radius: 8px;
+
+    font-size: 14px;
+
+    line-height: 1.4;
+
+    color: #f04452;
+}
+
+
+/* =========================================
+   환불 버튼
+   ========================================= */
+
+.point-refund-footer {
+    margin-top: 20px;
+}
+
+
+.point-refund-confirm-btn {
+    width: 100%;
+
+    height: 52px;
+
+    border: none;
+
+    border-radius: 9px;
+
+    background: #3182f6;
+
+    color: #ffffff;
+
+    font-size: 16px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition: background 0.15s ease,
+    transform 0.05s ease;
+}
+
+
+.point-refund-confirm-btn:hover {
+    background: #1b64da;
+}
+
+
+.point-refund-confirm-btn:active {
+    transform: scale(0.99);
+}
+
+
+.point-refund-confirm-btn:disabled {
+    background: #b8c0cc;
+
+    cursor: not-allowed;
+}
+
+
+/* =========================================
+   환불 성공 화면
+   ========================================= */
+
+.point-refund-success {
+    text-align: center;
+
+    padding: 24px 10px 10px;
+}
+
+
+.point-refund-success-icon {
+    display: flex;
+
+    width: 60px;
+    height: 60px;
+
+    margin: 0 auto 16px;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: #e8f3ff;
+
+    color: #3182f6;
+
+    font-size: 32px;
+    font-weight: 700;
+}
+
+
+.point-refund-success h4 {
+    margin: 0 0 12px;
+
+    font-size: 20px;
+
+    color: #191f28;
+}
+
+
+.point-refund-success p {
+    margin: 6px 0;
+
+    color: #4e5968;
+
+    line-height: 1.5;
+}
+
+
+/* 환불 완료 후 클릭 안내 */
+.point-refund-close-guide {
+    margin-top: 20px !important;
+
+    font-size: 13px;
+
+    color: #8b95a1 !important;
+}
+
+
+/* =========================================
+   모바일 대응
+   ========================================= */
+
+@media (max-width: 600px) {
+
+    .point-refund-backdrop {
+        padding: 15px;
+    }
+
+    .point-refund-modal {
+        width: 100%;
+
+        padding: 22px;
+
+        border-radius: 14px;
+    }
+
+    .point-refund-title {
+        font-size: 20px;
+    }
+
+}

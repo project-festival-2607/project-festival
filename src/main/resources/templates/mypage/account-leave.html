@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ko"
+      layout:decorate="~{layout/layout}"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block layout:fragment="css">
+        <link rel="stylesheet" th:href="@{/css/member/login.css}">
+    </th:block>
+</head>
+<div layout:fragment="content">
+    <div class="container login-container">
+        <h1 class="login-h1">회원탈퇴</h1>
+
+        <div class="p-3 mb-3" style="height: 200px; overflow-y: auto; font-size: 14px; color: #dc3545">
+            <p class="text-muted mb-0">
+                회원탈퇴 시 계정 정보 및 이용 기록이 삭제되며, 복구할 수 없습니다.
+            </p>
+        </div>
+
+        <div class="form-check mb-4">
+            <input type="checkbox" class="form-check-input" id="agreeTerms">
+            <label class="form-check-label" for="agreeTerms" style="color: #dc3545; font-size: 14px;">
+                위 내용에 동의합니다.
+            </label>
+        </div>
+
+        <div id="confirmSection" style="display: none;">
+            <div class="mb-3">
+                <input type="text" class="login-input" id="username" th:value="${username}" disabled>
+            </div>
+
+            <div th:if="${!socialSignUp}" class="mb-3">
+                <input type="password" class="login-input" id="password" name="password" placeholder="비밀번호입력" required>
+            </div>
+
+            <div th:if="${socialSignUp}" class="mb-3">
+                <p class="text-muted mb-2">소셜회원은 비밀번호를 입력하지 않으셔도 됩니다.</p>
+                <input type="text" class="login-input" id="confirmName" name="confirmName" placeholder="이름확인" required>
+            </div>
+
+            <button type="button" id="withdrawBtn" class="btn btn-danger w-100" style="font-size: 14px;">탈퇴</button>
+        </div>
+    </div>
+    <script th:src="@{/js/mypage/accountLeave.js}"></script>
+</div>

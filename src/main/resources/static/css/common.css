@@ -1,0 +1,313 @@
+@font-face {
+    font-family: 'Pretendard';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/pretendard@1.0/Pretendard-Thin.woff2') format('woff2');
+    font-weight: 100;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Pretendard';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/pretendard@1.0/Pretendard-ExtraLight.woff2') format('woff2');
+    font-weight: 200;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Pretendard';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/pretendard@1.0/Pretendard-Light.woff2') format('woff2');
+    font-weight: 300;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Pretendard';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/pretendard@1.0/Pretendard-Regular.woff2') format('woff2');
+    font-weight: 400;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Pretendard';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/pretendard@1.0/Pretendard-Medium.woff2') format('woff2');
+    font-weight: 500;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Pretendard';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/pretendard@1.0/Pretendard-SemiBold.woff2') format('woff2');
+    font-weight: 600;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Pretendard';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/pretendard@1.0/Pretendard-Bold.woff2') format('woff2');
+    font-weight: 700;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Pretendard';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/pretendard@1.0/Pretendard-ExtraBold.woff2') format('woff2');
+    font-weight: 800;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Pretendard';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/pretendard@1.0/Pretendard-Black.woff2') format('woff2');
+    font-weight: 900;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Gunhamimalmunteuyeot';
+    src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/2607131613@gfcgunhamitalks/gfcgunhamitalks/GFCGunhamiTalks.woff2') format('woff2');
+    font-weight: 400;
+    font-display: swap;
+}
+
+
+@font-face {
+    font-family: 'KblJumpExtended';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2601-5@1.0/KBLJump_EB_ExtendedTTF.woff2') format('woff2');
+    font-weight: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Cafe24ProSlim';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/2511-1@1.0/Cafe24PROSlim-Regular.woff2') format('woff2');
+    font-weight: 400;
+    font-display: swap;
+}
+
+:root {
+    --theme-main-color: var(--bs-danger);
+    --theme-main-color-rgb: var(--bs-danger-rgb);
+    --theme-main-color-subtle: var(--bs-danger-text-emphasis);
+}
+
+* {
+    font-family: 'Pretendard';
+    font-weight: 600;
+}
+
+a, a * {
+    text-decoration: none !important;
+}
+
+ul * {
+    list-style: none !important;
+}
+
+/* ------------------ HEADER ------------------*/
+
+.logo {
+    font-family: 'Gunhamimalmunteuyeot';
+    color: #FEFEFE;
+    font-size: 45px;
+    margin-right: 50px;
+    /*-webkit-text-stroke: 1px #2C2C2C;*/
+}
+
+.c-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    z-index: 2;
+}
+
+.navbar {
+    height: 80px;
+    transition: height 0.3s ease;
+    overflow: visible;
+    margin-bottom: 40px;
+    background: var(--theme-main-color);
+}
+
+.header-bar > .header-nav {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+    margin: 0;
+    padding: 0;
+    align-items: center;
+
+    transition: gap 0.3s ease;
+}
+
+.nav-item {
+    position: relative;
+}
+
+.nav-item > .nav-link {
+    color: #FEFEFE;
+    padding: 8px 15px;
+    display: inline-block;
+    transition: 0.3s ease;
+    border-radius: 20px;
+    font-size: 13px;
+}
+
+.nav-item > .nav-link:hover {
+    background: #2C2C2C;
+    color: #FEFEFE;
+}
+
+.dropdown-menu-box {
+    position: absolute;
+    top: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 150px;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+    padding-top: 15px;
+}
+
+.navbar:hover .dropdown-menu-box {
+    opacity: 1;
+    visibility: visible;
+}
+
+.submenu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    text-align: center;
+}
+
+.submenu li a {
+    color: #FEFEFE;
+    font-size: 12px;
+    transition: 0.3s ease;
+    display: block;
+    padding: 4px 0;
+}
+
+.submenu li a:hover {
+    color: #FEFEFE;
+    text-shadow: 0px 0px 2px #FEFEFE;
+    text-decoration: none;
+}
+
+.dropdown-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 0;
+    background-color: var(--theme-main-color);
+    transition: height 0.3s ease;
+    overflow: hidden;
+    z-index: 1;
+}
+
+.navbar:hover .dropdown-bg {
+    height: 210px;
+    box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.2);
+}
+
+.navbar:hover .header-nav {
+    gap: 50px;
+}
+
+.user-box {
+    display: flex;
+    justify-content: flex-end;
+    margin-left: auto;
+}
+
+.user-box .user-sub {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    margin: 0;
+    padding: 0;
+}
+
+.user-box .user-sub li a {
+    color: var(--theme-main-color);
+    transition: 0.3s ease;
+    border-radius: 20px;
+    background: #FEFEFE;
+    font-size: 13px;
+}
+
+.user-box .user-sub li a:hover {
+    color: var(--theme-main-color);
+}
+
+.user-sub .nav-link {
+    color: #FEFEFE;
+    border: 1px solid #FEFEFE;
+    padding: 8px 15px;
+    display: inline-block;
+    transition: 0.3s ease;
+}
+
+.user-sub .nav-link:hover {
+    background: #2C2C2C;
+    color: #FEFEFE;
+}
+
+/* 반응형 대응 */
+
+@media (max-width: 767px){
+
+}
+
+/* ------------------ FOOTER ------------------*/
+
+.f-footer {
+    padding: 60px 0;
+    background: #FEFEFE;
+    z-index: 10;
+}
+
+.footer-bar .footer-info {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    font-size: 13px;
+}
+
+.footer-bar .footer-info > div {
+    background: #2C2C2C;
+    border: 1px solid #2C2C2C;
+    padding: 8px 10px;
+    border-radius: 50px;
+}
+
+.footer-bar .footer-info > div > a {
+    color: #FEFEFE;
+}
+
+.footer-social {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.footer-social > .social-add {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+}
+
+.footer-social > .social-add > .add-icon {
+    border: 1px solid #2C2C2C;
+    padding: 5px 10px;
+    border-radius: 50px;
+}

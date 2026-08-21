@@ -1,0 +1,188 @@
+/* ==================== HEADER ==================== */
+
+:root {
+  --theme-main-color: var(--bs-dark);
+  --theme-main-color-rgb: var(--bs-dark-rgb);
+  --theme-main-color-subtle: var(--bs-dark-text-emphasis);
+}
+
+.navbar .nav-link {
+  font-size: 15px;
+}
+
+ul.submenu {
+  gap: 4px;
+}
+
+/* ==================== BADGE ==================== */
+
+.badge {
+  font-weight: 500 !important;
+  color: #fff;
+}
+
+.badge.general {
+  background-color: #fafafa;
+  color: var(--bs-secondary-color);
+}
+
+
+.badge.member-status-suspended,
+.badge.notice-highlight,
+.badge.refund-failed,
+.badge.payment-aborted,
+.badge.payment-expired,
+.badge.payment-record-type-refund {
+  background-color: var(--bs-danger);
+}
+
+.badge.member-status-dormant,
+.badge.inquiry-not-replied,
+.badge.recruitment-status-draft,
+.badge.refund-requested,
+.badge.payment-canceled,
+.badge.payment-partial-canceled {
+  background-color: var(--bs-secondary);
+}
+
+.badge.payment-ready,
+.badge.payment-in-progress,
+.badge.payment-waiting-for-deposit,
+.badge.payment-record-type-use {
+  background-color: var(--bs-primary);
+}
+
+.badge.member-status-active,
+.badge.inquiry-replied,
+.badge.recruitment-status-recruiting,
+.badge.refund-completed,
+.badge.product-on-sale,
+.badge.payment-done,
+.badge.payment-record-type-charge {
+  background-color: var(--bs-success);
+}
+
+.badge.recruitment-status-paused {
+  background-color: var(--bs-warning);
+  color: var(--bs-dark);
+}
+
+.badge.member-status-deleted,
+.badge.recruitment-status-closed,
+.badge.refund-canceled,
+.badge.product-sale-ended{
+  background-color: var(--bs-dark);
+}
+
+
+
+/* ==================== MISCELLANEOUS ==================== */
+
+.tooltip-icon,
+.unique-id-icon,
+.copy-icon{
+  display: block;
+  width: 13px;
+  height: 13px;
+}
+
+.alert-icon {
+  width: 1rem;
+  height: 1rem;
+  margin: 0.1rem 0.25rem;
+}
+
+.alert {
+  --bs-alert-padding-x: 0.5rem;
+  --bs-alert-padding-y: 0.5rem;
+  font-size: 0.8rem;
+}
+
+.alert * {
+  font-weight: 400;
+}
+
+.alert strong {
+  font-weight: 700;
+  text-decoration: underline;
+}
+
+a[data-bs-toggle="tooltip"] {
+  color: inherit;
+}
+
+.tooltip-inner {
+  font-size: 90%;
+  font-weight: 500;
+  max-width: 400px;
+}
+
+.dropdown-menu{
+  --bs-dropdown-padding-y: .25rem;
+  --bs-dropdown-item-padding-y: .15rem;
+  font-size: 13px;
+
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.dropdown-btn-left {
+  border: var(--bs-border-width) solid var(--bs-border-color);
+  border-right: 0 none;
+  width: 100px;
+}
+
+.dropdown-btn-right {
+  border: var(--bs-border-width) solid var(--bs-border-color);
+  border-left: 0 none;
+}
+
+.dropdown-no-caret::after {
+  display: none;
+}
+
+.border-radius-end {
+  border-top-right-radius: var(--bs-border-radius-sm) !important;
+  border-bottom-right-radius: var(--bs-border-radius-sm) !important;
+}
+
+.page-size-selector .dropdown-btn-left {
+  width: 60px;
+}
+
+.btn-reset {
+  background: transparent;
+  border: none;
+  padding: 0;
+  outline: none;
+  box-shadow: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.min-width-0 {
+  min-width: 0;
+}
+
+.text-ellipsis-with-suffix {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+}
+
+.ellipsis-main {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ellipsis-suffix {
+  flex-shrink: 0;
+}
+
+.new-window-icon {
+  width: 10px;
+  height: 10px;
+}

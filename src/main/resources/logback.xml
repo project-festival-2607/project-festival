@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<configuration>
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <!-- encoders are assigned the type
+             ch.qos.logback.classic.encoder.PatternLayoutEncoder by default -->
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} %logger{36} -%kvp- %msg%n</pattern>
+        </encoder>
+    </appender>
+    <!--  애플리케이션 로그 -->
+    <logger name="com.example.boot" level="INFO" />     <!-- 사용자 로그 -->
+    <logger name="org.springframework" level="INFO" />  <!-- Spring 로그 -->
+    <logger name="jdbc.sqlonly" level="INFO" />         <!-- SQL 문장 출력 -->
+    <logger name="jdbc.resultsettable" level="INFO" />  <!-- 결과 테이블 출력 -->
+    <logger name="jdbc.sqltiming" level="OFF" />        <!-- SQL 실행 시간 출력 끔 -->
+    <logger name="jdbc.audit" level="OFF" />            <!-- JDBC 내부 호출 로그 출력 끔 -->
+    <logger name="jdbc.resultset" level="OFF" />        <!-- resultset 데이터를 한 줄씩 로깅 출력 끔 -->
+    <logger name="jdbc.connection" level="OFF" />       <!-- connection 열고 닫는 로깅 출력 끔 -->
+
+    <!-- 전체 기본 로그 레벨 설정 -->
+    <root level="INFO">
+        <appender-ref ref="STDOUT"/>
+    </root>
+</configuration>

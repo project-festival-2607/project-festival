@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="ko"
+      layout:decorate="~{layout/admin-layout}"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+  <th:block layout:fragment="css">
+    <link rel="stylesheet" th:href="@{/css/admin/result-fragment.css}">
+    <link rel="stylesheet" th:href="@{/css/admin/common.css}">
+    <link rel="stylesheet" th:href="@{/css/admin/search-form.css}">
+  </th:block>
+</head>
+<div layout:fragment="content">
+  <div class="container admin-container">
+    <form id="form" method="get"
+          th:action="@{/admin/member/job-seeker}">
+      <div class="mb-3">
+        <div class="admin-search-form">
+          <th:block th:replace="~{admin/fragments/search-form :: keyword(
+            ${keywordOptions}, ${form})}"></th:block>
+          <th:block th:replace="~{admin/fragments/search-form ::date-range(
+            ${dateRangeOptions}, ${dateRangeAutofillOptions}, ${form})}"></th:block>
+        </div>
+        <th:block th:replace="~{admin/fragments/search-form :: search-buttons}"></th:block>
+      </div>
+      <div id="result">
+      </div>
+    </form>
+  </div>
+  <!-- suspendMemberModal -->
+  <div aria-hidden="true" class="modal fade"
+       data-role="suspendMember" id="suspendMemberModal"
+       tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div th:replace="~{admin/fragments/modal :: modal-header('계정 정지')}"></div>
+        <div class="modal-body">
+          <div
+            th:replace="~{admin/fragments/modal :: modal-member-info(${suspendMemberInfo})}"></div>
+          <div class="mb-3">
+            <label class="form-label" for="suspensionReason">정지 사유</label>
+            <div class="input-group" data-member-info data-member-field="suspendedReason">
+              <input class="form-control form-control-sm" data-load-here id="suspensionReason"
+                     type="text">
+            </div>
+          </div>
+        </div>
+        <div th:replace="~{admin/fragments/modal :: modal-footer('danger', '저장')}"></div>
+      </div>
+    </div>
+  </div>
+  <!-- unsuspendMemberModal -->
+  <div aria-hidden="true" class="modal fade"
+       data-role="unsuspendMember" id="unsuspendMemberModal"
+       tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div th:replace="~{admin/fragments/modal :: modal-header('계정 정지 해제')}"></div>
+        <div class="modal-body">
+          <div
+            th:replace="~{admin/fragments/modal :: modal-member-info(${unsuspendMemberInfo})}"></div>
+        </div>
+        <div th:replace="~{admin/fragments/modal :: modal-footer('danger', '정지 해제')}"></div>
+      </div>
+    </div>
+  </div>
+  <!-- removePhoneVerificationModal -->
+  <div aria-hidden="true" class="modal fade"
+       data-role="removePhoneVerification" id="removePhoneVerificationModal"
+       tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div th:replace="~{admin/fragments/modal :: modal-header('휴대전화번호 인증 삭제')}"></div>
+        <div class="modal-body">
+          <div
+            th:replace="~{admin/fragments/modal :: modal-member-info(${removePhoneVerificationInfo})}"></div>
+        </div>
+        <div th:replace="~{admin/fragments/modal :: modal-footer('danger', '인증 삭제')}"></div>
+      </div>
+    </div>
+  </div>
+  <!-- addPhoneWithVerificationModal -->
+  <div aria-hidden="true" class="modal fade"
+       data-role="addPhoneWithVerification" id="addPhoneWithVerificationModal"
+       tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div th:replace="~{admin/fragments/modal :: modal-header('휴대전화 인증 추가')}"></div>
+        <div class="modal-body">
+          <div
+            th:replace="~{admin/fragments/modal :: modal-member-info(${addPhoneWithVerificationInfo})}"></div>
+          <div class="mb-3">
+            <label class="form-label" for="addPhoneWithVerificationPhone">새 휴대전화 번호</label>
+            <div class="input-group">
+              <input class="form-control form-control-sm" id="addPhoneWithVerificationPhone" type="text">
+            </div>
+          </div>
+          <div class="mb-3">
+            <label class="form-label" for="addPhoneWithVerificationPhoneVerify">새 휴대전화 번호 확인</label>
+            <div class="input-group">
+              <input class="form-control form-control-sm" id="addPhoneWithVerificationPhoneVerify" type="text">
+            </div>
+          </div>
+          <div class="alert alert-light d-flex align-items-start" role="alert">
+            <div th:replace="~{admin/fragments/svg :: notification('alert-icon')}"></div>
+            <div>
+              "인증 추가" 버튼을 누르면 <strong>인증 과정 없이</strong> 등록됩니다.<br/>
+              "휴대전화번호 인증이 유효하지 않음" 사유의 정지는 별도로 해제해야합니다.
+            </div>
+          </div>
+        </div>
+        <div th:replace="~{admin/fragments/modal :: modal-footer('success', '인증 추가')}"></div>
+      </div>
+    </div>
+  </div>
+  <!-- addBusinessRegistrationModal -->
+  <div aria-hidden="true" class="modal fade"
+       data-role="addBusinessRegistration" id="addBusinessRegistrationModal"
+       tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div th:replace="~{admin/fragments/modal :: modal-header('사업자등록번호 인증 추가')}"></div>
+        <div class="modal-body">
+          <div
+            th:replace="~{admin/fragments/modal :: modal-member-info(${addBusinessRegistrationInfo})}"></div>
+          <div class="mb-3">
+            <label class="form-label" for="addPhoneWithVerificationPhone">새 사업자등록번호</label>
+            <div class="input-group">
+              <input class="form-control form-control-sm" id="addBusinessRegistrationBusinessNumber" type="text">
+            </div>
+          </div>
+          <div class="mb-3">
+            <label class="form-label" for="addPhoneWithVerificationPhoneVerify">새 사업자등록번호 확인</label>
+            <div class="input-group">
+              <input class="form-control form-control-sm" id="addBusinessRegistrationBusinessNumberVerify" type="text">
+            </div>
+          </div>
+          <div class="alert alert-light d-flex align-items-start mx-2" role="alert">
+            <div th:replace="~{admin/fragments/svg :: notification('alert-icon')}"></div>
+            <div>
+              "인증 추가" 버튼을 누르면 <strong>인증 과정 없이</strong> 등록되며,<br/>
+              등록 성공 시 <strong>사용자의 역할이 "전문 구직자"로 변경</strong>됩니다.<br/>
+              사업자등록번호 인증 등록 후에는 <a
+                target="_blank"
+                class="link-danger link-offset-2 fw-semibold
+                       link-underline link-underline-opacity-0 link-underline-opacity-100
+                       d-inline-flex align-items-center gap-1"
+                href="/admin/member/job-equip">
+                <span>전문 구직자 조회 페이지</span>
+                <th:block th:replace="~{admin/fragments/svg :: new-window('new-window-icon')}"></th:block>
+              </a> 에서<br/>해당 사용자를 관리할 수 있습니다.
+            </div>
+          </div>
+        </div>
+        <div th:replace="~{admin/fragments/modal :: modal-footer('success', '인증 추가')}"></div>
+      </div>
+    </div>
+  </div>
+  <script th:src="@{/js/admin/initialize-search-form.js}"></script>
+  <script th:src="@{/js/admin/load-result.js}"></script>
+  <script th:src="@{/js/admin/table-th-filter.js}"></script>
+  <script th:src="@{/js/admin/member/modal.js}"></script>
+  <script>
+    loadResult(window.location.pathname, {forceParams: new URLSearchParams(window.location.search)});
+  </script>
+</div>

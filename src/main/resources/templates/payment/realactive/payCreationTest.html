@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>결제 생성 테스트</title>
+    <link rel="stylesheet" href="/css/payment/style.css">
+    <!-- 토스페이먼츠 SDK -->
+    <script src="https://js.tosspayments.com/v2/standard"></script>
+
+    <style>
+        .modal-backdrop {
+            display: none;
+            position: fixed;
+            z-index: 9999;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: white;
+            width: 460px;
+            max-width: 90%;
+            max-height: 85vh;
+            overflow-y: auto;
+            padding: 30px;
+            border-radius: 12px;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .close-btn {
+            font-size: 24px;
+            border: none;
+            background: none;
+            cursor: pointer;
+            color: #8b95a1;
+        }
+
+        .product-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            padding: 14px 16px;
+            margin-bottom: 8px;
+            border: 2px solid #e5e8eb;
+            border-radius: 8px;
+            background: #fff;
+            cursor: pointer;
+            text-align: left;
+            font-size: 16px;
+            transition: 0.15s;
+        }
+
+        .product-item:hover {
+            background: #f5f7fa;
+        }
+
+        .product-item.selected {
+            border-color: #3182f6;
+            background: #eef4ff;
+        }
+
+        .modal-footer {
+            margin-top: 20px;
+        }
+
+        #toPaymentBtn,
+        #finalPayBtn {
+            width: 100%;
+            height: 52px;
+            border: none;
+            border-radius: 8px;
+            background: #3182f6;
+            color: #fff;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        #toPaymentBtn:disabled {
+            background: #d1d6db;
+            cursor: not-allowed;
+        }
+
+        .back-btn {
+            border: none;
+            background: none;
+            color: #8b95a1;
+            font-size: 14px;
+            cursor: pointer;
+            margin-bottom: 12px;
+        }
+
+        .selected-summary {
+            background: #f5f7fa;
+            border-radius: 8px;
+            padding: 12px 16px;
+            margin-bottom: 16px;
+            font-size: 15px;
+        }
+    </style>
+</head>
+
+<body>
+<div class="wrapper">
+    <div class="box_section" style="padding: 40px 30px; margin-top: 30px;">
+        <h1>결제 생성 테스트</h1>
+        <p style="color:#8b95a1; margin: 8px 0 24px;">
+            결제하기 버튼을 누르면 구매할 포인트 상품을 선택합니다.
+        </p>
+        <button id="openModalBtn" class="button">결제하기</button>
+
+        <a href="#" class="button2" style="display:block; width:100%; height:60px; margin-top:20px; border-radius:8px; text-align:center; line-height:60px; box-sizing:border-box; text-decoration:none;">
+            📄 결제 내역 조회
+        </a>
+
+        <div style="margin-top:20px;">
+
+            <input
+                    type="number"
+                    id="recruitIdInput"
+                    placeholder="모집공고 ID 입력"
+                    style="
+            width:100%;
+            height:50px;
+            padding:0 15px;
+            box-sizing:border-box;
+            border:1px solid #ddd;
+            border-radius:8px;
+            margin-bottom:10px;
+            font-size:16px;
+        "
+            >
+
+            <a href="#"
+               id="writeWithPointBtn"
+               class="button2"
+               style="
+            display:block;
+            width:100%;
+            height:60px;
+            border-radius:8px;
+            text-align:center;
+            line-height:60px;
+            box-sizing:border-box;
+            text-decoration:none;
+       ">
+                ✏️ 글쓰기 (포인트 사용)
+            </a>
+
+        </div>
+
+        <a href="#" class="button2" style="display:block; width:100%; height:60px; margin-top:20px; border-radius:8px; text-align:center; line-height:60px; box-sizing:border-box; text-decoration:none;">
+            ⭐ 포인트 사용 내역
+        </a>
+
+        <a href="/refund" class="button2" style="display:block; width:100%; height:60px; margin-top:20px; border-radius:8px; text-align:center; line-height:60px; box-sizing:border-box; text-decoration:none;">
+            환불 testing 화면으로 사출
+        </a>
+
+    </div>
+</div>
+
+<!-- 포인트 구매 모달 -->
+<div id="product-modal-backdrop" class="modal-backdrop">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 id="modalTitle" style="margin:0;">포인트 구매</h3>
+            <button class="close-btn" id="closeModalBtn">&times;</button>
+        </div>
+
+        <!-- STEP 1: 상품 선택 -->
+        <div id="step-select">
+            <div id="product-list">불러오는 중...</div>
+            <div class="modal-footer">
+                <button id="toPaymentBtn" disabled>결제하기</button>
+            </div>
+        </div>
+
+        <!-- STEP 2: 주문서형 결제 (토스 위젯) -->
+        <div id="step-payment" style="display:none;">
+            <button class="back-btn" id="backBtn">&larr; 상품 다시 선택</button>
+
+            <div class="selected-summary" id="selectedSummary"></div>
+
+            <!-- 결제 UI -->
+            <div id="payment-method"></div>
+            <!-- 이용약관 UI -->
+            <div id="agreement"></div>
+
+            <div class="modal-footer">
+                <button id="finalPayBtn">결제하기</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const backdrop = document.getElementById("product-modal-backdrop");
+    const toPaymentBtn = document.getElementById("toPaymentBtn");
+    let selectedProduct = null;
+    let widgets = null; // 토스 위젯 인스턴스 (선택 상품 바뀔 때마다 새로 초기화)
+
+    // 테스트용 결제위젯 연동 키 (토스 샘플 프로젝트 기본 제공 키)
+    const clientKey = "test_gck_docs_Ovk5rk1EwkEbP0W43n07xlzm";
+    const generateRandomString = () => window.btoa(Math.random()).slice(0, 20);
+
+    document.getElementById("openModalBtn").addEventListener("click", async () => {
+        resetToStep1();
+        backdrop.style.display = "flex";
+        await loadProductList();
+    });
+
+    document.getElementById("closeModalBtn").addEventListener("click", closeModal);
+    document.getElementById("backBtn").addEventListener("click", resetToStep1);
+
+    backdrop.addEventListener("click", (event) => {
+        if (event.target === backdrop) closeModal();
+    });
+
+    function closeModal() {
+        backdrop.style.display = "none";
+    }
+
+    function resetToStep1() {
+        selectedProduct = null;
+        toPaymentBtn.disabled = true;
+        document.getElementById("step-select").style.display = "block";
+        document.getElementById("step-payment").style.display = "none";
+        document.getElementById("modalTitle").textContent = "포인트 구매";
+    }
+
+    // STEP 1: product 테이블 조회해서 메뉴판 채우기
+    async function loadProductList() {
+        const listEl = document.getElementById("product-list");
+        listEl.innerHTML = "불러오는 중...";
+
+        try {
+            const res = await fetch("/products");
+            const products = await res.json();
+
+            listEl.innerHTML = "";
+
+            if (products.length === 0) {
+                listEl.innerHTML = "등록된 상품이 없습니다.";
+                return;
+            }
+
+            products.sort((a, b) => a.pointGet - b.pointGet);
+
+            products.forEach(function (product) {
+                const item = document.createElement("button");
+                item.className = "product-item";
+                item.innerHTML =
+                    "<span>" + product.productName + "</span>" +
+                    "<b>" + product.productPrice.toLocaleString() + "원</b>";
+                item.addEventListener("click", () => choseProduct(product, item));
+                listEl.appendChild(item);
+            });
+        } catch (e) {
+            listEl.innerHTML = "상품을 불러오지 못했습니다.";
+        }
+    }
+
+    function choseProduct(product, itemEl) {
+        selectedProduct = product;
+        document.querySelectorAll(".product-item").forEach((el) => el.classList.remove("selected"));
+        itemEl.classList.add("selected");
+        toPaymentBtn.disabled = false;
+    }
+
+    // STEP 1 -> STEP 2 전환: 선택한 상품 금액으로 토스 "주문서형 결제" 위젯 렌더링
+    toPaymentBtn.addEventListener("click", async () => {
+        if (!selectedProduct) return;
+
+        document.getElementById("step-select").style.display = "none";
+        document.getElementById("step-payment").style.display = "block";
+        document.getElementById("modalTitle").textContent = "결제하기";
+
+        document.getElementById("selectedSummary").innerHTML =
+            "<b>" + selectedProduct.productName + "</b> · " +
+            selectedProduct.productPrice.toLocaleString() + "원";
+
+        try {
+            await renderPaymentWidget(selectedProduct);
+        } catch (e) {
+            console.error("위젯 렌더링 실패:", e);
+            //document.getElementById("payment-method").innerHTML = "<p style='color:red;'>결제위젯 로드 실패: " + e.message + "</p>";
+            //자꾸 빨간 글씨 보여주느라 맘에 안들어서 가림.
+            //결제위젯 로드 실패: 하나의 약관 위젯만 사용 가능
+        }
+    });
+
+    // "주문서형 결제" 블록과 동일한 로직
+    async function renderPaymentWidget(product) {
+        const amount = { currency: "KRW", value: product.productPrice };
+
+        widgets = TossPayments(clientKey).widgets({ customerKey: generateRandomString() });
+
+        await widgets.setAmount(amount);
+
+        await Promise.all([
+            widgets.renderPaymentMethods({ selector: "#payment-method", variantKey: "DEFAULT" }),
+            widgets.renderAgreement({ selector: "#agreement", variantKey: "AGREEMENT" }),
+        ]);
+    }
+
+    // STEP 2의 최종 "결제하기" 버튼 - 실제 토스 결제창 호출
+    document.getElementById("finalPayBtn").addEventListener("click", async () => {
+        if (!widgets || !selectedProduct) return;
+
+        await widgets.requestPayment({
+            orderId: generateRandomString(),
+            orderName: selectedProduct.productName,
+            successUrl: window.location.origin + "/widget/success",
+            failUrl: window.location.origin + "/fail",
+            customerEmail: "customer123@gmail.com",
+            customerName: "김토스",
+        });
+    });
+</script>
+
+
+<!--글쓰기로 포인트 차감-->
+<script>
+    document.getElementById("writeWithPointBtn").addEventListener("click", async function (e) {
+
+        e.preventDefault();
+
+        const recruitId =
+            document.getElementById("recruitIdInput").value;
+
+        if (!recruitId) {
+            alert("모집공고 ID를 입력해주세요.");
+            return;
+        }
+
+        try {
+
+            const response = await fetch(
+                `/point/reduce?recruitId=${recruitId}`,
+                {
+                    method: "POST"
+                }
+            );
+
+            const result = await response.json();
+
+            if (result.success) {
+
+                alert(result.message);
+
+                // 실제 글쓰기 페이지로 이동하려면 여기에 작성
+                // location.href = `/recruitment/write?recruitId=${recruitId}`;
+
+            } else {
+
+                alert(result.message);
+            }
+
+        } catch (error) {
+
+            console.error(error);
+            alert("포인트 차감 요청 중 오류가 발생했습니다.");
+
+        }
+
+    });
+</script>
+
+
+
+</body>
+</html>
