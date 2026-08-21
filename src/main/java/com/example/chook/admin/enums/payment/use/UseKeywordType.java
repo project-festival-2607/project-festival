@@ -11,7 +11,7 @@ import java.util.EnumSet;
 @Getter
 public enum UseKeywordType implements KeywordType {
 
-  PAY_CLASSIFY_ID("전체기록 UID", EnumSet.of(KeywordCriteria.EXACT)),
+  RECORD_ID("전체기록 UID", EnumSet.of(KeywordCriteria.EXACT)),
 
   POINT_HISTORY_ID("사용 UID", EnumSet.of(KeywordCriteria.EXACT)),
 

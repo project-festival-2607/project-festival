@@ -12,17 +12,119 @@
     <table class="table">
       <colgroup>
         <col style="width: 65px;">  <!-- # -->
+        <col style="width: 200px;"> <!-- 사용자 [이름 (아이디)]-->
+        <col style="width: 80px;">  <!-- 구분 -->
+        <col style="width: 100px;"> <!-- 변화량 -->
+        <col style="width: 150px;"> <!-- 기록일시 -->
+        <col style="width: 340px">  <!-- 등록 공고 -->
+        <col style="width: 150px;"> <!-- 상세 기록 -->
         <col style="width: 45px;">  <!-- 관리 -->
       </colgroup>
       <thead>
       <tr>
         <th scope="col">#</th>
+        <th scope="col">사용자</th>
+        <th scope="col">
+          <div class="d-flex gap-3 justify-content-between">
+            <span>구분</span>
+            <div class="dropdown d-flex justify-content-center align-items-center">
+              <button class="btn btn-reset btn-th dropdown-toggle dropdown-no-caret" data-bs-toggle="dropdown"
+                      type="button">
+                <th:block th:replace="${form.paymentRecordType == null}
+                                      ? ~{admin/fragments/svg :: filter-idle('filter-idle-icon')}
+                                      : ~{admin/fragments/svg :: filter-active('filter-active-icon')}"></th:block>
+              </button>
+              <ul class="dropdown-menu filter-menu" id="paymentRecordTypeFilterDropdownList">
+                <li>
+                  <button class="dropdown-item payment-record-type-filter-li" data-role="update-filter"
+                          data-target-element="filterPaymentRecordType"
+                          th:classappend="${form.paymentRecordType == null} ? 'active'"
+                          type="button">
+                    <th:block th:replace="~{admin/fragments/badge :: general('전체')}"></th:block>
+                  </button>
+                </li>
+                <li th:each="paymentRecordType: ${paymentRecordTypeList}">
+                  <button class="dropdown-item status-filter-li" data-role="update-filter"
+                          data-target-element="filterPaymentRecordType"
+                          th:classappend="${form.paymentRecordType != null and form.paymentRecordType == paymentRecordType.name} ? 'active'"
+                          th:data-value="${paymentRecordType.name}"
+                          type="button">
+                    <th:block
+                      th:replace="~{admin/fragments/badge :: general-with-badgeClass(${paymentRecordType.label}, ${paymentRecordType.badgeClass})}"></th:block>
+                  </button>
+                </li>
+              </ul>
+              <input id="filterPaymentRecordType" name="paymentRecordType" th:value="${form.paymentRecordType}" type="hidden">
+            </div>
+          </div>
+        </th>
+        <th scope="col">
+          <span class="d-flex gap-3 justify-content-between">
+            <span>변화량</span>
+            <th:block th:replace="~{admin/fragments/sort-button :: sort-button(
+            'POINT_CHANGING', ${form.sortCriteria}, ${form.ascending}
+            )}"></th:block>
+          </span>
+        </th>
+        <th scope="col">
+          <span class="d-flex gap-3 justify-content-between">
+            <span>기록일시</span>
+            <th:block th:replace="~{admin/fragments/sort-button :: sort-button(
+            'USED_AT', ${form.sortCriteria}, ${form.ascending}
+            )}"></th:block>
+          </span>
+        </th>
+        <th scope="col">등록 공고</th>
+        <th scope="col">상세 기록</th>
         <th class="text-center bg-body-secondary" scope="col">관리</th>
       </tr>
       </thead>
       <tbody>
       <tr th:each="summary : ${page}">
         <td data-field="recordId" th:text="${summary.recordId}"></td>
+        <td>
+          <span class="d-none" data-field="memberId" th:text="${summary.memberId}"></span>
+          <div class="d-flex align-items-center justify-content-between gap-2">
+            <span class="text-ellipsis-with-suffix">
+              <span class="ellipsis-main">
+                <span data-field="memberName" th:text="${summary.memberName}"></span>
+                <span data-field="memberUsername" th:text="'('+${summary.memberUsername}+')'"></span>
+              </span>
+            </span>
+            <span class="flex-shrink-0">
+              <span th:replace="~{admin/fragments/small-button :: unique-id(${summary.memberId})}"></span>
+            </span>
+          </div>
+        </td>
+        <td class="text-center">
+          <span class="d-none" data-field="paymentRecordType" th:text="${summary.paymentRecordType}"></span>
+          <th:block
+            th:replace="~{admin/fragments/badge :: general-with-badgeClass(${summary.paymentRecordType.label}, ${summary.paymentRecordType.badgeClass})}"></th:block>
+        </td>
+        <td class="text-end" data-field="pointChanging" th:text="${#numbers.formatInteger(summary.pointChanging, 1, 'COMMA') + ' 포인트'}"></td>
+        <td data-field="recordedAt" th:text="${#temporals.format(summary.recordedAt, 'yyyy.MM.dd. HH:mm:ss')}"></td>
+        <td>
+          <a th:if="${summary.paymentRecordType.name == 'USE'}"
+             class="fw-medium text-ellipsis-with-suffix gap-1" target="_blank"
+             th:href="@{/recruitment/{id}(id=${summary.recruitmentId})}">
+            <span class="ellipsis-main" data-field="recruitmentTitle" th:text="${summary.recruitmentTitle}"></span>
+            <span class="ellipsis-suffix">
+              <th:block th:replace="~{admin/fragments/svg :: new-window('new-window-icon')}"></th:block>
+            </span>
+          </a>
+          <span th:unless="${summary.paymentRecordType.name == 'USE'}">-</span>
+        </td>
+        <td>
+          <a class="fw-medium text-ellipsis-with-suffix gap-1" target="_blank"
+             th:href="@{/admin/payment/{type}(
+               type=${#strings.toLowerCase(summary.paymentRecordType.name)},
+               keywordCriteria='EXACT', keywordType='RECORD_ID', keywords=${summary.recordId})}">
+            <span class="ellipsis-main" th:text="${summary.paymentRecordType.label + ' 상세 페이지'}"></span>
+            <span class="ellipsis-suffix">
+              <th:block th:replace="~{admin/fragments/svg :: new-window('new-window-icon')}"></th:block>
+            </span>
+          </a>
+        </td>
         <td class="center bg-body-secondary">
           <button class="btn btn-reset dropdown-toggle dropdown-no-caret moderation-btn" data-bs-toggle="dropdown"
                   disabled type="button">

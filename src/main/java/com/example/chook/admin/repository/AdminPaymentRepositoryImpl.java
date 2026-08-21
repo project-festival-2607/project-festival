@@ -456,7 +456,7 @@ public class AdminPaymentRepositoryImpl implements AdminPaymentRepository {
       BooleanBuilder keywordResult = new BooleanBuilder();
       for (SummaryKeywordType type : types) {
         switch (type) {
-          case PAY_CLASSIFY_ID -> {
+          case RECORD_ID -> {
             StringExpression payClassifyId = Expressions.stringTemplate("STR({0})", payClassify.payClassifyId);
             keywordResult.or(keywordCheck.apply(payClassifyId, keyword));
           }
@@ -512,7 +512,7 @@ public class AdminPaymentRepositoryImpl implements AdminPaymentRepository {
       BooleanBuilder keywordResult = new BooleanBuilder();
       for (ChargeKeywordType type : types) {
         switch (type) {
-          case PAY_CLASSIFY_ID -> {
+          case RECORD_ID -> {
             StringExpression payClassifyId = Expressions.stringTemplate("STR({0})", payClassify.payClassifyId);
             keywordResult.or(keywordCheck.apply(payClassifyId, keyword));
           }
@@ -560,7 +560,7 @@ public class AdminPaymentRepositoryImpl implements AdminPaymentRepository {
       BooleanBuilder keywordResult = new BooleanBuilder();
       for (UseKeywordType type : types) {
         switch (type) {
-          case PAY_CLASSIFY_ID -> {
+          case RECORD_ID -> {
             StringExpression payClassifyId = Expressions.stringTemplate("STR({0})", payClassify.payClassifyId);
             keywordResult.or(keywordCheck.apply(payClassifyId, keyword));
           }
@@ -610,7 +610,7 @@ public class AdminPaymentRepositoryImpl implements AdminPaymentRepository {
             StringExpression refundId = Expressions.stringTemplate("STR({0})", refund.refundId);
             keywordResult.or(keywordCheck.apply(refundId, keyword));
           }
-          case PAY_CLASSIFY_ID -> {
+          case RECORD_ID -> {
             StringExpression payClassifyId = Expressions.stringTemplate("STR({0})", payClassify.payClassifyId);
             keywordResult.or(keywordCheck.apply(payClassifyId, keyword));
           }

@@ -103,8 +103,8 @@
                 th:text="${product.status.name}"></span>
         </td>
         <td data-field="productName" th:text="${product.productName}"></td>
-        <td data-field="pointGet" th:text="${product.pointGet + ' 포인트'}"></td>
-        <td data-field="productPrice" th:text="${product.productPrice + ' 원'}"></td>
+        <td class="text-end" data-field="pointGet" th:text="${product.pointGet + ' 포인트'}"></td>
+        <td class="text-end" data-field="productPrice" th:text="${product.productPrice + ' 원'}"></td>
         <td data-field="createdAt" th:text="${#temporals.format(product.createdAt, 'yyyy.MM.dd. HH:mm:ss')}"></td>
         <td data-field="deletedAt" th:text="${#temporals.format(product.deletedAt, 'yyyy.MM.dd. HH:mm:ss')}"></td>
         <td class="center bg-body-secondary">
