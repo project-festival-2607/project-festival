@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<th:block th:fragment="summary-result">
+  <div class="result-table-wrapper"
+       id="tableWrapper"
+       th:with="form=${pagingHandler.form}">
+    <input id="sortCriteria" name="sortCriteria" th:value="${form.sortCriteria}" type="hidden"/>
+    <input id="ascending" name="ascending" th:value="${form.ascending}" type="hidden"/>
+    <table class="table">
+      <colgroup>
+        <col style="width: 65px;">  <!-- # -->
+        <col style="width: 45px;">  <!-- 관리 -->
+      </colgroup>
+      <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th class="text-center bg-body-secondary" scope="col">관리</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="summary : ${page}">
+        <td data-field="recordId" th:text="${summary.recordId}"></td>
+        <td class="center bg-body-secondary">
+          <button class="btn btn-reset dropdown-toggle dropdown-no-caret moderation-btn" data-bs-toggle="dropdown"
+                  disabled type="button">
+            <th:block th:replace="~{admin/fragments/svg :: moderation('moderation-icon')}"></th:block>
+          </button>
+          <ul class="dropdown-menu moderation-menu">
+          </ul>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+  <div>
+    <th:block th:replace="~{admin/fragments/pagination :: pagination(
+      ${pagingHandler},
+      ${pageSize},
+      ${pageSizeOptions}
+    )}"></th:block>
+  </div>
+</th:block>

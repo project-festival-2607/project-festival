@@ -1,0 +1,17 @@
+package com.example.chook.admin.enums.payment.summary;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
+@AllArgsConstructor
+@Getter
+public enum PaymentRecordType {
+
+  CHARGE("충전", "payment-charge"),
+  USE("사용", "payment-use"),
+  REFUND("환불", "payment-refund");
+
+  private final String label;
+  private final String badgeClass;
+
+}

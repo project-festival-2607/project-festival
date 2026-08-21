@@ -1,4 +1,4 @@
-package com.example.chook.admin.enums.payment.use;
+package com.example.chook.admin.enums.payment.summary;
 
 import com.example.chook.admin.enums.KeywordCriteria;
 import com.example.chook.admin.enums.KeywordType;
@@ -9,11 +9,13 @@ import java.util.EnumSet;
 
 @AllArgsConstructor
 @Getter
-public enum UseKeywordType implements KeywordType {
+public enum SummaryKeywordType implements KeywordType {
 
   PAY_CLASSIFY_ID("전체기록 UID", EnumSet.of(KeywordCriteria.EXACT)),
 
+  PAYMENT_ID("충전 UID", EnumSet.of(KeywordCriteria.EXACT)),
   POINT_HISTORY_ID("사용 UID", EnumSet.of(KeywordCriteria.EXACT)),
+  REFUND_ID("환불 UID", EnumSet.of(KeywordCriteria.EXACT)),
 
   MEMBER_ID("사용자 UID", EnumSet.of(KeywordCriteria.EXACT)),
   MEMBER_USERNAME("사용자 아이디", EnumSet.of(KeywordCriteria.EXACT)),
@@ -25,7 +27,7 @@ public enum UseKeywordType implements KeywordType {
   private final String label;
   private final EnumSet<KeywordCriteria> supportedCriteria;
 
-  UseKeywordType(String label) {
+  SummaryKeywordType(String label) {
     this(label, EnumSet.of(
       KeywordCriteria.ALL_WORDS_CONTAINS,
       KeywordCriteria.PHRASE_CONTAINS,
