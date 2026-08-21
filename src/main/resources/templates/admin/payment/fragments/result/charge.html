@@ -212,7 +212,7 @@
         <td class="d-flex justify-content-end align-items-center gap-2">
           <span th:text="${charge.recordId}" data-field="recordId"></span>
           <th:block th:replace="~{admin/fragments/small-button :: new-tab(
-            @{/admin/payment/summary(recordId=${charge.recordId})}
+            @{/admin/payment/summary(keywordCriteria='EXACT', keywordType='RECORD_ID', keywords=${charge.recordId})}
           )}"></th:block>
         </td>
         <td class="center bg-body-secondary">
