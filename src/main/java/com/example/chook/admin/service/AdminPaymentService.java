@@ -1,16 +1,12 @@
 package com.example.chook.admin.service;
 
-import com.example.chook.admin.condition.payment.ChargeSearchCondition;
-import com.example.chook.admin.condition.payment.ProductSearchCondition;
-import com.example.chook.admin.condition.payment.RefundSearchCondition;
-import com.example.chook.admin.condition.payment.UseSearchCondition;
-import com.example.chook.admin.dto.payment.ChargeTableDTO;
-import com.example.chook.admin.dto.payment.ProductTableDTO;
-import com.example.chook.admin.dto.payment.RefundTableDTO;
-import com.example.chook.admin.dto.payment.UseTableDTO;
+import com.example.chook.admin.condition.payment.*;
+import com.example.chook.admin.dto.payment.*;
 import org.springframework.data.domain.Page;
 
 public interface AdminPaymentService {
+
+  Page<SummaryTableDTO> getSummaryPage(int pageIdx, int pageSize, SummarySearchCondition condition);
 
   Page<ChargeTableDTO> getChargePage(int pageIdx, int pageSize, ChargeSearchCondition condition);
 

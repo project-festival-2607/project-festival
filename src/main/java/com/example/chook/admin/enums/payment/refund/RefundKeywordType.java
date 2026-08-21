@@ -11,7 +11,7 @@ import java.util.EnumSet;
 @Getter
 public enum RefundKeywordType implements KeywordType {
 
-  PAY_CLASSIFY_ID("전체기록 UID", EnumSet.of(KeywordCriteria.EXACT)),
+  RECORD_ID("전체기록 UID", EnumSet.of(KeywordCriteria.EXACT)),
 
   REFUND_ID("환불 UID", EnumSet.of(KeywordCriteria.EXACT)),
 

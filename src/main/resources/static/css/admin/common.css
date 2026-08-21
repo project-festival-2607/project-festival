@@ -31,7 +31,8 @@ ul.submenu {
 .badge.notice-highlight,
 .badge.refund-failed,
 .badge.payment-aborted,
-.badge.payment-expired{
+.badge.payment-expired,
+.badge.payment-record-type-refund {
   background-color: var(--bs-danger);
 }
 
@@ -46,8 +47,8 @@ ul.submenu {
 
 .badge.payment-ready,
 .badge.payment-in-progress,
-.badge.payment-waiting-for-deposit
-{
+.badge.payment-waiting-for-deposit,
+.badge.payment-record-type-use {
   background-color: var(--bs-primary);
 }
 
@@ -56,7 +57,8 @@ ul.submenu {
 .badge.recruitment-status-recruiting,
 .badge.refund-completed,
 .badge.product-on-sale,
-.badge.payment-done {
+.badge.payment-done,
+.badge.payment-record-type-charge {
   background-color: var(--bs-success);
 }
 

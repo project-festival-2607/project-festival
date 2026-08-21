@@ -1,17 +1,12 @@
 package com.example.chook.admin.service;
 
-import com.example.chook.admin.condition.payment.ChargeSearchCondition;
-import com.example.chook.admin.condition.payment.ProductSearchCondition;
-import com.example.chook.admin.condition.payment.RefundSearchCondition;
-import com.example.chook.admin.condition.payment.UseSearchCondition;
-import com.example.chook.admin.dto.payment.ChargeTableDTO;
-import com.example.chook.admin.dto.payment.ProductTableDTO;
-import com.example.chook.admin.dto.payment.RefundTableDTO;
-import com.example.chook.admin.dto.payment.UseTableDTO;
+import com.example.chook.admin.condition.payment.*;
+import com.example.chook.admin.dto.payment.*;
 import com.example.chook.admin.enums.payment.charge.PaymentMethod;
 import com.example.chook.admin.enums.payment.charge.PaymentStatus;
 import com.example.chook.admin.enums.payment.product.ProductStatus;
 import com.example.chook.admin.enums.payment.refund.RefundStatus;
+import com.example.chook.admin.enums.payment.summary.PaymentRecordType;
 import com.example.chook.admin.repository.AdminPaymentRepository;
 import com.example.chook.payment.entity.Product;
 import com.example.chook.payment.repository.ProductRepository;
@@ -35,6 +30,16 @@ public class AdminPaymentServiceImpl implements AdminPaymentService {
 
   private final AdminPaymentRepository adminPaymentRepository;
   private final ProductRepository productRepository;
+
+  @Override
+  public Page<SummaryTableDTO> getSummaryPage(int pageIdx, int pageSize, SummarySearchCondition condition) {
+    Pageable pageable = PageRequest.of(pageIdx - 1, pageSize);
+    Page<SummaryTableDTO> result = adminPaymentRepository.getSummaryPage(pageable, condition);
+    result.forEach(dto -> {
+      dto.setPaymentRecordType(toEnum(dto.getRawPaymentRecordType().toUpperCase(), PaymentRecordType.class, null));
+    });
+    return result;
+  }
 
   @Override
   public Page<ChargeTableDTO> getChargePage(int pageIdx, int pageSize, ChargeSearchCondition condition) {

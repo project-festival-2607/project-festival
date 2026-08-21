@@ -1,13 +1,7 @@
 package com.example.chook.admin.repository;
 
-import com.example.chook.admin.condition.payment.ChargeSearchCondition;
-import com.example.chook.admin.condition.payment.ProductSearchCondition;
-import com.example.chook.admin.condition.payment.RefundSearchCondition;
-import com.example.chook.admin.condition.payment.UseSearchCondition;
-import com.example.chook.admin.dto.payment.ChargeTableDTO;
-import com.example.chook.admin.dto.payment.ProductTableDTO;
-import com.example.chook.admin.dto.payment.RefundTableDTO;
-import com.example.chook.admin.dto.payment.UseTableDTO;
+import com.example.chook.admin.condition.payment.*;
+import com.example.chook.admin.dto.payment.*;
 import com.example.chook.admin.enums.KeywordCriteria;
 import com.example.chook.admin.enums.payment.charge.*;
 import com.example.chook.admin.enums.payment.product.ProductDateRangeType;
@@ -18,6 +12,10 @@ import com.example.chook.admin.enums.payment.refund.RefundDateRangeType;
 import com.example.chook.admin.enums.payment.refund.RefundKeywordType;
 import com.example.chook.admin.enums.payment.refund.RefundSortCriteria;
 import com.example.chook.admin.enums.payment.refund.RefundStatus;
+import com.example.chook.admin.enums.payment.summary.PaymentRecordType;
+import com.example.chook.admin.enums.payment.summary.SummaryDateRangeType;
+import com.example.chook.admin.enums.payment.summary.SummaryKeywordType;
+import com.example.chook.admin.enums.payment.summary.SummarySortCriteria;
 import com.example.chook.admin.enums.payment.use.UseDateRangeType;
 import com.example.chook.admin.enums.payment.use.UseKeywordType;
 import com.example.chook.admin.enums.payment.use.UseSortCriteria;
@@ -28,6 +26,7 @@ import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.StringExpression;
+import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
@@ -61,6 +60,67 @@ public class AdminPaymentRepositoryImpl implements AdminPaymentRepository {
 
   public AdminPaymentRepositoryImpl(EntityManager em) {
     this.jpaQueryFactory = new JPAQueryFactory(em);
+  }
+
+  @Override
+  public Page<SummaryTableDTO> getSummaryPage(Pageable pageable, SummarySearchCondition condition) {
+
+    JPAQuery<SummaryTableDTO> resultQuery = this.jpaQueryFactory.select(Projections.fields(
+
+      SummaryTableDTO.class,
+
+      payClassify.payClassifyId.as("recordId"),
+      payClassify.createdAt.as("recordedAt"),
+
+      payClassify.member.id.as("memberId"),
+      payClassify.member.username.as("memberUsername"),
+      payClassify.member.name.as("memberName"),
+
+      pointHistory.pointChanging.sum().as("pointChanging"),
+      pointHistory.pType.as("rawPaymentRecordType"),
+
+      recruitment.id.as("recruitmentId"),
+      recruitment.title.as("recruitmentTitle")
+
+    )).from(payClassify);
+
+    JPAQuery<Long> countQuery = jpaQueryFactory
+      .select(payClassify.payClassifyId.countDistinct())
+      .from(payClassify);
+
+    resultQuery = applySummaryJoin(resultQuery);
+    countQuery = applySummaryJoin(countQuery);
+
+    BooleanBuilder whereCondition = new BooleanBuilder();
+
+    whereCondition
+      .and(applySummaryKeywordFilter(condition.keywordList(), condition.keywordType(), condition.keywordCriteria()))
+      .and(applyPaymentRecordTypeFilter(condition.paymentRecordType()))
+      .and(applySummaryDateRangeFilter(
+        condition.dateRangeType(),
+        condition.startDateTime(),
+        condition.endDateTime()
+      ));
+
+    resultQuery.where(whereCondition);
+    resultQuery = applySummaryGroupBy(resultQuery);
+
+    List<SummaryTableDTO> content = resultQuery
+      .orderBy(getSummaryOrderSpecifierArray(condition.sortCriteria(), condition.ascending()))
+      .offset(pageable.getOffset())
+      .limit(pageable.getPageSize())
+      .fetch();
+
+    Long total = countQuery
+      .where(whereCondition)
+      .fetchOne();
+
+    return new PageImpl<>(
+      content,
+      pageable,
+      total != null ? total : 0
+    );
+
   }
 
   @Override
@@ -310,6 +370,16 @@ public class AdminPaymentRepositoryImpl implements AdminPaymentRepository {
 
   // #################### JOIN 적용 메서드 ####################
 
+  private <T> JPAQuery<T> applySummaryJoin(JPAQuery<T> query) {
+    return query
+      .leftJoin(pointHistory)
+      .on(pointHistory.payClassify.payClassifyId.eq(payClassify.payClassifyId))
+      .leftJoin(recruitment)
+      .on(pointHistory.recruit.id.eq(recruitment.id))
+      ;
+
+  }
+
   private <T> JPAQuery<T> applyPaymentJoin(JPAQuery<T> query) {
     return query
       .leftJoin(member)
@@ -348,7 +418,88 @@ public class AdminPaymentRepositoryImpl implements AdminPaymentRepository {
   }
 
 
+  // #################### GROUP BY 적용 메서드 ####################
+
+  private <T> JPAQuery<T> applySummaryGroupBy(JPAQuery<T> query) {
+    return query
+      .groupBy(
+        payClassify.payClassifyId,
+        payClassify.createdAt,
+        payClassify.member.id,
+        payClassify.member.username,
+        payClassify.member.name,
+        pointHistory.pType,
+        recruitment.id,
+        recruitment.title
+      );
+  }
+
   // #################### KEYWORD FILTER 적용 메서드 ####################
+
+  private BooleanBuilder applySummaryKeywordFilter(List<String> keywordList,
+                                                   SummaryKeywordType keywordType,
+                                                   KeywordCriteria keywordCriteria) {
+
+    if (keywordList == null || keywordList.isEmpty()) return null;
+    List<SummaryKeywordType> types =
+      keywordType == null
+        ? List.of(SummaryKeywordType.values())
+        : List.of(keywordType);
+
+    BooleanBuilder result = new BooleanBuilder();
+
+    BiFunction<StringExpression, String, BooleanExpression> keywordCheck =
+      getKeywordCheckFunction(keywordCriteria);
+
+    for (String keyword : keywordList) {
+      BooleanBuilder keywordResult = new BooleanBuilder();
+      for (SummaryKeywordType type : types) {
+        switch (type) {
+          case RECORD_ID -> {
+            StringExpression payClassifyId = Expressions.stringTemplate("STR({0})", payClassify.payClassifyId);
+            keywordResult.or(keywordCheck.apply(payClassifyId, keyword));
+          }
+          case PAYMENT_ID -> {
+            StringExpression paymentId = Expressions.stringTemplate("STR({0})", pointHistory.payment.paymentId);
+            keywordResult.or(keywordCheck.apply(paymentId, keyword));
+          }
+          case POINT_HISTORY_ID -> {
+            StringExpression pointHistoryId = Expressions.stringTemplate("STR({0})", pointHistory.pointHistoryId);
+            keywordResult.or(keywordCheck.apply(pointHistoryId, keyword));
+          }
+          case REFUND_ID -> {
+            StringExpression refundId = Expressions.stringTemplate("STR({0})", refund.refundId);
+            keywordResult.or(
+              JPAExpressions
+                .selectOne()
+                .from(refund)
+                .where(
+                  refund.payClassify.payClassifyId.eq(payClassify.payClassifyId),
+                  keywordCheck.apply(refundId, keyword)
+                )
+                .exists()
+            );
+          }
+          case MEMBER_ID -> {
+            StringExpression memberId = Expressions.stringTemplate("STR({0})", member.id);
+            keywordResult.or(keywordCheck.apply(memberId, keyword));
+          }
+          case MEMBER_USERNAME -> keywordResult.or(keywordCheck.apply(member.username, keyword));
+          case MEMBER_NAME -> keywordResult.or(keywordCheck.apply(member.name, keyword));
+          case RECRUITMENT_ID -> {
+            StringExpression recruitmentId = Expressions.stringTemplate("STR({0})", recruitment.id);
+            keywordResult.or(keywordCheck.apply(recruitmentId, keyword));
+          }
+          case RECRUITMENT_TITLE -> keywordResult.or(keywordCheck.apply(recruitment.title, keyword));
+        }
+      }
+      result.and(keywordResult);
+    }
+    return result;
+
+
+  }
+
 
   private BooleanBuilder applyChargeKeywordFilter(List<String> keywordList,
                                                   ChargeKeywordType keywordType,
@@ -369,7 +520,7 @@ public class AdminPaymentRepositoryImpl implements AdminPaymentRepository {
       BooleanBuilder keywordResult = new BooleanBuilder();
       for (ChargeKeywordType type : types) {
         switch (type) {
-          case PAY_CLASSIFY_ID -> {
+          case RECORD_ID -> {
             StringExpression payClassifyId = Expressions.stringTemplate("STR({0})", payClassify.payClassifyId);
             keywordResult.or(keywordCheck.apply(payClassifyId, keyword));
           }
@@ -417,7 +568,7 @@ public class AdminPaymentRepositoryImpl implements AdminPaymentRepository {
       BooleanBuilder keywordResult = new BooleanBuilder();
       for (UseKeywordType type : types) {
         switch (type) {
-          case PAY_CLASSIFY_ID -> {
+          case RECORD_ID -> {
             StringExpression payClassifyId = Expressions.stringTemplate("STR({0})", payClassify.payClassifyId);
             keywordResult.or(keywordCheck.apply(payClassifyId, keyword));
           }
@@ -467,7 +618,7 @@ public class AdminPaymentRepositoryImpl implements AdminPaymentRepository {
             StringExpression refundId = Expressions.stringTemplate("STR({0})", refund.refundId);
             keywordResult.or(keywordCheck.apply(refundId, keyword));
           }
-          case PAY_CLASSIFY_ID -> {
+          case RECORD_ID -> {
             StringExpression payClassifyId = Expressions.stringTemplate("STR({0})", payClassify.payClassifyId);
             keywordResult.or(keywordCheck.apply(payClassifyId, keyword));
           }
@@ -519,6 +670,24 @@ public class AdminPaymentRepositoryImpl implements AdminPaymentRepository {
 
   // #################### DATE RANGE FILTER 적용 메서드 ####################
 
+  private BooleanBuilder applySummaryDateRangeFilter(SummaryDateRangeType dateRangeType,
+                                                     LocalDateTime startDateTime,
+                                                     LocalDateTime endDateTime) {
+
+    if (dateRangeType == null) return null;
+
+    BooleanBuilder result = new BooleanBuilder();
+
+    if (dateRangeType == SummaryDateRangeType.RECORDED_AT) {
+      result.and(goe(payClassify.createdAt, startDateTime));
+      result.and(loe(payClassify.createdAt, endDateTime));
+    }
+
+    return result;
+
+  }
+
+
   private BooleanBuilder applyChargeDateRangeFilter(ChargeDateRangeType dateRangeType,
                                                     LocalDateTime startDateTime,
                                                     LocalDateTime endDateTime) {
@@ -555,7 +724,7 @@ public class AdminPaymentRepositoryImpl implements AdminPaymentRepository {
                                                  LocalDateTime startDateTime,
                                                  LocalDateTime endDateTime) {
 
-    if  (dateRangeType == null) return null;
+    if (dateRangeType == null) return null;
 
     BooleanBuilder result = new BooleanBuilder();
 
@@ -617,6 +786,15 @@ public class AdminPaymentRepositoryImpl implements AdminPaymentRepository {
 
   // #################### 테이블 상단 필터 적용 메서드 ####################
 
+  private BooleanBuilder applyPaymentRecordTypeFilter(PaymentRecordType paymentRecordType) {
+    if (paymentRecordType == null) return null;
+
+    BooleanBuilder result = new BooleanBuilder();
+    result.and(equalsIgnoreCase(pointHistory.pType, paymentRecordType.name()));
+    return result;
+
+  }
+
   private BooleanBuilder applyPaymentMethodFilter(PaymentMethod paymentMethod) {
 
     BooleanBuilder result = new BooleanBuilder();
@@ -660,6 +838,22 @@ public class AdminPaymentRepositoryImpl implements AdminPaymentRepository {
   }
 
   // #################### 테이블 상단 정렬 OrderSpecifier<>[] 구축 메서드 ####################
+
+  private OrderSpecifier<?>[] getSummaryOrderSpecifierArray(SummarySortCriteria sortCriteria,
+                                                            Boolean ascending) {
+
+    List<OrderSpecifier<?>> orderSpecifiers = new ArrayList<>();
+    if (sortCriteria != null) {
+      Order order = ascending ? Order.ASC : Order.DESC;
+      switch (sortCriteria) {
+        case POINT_CHANGING -> orderSpecifiers.addAll(getOrderSpecifier(order, pointHistory.pointChanging.sum()));
+        case RECORDED_AT -> orderSpecifiers.addAll(getOrderSpecifier(order, payClassify.createdAt));
+      }
+    }
+    orderSpecifiers.add(new OrderSpecifier<>(Order.ASC, payClassify.payClassifyId));
+    return orderSpecifiers.toArray(new OrderSpecifier[0]);
+
+  }
 
   private OrderSpecifier<?>[] getChargeOrderSpecifierArray(ChargeSortCriteria sortCriteria,
                                                            Boolean ascending) {
