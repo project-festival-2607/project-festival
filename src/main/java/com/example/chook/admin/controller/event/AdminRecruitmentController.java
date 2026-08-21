@@ -3,8 +3,8 @@ package com.example.chook.admin.controller.event;
 import com.example.chook.admin.condition.event.RecruitmentSearchCondition;
 import com.example.chook.admin.dto.event.RecruitmentTableDTO;
 import com.example.chook.admin.enums.DateRangeAutofillOption;
-import com.example.chook.admin.enums.event.festival.FestivalDateRangeType;
-import com.example.chook.admin.enums.event.festival.FestivalKeywordType;
+import com.example.chook.admin.enums.event.recruitment.RecruitmentDateRangeType;
+import com.example.chook.admin.enums.event.recruitment.RecruitmentKeywordType;
 import com.example.chook.admin.form.event.RecruitmentSearchForm;
 import com.example.chook.admin.provider.ModalInfoFieldProvider;
 import com.example.chook.admin.service.AdminEventService;
@@ -35,13 +35,13 @@ public class AdminRecruitmentController {
   private final ModalInfoFieldProvider infoFieldProvider;
 
   @GetMapping
-  public void loadFestivalPage(
+  public void loadRecruitmentPage(
     Model model,
     @Valid @ModelAttribute RecruitmentSearchForm form
   ) {
     model.addAttribute("form", form);
-    model.addAttribute("keywordOptions", List.of(FestivalKeywordType.values()));
-    model.addAttribute("dateRangeOptions", List.of(FestivalDateRangeType.values()));
+    model.addAttribute("keywordOptions", List.of(RecruitmentKeywordType.values()));
+    model.addAttribute("dateRangeOptions", List.of(RecruitmentDateRangeType.values()));
     model.addAttribute("dateRangeAutofillOptions", List.of(DateRangeAutofillOption.values()));
   }
 
