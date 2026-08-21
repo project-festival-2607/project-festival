@@ -5,6 +5,8 @@ import com.example.chook.admin.dto.board.NoticeTableDTO;
 import com.example.chook.admin.enums.DateRangeAutofillOption;
 import com.example.chook.admin.enums.board.inquiry.InquiryDateRangeType;
 import com.example.chook.admin.enums.board.inquiry.InquiryKeywordType;
+import com.example.chook.admin.enums.board.notice.NoticeDateRangeType;
+import com.example.chook.admin.enums.board.notice.NoticeKeywordType;
 import com.example.chook.admin.form.board.InquirySearchForm;
 import com.example.chook.admin.form.board.NoticeSearchForm;
 import com.example.chook.admin.service.AdminBoardService;
@@ -39,8 +41,8 @@ public class AdminNoticeController {
     @Valid @ModelAttribute InquirySearchForm form
   ) {
     model.addAttribute("form", form);
-    model.addAttribute("keywordOptions", List.of(InquiryKeywordType.values()));
-    model.addAttribute("dateRangeOptions", List.of(InquiryDateRangeType.values()));
+    model.addAttribute("keywordOptions", List.of(NoticeKeywordType.values()));
+    model.addAttribute("dateRangeOptions", List.of(NoticeDateRangeType.values()));
     model.addAttribute("dateRangeAutofillOptions", List.of(DateRangeAutofillOption.values()));
   }
 
