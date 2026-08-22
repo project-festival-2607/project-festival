@@ -34,6 +34,7 @@ public final class CustomStringUtils {
   }
 
   public static String getFormattedBusinessNumber(String businessNumber) {
+    if (businessNumber == null) return "";
     return businessNumber.length() == 10
       ? String.format("%s-%s-%s", businessNumber.substring(0, 3), businessNumber.substring(3, 5), businessNumber.substring(5))
       : businessNumber;

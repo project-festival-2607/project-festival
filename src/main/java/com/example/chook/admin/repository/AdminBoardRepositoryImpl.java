@@ -178,7 +178,7 @@ public class AdminBoardRepositoryImpl implements AdminBoardRepository {
       for (InquiryKeywordType type : types) {
         switch (type) {
           case INO -> {
-            StringExpression ino = Expressions.stringTemplate("CAST({0} AS CHAR)", inquiry.ino);
+            StringExpression ino = Expressions.stringTemplate("STR({0})", inquiry.ino);
             keywordResult.or(keywordCheck.apply(ino, keyword));
           }
           case TITLE -> keywordResult.or(keywordCheck.apply(inquiry.title, keyword));
