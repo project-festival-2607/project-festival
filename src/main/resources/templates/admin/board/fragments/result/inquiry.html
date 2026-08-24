@@ -32,7 +32,7 @@
             <div class="dropdown d-flex justify-content-center align-items-center">
               <button class="btn btn-reset btn-th dropdown-toggle dropdown-no-caret" data-bs-toggle="dropdown"
                       type="button">
-                <th:block th:replace="${form.replyStatus == null}
+                <th:block th:replace="${form.memberRole == null or form.memberRole == ''}
                                       ? ~{admin/fragments/svg :: filter-idle('filter-idle-icon')}
                                       : ~{admin/fragments/svg :: filter-active('filter-active-icon')}"></th:block>
               </button>
@@ -40,7 +40,7 @@
                 <li>
                   <button class="dropdown-item member-role-filter-li" data-role="update-filter"
                           data-target-element="filterMemberRole"
-                          th:classappend="${form.memberRole == null} ? 'active'"
+                          th:classappend="${form.memberRole == null or form.memberRole == ''} ? 'active'"
                           type="button">
                     <th:block th:replace="~{admin/fragments/badge :: general('전체')}"></th:block>
                   </button>

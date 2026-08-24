@@ -24,8 +24,12 @@ public class SecurityConfig {
             throws Exception {
         http
                 .csrf(csrf -> csrf.disable())
+
                 .httpBasic(httpBasic -> httpBasic.disable())
-                .authorizeHttpRequests(auth -> auth.anyRequest().permitAll())
+                .authorizeHttpRequests(auth -> auth
+                  .requestMatchers("/admin/**").hasRole("ADMIN")
+                  .anyRequest().permitAll()
+                )
                 .formLogin(formLogin -> formLogin
                         .loginPage("/member/login")
                         .loginProcessingUrl("/member/login")

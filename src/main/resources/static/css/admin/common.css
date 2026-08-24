@@ -129,7 +129,7 @@ a[data-bs-toggle="tooltip"] {
 .dropdown-btn-left {
   border: var(--bs-border-width) solid var(--bs-border-color);
   border-right: 0 none;
-  width: 100px;
+  width: 110px;
 }
 
 .dropdown-btn-right {

@@ -286,7 +286,7 @@ public class AdminEventRepositoryImpl implements AdminEventRepository {
       for (RecruitmentKeywordType type : types) {
         switch (type) {
           case RECRUITMENT_ID -> {
-            StringExpression id = Expressions.stringTemplate("CAST({0} AS CHAR)", recruitment.id);
+            StringExpression id = Expressions.stringTemplate("STR({0})", recruitment.id);
             keywordResult.or(keywordCheck.apply(id, keyword));
           }
           case RECRUITMENT_TITLE -> keywordResult.or(keywordCheck.apply(recruitment.title, keyword));
@@ -294,7 +294,7 @@ public class AdminEventRepositoryImpl implements AdminEventRepository {
           case FESTIVAL_ID -> keywordResult.or(keywordCheck.apply(festival.contentId, keyword));
           case FESTIVAL_TITLE -> keywordResult.or(keywordCheck.apply(festival.title, keyword));
           case MEMBER_ID -> {
-            StringExpression memberId = Expressions.stringTemplate("CAST({0} AS CHAR)", member.id);
+            StringExpression memberId = Expressions.stringTemplate("STR({0})", member.id);
             keywordResult.or(keywordCheck.apply(memberId, keyword));
           }
           case LOCATION -> {
